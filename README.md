@@ -3,9 +3,10 @@
 The public website for **y[AI]r studio** (spoken: *Yair Studio*) — AI systems for real business
 workflows.
 
-Built with Next.js (App Router) + TypeScript. This repo currently holds the **foundation only**:
-a minimal App Router skeleton with placeholder routes. The design system, copy, and integrations
-are added in later steps.
+Built with Next.js (App Router) + TypeScript. This repo currently holds the **visual foundation**:
+design tokens, bilingual (EN/HE) typography, base styles, and a shared shell (header/footer/
+container) sourced from the design system — wrapping placeholder routes. Homepage sections, final
+copy, and integrations are added in later steps.
 
 ## Visual source of truth
 
@@ -34,11 +35,21 @@ Install dependencies first with `npm install`.
 |------|-------|
 | `/` | Home |
 | `/he` | Hebrew (RTL) |
+| `/workflows` | Stub |
+| `/offers` | Stub (index) |
 | `/offers/office-ai-systems` | Offer |
 | `/offers/dashboards-automation` | Offer |
 | `/offers/content-ad-operations` | Offer |
+| `/about` | Stub |
+| `/contact` | Stub |
 
 ## Stack
 
 App Router · TypeScript · ESLint · `src/` directory · import alias `@/*`. No Tailwind, no external
-UI library. Hebrew/RTL is supported from the start (logical CSS properties + `dir="rtl"` on `/he`).
+UI library. Fonts are loaded with `next/font` (Inter — EN body/display; Geist Mono — mono accents;
+Assistant — Hebrew body), not a CDN `@import`. Hebrew/RTL is supported from the start (logical CSS
+properties, subtree-scoped `[lang]`/`[dir]` selectors, `dir="rtl"` on `/he`, `<bdi>` for the wordmark).
+
+Shared components live in `src/components/` (`Container`, `SiteHeader`, `SiteFooter`, `SectionLabel`,
+`CTAButton`, `Wordmark`, `LangToggle`). Design tokens are defined once in `src/app/globals.css` —
+never hardcode hex; reference `var(--*)`.

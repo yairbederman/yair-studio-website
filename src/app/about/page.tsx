@@ -3,16 +3,16 @@ import Container from "@/components/Container";
 import SectionLabel from "@/components/SectionLabel";
 
 export const metadata: Metadata = {
-  title: "Content & Ad Operations",
+  title: "About",
 };
 
-export default function ContentAdOperationsPage() {
+export default function AboutPage() {
   return (
     <main id="main" className="page">
       <Container>
         <div className="stack">
-          <SectionLabel>Offers</SectionLabel>
-          <h1>Content &amp; Ad Operations</h1>
+          <SectionLabel>About</SectionLabel>
+          <h1>About</h1>
         </div>
       </Container>
     </main>

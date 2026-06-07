@@ -1,15 +1,122 @@
-/*
- * Foundation reset + base styles only.
- *
- * The full design system — warm charcoal + softened copper, dark-first,
- * technical/schematic typography — lives in the design-system source of truth
- * (https://github.com/yairbederman/yair-design-system) and will be implemented
- * in a later step. Keep this file minimal until then.
- *
- * RTL note: prefer logical properties (padding-inline, margin-block, inset-*)
- * over physical ones so Hebrew/RTL routes (e.g. /he) work without overrides.
- */
+/* ============================================================
+   y[AI]r studio — website foundation (Step 2)
+   ------------------------------------------------------------
+   Adapted from the design-system SOURCE OF TRUTH — ROOT files only:
+     https://github.com/yairbederman/yair-design-system
+       - colors_and_type.css   (tokens, base elements, utilities)
+       - ui_kits/website/site.css  (shell: nav, footer, responsive, RTL)
+       - COLOR.md / HEBREW.md / fonts/README.md  (usage + RTL rules)
+   The frozen design_handoff_yair_studio/ snapshot is NOT a source.
 
+   Fonts are loaded via next/font (see src/app/layout.tsx), which sets
+   --font-inter / --font-geist-mono / --font-assistant on <html>. The
+   design system's CDN @import is intentionally NOT used.
+
+   Deliberate, approved deviations from the source:
+     - Display family = Inter (not JetBrains Mono).
+     - Solid nav background (no backdrop-filter / glassmorphism).
+     - Light/print theme + full homepage section styles omitted.
+     - IBM Plex Mono (Hebrew mono) deferred — graceful fallback below.
+   Rule: never hardcode hex in components — always use var(--*).
+   ============================================================ */
+
+:root {
+  /* ---------- Colors (dark, default) — COLOR.md §2 ---------- */
+  --bg-0: #121211;          /* page — warm near-black charcoal */
+  --bg-1: #1a1a18;          /* card / surface */
+  --bg-2: #242420;          /* elevated surface */
+  --bg-3: #2e2e29;          /* hover surface */
+
+  --fg-1: #f4f1ea;          /* primary text — warm cream */
+  --fg-2: #b9b3aa;          /* secondary text — warm taupe */
+  --fg-3: #837d72;          /* muted / captions */
+
+  --accent:       #d96832;                   /* softened copper — the signal */
+  --accent-hover: #e67e45;
+  --accent-press: #be5826;
+  --accent-soft:  rgba(217, 104, 50, 0.12);
+  --accent-rule:  rgba(217, 104, 50, 0.3);
+
+  --rule: #2a2a26;          /* hairline / dividers / borders */
+  --rule-strong: #3a3a34;   /* button borders / emphasis */
+
+  --ok:   #6fb58a;
+  --warn: #e0a93b;
+  --err:  #d85a52;
+
+  /* ---------- Typography (mapped to next/font variables) ----------
+     Per Step 2 decision: Inter = EN body + display; Geist Mono = mono
+     accents; Assistant = HE body. IBM Plex Mono (HE mono) deferred. */
+  --font-body:    var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono:    var(--font-geist-mono), "IBM Plex Mono", "Space Mono", ui-monospace, monospace;
+  --font-body-en: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono-en: var(--font-geist-mono), "IBM Plex Mono", "Space Mono", ui-monospace, monospace;
+  --font-body-he: var(--font-assistant), "Heebo", "Noto Sans Hebrew", system-ui, sans-serif;
+  --font-mono-he: var(--font-geist-mono), "Noto Sans Hebrew", ui-monospace, monospace; /* IBM Plex Mono deferred */
+
+  /* Sizes (rem, base 16) */
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.8125rem;
+  --fs-md: 0.875rem;
+  --fs-base: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.3125rem;
+  --fs-2xl: 1.75rem;
+  --fs-3xl: 2.25rem;
+  --fs-4xl: 3rem;
+  --fs-5xl: 4rem;
+  --fs-6xl: 5.5rem;
+
+  /* Line heights */
+  --lh-tight: 1.05;
+  --lh-snug: 1.2;
+  --lh-body: 1.55;
+  --lh-loose: 1.7;
+
+  /* Tracking */
+  --tr-tight: -0.02em;
+  --tr-tighter: -0.04em;
+  --tr-normal: 0;
+  --tr-wide: 0.04em;
+  --tr-ui: 0.08em;
+
+  /* Spacing (8pt) */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+  --s-10: 128px;
+
+  /* Radii */
+  --r-sm: 2px;
+  --r-md: 4px;
+  --r-lg: 8px;
+
+  /* Elevation (no shadows; light edge only) */
+  --edge-top: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --edge-top-strong: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --focus-ring: 0 0 0 2px var(--bg-0), 0 0 0 4px var(--accent);
+
+  /* Motion */
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --dur-fast: 120ms;
+  --dur: 160ms;
+  --dur-slow: 240ms;
+
+  /* Layout */
+  --content-max: 1200px;
+  --gutter: 24px;
+}
+
+/* ============================================================
+   Base elements
+   ============================================================ */
 *,
 *::before,
 *::after {
@@ -21,34 +128,355 @@
 }
 
 html {
-  /* Dark-first per approved direction. */
   color-scheme: dark;
   -webkit-text-size-adjust: 100%;
 }
 
 body {
   min-height: 100vh;
-  /* Neutral dark baseline; final palette comes from the design system. */
-  background-color: #141414;
-  color: #ededed;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
-    sans-serif;
-  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-0);
+  color: var(--fg-1);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-main {
-  padding-block: 4rem;
-  padding-inline: 1.5rem;
-}
-
-h1 {
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: var(--tr-tight);
+  line-height: var(--lh-snug);
+  text-wrap: balance;
 }
+
+h1 { font-size: var(--fs-5xl); line-height: var(--lh-tight); letter-spacing: var(--tr-tighter); }
+h2 { font-size: var(--fs-3xl); }
+h3 { font-size: var(--fs-2xl); }
+
+p { color: var(--fg-1); text-wrap: pretty; }
 
 a {
-  color: inherit;
+  color: var(--accent);
+  text-decoration: none;
+  text-underline-offset: 4px;
+  transition: color var(--dur) var(--ease);
+}
+a:hover { color: var(--accent-hover); text-decoration: underline; }
+
+/* Universal focus-visible — single source of truth (copper outline). */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+.btn:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--r-md);
+}
+
+code, kbd, samp, pre {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+
+hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
+
+::selection { background: var(--accent); color: var(--bg-0); }
+
+/* Screen-reader-only utility. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Respect reduced-motion. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   Bilingual EN/HE — subtree-scoped (HEBREW.md)
+   ------------------------------------------------------------
+   The shell stays English/LTR (html lang="en"); only the Hebrew
+   <main> opts in via lang="he" dir="rtl". So these target subtrees,
+   not <body>. Hebrew body never uses mono; Hebrew anchors to `start`.
+   ============================================================ */
+[lang="he"], [dir="rtl"] { direction: rtl; font-family: var(--font-body-he); }
+[lang="en"], [dir="ltr"] { direction: ltr; font-family: var(--font-body-en); }
+
+[lang="he"] :is(h1, h2, h3, h4, h5, h6),
+[dir="rtl"] :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-body-he);
+  letter-spacing: 0;
+  line-height: 1.15;
+}
+
+/* Body-text utilities set an explicit Latin family — re-assert Hebrew here so
+   it isn't overridden by their own font-family (e.g. .lead). */
+[lang="he"] :is(p, .lead),
+[dir="rtl"] :is(p, .lead) {
+  font-family: var(--font-body-he);
+}
+
+[dir="rtl"] :is(h1, h2, h3, p, .lead) { text-align: start; }
+
+[lang="he"] :is(.eyebrow, .label-mono, .section-index, .mono),
+[dir="rtl"] :is(.eyebrow, .label-mono, .section-index, .mono) {
+  font-family: var(--font-mono-he);
+}
+
+/* Mixed-direction helpers — keep LTR islands (URLs, versions, brand) intact. */
+.ltr-inline { direction: ltr; unicode-bidi: isolate; }
+.rtl-inline { direction: rtl; unicode-bidi: isolate; }
+
+/* ============================================================
+   Wordmark — inline written-brand treatment (HEBREW.md §1: Latin/LTR)
+   The bracketed [AI] is the brand; brackets + AI render in --accent.
+   ============================================================ */
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1em;
+  letter-spacing: var(--tr-tight);
+  color: var(--fg-1);
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  column-gap: 0;
+  white-space: nowrap;
+  line-height: 1;
+}
+.wordmark-y,
+.wordmark-r { font-weight: 600; color: var(--fg-1); letter-spacing: var(--tr-tight); }
+.wordmark-bracket { color: var(--accent); font-weight: 600; letter-spacing: -0.02em; }
+.wordmark-ai { color: var(--accent); font-weight: 700; letter-spacing: -0.02em; text-transform: uppercase; }
+
+.wordmark-group { display: inline-flex; align-items: center; column-gap: 0.6em; font-size: 1em; line-height: 1; }
+.wordmark-group .wordmark { font-size: inherit; }
+.wordmark-studio {
+  font-family: var(--font-mono);
+  font-size: 0.32em;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.6em;
+  color: var(--fg-3);
+  padding-inline-start: 0.6em;
+}
+
+/* ============================================================
+   Type utilities
+   ============================================================ */
+.eyebrow,
+.label-mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--tr-ui);
+  color: var(--fg-2);
+}
+
+.section-index {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tr-ui);
+  color: var(--fg-3);
+  display: inline-flex;
+  gap: var(--s-2);
+  align-items: center;
+}
+.section-index .num { color: var(--accent); }
+
+.lead {
+  font-family: var(--font-body);
+  font-size: var(--fs-xl);
+  line-height: var(--lh-snug);
+  color: var(--fg-2);
+  font-weight: 400;
+}
+
+/* Optional dot-grid utility (available; not applied globally to avoid clutter). */
+.dot-grid {
+  background-image: radial-gradient(circle, var(--fg-3) 1px, transparent 1.5px);
+  background-size: 24px 24px;
+  opacity: 0.18;
+}
+
+/* ============================================================
+   Buttons — bracketed, mono, no shadow (COLOR.md: one primary per view)
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 44px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-md);
+  font-weight: 500;
+  letter-spacing: var(--tr-wide);
+  text-transform: lowercase;
+  padding: 12px 18px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--fg-1);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.btn::before { content: "["; color: var(--fg-3); transition: color var(--dur) var(--ease); }
+.btn::after  { content: "]"; color: var(--fg-3); transition: color var(--dur) var(--ease); }
+.btn:hover { background: var(--bg-3); border-color: var(--fg-3); }
+.btn:hover::before, .btn:hover::after { color: var(--fg-2); }
+
+.btn-primary { background: var(--accent); color: var(--bg-0); border-color: var(--accent); }
+.btn-primary::before, .btn-primary::after { color: var(--bg-0); opacity: 0.6; }
+.btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn-primary:hover::before, .btn-primary:hover::after { color: var(--bg-0); opacity: 0.85; }
+.btn-primary:active { background: var(--accent-press); }
+
+.btn-ghost { border-color: transparent; }
+.btn-ghost:hover { background: var(--bg-3); border-color: var(--rule); }
+
+/* Keep "AI" uppercase inside lowercased button labels (brand rule). */
+.btn-cap { text-transform: none; }
+
+/* ============================================================
+   Shell — nav, layout, footer (adapted from site.css)
+   ============================================================ */
+.skip-link {
+  position: absolute;
+  inset-inline-start: var(--s-4);
+  top: -100px;
+  z-index: 100;
+  padding: 10px 14px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-md);
+  background: var(--bg-1);
+  color: var(--fg-1);
+  border: 1px solid var(--accent);
+  border-radius: var(--r-md);
+  text-decoration: none;
+  transition: top var(--dur) var(--ease);
+}
+.skip-link:focus { top: var(--s-4); outline: none; }
+
+/* Solid sticky nav — NO backdrop-filter (no glassmorphism). */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: var(--s-6);
+  padding: 18px var(--s-6);
+  background: var(--bg-0);
+  border-bottom: 1px solid var(--rule);
+}
+.brand { display: inline-flex; align-items: baseline; gap: 10px; text-decoration: none; }
+.brand .wordmark-group { font-size: 22px; }
+
+.nav-links { display: flex; align-items: center; gap: var(--s-5); margin-inline-start: auto; }
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--fg-2);
+  text-decoration: none;
+  transition: color var(--dur) var(--ease);
+}
+.nav-links a:hover { color: var(--fg-1); text-decoration: none; }
+.lang-toggle {
+  padding-inline-start: var(--s-4);
+  border-inline-start: 1px solid var(--rule);
+  color: var(--fg-1) !important;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.page { flex: 1 1 auto; padding-block: var(--s-9) var(--s-8); }
+
+/* Vertical stack for placeholder content (start-aligned in both directions). */
+.stack { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-4); }
+
+.site-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-5);
+  padding: var(--s-6);
+  max-width: var(--content-max);
+  margin: var(--s-8) auto 0;
+  border-top: 1px solid var(--rule);
+}
+.footer-l { display: flex; align-items: baseline; gap: var(--s-4); }
+.footer-l .wordmark-group { font-size: 18px; }
+.footer-tag {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tr-ui);
+  color: var(--fg-3);
+}
+.footer-r { display: flex; gap: var(--s-5); }
+.footer-r a {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--fg-2);
+  text-decoration: none;
+  transition: color var(--dur) var(--ease);
+}
+.footer-r a:hover { color: var(--fg-1); }
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 767px) {
+  .site-nav { flex-wrap: wrap; gap: 12px 16px; padding: 14px 20px; }
+  .brand .wordmark-group { font-size: 18px; }
+  .nav-links {
+    order: 3;
+    width: 100%;
+    margin: 0;
+    gap: 18px;
+    flex-wrap: wrap;
+    padding-top: 8px;
+    border-top: 1px solid var(--rule);
+  }
+  .page { padding-block: var(--s-8) var(--s-7); }
+  h1 { font-size: var(--fs-4xl); }
+  .site-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--s-4);
+    padding: var(--s-5) 20px;
+    margin-top: var(--s-7);
+  }
+  .footer-r { flex-wrap: wrap; gap: 16px 20px; }
 }
