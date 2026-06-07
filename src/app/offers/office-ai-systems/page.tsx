@@ -1,10 +1,8 @@
-import type { Metadata } from "next";
 import Container from "@/components/Container";
 import SectionLabel from "@/components/SectionLabel";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Office AI Systems",
-};
+export const metadata = pageMetadata("/offers/office-ai-systems");
 
 export default function OfficeAiSystemsPage() {
   return (

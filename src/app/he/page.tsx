@@ -1,11 +1,9 @@
-import type { Metadata } from "next";
 import Container from "@/components/Container";
 import SectionLabel from "@/components/SectionLabel";
 import Wordmark from "@/components/Wordmark";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "עברית",
-};
+export const metadata = pageMetadata("/he");
 
 export default function HomePageHe() {
   return (

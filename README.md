@@ -3,10 +3,11 @@
 The public website for **y[AI]r studio** (spoken: *Yair Studio*) — AI systems for real business
 workflows.
 
-Built with Next.js (App Router) + TypeScript. This repo currently holds the **visual foundation**:
-design tokens, bilingual (EN/HE) typography, base styles, and a shared shell (header/footer/
-container) sourced from the design system — wrapping placeholder routes. Homepage sections, final
-copy, and integrations are added in later steps.
+Built with Next.js (App Router) + TypeScript. This repo currently holds the **visual foundation**
+(design tokens, bilingual EN/HE typography, base styles, and a shared shell sourced from the design
+system), a **homepage v1** composing those tokens, and an **SEO/AEO/GEO foundation** (metadata,
+Open Graph, structured data, and public crawl endpoints). The remaining routes are still
+placeholders; final copy and integrations come in later steps.
 
 ## Visual source of truth
 
@@ -29,11 +30,13 @@ npm run start   # serve the production build (after `npm run build`)
 
 Install dependencies first with `npm install`.
 
-## Routes (placeholders)
+## Routes
+
+The homepage is built (v1); the remaining routes are still placeholders.
 
 | Path | Notes |
 |------|-------|
-| `/` | Home |
+| `/` | Home (v1) |
 | `/he` | Hebrew (RTL) |
 | `/workflows` | Stub |
 | `/offers` | Stub (index) |
@@ -42,6 +45,24 @@ Install dependencies first with `npm install`.
 | `/offers/content-ad-operations` | Offer |
 | `/about` | Stub |
 | `/contact` | Stub |
+
+## SEO / metadata
+
+[`src/lib/site.ts`](src/lib/site.ts) is the **single source** for `SITE_URL`, the canonical route
+list, per-page metadata (titles, descriptions, Open Graph, canonical + `hreflang`), and the service
+taxonomy. Each route's `metadata` export, the sitemap, robots, and `llms.txt` all derive from it —
+so the production domain and route list live in exactly one place.
+
+Public crawl endpoints:
+
+| Endpoint | Source |
+|----------|--------|
+| `/robots.txt` | `src/app/robots.ts` — allow-all (AI crawlers included) |
+| `/sitemap.xml` | `src/app/sitemap.ts` — all public routes |
+| `/llms.txt` | `src/app/llms.txt/route.ts` — factual brief for answer engines |
+
+> The production domain is not finalized — `SITE_URL` in `src/lib/site.ts` is a placeholder
+> (`https://yair.studio`); update it there before launch.
 
 ## Stack
 

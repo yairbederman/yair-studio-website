@@ -1,0 +1,143 @@
+import type { Metadata } from "next";
+
+/**
+ * Central site constants + canonical page list + metadata helper.
+ * Single source of truth for the production domain, the public route list,
+ * and the offer taxonomy. Consumed by every page's `metadata` export, plus
+ * sitemap.ts, robots.ts, llms.txt/route.ts, and JsonLd.tsx.
+ */
+
+// TODO: Confirm production domain before launch.
+export const SITE_URL = "https://yair.studio";
+
+export const SITE_NAME = "y[AI]r studio";
+export const SITE_ALT_NAME = "Yair Studio";
+export const SITE_DESCRIPTION =
+  "AI workflow systems for growing businesses: process mapping, dashboards, automations, and internal AI assistants with human approval where it matters.";
+
+/**
+ * Canonical offer taxonomy. Also displayed — with full card copy — in
+ * src/components/home/OffersSection.tsx; keep the two in sync.
+ */
+export const SERVICES = [
+  "AI Workflow Audit",
+  "Internal AI System",
+  "Dashboard + Automation Layer",
+  "Content & Ad Operations",
+] as const;
+
+type Locale = "en_US" | "he_IL";
+
+type PageDef = {
+  /** Route path, e.g. "/" or "/offers/office-ai-systems". */
+  path: string;
+  /** String title — the root layout template ("%s · y[AI]r studio") applies. */
+  title?: string;
+  /** Absolute title — bypasses the template (homepage only). */
+  absoluteTitle?: string;
+  /** Factual, restrained description. */
+  description: string;
+  /** OG locale; defaults to en_US. */
+  locale?: Locale;
+  /** Emit hreflang en/he alternates (home + /he only). */
+  langAlternates?: boolean;
+};
+
+/**
+ * Every public route, in sitemap order. Single source for per-page metadata,
+ * the sitemap, and llms.txt. Descriptions are factual placeholders describing
+ * the studio and its offers — they do not claim that thin pages are fully built.
+ */
+export const PAGES: PageDef[] = [
+  {
+    path: "/",
+    absoluteTitle: "y[AI]r studio — AI systems for real business workflows",
+    description: SITE_DESCRIPTION,
+    langAlternates: true,
+  },
+  {
+    path: "/he",
+    title: "עברית",
+    description:
+      "תצוגה מקדימה של y[AI]r studio — מערכות AI לתהליכי עבודה אמיתיים בעסקים. תוכן מלא בעברית יתווסף בשלב הבא.",
+    locale: "he_IL",
+    langAlternates: true,
+  },
+  {
+    path: "/workflows",
+    title: "Workflows",
+    description:
+      "y[AI]r studio's approach to business workflows: mapping where work gets stuck and turning scattered inputs into clear, AI-assisted next actions.",
+  },
+  {
+    path: "/offers",
+    title: "Offers",
+    description:
+      "y[AI]r studio's offers: an AI workflow audit, internal AI systems, a dashboard and automation layer, and content and ad operations — four entry points into one system.",
+  },
+  {
+    path: "/offers/office-ai-systems",
+    title: "Office AI Systems",
+    description:
+      "Internal AI systems from y[AI]r studio: practical assistants and workflow layers for meetings, tasks, email, knowledge search, reporting, and follow-up.",
+  },
+  {
+    path: "/offers/dashboards-automation",
+    title: "Dashboards & Automation",
+    description:
+      "A dashboard and automation layer from y[AI]r studio: connected to existing tools so teams can see what needs attention and trigger the right next action.",
+  },
+  {
+    path: "/offers/content-ad-operations",
+    title: "Content & Ad Operations",
+    description:
+      "A content and ad operations system from y[AI]r studio: turning raw ideas, calls, assets, and performance data into structured content or ad experiments.",
+  },
+  {
+    path: "/about",
+    title: "About",
+    description:
+      "About y[AI]r studio — AI workflow systems for growing service businesses, built around human-in-the-loop automation.",
+  },
+  {
+    path: "/contact",
+    title: "Contact",
+    description:
+      "Contact y[AI]r studio to map one business workflow and scope a practical, human-in-the-loop AI system.",
+  },
+];
+
+function buildMetadata(p: PageDef): Metadata {
+  const locale: Locale = p.locale ?? "en_US";
+  const alternateLocale: Locale = locale === "he_IL" ? "en_US" : "he_IL";
+  const ogTitle = p.absoluteTitle ?? p.title;
+
+  return {
+    title: p.absoluteTitle ? { absolute: p.absoluteTitle } : p.title,
+    description: p.description,
+    alternates: {
+      canonical: p.path,
+      ...(p.langAlternates
+        ? { languages: { "en-US": "/", "he-IL": "/he" } }
+        : {}),
+    },
+    openGraph: {
+      type: "website",
+      siteName: SITE_NAME,
+      title: ogTitle,
+      description: p.description,
+      url: p.path,
+      locale,
+      alternateLocale,
+    },
+  };
+}
+
+/** Resolve a route's full Metadata from the canonical PAGES list. */
+export function pageMetadata(path: string): Metadata {
+  const page = PAGES.find((p) => p.path === path);
+  if (!page) {
+    throw new Error(`pageMetadata: no PAGES entry for "${path}"`);
+  }
+  return buildMetadata(page);
+}

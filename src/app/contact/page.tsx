@@ -1,10 +1,8 @@
-import type { Metadata } from "next";
 import Container from "@/components/Container";
 import SectionLabel from "@/components/SectionLabel";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Contact",
-};
+export const metadata = pageMetadata("/contact");
 
 export default function ContactPage() {
   return (
