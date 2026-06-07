@@ -1,0 +1,54 @@
+/*
+ * Foundation reset + base styles only.
+ *
+ * The full design system — warm charcoal + softened copper, dark-first,
+ * technical/schematic typography — lives in the design-system source of truth
+ * (https://github.com/yairbederman/yair-design-system) and will be implemented
+ * in a later step. Keep this file minimal until then.
+ *
+ * RTL note: prefer logical properties (padding-inline, margin-block, inset-*)
+ * over physical ones so Hebrew/RTL routes (e.g. /he) work without overrides.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  /* Dark-first per approved direction. */
+  color-scheme: dark;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  /* Neutral dark baseline; final palette comes from the design system. */
+  background-color: #141414;
+  color: #ededed;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  padding-block: 4rem;
+  padding-inline: 1.5rem;
+}
+
+h1 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: inherit;
+}
