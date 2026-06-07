@@ -15,7 +15,7 @@
    Deliberate, approved deviations from the source:
      - Display family = Inter (not JetBrains Mono).
      - Solid nav background (no backdrop-filter / glassmorphism).
-     - Light/print theme + full homepage section styles omitted.
+     - Light/print theme omitted (homepage section styles added in Step 3, below).
      - IBM Plex Mono (Hebrew mono) deferred — graceful fallback below.
    Rule: never hardcode hex in components — always use var(--*).
    ============================================================ */
@@ -479,4 +479,210 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
     margin-top: var(--s-7);
   }
   .footer-r { flex-wrap: wrap; gap: 16px 20px; }
+}
+
+/* ============================================================
+   Homepage sections (Step 3)
+   ------------------------------------------------------------
+   Composes the Step 2 tokens/components into the five homepage
+   sections. Tokens only — no hex, no new colors. These styles live
+   here to match the design-system site.css structure (the globals
+   header notes the homepage section CSS was "omitted" in Step 2).
+   ============================================================ */
+
+/* Homepage main wrapper — grows to push the footer down. */
+.home { flex: 1 1 auto; }
+
+/* Section rhythm — hairline-separated bands; each owns its padding. */
+.section { padding-block: var(--s-9); border-top: 1px solid var(--rule); }
+.section-head { margin-bottom: var(--s-7); }
+.section-intro {
+  margin-top: var(--s-3);
+  max-width: 60ch;
+  color: var(--fg-2);
+  font-size: var(--fs-lg);
+}
+
+/* Shared card title/description (problems, method, offers) — defined once. */
+.card-title { font-size: var(--fs-lg); font-weight: 600; color: var(--fg-1); }
+.card-desc { margin-top: var(--s-2); color: var(--fg-2); }
+
+/* ---------- Hero ---------- */
+.hero { padding-block: var(--s-9) var(--s-8); }
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: var(--s-8);
+  align-items: center;
+}
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-5);
+}
+.hero h1 { font-size: var(--fs-4xl); }
+.hero-lead { line-height: var(--lh-body); max-width: 52ch; }
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-2);
+}
+
+/* Hero schematic — decorative process spine (aria-hidden, hidden on mobile). */
+.hero-schematic { display: flex; flex-direction: column; gap: var(--s-5); }
+.sch-cap {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tr-ui);
+  color: var(--fg-3);
+}
+.sch-flow { position: relative; list-style: none; margin: 0; padding: 0; }
+.sch-flow::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  bottom: 14px;
+  inset-inline-start: 7px;
+  width: 1px;
+  background: var(--rule-strong);
+}
+.sch-node {
+  position: relative;
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  column-gap: var(--s-4);
+  padding-block: var(--s-3);
+}
+.sch-marker { display: flex; justify-content: center; }
+.sch-dot {
+  position: relative;
+  z-index: 1;
+  width: 9px;
+  height: 9px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: var(--bg-0);
+  border: 1px solid var(--fg-3);
+}
+.sch-text { display: flex; flex-direction: column; gap: 2px; }
+.sch-label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  letter-spacing: var(--tr-wide);
+  color: var(--fg-2);
+}
+.sch-sub {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--tr-wide);
+  color: var(--fg-3);
+}
+.sch-node--human .sch-dot {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.sch-node--human .sch-label { color: var(--accent); }
+.sch-node--out .sch-label { color: var(--fg-1); }
+
+/* ---------- Problems ---------- */
+.problems-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--s-4);
+}
+.problem-card {
+  background: var(--bg-1);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  padding: var(--s-6);
+  box-shadow: var(--edge-top);
+}
+
+/* ---------- Method ---------- */
+.method { scroll-margin-top: var(--s-9); }
+.method-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--s-5);
+}
+.method-step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--s-4);
+  padding: var(--s-5);
+  border: 1px solid transparent;
+  border-radius: var(--r-lg);
+}
+.method-step-num {
+  font-family: var(--font-mono);
+  font-size: var(--fs-md);
+  letter-spacing: var(--tr-ui);
+  color: var(--fg-3);
+}
+.method-step.is-human {
+  background: var(--accent-soft);
+  border-color: var(--accent-rule);
+}
+.method-step.is-human .method-step-num { color: var(--accent); }
+
+/* ---------- Offers ---------- */
+.offers-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--s-4);
+}
+.offer-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-1);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  padding: var(--s-6);
+  box-shadow: var(--edge-top);
+}
+.offer-card .card-desc { flex: 1 1 auto; }
+.offer-card-foot { margin-top: var(--s-5); }
+
+/* ---------- Final CTA band ---------- */
+.final-cta-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-4);
+  background: var(--bg-1);
+  border: 1px solid var(--rule);
+  border-top: 2px solid var(--accent);
+  border-radius: var(--r-lg);
+  padding: var(--s-8);
+  box-shadow: var(--edge-top);
+}
+.final-cta-inner h2 { font-size: var(--fs-2xl); max-width: 24ch; }
+.final-cta-body { max-width: 60ch; color: var(--fg-2); }
+.final-cta-actions { margin-top: var(--s-2); }
+
+/* ---------- Homepage responsive ---------- */
+@media (max-width: 767px) {
+  .section { padding-block: var(--s-8); }
+  .section-head { margin-bottom: var(--s-6); }
+  .hero { padding-block: var(--s-8) var(--s-7); }
+  .hero-inner { grid-template-columns: 1fr; gap: var(--s-7); }
+  .hero-schematic { display: none; }
+  .hero h1 { font-size: var(--fs-3xl); }
+  .problems-grid,
+  .method-list,
+  .offers-grid { grid-template-columns: 1fr; }
+  .final-cta-inner { padding: var(--s-6); }
 }

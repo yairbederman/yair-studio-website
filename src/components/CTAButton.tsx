@@ -26,6 +26,15 @@ export default function CTAButton({
   children: ReactNode;
 }) {
   if (href) {
+    // In-page anchors (href="#id") use a plain <a>: next/link does not reliably
+    // perform the hash scroll for pure-hash hrefs in the App Router.
+    if (href.startsWith("#")) {
+      return (
+        <a href={href} className={classes(variant)}>
+          {children}
+        </a>
+      );
+    }
     return (
       <Link href={href} className={classes(variant)}>
         {children}

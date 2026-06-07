@@ -1,22 +1,17 @@
-import Container from "@/components/Container";
-import SectionLabel from "@/components/SectionLabel";
-import Wordmark from "@/components/Wordmark";
-import CTAButton from "@/components/CTAButton";
+import HeroSection from "@/components/home/HeroSection";
+import ProblemsSection from "@/components/home/ProblemsSection";
+import MethodSection from "@/components/home/MethodSection";
+import OffersSection from "@/components/home/OffersSection";
+import FinalCTA from "@/components/home/FinalCTA";
 
 export default function HomePage() {
   return (
-    <main id="main" className="page">
-      <Container>
-        <div className="stack">
-          <SectionLabel>Home</SectionLabel>
-          <h1>
-            <Wordmark />
-          </h1>
-          <CTAButton href="/contact" variant="primary">
-            Contact
-          </CTAButton>
-        </div>
-      </Container>
+    <main id="main" className="home">
+      <HeroSection />
+      <ProblemsSection />
+      <MethodSection />
+      <OffersSection />
+      <FinalCTA />
     </main>
   );
 }

@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Local, gitignored tooling — not project source (e.g. the vendored
+    // Impeccable design-critique skill). Keeps lint focused on src/.
+    ".claude/**",
   ]),
 ]);
 
