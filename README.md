@@ -5,9 +5,10 @@ workflows.
 
 Built with Next.js (App Router) + TypeScript. This repo currently holds the **visual foundation**
 (design tokens, bilingual EN/HE typography, base styles, and a shared shell sourced from the design
-system), a **homepage v1** composing those tokens, and an **SEO/AEO/GEO foundation** (metadata,
-Open Graph, structured data, and public crawl endpoints). The remaining routes are still
-placeholders; final copy and integrations come in later steps.
+system), a **homepage v1** composing those tokens, **offer pages** (an overview plus four offers),
+and an **SEO/AEO/GEO foundation** (metadata, Open Graph, structured data, and public crawl
+endpoints). The remaining routes (`/workflows`, `/about`, `/contact`) are still placeholders; final
+copy and integrations come in later steps.
 
 ## Visual source of truth
 
@@ -32,15 +33,16 @@ Install dependencies first with `npm install`.
 
 ## Routes
 
-The homepage is built (v1); the remaining routes are still placeholders.
+The homepage and offer pages are built; the remaining routes are still placeholders.
 
 | Path | Notes |
 |------|-------|
 | `/` | Home (v1) |
 | `/he` | Hebrew (RTL) |
 | `/workflows` | Stub |
-| `/offers` | Stub (index) |
-| `/offers/office-ai-systems` | Offer |
+| `/offers` | Offers overview |
+| `/offers/ai-workflow-audit` | Offer (entry / first step) |
+| `/offers/internal-ai-systems` | Offer |
 | `/offers/dashboards-automation` | Offer |
 | `/offers/content-ad-operations` | Offer |
 | `/about` | Stub |

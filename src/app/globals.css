@@ -686,3 +686,45 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   .offers-grid { grid-template-columns: 1fr; }
   .final-cta-inner { padding: var(--s-6); }
 }
+
+/* ============================================================
+   Offer pages (Step 4)
+   ------------------------------------------------------------
+   Detail + overview offer pages. Reuses the homepage section,
+   method-list, card, and final-cta classes; adds only a single-
+   column hero and a neutral feature-card grid. Tokens only — no hex.
+   ============================================================ */
+
+/* Single-column offer hero (no schematic) — reuses .hero-copy/.hero-lead. */
+.offer-hero { padding-block: var(--s-9) var(--s-7); }
+.offer-hero h1 { font-size: var(--fs-4xl); }
+
+/* Neutral feature grid — who it's for / problems / deliverables / what stays
+   human. Distinct from the homepage .offer-card (a CTA card). */
+.feature-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--s-4);
+}
+.feature-card {
+  background: var(--bg-1);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  padding: var(--s-6);
+  box-shadow: var(--edge-top);
+}
+/* Approval-principle emphasis — mirrors .method-step.is-human (copper). */
+.feature-card.is-human {
+  background: var(--accent-soft);
+  border-color: var(--accent-rule);
+}
+.feature-card.is-human .card-title { color: var(--accent); }
+
+@media (max-width: 767px) {
+  .offer-hero { padding-block: var(--s-8) var(--s-6); }
+  .offer-hero h1 { font-size: var(--fs-3xl); }
+  .feature-grid { grid-template-columns: 1fr; }
+}

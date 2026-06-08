@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OFFERS } from "@/lib/offers";
 
 /**
  * Central site constants + canonical page list + metadata helper.
@@ -16,20 +17,16 @@ export const SITE_DESCRIPTION =
   "AI workflow systems for growing businesses: process mapping, dashboards, automations, and internal AI assistants with human approval where it matters.";
 
 /**
- * Canonical offer taxonomy. Also displayed — with full card copy — in
- * src/components/home/OffersSection.tsx; keep the two in sync.
+ * Canonical offer taxonomy (schema.org Service names). Derived from the single
+ * OFFERS list (src/lib/offers.ts) so the offer names live in exactly one place.
+ * Consumed by JsonLd.tsx and llms.txt/route.ts.
  */
-export const SERVICES = [
-  "AI Workflow Audit",
-  "Internal AI System",
-  "Dashboard + Automation Layer",
-  "Content & Ad Operations",
-] as const;
+export const SERVICES: readonly string[] = OFFERS.map((o) => o.serviceName);
 
 type Locale = "en_US" | "he_IL";
 
 type PageDef = {
-  /** Route path, e.g. "/" or "/offers/office-ai-systems". */
+  /** Route path, e.g. "/" or "/offers/internal-ai-systems". */
   path: string;
   /** String title — the root layout template ("%s · y[AI]r studio") applies. */
   title?: string;
@@ -76,8 +73,14 @@ export const PAGES: PageDef[] = [
       "y[AI]r studio's offers: an AI workflow audit, internal AI systems, a dashboard and automation layer, and content and ad operations — four entry points into one system.",
   },
   {
-    path: "/offers/office-ai-systems",
-    title: "Office AI Systems",
+    path: "/offers/ai-workflow-audit",
+    title: "AI Workflow Audit",
+    description:
+      "An AI workflow audit from y[AI]r studio: a focused review of one business process — owners, inputs and outputs, bottlenecks, automation candidates, and what should stay human — before anything is built.",
+  },
+  {
+    path: "/offers/internal-ai-systems",
+    title: "Internal AI Systems",
     description:
       "Internal AI systems from y[AI]r studio: practical assistants and workflow layers for meetings, tasks, email, knowledge search, reporting, and follow-up.",
   },
