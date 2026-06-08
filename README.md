@@ -7,8 +7,10 @@ Built with Next.js (App Router) + TypeScript. This repo currently holds the **vi
 (design tokens, bilingual EN/HE typography, base styles, and a shared shell sourced from the design
 system), a **homepage v1** composing those tokens, **offer pages** (an overview plus four offers),
 and an **SEO/AEO/GEO foundation** (metadata, Open Graph, structured data, and public crawl
-endpoints). The remaining routes (`/workflows`, `/about`, `/contact`) are still placeholders; final
-copy and integrations come in later steps.
+endpoints). A launch-readiness pass then built out `/workflows`, `/about`, and `/contact`, added a
+reusable workflow-map artifact, active nav state, and a branded Open Graph image. `/contact` uses a
+visible placeholder for the contact channel and is **not ready for public launch** until a real
+contact channel is added.
 
 ## Visual source of truth
 
@@ -33,20 +35,22 @@ Install dependencies first with `npm install`.
 
 ## Routes
 
-The homepage and offer pages are built; the remaining routes are still placeholders.
+All public routes are built. `/he` remains a Hebrew preview; `/contact` ships with a placeholder
+contact address and is not yet launch-ready.
 
 | Path | Notes |
 |------|-------|
 | `/` | Home (v1) |
-| `/he` | Hebrew (RTL) |
-| `/workflows` | Stub |
+| `/he` | Hebrew (RTL) preview |
+| `/workflows` | Approach + worked example (workflow-map artifact) |
 | `/offers` | Offers overview |
-| `/offers/ai-workflow-audit` | Offer (entry / first step) |
+| `/offers/ai-workflow-audit` | Offer (entry / first step) — includes a workflow-map artifact |
 | `/offers/internal-ai-systems` | Offer |
 | `/offers/dashboards-automation` | Offer |
 | `/offers/content-ad-operations` | Offer |
-| `/about` | Stub |
-| `/contact` | Stub |
+| `/about` | About the studio |
+| `/contact` | Contact (placeholder — not launch-ready until a real contact channel is added) |
+| `/opengraph-image` | Generated 1200×630 branded OG image (`next/og`) |
 
 ## SEO / metadata
 
@@ -74,5 +78,7 @@ Assistant — Hebrew body), not a CDN `@import`. Hebrew/RTL is supported from th
 properties, subtree-scoped `[lang]`/`[dir]` selectors, `dir="rtl"` on `/he`, `<bdi>` for the wordmark).
 
 Shared components live in `src/components/` (`Container`, `SiteHeader`, `SiteFooter`, `SectionLabel`,
-`CTAButton`, `Wordmark`, `LangToggle`). Design tokens are defined once in `src/app/globals.css` —
-never hardcode hex; reference `var(--*)`.
+`CTAButton`, `Wordmark`, `LangToggle`, `NavLinks` — active-state nav, `WorkflowMap` — the schematic
+process-spine artifact). Design tokens are defined once in `src/app/globals.css` — never hardcode hex
+in UI; reference `var(--*)`. The one allowed exception is `src/lib/brand.ts`, which mirrors the token
+literals for the OG image because `next/og` (Satori) cannot read CSS variables.

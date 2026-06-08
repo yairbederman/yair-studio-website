@@ -3,6 +3,7 @@ import OfferSection from "@/components/offers/OfferSection";
 import OfferCardGrid from "@/components/offers/OfferCardGrid";
 import OfferSteps from "@/components/offers/OfferSteps";
 import OfferCTA from "@/components/offers/OfferCTA";
+import WorkflowMap from "@/components/WorkflowMap";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata("/offers/ai-workflow-audit");
@@ -84,6 +85,14 @@ const STEPS = [
   },
 ];
 
+const EXAMPLE_MAP = [
+  { label: "Current process", sub: "as it runs today" },
+  { label: "Bottlenecks marked" },
+  { label: "Automation candidates" },
+  { label: "Human review", human: true },
+  { label: "Sequenced roadmap", out: true },
+] as const;
+
 const HUMAN = [
   {
     title: "The decision to build",
@@ -122,6 +131,18 @@ export default function AiWorkflowAuditPage() {
         intro="A clear picture of one workflow and a practical plan — not a finished build."
       >
         <OfferCardGrid items={DELIVERABLES} />
+      </OfferSection>
+
+      <OfferSection
+        id="example"
+        title="What a workflow map looks like"
+        intro="A simplified example of the artifact you receive, not a client case study."
+      >
+        <WorkflowMap
+          caption="Example workflow map"
+          ariaLabel="Example of a delivered workflow map"
+          nodes={EXAMPLE_MAP}
+        />
       </OfferSection>
 
       <OfferSection id="how" title="How it works">
