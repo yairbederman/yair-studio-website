@@ -36,8 +36,11 @@ yarn-error.log*
 # vercel
 .vercel
 
-# local tooling (Claude Code preview/launch config, etc.)
+# local tooling (Claude Code preview/launch config, vendored skills, etc.)
 .claude/
+.agents/
+.impeccable/
+.playwright-cli/
 
 # typescript
 *.tsbuildinfo

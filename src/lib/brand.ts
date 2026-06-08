@@ -19,7 +19,7 @@ export const BRAND_COLORS = {
   surface: "#1a1a18", // --bg-1  card / surface
   fg: "#f4f1ea", // --fg-1  primary text (warm cream)
   fgSecondary: "#b9b3aa", // --fg-2  secondary text (warm taupe)
-  fgMuted: "#837d72", // --fg-3  muted / captions
+  fgMuted: "#8a847a", // --fg-3  muted / captions (≥4.5:1 on --bg-1)
   accent: "#d96832", // --accent  softened copper (the signal)
   rule: "#2a2a26", // --rule  hairline / dividers
 } as const;

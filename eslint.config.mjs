@@ -15,6 +15,9 @@ const eslintConfig = defineConfig([
     // Local, gitignored tooling — not project source (e.g. the vendored
     // Impeccable design-critique skill). Keeps lint focused on src/.
     ".claude/**",
+    ".agents/**",
+    ".impeccable/**",
+    ".playwright-cli/**",
   ]),
 ]);
 

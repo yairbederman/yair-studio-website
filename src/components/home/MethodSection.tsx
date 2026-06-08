@@ -1,31 +1,17 @@
 import Container from "@/components/Container";
+import type { HomeContent } from "@/content/home";
 
 /**
  * How I help — method, not hype. Numbered steps; the final "keep humans in
  * control" step is emphasized in copper so the approval principle reads as
  * built-in, not bolted on. id="how-i-work" is the hero secondary-CTA anchor.
+ * Copy from the model; the `human` flag drives the copper emphasis.
  */
-const STEPS = [
-  {
-    title: "Map the workflow",
-    desc: "We identify the real process, owners, inputs, outputs, bottlenecks, and risk points.",
-  },
-  {
-    title: "Connect the tools",
-    desc: "We use the systems already in the business — email, calendar, CRM, documents, spreadsheets, APIs, or databases.",
-  },
-  {
-    title: "Build the operating layer",
-    desc: "Dashboards, automations, summaries, alerts, and AI assistants are added where they reduce friction.",
-  },
-  {
-    title: "Keep humans in control",
-    desc: "Approvals, review points, and clear handoff rules stay built into the system.",
-    human: true,
-  },
-] as const;
-
-export default function MethodSection() {
+export default function MethodSection({
+  content,
+}: {
+  content: HomeContent["method"];
+}) {
   return (
     <section
       className="section method"
@@ -34,13 +20,13 @@ export default function MethodSection() {
     >
       <Container>
         <div className="section-head">
-          <h2 id="method-title">How I work</h2>
+          <h2 id="method-title">{content.title}</h2>
         </div>
         <ol className="method-list">
-          {STEPS.map((step, i) => (
+          {content.steps.map((step, i) => (
             <li
               key={step.title}
-              className={"method-step" + ("human" in step ? " is-human" : "")}
+              className={"method-step" + (step.human ? " is-human" : "")}
             >
               <span className="method-step-num" aria-hidden="true">
                 {String(i + 1).padStart(2, "0")}

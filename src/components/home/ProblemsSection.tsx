@@ -1,40 +1,32 @@
 import Container from "@/components/Container";
+import type { HomeContent } from "@/content/home";
 
-/** Problems this fixes — name the business pain plainly. */
-const PROBLEMS = [
-  {
-    title: "Scattered tools",
-    desc: "Tasks, notes, emails, files, and customer context live in different places.",
-  },
-  {
-    title: "Manual follow-up",
-    desc: "People remember what to do by memory, chat threads, or repeated status meetings.",
-  },
-  {
-    title: "No operational visibility",
-    desc: "Leaders cannot quickly see what is stuck, overdue, risky, or waiting for a decision.",
-  },
-  {
-    title: "AI experiments that do not survive",
-    desc: "Prompts and demos look useful, but never become a reliable workflow.",
-  },
-] as const;
-
-export default function ProblemsSection() {
+/**
+ * Problems this fixes — named plainly. Rendered as a hairline .panel-list (the
+ * existing treatment, reused) rather than a card grid, so it doesn't repeat the
+ * 2-col card rhythm of Offers. The term emphasis is Problems-scoped (.problem-term)
+ * and never touches the shared .card-title/.card-desc classes.
+ */
+export default function ProblemsSection({
+  content,
+}: {
+  content: HomeContent["problems"];
+}) {
   return (
     <section className="section problems" aria-labelledby="problems-title">
       <Container>
         <div className="section-head">
-          <h2 id="problems-title">Where work gets stuck</h2>
+          <h2 id="problems-title">{content.title}</h2>
         </div>
-        <ul className="problems-grid">
-          {PROBLEMS.map((p) => (
-            <li key={p.title} className="problem-card">
-              <h3 className="card-title">{p.title}</h3>
-              <p className="card-desc">{p.desc}</p>
-            </li>
-          ))}
-        </ul>
+        <div className="panel-list problems-list">
+          <ul>
+            {content.items.map((p) => (
+              <li key={p.title}>
+                <strong className="problem-term">{p.title}.</strong> {p.desc}
+              </li>
+            ))}
+          </ul>
+        </div>
       </Container>
     </section>
   );

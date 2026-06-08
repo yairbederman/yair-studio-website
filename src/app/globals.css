@@ -1,16 +1,16 @@
 /* ============================================================
    y[AI]r studio — website foundation (Step 2)
    ------------------------------------------------------------
-   Adapted from the design-system SOURCE OF TRUTH — ROOT files only:
+   This file is the source of truth for the site's visual tokens and base
+   styles. The language originated in the design-system repo — now a historical
+   origin and optional upstream reference, NOT a gate:
      https://github.com/yairbederman/yair-design-system
-       - colors_and_type.css   (tokens, base elements, utilities)
-       - ui_kits/website/site.css  (shell: nav, footer, responsive, RTL)
-       - COLOR.md / HEBREW.md / fonts/README.md  (usage + RTL rules)
-   The frozen design_handoff_yair_studio/ snapshot is NOT a source.
+   When the two diverge, this file wins for anything site-specific. (The frozen
+   design_handoff_yair_studio/ snapshot was never a source.)
 
-   Fonts are loaded via next/font (see src/app/layout.tsx), which sets
-   --font-inter / --font-geist-mono / --font-assistant on <html>. The
-   design system's CDN @import is intentionally NOT used.
+   Fonts are loaded via next/font (see src/lib/fonts.ts, imported by both root
+   layouts), which sets --font-inter / --font-geist-mono / --font-assistant on
+   <html>. The design system's CDN @import is intentionally NOT used.
 
    Deliberate, approved deviations from the source:
      - Display family = Inter (not JetBrains Mono).
@@ -29,7 +29,7 @@
 
   --fg-1: #f4f1ea;          /* primary text — warm cream */
   --fg-2: #b9b3aa;          /* secondary text — warm taupe */
-  --fg-3: #837d72;          /* muted / captions */
+  --fg-3: #8a847a;          /* muted / captions — ≥4.5:1 on --bg-1 (≈4.70:1) for WCAG AA */
 
   --accent:       #d96832;                   /* softened copper — the signal */
   --accent-hover: #e67e45;
@@ -216,11 +216,14 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 }
 
 /* ============================================================
-   Bilingual EN/HE — subtree-scoped (HEBREW.md)
+   Bilingual EN/HE (HEBREW.md)
    ------------------------------------------------------------
-   The shell stays English/LTR (html lang="en"); only the Hebrew
-   <main> opts in via lang="he" dir="rtl". So these target subtrees,
-   not <body>. Hebrew body never uses mono; Hebrew anchors to `start`.
+   The site has two root layouts: the English root is html lang="en"
+   (LTR); the Hebrew root (/he) is html lang="he" dir="rtl". These
+   selectors therefore apply at the DOCUMENT level on /he (and to any
+   inline [dir] island elsewhere) — the shell is no longer English-only.
+   Hebrew body never uses mono: every Hebrew-bearing element resolves to
+   the Hebrew family, and Hebrew text anchors to `start`.
    ============================================================ */
 [lang="he"], [dir="rtl"] { direction: rtl; font-family: var(--font-body-he); }
 [lang="en"], [dir="ltr"] { direction: ltr; font-family: var(--font-body-en); }
@@ -232,19 +235,18 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   line-height: 1.15;
 }
 
-/* Body-text utilities set an explicit Latin family — re-assert Hebrew here so
-   it isn't overridden by their own font-family (e.g. .lead). */
-[lang="he"] :is(p, .lead),
-[dir="rtl"] :is(p, .lead) {
+/* Many elements hardcode a Latin family (var(--font-body) on chrome, or
+   var(--font-mono) on labels/diagram captions). Re-assert the Hebrew family in
+   RTL for every Hebrew-bearing element so none falls back to a Latin font. The
+   Latin-digit step numbers (.method-step-num) deliberately stay mono. */
+[lang="he"] :is(p, .lead, .eyebrow, .label-mono, .section-index, .mono, .btn,
+  .nav-links a, .footer-r a, .footer-tag, .panel-list li, .sch-cap, .sch-label, .sch-sub),
+[dir="rtl"] :is(p, .lead, .eyebrow, .label-mono, .section-index, .mono, .btn,
+  .nav-links a, .footer-r a, .footer-tag, .panel-list li, .sch-cap, .sch-label, .sch-sub) {
   font-family: var(--font-body-he);
 }
 
 [dir="rtl"] :is(h1, h2, h3, p, .lead) { text-align: start; }
-
-[lang="he"] :is(.eyebrow, .label-mono, .section-index, .mono),
-[dir="rtl"] :is(.eyebrow, .label-mono, .section-index, .mono) {
-  font-family: var(--font-mono-he);
-}
 
 /* Mixed-direction helpers — keep LTR islands (URLs, versions, brand) intact. */
 .ltr-inline { direction: ltr; unicode-bidi: isolate; }
@@ -325,18 +327,18 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 }
 
 /* ============================================================
-   Buttons — bracketed, mono, no shadow (COLOR.md: one primary per view)
+   Buttons — body font, no shadow. The bracketed [ ] signature is
+   reserved for the single primary action per view (COLOR.md: one
+   primary per view); standard buttons read as plain UI.
    ============================================================ */
 .btn {
   display: inline-flex;
   align-items: center;
   gap: var(--s-2);
   min-height: 44px;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--fs-md);
   font-weight: 500;
-  letter-spacing: var(--tr-wide);
-  text-transform: lowercase;
   padding: 12px 18px;
   border: 1px solid var(--rule-strong);
   border-radius: var(--r-md);
@@ -346,22 +348,18 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   text-decoration: none;
   transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
-.btn::before { content: "["; color: var(--fg-3); transition: color var(--dur) var(--ease); }
-.btn::after  { content: "]"; color: var(--fg-3); transition: color var(--dur) var(--ease); }
 .btn:hover { background: var(--bg-3); border-color: var(--fg-3); }
-.btn:hover::before, .btn:hover::after { color: var(--fg-2); }
 
 .btn-primary { background: var(--accent); color: var(--bg-0); border-color: var(--accent); }
-.btn-primary::before, .btn-primary::after { color: var(--bg-0); opacity: 0.6; }
+/* Bracketed [ ] signature — primary action only. */
+.btn-primary::before { content: "["; color: var(--bg-0); opacity: 0.6; transition: opacity var(--dur) var(--ease); }
+.btn-primary::after  { content: "]"; color: var(--bg-0); opacity: 0.6; transition: opacity var(--dur) var(--ease); }
 .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
-.btn-primary:hover::before, .btn-primary:hover::after { color: var(--bg-0); opacity: 0.85; }
+.btn-primary:hover::before, .btn-primary:hover::after { opacity: 0.85; }
 .btn-primary:active { background: var(--accent-press); }
 
 .btn-ghost { border-color: transparent; }
 .btn-ghost:hover { background: var(--bg-3); border-color: var(--rule); }
-
-/* Keep "AI" uppercase inside lowercased button labels (brand rule). */
-.btn-cap { text-transform: none; }
 
 /* ============================================================
    Shell — nav, layout, footer (adapted from site.css)
@@ -400,7 +398,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 
 .nav-links { display: flex; align-items: center; gap: var(--s-5); margin-inline-start: auto; }
 .nav-links a {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--fs-sm);
   color: var(--fg-2);
   text-decoration: none;
@@ -455,7 +453,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 }
 .footer-r { display: flex; gap: var(--s-5); }
 .footer-r a {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--fs-sm);
   color: var(--fg-2);
   text-decoration: none;
@@ -598,21 +596,10 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 .sch-node--out .sch-label { color: var(--fg-1); }
 
 /* ---------- Problems ---------- */
-.problems-grid {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--s-4);
-}
-.problem-card {
-  background: var(--bg-1);
-  border: 1px solid var(--rule);
-  border-radius: var(--r-lg);
-  padding: var(--s-6);
-  box-shadow: var(--edge-top);
-}
+/* A hairline .panel-list (reused), not a card grid — breaks the 2-col card
+   rhythm shared with Offers. The .problem-term emphasis is Problems-scoped and
+   deliberately never touches the shared .card-title / .card-desc classes. */
+.problems-list .problem-term { color: var(--fg-1); font-weight: 600; }
 
 /* ---------- Method ---------- */
 .method { scroll-margin-top: var(--s-9); }
@@ -690,7 +677,6 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   .hero-inner { grid-template-columns: 1fr; gap: var(--s-7); }
   .hero-schematic { display: none; }
   .hero h1 { font-size: var(--fs-3xl); }
-  .problems-grid,
   .method-list,
   .offers-grid { grid-template-columns: 1fr; }
   .final-cta-inner { padding: var(--s-6); }

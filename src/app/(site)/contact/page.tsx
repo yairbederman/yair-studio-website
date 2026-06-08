@@ -2,7 +2,8 @@ import PageHero from "@/components/PageHero";
 import OfferSection from "@/components/offers/OfferSection";
 import OfferCardGrid from "@/components/offers/OfferCardGrid";
 import OfferSteps from "@/components/offers/OfferSteps";
-import { pageMetadata } from "@/lib/site";
+import CTAButton from "@/components/CTAButton";
+import { pageMetadata, CONTACT_EMAIL, CONTACT_MAILTO } from "@/lib/site";
 
 export const metadata = pageMetadata("/contact");
 
@@ -114,11 +115,16 @@ export default function ContactPage() {
       <OfferSection id="reach" title="How to reach out">
         <div className="panel-list">
           <span className="sch-cap">Contact</span>
-          {/* TODO: add the real contact channel (email / booking link / etc.)
-              before public launch. /contact is structurally complete but NOT
-              launch-ready until this is filled in. No contact method is
-              fabricated. */}
-          <p>Contact channel to be added before launch.</p>
+          <p>
+            Email <a href={CONTACT_MAILTO}>{CONTACT_EMAIL}</a> with a short note
+            about the workflow and where it slows down. A few lines is enough to
+            start.
+          </p>
+          <div>
+            <CTAButton href={CONTACT_MAILTO} variant="primary">
+              Send an email
+            </CTAButton>
+          </div>
         </div>
       </OfferSection>
     </main>

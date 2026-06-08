@@ -1,23 +1,22 @@
 import Container from "@/components/Container";
 import CTAButton from "@/components/CTAButton";
+import type { HomeContent } from "@/content/home";
 
-/** Closing CTA band — one clear next action. */
-export default function FinalCTA() {
+/** Closing CTA band — one clear next action. Copy + destination from the model. */
+export default function FinalCTA({
+  content,
+}: {
+  content: HomeContent["finalCta"];
+}) {
   return (
     <section className="section final-cta" aria-labelledby="final-cta-title">
       <Container>
         <div className="final-cta-inner">
-          <h2 id="final-cta-title">
-            Start with one workflow, not a transformation program.
-          </h2>
-          <p className="final-cta-body">
-            The first step is a focused map of a real process: where work
-            enters, where it gets stuck, who approves what, and what a useful
-            AI-assisted system should actually do.
-          </p>
+          <h2 id="final-cta-title">{content.title}</h2>
+          <p className="final-cta-body">{content.body}</p>
           <div className="final-cta-actions">
-            <CTAButton href="/contact" variant="primary">
-              Map one workflow
+            <CTAButton href={content.cta.href} variant="primary">
+              {content.cta.label}
             </CTAButton>
           </div>
         </div>

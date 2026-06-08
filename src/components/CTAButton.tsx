@@ -10,9 +10,18 @@ function classes(variant: Variant) {
 }
 
 /**
- * Bracketed mono button. Renders an <a> when `href` is given, else a <button>.
- * The .btn style lowercases labels — wrap "AI" in <span className="btn-cap">AI</span>
- * to keep brand casing.
+ * A non-internal href is one next/link should not own: an in-page hash anchor,
+ * or anything with a URL scheme (mailto:, tel:, http(s)://). These render as a
+ * plain <a>. Internal route paths ("/contact", "/offers/...") use next/link.
+ */
+function isPlainAnchor(href: string) {
+  return href.startsWith("#") || /^[a-z][a-z0-9+.-]*:/i.test(href);
+}
+
+/**
+ * Button in the body font. Renders an <a> when `href` is given, else a <button>.
+ * The bracketed [ ] signature is applied by CSS to the primary variant only;
+ * standard/ghost buttons read as plain UI. Labels keep their natural casing.
  */
 export default function CTAButton({
   href,
@@ -26,9 +35,9 @@ export default function CTAButton({
   children: ReactNode;
 }) {
   if (href) {
-    // In-page anchors (href="#id") use a plain <a>: next/link does not reliably
-    // perform the hash scroll for pure-hash hrefs in the App Router.
-    if (href.startsWith("#")) {
+    // Hash anchors (next/link doesn't reliably hash-scroll in the App Router)
+    // and scheme URLs (mailto:, tel:, external) use a plain <a>.
+    if (isPlainAnchor(href)) {
       return (
         <a href={href} className={classes(variant)}>
           {children}
