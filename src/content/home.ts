@@ -74,7 +74,7 @@ const en: HomeContent = {
   hero: {
     eyebrow: "AI workflow systems",
     title: "Turn messy business workflows into clear AI-assisted systems.",
-    lead: "I help growing businesses map stuck processes, connect existing tools, and build dashboards, automations, and AI assistants that create clear next actions, with human approval where it matters.",
+    lead: "I help growing businesses map stuck processes, connect existing tools, and build dashboards, automations, and AI assistants that create clear next actions, with human approval where it matters. I work in Hebrew and English where the team needs it.",
     primaryCta: { label: "Map one workflow", href: "/contact" },
     secondaryCta: { label: "See how it works", href: "#how-i-work" },
     schematic: {
@@ -159,7 +159,7 @@ const en: HomeContent = {
   },
   finalCta: {
     title: "Start with one workflow, not a transformation program.",
-    body: "The first step is a focused map of a real process: where work enters, where it gets stuck, who approves what, and what a useful AI-assisted system should actually do.",
+    body: "The first step is a focused map of a real process: where work enters, where it gets stuck, who approves what, and what a useful AI-assisted system should actually do. After it goes live, I stay involved: tuning the summaries, signals, and automations as real use shows what to adjust, and helping the team actually run it.",
     cta: { label: "Map one workflow", href: "/contact" },
   },
 };
@@ -175,7 +175,7 @@ const he: HomeContent = {
   hero: {
     eyebrow: "מערכות AI לתהליכי עבודה",
     title: "הופכים תהליכי עבודה מבולגנים למערכות AI ברורות.",
-    lead: "אני עוזר לעסקים צומחים למפות תהליכים תקועים, לחבר את הכלים שכבר קיימים, ולבנות דשבורדים, אוטומציות ועוזרי AI שמייצרים צעד הבא ברור. עם אישור אנושי איפה שזה חשוב.",
+    lead: "אני עוזר לעסקים צומחים למפות תהליכים תקועים, לחבר את הכלים שכבר קיימים, ולבנות דשבורדים, אוטומציות ועוזרי AI שמייצרים צעד הבא ברור. עם אישור אנושי איפה שזה חשוב. אני עובד בעברית ובאנגלית, לפי הצורך.",
     primaryCta: { label: "למפות תהליך אחד", href: CONTACT_MAILTO },
     secondaryCta: { label: "איך זה עובד", href: "#how-i-work" },
     schematic: {
@@ -260,7 +260,7 @@ const he: HomeContent = {
   },
   finalCta: {
     title: "מתחילים מתהליך אחד, לא מפרויקט שינוי גדול.",
-    body: "הצעד הראשון הוא מיפוי ממוקד של תהליך אמיתי: איפה העבודה נכנסת, איפה היא נתקעת, מי מאשר מה, ומה מערכת AI שימושית באמת צריכה לעשות.",
+    body: "הצעד הראשון הוא מיפוי ממוקד של תהליך אמיתי: איפה העבודה נכנסת, איפה היא נתקעת, מי מאשר מה, ומה מערכת AI שימושית באמת צריכה לעשות. אחרי שהמערכת עולה לאוויר, אני ממשיך ללוות: מכוונן את הסיכומים, ההתראות והאוטומציות לפי השימוש בפועל, ועוזר לצוות להטמיע את המערכת.",
     cta: { label: "למפות תהליך אחד", href: CONTACT_MAILTO },
   },
 };

@@ -30,6 +30,7 @@ const PRINCIPLES = [
   "Keep humans in control",
   "Connect existing tools instead of replacing them",
   "Make the next action visible",
+  "Support adoption after setup, not just hand off the system",
   "Skip AI demos that don't survive real work",
 ];
 
@@ -72,7 +73,8 @@ export default function AboutPage() {
           have been a strong pilot pattern for this approach, since the work is
           document-heavy, approval-driven, and deadline-bound. The same system
           fits any service business whose workflows have outgrown manual
-          coordination.
+          coordination. The work runs in Hebrew and English, whichever the team
+          actually uses day to day.
         </p>
       </OfferSection>
 

@@ -44,7 +44,7 @@ const PROBLEMS = [
 const DELIVERABLES = [
   {
     title: "Operational dashboards",
-    desc: "One view of what needs attention: stuck, overdue, and at-risk work.",
+    desc: "One view of what needs attention: what's stuck, overdue, at risk, and what's newly flagged this week.",
   },
   {
     title: "Alerts & triggers",
