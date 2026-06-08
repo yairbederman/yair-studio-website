@@ -74,7 +74,7 @@ const en: HomeContent = {
   hero: {
     eyebrow: "AI workflow systems",
     title: "Turn messy business workflows into clear AI-assisted systems.",
-    lead: "I help growing businesses map stuck processes, connect existing tools, and build dashboards, automations, and AI assistants that create clear next actions — with human approval where it matters.",
+    lead: "I help growing businesses map stuck processes, connect existing tools, and build dashboards, automations, and AI assistants that create clear next actions, with human approval where it matters.",
     primaryCta: { label: "Map one workflow", href: "/contact" },
     secondaryCta: { label: "See how it works", href: "#how-i-work" },
     schematic: {
@@ -118,7 +118,7 @@ const en: HomeContent = {
       },
       {
         title: "Connect the tools",
-        desc: "We use the systems already in the business — email, calendar, CRM, documents, spreadsheets, APIs, or databases.",
+        desc: "We use the systems already in the business: email, calendar, CRM, documents, spreadsheets, APIs, or databases.",
       },
       {
         title: "Build the operating layer",

@@ -13,8 +13,8 @@ export default function OffersSection() {
         <div className="section-head">
           <h2 id="offers-title">Offers</h2>
           <p className="section-intro">
-            Not four separate services — four entry points into one system built
-            around real workflows.
+            Four entry points into one system built around real workflows, not
+            four separate services.
           </p>
         </div>
         <OfferCards />
