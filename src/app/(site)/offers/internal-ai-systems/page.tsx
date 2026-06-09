@@ -17,8 +17,8 @@ const WHO = [
     desc: "People who keep work moving and want less manual coordination.",
   },
   {
-    title: "Law offices — a strong pilot pattern",
-    desc: "Document-heavy, deadline-driven, approval-sensitive work is a natural fit. This is an example, not a limit — the same layer fits other service teams.",
+    title: "Document-heavy professional offices",
+    desc: "Teams with documents, deadlines, approvals, and client follow-up are a natural fit. Legal work is one example, not the limit.",
   },
 ];
 
@@ -103,7 +103,7 @@ export default function InternalAiSystemsPage() {
   return (
     <main id="main">
       <OfferHero
-        eyebrow="Internal AI Systems"
+        eyebrow="Assistant layer"
         title="Internal AI Systems"
         lead="A practical AI layer for the day-to-day work of a service team: meetings, email and calendar context, tasks, knowledge search, and follow-up — with approvals before anything acts."
       />

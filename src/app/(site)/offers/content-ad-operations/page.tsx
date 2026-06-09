@@ -103,7 +103,7 @@ export default function ContentAdOperationsPage() {
   return (
     <main id="main">
       <OfferHero
-        eyebrow="Content & Ad Operations"
+        eyebrow="Content operations"
         title="Content & Ad Operations"
         lead="Turn ideas, assets, performance data, and approvals into repeatable campaigns. A system for content and ad operations — with approval before anything publishes."
       />

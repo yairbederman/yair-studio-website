@@ -103,7 +103,7 @@ export default function DashboardsAutomationPage() {
   return (
     <main id="main">
       <OfferHero
-        eyebrow="Dashboards & Automation"
+        eyebrow="Visibility layer"
         title="Dashboards & Automation"
         lead="See what needs attention and trigger the right next action. A visibility and automation layer connected to the tools you already use."
       />

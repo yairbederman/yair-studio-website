@@ -74,7 +74,7 @@ const en: HomeContent = {
   hero: {
     eyebrow: "AI workflow systems",
     title: "Turn messy business workflows into clear AI-assisted systems.",
-    lead: "I help growing businesses map stuck processes, connect existing tools, and build dashboards, automations, and AI assistants that create clear next actions, with human approval where it matters. I work in Hebrew and English where the team needs it.",
+    lead: "I help growing businesses map stuck processes, connect existing tools, and build dashboards, automations, and AI assistants so teams know the next action, with human approval where it matters. I work in Hebrew and English where your team needs it.",
     primaryCta: { label: "Map one workflow", href: "/contact" },
     secondaryCta: { label: "See how it works", href: "#how-i-work" },
     schematic: {
@@ -134,7 +134,7 @@ const en: HomeContent = {
   evidence: {
     title: "What “mapped” looks like",
     intro:
-      "An illustration of the approach, not a client case study. The improvement here is structural: scattered, manual work becomes a mapped flow with a human approval step, shown without any fabricated numbers.",
+      "An illustration of the approach, not a client case study. The improvement here is structural: scattered, manual work becomes a mapped flow with a human approval step, shown as a structure, not a performance claim.",
     before: {
       caption: "Before",
       items: [
@@ -175,7 +175,7 @@ const he: HomeContent = {
   hero: {
     eyebrow: "מערכות AI לתהליכי עבודה",
     title: "הופכים תהליכי עבודה מבולגנים למערכות AI ברורות.",
-    lead: "אני עוזר לעסקים צומחים למפות תהליכים תקועים, לחבר את הכלים שכבר קיימים, ולבנות דשבורדים, אוטומציות ועוזרי AI שמייצרים צעד הבא ברור. עם אישור אנושי איפה שזה חשוב. אני עובד בעברית ובאנגלית, לפי הצורך.",
+    lead: "אני עוזר לעסקים צומחים למפות תהליכים תקועים, לחבר את הכלים שכבר קיימים, ולבנות דשבורדים, אוטומציות ועוזרי AI שמייצרים את הצעד הבא הברור. עם אישור אנושי במקומות שבהם זה חשוב. אני עובד בעברית ובאנגלית, לפי הצורך.",
     primaryCta: { label: "למפות תהליך אחד", href: CONTACT_MAILTO },
     secondaryCta: { label: "איך זה עובד", href: "#how-i-work" },
     schematic: {

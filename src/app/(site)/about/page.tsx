@@ -87,12 +87,12 @@ export default function AboutPage() {
       <OfferSection id="who" title="Who it's for">
         <p className="section-intro">
           Growing service businesses, operators, founders, professional offices,
-          and lean teams running real work across too many tools. Law offices
-          have been a strong pilot pattern for this approach, since the work is
-          document-heavy, approval-driven, and deadline-bound. The same system
-          fits any service business whose workflows have outgrown manual
-          coordination. The work runs in Hebrew and English, whichever the team
-          actually uses day to day.
+          and lean teams running real work across too many tools. Professional
+          offices — including legal, document-heavy, and approval-driven teams —
+          are a strong fit for this approach. The same system fits any service
+          business whose workflows have outgrown manual coordination. The work
+          runs in Hebrew and English, whichever the team actually uses day to
+          day.
         </p>
       </OfferSection>
 
