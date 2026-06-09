@@ -871,6 +871,14 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   .workflow-film .film-video { display: none; }
   .workflow-film .film-poster { display: block; }
 }
+/* Caption under an embedded process film (sentence, so not the all-caps .sch-cap) */
+.film-caption {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+  color: var(--fg-3);
+  text-align: center;
+  text-wrap: balance;
+}
 
 .workflow-compare {
   display: grid;

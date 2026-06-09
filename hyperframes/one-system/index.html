@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      /* ============================================================
+         "One System" overview film — HyperFrames composition.
+         Four equal offer lanes (left) converge into one operating core,
+         gated by a copper human-approval checkpoint (the peak), then the
+         system runs. Palette + type mirror src/app/globals.css.
+         Renders transparent (alpha WebM); #review-bg is REVIEW-ONLY.
+         ============================================================ */
+      @font-face { font-family: "Inter"; font-weight: 600; font-display: block; src: url("assets/fonts/inter-600.woff2") format("woff2"); }
+      @font-face { font-family: "Geist Mono"; font-weight: 400; font-display: block; src: url("assets/fonts/geist-mono-400.woff2") format("woff2"); }
+
+      :root {
+        --bg-0: #121211; --bg-1: #1a1a18; --bg-2: #242420;
+        --fg-1: #f4f1ea; --fg-2: #b9b3aa; --fg-3: #8a847a;
+        --accent: #d96832; --accent-hover: #e67e45;
+        --accent-soft: rgba(217, 104, 50, 0.12); --accent-rule: rgba(217, 104, 50, 0.3);
+        --rule: #2a2a26; --rule-strong: #3a3a34;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden; background: transparent;
+        font-family: "Inter", system-ui, sans-serif; color: var(--fg-1);
+        -webkit-font-smoothing: antialiased;
+      }
+      #stage { position: relative; width: 1920px; height: 1080px; }
+      #camera { position: absolute; inset: 0; transform-origin: 760px 540px; will-change: transform; }
+
+      /* ---------- Rails (SVG) ---------- */
+      #rails { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+      .rail-base { fill: none; stroke: var(--rule); stroke-width: 2; opacity: 0; }
+      .rail-flow {
+        fill: none; stroke: var(--accent); stroke-width: 2;
+        stroke-dasharray: 1; stroke-dashoffset: 1; /* drawn by GSAP (pathLength=1) */
+      }
+
+      /* ---------- Offer lanes ---------- */
+      .lane { position: absolute; opacity: 0; filter: blur(1.6px); } /* DOF until active */
+      .lane .dot {
+        position: absolute; width: 14px; height: 14px; border-radius: 50%;
+        background: var(--bg-0); border: 2px solid var(--rule-strong);
+        box-shadow: 0 0 0 5px var(--bg-0); /* knock the rail out behind the dot */
+      }
+      .lane .lbl {
+        position: absolute; left: 30px; top: -54px; white-space: nowrap;
+        font-size: 28px; font-weight: 600; letter-spacing: -0.01em; color: var(--fg-3);
+      }
+      .lane .sig {
+        position: absolute; left: 30px; top: -22px; white-space: nowrap;
+        font-family: "Geist Mono", ui-monospace, monospace; font-size: 15px;
+        letter-spacing: 0.03em; color: var(--fg-3);
+      }
+
+      /* ---------- Convergence junction: human approval (peak) ---------- */
+      #approve-node {
+        position: absolute; left: 1150px; top: 540px; width: 16px; height: 16px;
+        margin-left: -8px; margin-top: -8px; border-radius: 50%;
+        background: var(--bg-0); border: 2px solid var(--accent);
+        box-shadow: 0 0 0 6px var(--bg-0); opacity: 0;
+      }
+      #approve-ring {
+        position: absolute; left: 1150px; top: 540px; width: 46px; height: 46px;
+        margin-left: -23px; margin-top: -23px; border-radius: 50%;
+        border: 2px solid var(--accent); opacity: 0;
+      }
+      #approve-label {
+        position: absolute; left: 1150px; top: 470px; transform: translateX(-50%);
+        white-space: nowrap; font-size: 26px; font-weight: 600; letter-spacing: -0.01em;
+        color: var(--accent); opacity: 0;
+      }
+      #approved-cap {
+        position: absolute; left: 1150px; top: 582px; transform: translateX(-50%);
+        display: flex; align-items: center; gap: 9px; opacity: 0;
+      }
+      #approved-cap .check { width: 22px; height: 22px; }
+      #approved-cap .check path {
+        fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round;
+        stroke-linejoin: round; stroke-dasharray: 32; stroke-dashoffset: 32;
+      }
+      #approved-cap .t {
+        font-family: "Geist Mono", ui-monospace, monospace; font-size: 16px;
+        letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent);
+      }
+
+      /* ---------- Operating system (right) ---------- */
+      /* The system reads as a contained, resolved object — a copper-outlined
+         panel with a restrained glow. The four lanes stay open on the left so
+         neither side feels subordinate. */
+      #sys-panel {
+        position: absolute; left: 1300px; top: 372px; width: 540px; height: 336px;
+        border: 1.5px solid var(--accent-rule); border-radius: 12px;
+        background: rgba(217, 104, 50, 0.045);
+        box-shadow: 0 0 38px 0 rgba(217, 104, 50, 0.11), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        opacity: 0; transform-origin: 1300px 540px;
+      }
+      #sys-core {
+        position: absolute; left: 1300px; top: 540px; width: 22px; height: 22px;
+        margin-left: -11px; margin-top: -11px; border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 18px 4px var(--accent-soft), 0 0 0 6px var(--bg-0);
+        opacity: 0;
+      }
+      #system { position: absolute; left: 1342px; top: 0; width: 456px; }
+      .sys-title {
+        position: absolute; left: 0; top: 404px; white-space: nowrap;
+        font-size: 32px; font-weight: 600; letter-spacing: -0.015em; color: var(--fg-1); opacity: 0;
+      }
+      .sys-uline {
+        position: absolute; left: 0; top: 449px; width: 52px; height: 3px; border-radius: 2px;
+        background: var(--accent); transform: scaleX(0); transform-origin: left;
+      }
+      .sys-cap {
+        position: absolute; left: 0; top: 470px; font-family: "Geist Mono", ui-monospace, monospace;
+        font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-3); opacity: 0;
+      }
+      .nrow {
+        position: absolute; left: 0; width: 456px; height: 40px;
+        display: flex; align-items: center; gap: 16px; padding: 0 16px;
+        border: 1px solid var(--rule-strong); border-radius: 6px; background: var(--bg-2);
+        opacity: 0; will-change: transform, opacity;
+      }
+      .nrow .st { width: 17px; height: 17px; border-radius: 3px; border: 1.5px solid var(--accent); flex: 0 0 auto; }
+      .nrow .st.done { background: var(--accent-soft); }
+      .nrow .bar { height: 7px; border-radius: 3px; background: var(--rule-strong); flex: 1 1 auto; }
+      .nrow .own { width: 18px; height: 18px; border-radius: 50%; background: var(--accent); opacity: 0.75; flex: 0 0 auto; }
+
+      .week { position: absolute; left: 0; top: 648px; opacity: 0; }
+      .week .cap {
+        font-family: "Geist Mono", ui-monospace, monospace; font-size: 14px;
+        letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-3); margin-bottom: 11px;
+      }
+      .week .segs { display: flex; gap: 8px; }
+      .week .seg { width: 54px; height: 10px; border-radius: 3px; background: var(--rule-strong); }
+    </style>
+  </head>
+
+  <body>
+    <div id="stage" data-composition-id="root" data-start="0" data-duration="13" data-width="1920" data-height="1080">
+      <div id="camera" data-layout-allow-overflow>
+        <!-- Converging rails -->
+        <svg id="rails" viewBox="0 0 1920 1080">
+          <g id="rails-base">
+            <path class="rail-base" d="M130 230 L690 230 C 920 230, 1000 540, 1150 540" />
+            <path class="rail-base" d="M130 440 L690 440 C 920 440, 1030 540, 1150 540" />
+            <path class="rail-base" d="M130 650 L690 650 C 920 650, 1030 540, 1150 540" />
+            <path class="rail-base" d="M130 860 L690 860 C 920 860, 1000 540, 1150 540" />
+            <path class="rail-base" d="M1150 540 L1300 540" />
+          </g>
+          <g id="rails-flow">
+            <path class="rail-flow" id="f0" pathLength="1" d="M130 230 L690 230 C 920 230, 1000 540, 1150 540" />
+            <path class="rail-flow" id="f1" pathLength="1" d="M130 440 L690 440 C 920 440, 1030 540, 1150 540" />
+            <path class="rail-flow" id="f2" pathLength="1" d="M130 650 L690 650 C 920 650, 1030 540, 1150 540" />
+            <path class="rail-flow" id="f3" pathLength="1" d="M130 860 L690 860 C 920 860, 1000 540, 1150 540" />
+            <path class="rail-flow" id="fc" pathLength="1" d="M1150 540 L1300 540" />
+          </g>
+        </svg>
+
+        <!-- Four equal offer lanes -->
+        <div class="lane" id="lane0" style="left: 130px; top: 230px">
+          <span class="dot"></span>
+          <span class="lbl">AI Workflow Audit</span>
+          <span class="sig">map workflow · find friction · choose first useful system</span>
+        </div>
+        <div class="lane" id="lane1" style="left: 130px; top: 440px">
+          <span class="dot"></span>
+          <span class="lbl">Internal AI Systems</span>
+          <span class="sig">assistant layer · office memory · approval-aware drafts</span>
+        </div>
+        <div class="lane" id="lane2" style="left: 130px; top: 650px">
+          <span class="dot"></span>
+          <span class="lbl">Dashboards &amp; Automation</span>
+          <span class="sig">open loops · stuck items · weekly signal</span>
+        </div>
+        <div class="lane" id="lane3" style="left: 130px; top: 860px">
+          <span class="dot"></span>
+          <span class="lbl">Content &amp; Ad Operations</span>
+          <span class="sig">content pipeline · campaign rhythm · review queue</span>
+        </div>
+
+        <!-- Convergence junction — human approval (peak) -->
+        <div id="approve-ring"></div>
+        <div id="approve-node"></div>
+        <div id="approve-label">Human approval</div>
+        <div id="approved-cap">
+          <svg class="check" viewBox="0 0 24 24"><path d="M5 13 l4 4 l10 -11" /></svg>
+          <span class="t">Approved</span>
+        </div>
+
+        <!-- Operating system (right) — the resolved answer -->
+        <div id="sys-panel"></div>
+        <div id="sys-core"></div>
+        <div id="system">
+          <span class="sys-title">One operating system</span>
+          <span class="sys-uline"></span>
+          <span class="sys-cap">clear next actions</span>
+          <div class="nrow" id="nrow0" style="top: 498px"><span class="st done"></span><span class="bar"></span><span class="own"></span></div>
+          <div class="nrow" id="nrow1" style="top: 546px"><span class="st"></span><span class="bar"></span><span class="own"></span></div>
+          <div class="nrow" id="nrow2" style="top: 594px"><span class="st done"></span><span class="bar"></span><span class="own"></span></div>
+          <div class="week">
+            <div class="cap">weekly operating rhythm</div>
+            <div class="segs">
+              <span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /* ============================================================
+         Timeline — 13s, deterministic (no random / Date / setTimeout / async).
+         entry points → flow + converge → APPROVAL HOLD (peak) → system runs.
+         ============================================================ */
+      const LANES = ["#lane0", "#lane1", "#lane2", "#lane3"];
+      const FLOWS = ["#f0", "#f1", "#f2", "#f3"];
+
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+
+      // ---- ACT 1 — Four equal entry points appear (0.0–3.0) ----
+      tl.to("#rails-base path", { opacity: 1, duration: 0.8, stagger: 0.08 }, 0.3);
+      LANES.forEach((l, i) => {
+        tl.fromTo(l, { opacity: 0, y: 18 }, { opacity: 0.55, y: 0, duration: 0.7, overwrite: "auto" }, 0.4 + i * 0.28);
+      });
+
+      // ---- ACT 2 — Each lane lights up + flows toward the core (3.0–7.0) ----
+      LANES.forEach((l, i) => {
+        const at = 3.0 + i * 0.85;
+        tl.to(l, { filter: "blur(0px)", opacity: 1, duration: 0.5 }, at);
+        tl.to(l + " .dot", { backgroundColor: "#d96832", borderColor: "#d96832", duration: 0.4 }, at);
+        tl.to(l + " .lbl", { color: "#f4f1ea", duration: 0.4 }, at);
+        tl.to(FLOWS[i], { strokeDashoffset: 0, duration: 1.0, ease: "power1.inOut" }, at + 0.1);
+      });
+
+      // ---- ACT 3 — Convergence + APPROVAL HOLD (peak) (7.0–10.0) ----
+      tl.to(LANES, { opacity: 0.32, duration: 0.6 }, 7.2);
+      tl.to("#approve-node", { opacity: 1, duration: 0.4 }, 7.0);
+      tl.to("#approve-label", { opacity: 1, duration: 0.5 }, 7.1);
+      tl.fromTo("#approve-ring", { scale: 0.4, opacity: 0, transformOrigin: "center" }, { scale: 1, opacity: 1, duration: 0.5 }, 7.4)
+        .to("#approve-ring", { scale: 1.7, opacity: 0, duration: 0.9, ease: "power2.out" }, 7.9);
+      tl.to("#approved-cap", { opacity: 1, duration: 0.4 }, 8.4);
+      tl.to("#approved-cap .check path", { strokeDashoffset: 0, duration: 0.6, ease: "power2.inOut" }, 8.5);
+      // hold the beat 9.1–10.0
+
+      // ---- ACT 4 — The unified system runs (10.0–12.7) ----
+      tl.to("#fc", { strokeDashoffset: 0, duration: 0.6, ease: "power1.inOut" }, 10.0);
+      // the system resolves as a contained, glowing panel — the answer
+      tl.fromTo("#sys-panel", { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power3.out" }, 10.3);
+      tl.to("#sys-core", { opacity: 1, duration: 0.4 }, 10.4);
+      tl.to(".sys-title", { opacity: 1, duration: 0.5 }, 10.6);
+      tl.to(".sys-uline", { scaleX: 1, duration: 0.5, ease: "power3.out" }, 10.85);
+      tl.to(".sys-cap", { opacity: 1, duration: 0.4 }, 10.95);
+      tl.fromTo(".nrow",
+        { opacity: 0, x: 24, y: (i) => [12, -8, 6][i] || 0 },
+        { opacity: 1, x: 0, y: 0, duration: 0.5, stagger: 0.13, ease: "power3.out" }, 11.05);
+      tl.to(".week", { opacity: 1, duration: 0.4 }, 11.85);
+      tl.to(".week .seg", { backgroundColor: "#d96832", duration: 0.18, stagger: 0.07 }, 12.0);
+
+      // ---- Settle / loop-prep (12.5–13.0) ----
+      tl.to(LANES, { opacity: 0.5, duration: 0.4 }, 12.5);
+
+      // Camera: restrained push-in across the film
+      tl.fromTo("#camera", { scale: 1.0 }, { scale: 1.03, duration: 13, ease: "sine.inOut" }, 0);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["root"] = tl;
+    </script>
+  </body>
+</html>

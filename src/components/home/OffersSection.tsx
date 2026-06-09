@@ -1,5 +1,6 @@
 import Container from "@/components/Container";
 import OfferCards from "@/components/offers/OfferCards";
+import ProcessFilm from "@/components/ProcessFilm";
 
 /**
  * Homepage offers — concrete offers, but tied under one system (per brief: not
@@ -17,6 +18,12 @@ export default function OffersSection() {
             four separate services.
           </p>
         </div>
+        <ProcessFilm
+          webm="/videos/one-system-overview.webm"
+          mp4="/videos/one-system-overview.mp4"
+          poster="/videos/one-system-overview-poster.png"
+          caption="Four entry points, one operating layer — with human approval where it matters."
+        />
         <OfferCards />
       </Container>
     </section>
