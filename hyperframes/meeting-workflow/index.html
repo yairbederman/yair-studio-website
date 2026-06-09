@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      /* ============================================================
+         "Meeting Follow-up" process film — HyperFrames composition
+         Palette + type mirror src/app/globals.css (canonical tokens).
+         Two columns: the PROCESS spine (left) and the EVIDENCE it
+         produces (right). Human approval is the visual peak.
+         Renders transparent (alpha WebM); #review-bg is REVIEW-ONLY.
+         ============================================================ */
+      @font-face { font-family: "Inter"; font-weight: 400; font-display: block; src: url("assets/fonts/inter-400.woff2") format("woff2"); }
+      @font-face { font-family: "Inter"; font-weight: 600; font-display: block; src: url("assets/fonts/inter-600.woff2") format("woff2"); }
+      @font-face { font-family: "Geist Mono"; font-weight: 400; font-display: block; src: url("assets/fonts/geist-mono-400.woff2") format("woff2"); }
+
+      :root {
+        --bg-0: #121211;
+        --bg-1: #1a1a18;
+        --bg-2: #242420;
+        --fg-1: #f4f1ea;
+        --fg-2: #b9b3aa;
+        --fg-3: #8a847a;
+        --accent: #d96832;
+        --accent-hover: #e67e45;
+        --accent-soft: rgba(217, 104, 50, 0.12);
+        --accent-rule: rgba(217, 104, 50, 0.3);
+        --rule: #2a2a26;
+        --rule-strong: #3a3a34;
+        --font-body: "Inter", system-ui, sans-serif;
+        --font-mono: "Geist Mono", ui-monospace, monospace;
+
+        --rail-x: 470px;
+        --rail-top: 168px;
+        --rail-h: 720px;   /* nodes 168 → 888, gap 144 */
+        --evi-x: 1050px;   /* evidence column — nudged toward centre for a balanced settled frame */
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden;
+        background: transparent;
+        font-family: "Inter", system-ui, sans-serif; color: var(--fg-1);
+        -webkit-font-smoothing: antialiased;
+      }
+      #stage { position: relative; width: 1920px; height: 1080px; }
+      #camera { position: absolute; inset: 0; transform-origin: 760px 540px; will-change: transform; }
+
+      /* ---------- Spine ---------- */
+      .spine-rail, .spine-fill {
+        position: absolute; left: var(--rail-x); top: var(--rail-top);
+        width: 2px; height: var(--rail-h); transform: translateX(-50%);
+      }
+      .spine-rail { background: var(--rule); }
+      .spine-fill {
+        background: linear-gradient(var(--accent-hover), var(--accent));
+        transform: translateX(-50%) scaleY(0); transform-origin: top center;
+      }
+      .pulse {
+        position: absolute; left: var(--rail-x); top: var(--rail-top);
+        width: 14px; height: 14px; margin-left: -7px; margin-top: -7px;
+        border-radius: 50%; background: var(--accent-hover);
+        box-shadow: 0 0 16px 4px var(--accent-soft), 0 0 5px 1px var(--accent-rule);
+        opacity: 0;
+      }
+
+      /* ---------- Nodes ---------- */
+      .node {
+        position: absolute; left: var(--rail-x);
+        display: flex; align-items: center; gap: 22px;
+        transform: translateY(-50%);
+        filter: blur(1.6px); opacity: 0.5; /* DOF: out of focus until activated */
+      }
+      .node .dot {
+        position: relative; flex: 0 0 auto;
+        width: 14px; height: 14px; margin-left: -7px; border-radius: 50%;
+        background: var(--bg-0); border: 2px solid var(--rule-strong);
+        box-shadow: 0 0 0 5px var(--bg-0); /* knock the rail out behind the dot */
+      }
+      .node .body { display: flex; flex-direction: column; gap: 4px; }
+      .node .label {
+        font-size: 32px; font-weight: 600; letter-spacing: -0.01em;
+        color: var(--fg-3); white-space: nowrap;
+      }
+      .node .sub {
+        font-family: "Geist Mono", ui-monospace, monospace; font-size: 16px; letter-spacing: 0.04em;
+        color: var(--fg-3); white-space: nowrap;
+      }
+      .node--human .dot { border-color: var(--accent); }
+      .node--human .label { color: var(--accent); }
+      .node--out .label { color: var(--fg-2); }
+
+      /* ---------- Inputs (scatter → converge) ---------- */
+      #inputs { position: absolute; inset: 0; }
+      .frag {
+        position: absolute; font-family: "Geist Mono", ui-monospace, monospace; font-size: 16px;
+        letter-spacing: 0.04em; color: var(--fg-2); padding: 8px 13px;
+        border: 1px solid var(--rule-strong); border-radius: 4px;
+        background: var(--bg-1); white-space: nowrap; opacity: 0;
+        will-change: transform, opacity;
+      }
+      .frag-line {
+        position: absolute; height: 2px; background: var(--rule-strong);
+        border-radius: 2px; opacity: 0; will-change: transform, opacity;
+      }
+
+      /* ---------- Evidence column ---------- */
+      .artifact { position: absolute; left: var(--evi-x); opacity: 0; will-change: transform, opacity; }
+      .chip {
+        display: inline-flex; align-items: center; gap: 10px;
+        font-family: "Geist Mono", ui-monospace, monospace; font-size: 18px; letter-spacing: 0.03em;
+        color: var(--fg-2); padding: 10px 15px;
+        border: 1px solid var(--rule-strong); border-radius: 5px; background: var(--bg-1);
+      }
+      .chip .box { width: 14px; height: 14px; border: 1.5px solid var(--accent-rule); border-radius: 3px; }
+      .chip .owner { width: 18px; height: 18px; border-radius: 50%; background: var(--accent); opacity: 0.85; }
+      .chip .cal { width: 16px; height: 14px; border: 1.5px solid var(--rule-strong); border-radius: 2px; position: relative; }
+      .chip .cal::before { content: ""; position: absolute; top: 3px; left: 1px; right: 1px; border-top: 1.5px solid var(--rule-strong); }
+      .chip .sep { color: var(--fg-3); }
+
+      .card {
+        width: 320px; padding: 20px;
+        border: 1px solid var(--rule-strong); border-radius: 7px; background: var(--bg-1);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
+      .card .tag {
+        font-family: "Geist Mono", ui-monospace, monospace; font-size: 13px; letter-spacing: 0.08em;
+        text-transform: uppercase; color: var(--accent);
+      }
+      .card .ln { height: 8px; border-radius: 4px; background: var(--rule-strong); margin-top: 13px; }
+      .card .ln.head { background: var(--accent-rule); width: 58%; }
+
+      /* Approval — the peak */
+      #approve-ring {
+        position: absolute; left: var(--rail-x); top: 736px;
+        width: 40px; height: 40px; margin-left: -20px; margin-top: -20px;
+        border-radius: 50%; border: 2px solid var(--accent);
+        opacity: 0; /* initial scale set by GSAP fromTo */
+      }
+      #art-approve {
+        top: 736px; transform: translateY(-50%);
+        display: inline-flex; align-items: center; gap: 16px;
+        padding: 14px 22px 14px 18px;
+        border: 1.5px solid var(--accent); border-radius: 8px;
+        background: var(--accent-soft);
+      }
+      #art-approve .check { width: 30px; height: 30px; flex: 0 0 auto; }
+      #art-approve .check path {
+        fill: none; stroke: var(--accent); stroke-width: 3;
+        stroke-linecap: round; stroke-linejoin: round;
+        stroke-dasharray: 32; stroke-dashoffset: 32;
+      }
+      #art-approve .al { display: flex; flex-direction: column; gap: 7px; }
+      #art-approve .txt { font-size: 28px; font-weight: 600; letter-spacing: -0.01em; color: var(--accent); }
+      #art-approve .uline { height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; }
+
+      /* Output: tasks resolve (chaos → order) */
+      #dashboard { position: absolute; left: var(--evi-x); top: 800px; width: 440px; }
+      #dashboard .d-cap {
+        font-family: "Geist Mono", ui-monospace, monospace; font-size: 14px; letter-spacing: 0.08em;
+        text-transform: uppercase; color: var(--fg-3); margin-bottom: 14px; opacity: 0;
+      }
+      .row {
+        display: flex; align-items: center; gap: 16px; height: 36px; padding: 0 15px;
+        border: 1px solid var(--rule-strong); border-radius: 5px; background: var(--bg-1);
+        margin-bottom: 11px; opacity: 0; will-change: transform, opacity;
+      }
+      .row .status { width: 16px; height: 16px; border-radius: 3px; border: 1.5px solid var(--accent); flex: 0 0 auto; }
+      .row .status.done { background: var(--accent-soft); }
+      .row .rlabel { height: 7px; border-radius: 3px; background: var(--rule-strong); flex: 1 1 auto; }
+      .row .rowner { width: 18px; height: 18px; border-radius: 50%; background: var(--accent); opacity: 0.7; flex: 0 0 auto; }
+      .row .rdate { width: 44px; height: 7px; border-radius: 3px; background: var(--rule); flex: 0 0 auto; }
+    </style>
+  </head>
+
+  <body>
+    <div id="stage" data-composition-id="main" data-start="0" data-duration="12" data-width="1920" data-height="1080">
+      <div id="camera">
+        <!-- spine -->
+        <div class="spine-rail" id="spine-rail"></div>
+        <div class="spine-fill" id="spine-fill"></div>
+
+        <!-- nodes (persistent; activated as the pulse arrives) -->
+        <div class="node" id="n0" style="top: 168px">
+          <span class="dot"></span>
+          <span class="body">
+            <span class="label">Meeting notes</span>
+            <span class="sub">transcript · recording · notes</span>
+          </span>
+        </div>
+        <div class="node" id="n1" style="top: 312px"><span class="dot"></span><span class="body"><span class="label">Extract decisions + tasks</span></span></div>
+        <div class="node" id="n2" style="top: 456px"><span class="dot"></span><span class="body"><span class="label">Assign owner + date</span></span></div>
+        <div class="node" id="n3" style="top: 600px"><span class="dot"></span><span class="body"><span class="label">Draft follow-up</span></span></div>
+        <div class="node node--human" id="n4" style="top: 744px"><span class="dot"></span><span class="body"><span class="label">Human approval</span></span></div>
+        <div class="node node--out" id="n5" style="top: 888px"><span class="dot"></span><span class="body"><span class="label">Update tasks / dashboard</span></span></div>
+
+        <!-- pulse head + approval ring -->
+        <div class="pulse" id="pulse"></div>
+        <div id="approve-ring" style="top: 744px"></div>
+
+        <!-- inputs: scattered meeting sources that converge into node 0 -->
+        <div id="inputs">
+          <div class="frag" style="left: 150px; top: 250px; transform: rotate(-4deg)">transcript</div>
+          <div class="frag" style="left: 340px; top: 410px; transform: rotate(3deg)">recording</div>
+          <div class="frag" style="left: 200px; top: 560px; transform: rotate(-2deg)">notes</div>
+          <div class="frag-line" style="left: 120px; top: 330px; width: 130px"></div>
+          <div class="frag-line" style="left: 300px; top: 300px; width: 90px"></div>
+          <div class="frag-line" style="left: 250px; top: 500px; width: 110px"></div>
+          <div class="frag-line" style="left: 410px; top: 520px; width: 70px"></div>
+          <div class="frag-line" style="left: 160px; top: 620px; width: 100px"></div>
+        </div>
+
+        <!-- evidence column -->
+        <div class="artifact" id="art-extract" style="top: 312px; transform: translateY(-50%)">
+          <div style="display: flex; gap: 14px">
+            <span class="chip"><span class="box"></span>decision</span>
+            <span class="chip"><span class="box"></span>task</span>
+          </div>
+        </div>
+
+        <div class="artifact" id="art-assign" style="top: 456px; transform: translateY(-50%)">
+          <span class="chip"><span class="owner"></span>owner<span class="sep">·</span><span class="cal"></span>date</span>
+        </div>
+
+        <div class="artifact" id="art-draft" style="top: 600px; transform: translateY(-50%)">
+          <div class="card">
+            <span class="tag">draft</span>
+            <div class="ln head"></div>
+            <div class="ln" style="width: 100%"></div>
+            <div class="ln" style="width: 86%"></div>
+            <div class="ln" style="width: 68%"></div>
+          </div>
+        </div>
+
+        <!-- approval badge — the peak -->
+        <div class="artifact" id="art-approve">
+          <svg class="check" viewBox="0 0 24 24"><path d="M5 13 l4 4 l10 -11" /></svg>
+          <div class="al"><span class="txt">Approved</span><span class="uline"></span></div>
+        </div>
+
+        <!-- output: tasks resolve from chaos into an ordered stack -->
+        <div id="dashboard">
+          <div class="d-cap">tasks · updated</div>
+          <div class="row" id="r0"><span class="status done"></span><span class="rlabel"></span><span class="rowner"></span><span class="rdate"></span></div>
+          <div class="row" id="r1"><span class="status"></span><span class="rlabel"></span><span class="rowner"></span><span class="rdate"></span></div>
+          <div class="row" id="r2"><span class="status done"></span><span class="rlabel"></span><span class="rowner"></span><span class="rdate"></span></div>
+          <div class="row" id="r3"><span class="status"></span><span class="rlabel"></span><span class="rowner"></span><span class="rdate"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /* ============================================================
+         Timeline — 12s, deterministic (no random / Date / fetch).
+         scatter → flow → APPROVAL HOLD (peak) → output → settle.
+         Node y-centres: 168,312,456,600,744,888 (gap 144).
+         ============================================================ */
+      const NODE_Y = [168, 312, 456, 600, 744, 888];
+      const RAIL_TOP = 168, RAIL_H = 720;
+
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+
+      function activate(sel, at, human) {
+        tl.to(sel, { filter: "blur(0px)", opacity: 1, duration: 0.5 }, at);
+        tl.to(sel + " .dot", { backgroundColor: "#d96832", borderColor: "#d96832", duration: 0.4 }, at);
+        tl.to(sel + " .label", { color: human ? "#d96832" : "#f4f1ea", duration: 0.4, overwrite: "auto" }, at);
+      }
+
+      // ---- ACT 1 — Scatter → converge (0.0–2.6) ----
+      tl.to(".frag, .frag-line", { opacity: 1, duration: 0.7, stagger: 0.06 }, 0.2);
+      tl.to("#inputs .frag, #inputs .frag-line", {
+        x: (i, t) => (470 - (parseFloat(t.style.left) || 0)) * 0.82,
+        y: (i, t) => (168 - (parseFloat(t.style.top) || 0)) * 0.82,
+        opacity: 0, scale: 0.6, duration: 1.1, stagger: 0.05, ease: "power2.in",
+      }, 1.45);
+      activate("#n0", 2.35, false);
+
+      // ---- ACT 2 — Flow down the spine (2.6–7.3) ----
+      tl.to("#pulse", { opacity: 1, duration: 0.3 }, 2.55);
+      function travel(toI, at, dur) {
+        tl.to("#pulse", { top: NODE_Y[toI], duration: dur, ease: "power1.inOut" }, at);
+        tl.to(".spine-fill", { scaleY: (NODE_Y[toI] - RAIL_TOP) / RAIL_H, duration: dur, ease: "power1.inOut" }, at);
+      }
+      travel(1, 2.7, 1.1); activate("#n1", 3.65, false);
+      tl.fromTo("#art-extract", { opacity: 0, x: -18 }, { opacity: 1, x: 0, duration: 0.55 }, 3.7);
+
+      travel(2, 3.95, 1.0); activate("#n2", 4.85, false);
+      tl.fromTo("#art-assign", { opacity: 0, x: -18 }, { opacity: 1, x: 0, duration: 0.5 }, 4.9);
+
+      travel(3, 5.15, 1.0); activate("#n3", 6.05, false);
+      tl.fromTo("#art-draft", { opacity: 0, x: -18, scale: 0.96 }, { opacity: 1, x: 0, scale: 1, duration: 0.55 }, 6.1);
+
+      travel(4, 6.35, 0.95);
+
+      // ---- ACT 3 — APPROVAL HOLD (peak) (7.3–10.0) ----
+      tl.to(["#n0", "#n1", "#n2", "#n3", "#art-extract", "#art-assign", "#art-draft"], { opacity: 0.3, duration: 0.6 }, 7.3);
+      tl.to(["#n0", "#n1", "#n2", "#n3"], { filter: "blur(1.6px)", duration: 0.6 }, 7.3);
+      activate("#n4", 7.25, true);
+      tl.to("#n4", { scale: 1.08, duration: 0.6, transformOrigin: "left center" }, 7.3);
+      tl.fromTo("#approve-ring", { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5 }, 7.5)
+        .to("#approve-ring", { scale: 1.6, opacity: 0, duration: 0.9, ease: "power2.out" }, 8.0);
+      tl.fromTo("#art-approve", { opacity: 0, x: -18 }, { opacity: 1, x: 0, duration: 0.5 }, 7.7);
+      tl.to("#art-approve .check path", { strokeDashoffset: 0, duration: 0.6, ease: "power2.inOut" }, 8.1);
+      tl.to("#art-approve .uline", { scaleX: 1, duration: 0.5, ease: "power3.out" }, 8.7);
+      // hold the beat 9.2→10.0 — stillness
+
+      // ---- ACT 4 — Output: tasks resolve (10.0–11.4) ----
+      tl.to("#n4", { scale: 1, duration: 0.5 }, 10.0);
+      travel(5, 10.0, 0.9); activate("#n5", 10.3, false);
+      tl.to("#dashboard .d-cap", { opacity: 1, duration: 0.4 }, 10.35);
+      tl.fromTo("#dashboard .row",
+        { opacity: 0, x: 28, y: (i) => [16, -12, 9, -7][i] || 0, rotation: (i) => [1.6, -1.1, 1, -0.8][i] || 0 },
+        { opacity: 1, x: 0, y: 0, rotation: 0, duration: 0.55, stagger: 0.12, ease: "power3.out" },
+        10.45);
+
+      // ---- Settle / loop-prep (11.4–12.0) ----
+      tl.to("#pulse", { opacity: 0, duration: 0.5 }, 11.3);
+      tl.to(["#n0", "#n1", "#n2", "#n3"], { opacity: 0.5, duration: 0.6 }, 11.4);
+
+      // Camera: restrained push-in across the whole film
+      tl.fromTo("#camera", { scale: 1.0 }, { scale: 1.035, duration: 12, ease: "sine.inOut" }, 0);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

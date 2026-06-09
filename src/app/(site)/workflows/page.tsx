@@ -3,6 +3,7 @@ import OfferSection from "@/components/offers/OfferSection";
 import OfferCardGrid from "@/components/offers/OfferCardGrid";
 import OfferCTA from "@/components/offers/OfferCTA";
 import WorkflowMap from "@/components/WorkflowMap";
+import WorkflowFilm from "@/components/WorkflowFilm";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata("/workflows");
@@ -80,6 +81,7 @@ export default function WorkflowsPage() {
         title="Meeting follow-up workflow"
         intro="An illustration of the approach, not a client case study."
       >
+        <WorkflowFilm />
         <div className="workflow-compare">
           <div className="panel-list">
             <span className="sch-cap">Before</span>
