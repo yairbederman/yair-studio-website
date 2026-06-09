@@ -118,7 +118,7 @@ export default function ContactPage() {
           <p>
             Email <a href={CONTACT_MAILTO}>{CONTACT_EMAIL}</a> with a short note
             about the workflow and where it slows down. A few lines is enough to
-            start.
+            start. Hebrew or English is fine.
           </p>
           <div>
             <CTAButton href={CONTACT_MAILTO} variant="primary">

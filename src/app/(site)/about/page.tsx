@@ -52,6 +52,24 @@ export default function AboutPage() {
         <OfferCardGrid items={WHAT_I_BUILD} />
       </OfferSection>
 
+      <OfferSection id="why" title="Why this approach">
+        <p className="section-intro">
+          I come from R&amp;D and software leadership, where systems have to
+          work beyond the demo: unclear requirements, messy inputs, real users,
+          edge cases, and production constraints.
+        </p>
+        <p className="section-intro">
+          That background shapes y[AI]r studio. I map the workflow before
+          building, keep the first system small enough to trust, and put human
+          approval where the decision matters.
+        </p>
+        <p className="section-intro">
+          The work is especially useful for growing service businesses and
+          professional offices where meetings, documents, email, deadlines,
+          and follow-up all cross paths, often in Hebrew and English.
+        </p>
+      </OfferSection>
+
       <OfferSection
         id="how"
         title="How I think about AI"

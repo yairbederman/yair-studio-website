@@ -23,6 +23,29 @@ const MAPPED = [
   { label: "Update tasks / dashboard", out: true },
 ] as const;
 
+const OTHER_WORKFLOWS = [
+  {
+    title: "Client intake",
+    desc: "Capture the request, gather missing context, route it to the right owner, and track the next step.",
+  },
+  {
+    title: "Deadline visibility",
+    desc: "Show upcoming, overdue, and conditional dates clearly, with uncertainty visible instead of hidden.",
+  },
+  {
+    title: "Document review status",
+    desc: "Track which documents are waiting, reviewed, blocked, or ready for a decision.",
+  },
+  {
+    title: "Approval-based outbound communication",
+    desc: "Prepare drafts and supporting context, then wait for a person before anything is sent.",
+  },
+  {
+    title: "Weekly operating signal",
+    desc: "Summarize what is stuck, what changed, and what needs attention before the next week starts.",
+  },
+];
+
 const STAYS_HUMAN = [
   {
     title: "Final wording",
@@ -72,6 +95,14 @@ export default function WorkflowsPage() {
             nodes={MAPPED}
           />
         </div>
+      </OfferSection>
+
+      <OfferSection
+        id="other-workflows"
+        title="Other workflows that map well"
+        intro="These patterns are common in growing service businesses and professional offices, especially when work moves across meetings, documents, email, approvals, and follow-up."
+      >
+        <OfferCardGrid items={OTHER_WORKFLOWS} />
       </OfferSection>
 
       <OfferSection

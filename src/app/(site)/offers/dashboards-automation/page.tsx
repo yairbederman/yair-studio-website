@@ -116,7 +116,11 @@ export default function DashboardsAutomationPage() {
         <OfferCardGrid items={PROBLEMS} />
       </OfferSection>
 
-      <OfferSection id="build" title="What we build">
+      <OfferSection
+        id="build"
+        title="What we build"
+        intro="Good dashboard signals include open follow-ups, overdue or stuck items, documents waiting for review, decisions waiting for approval, and a weekly operating signal."
+      >
         <OfferCardGrid items={DELIVERABLES} />
       </OfferSection>
 

@@ -117,7 +117,11 @@ export default function AiWorkflowAuditPage() {
         lead="Before automating anything, map the real process. A focused review of one workflow — how it actually runs, where it stalls, and what's worth building."
       />
 
-      <OfferSection id="who" title="Who it's for">
+      <OfferSection
+        id="who"
+        title="Who it's for"
+        intro="The audit uses an engineering lens: trace the workflow, identify failure points, separate automation candidates from judgment calls, and define what would make the system trustworthy."
+      >
         <OfferCardGrid items={WHO} />
       </OfferSection>
 

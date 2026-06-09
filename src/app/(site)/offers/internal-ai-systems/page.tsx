@@ -108,7 +108,11 @@ export default function InternalAiSystemsPage() {
         lead="A practical AI layer for the day-to-day work of a service team: meetings, email and calendar context, tasks, knowledge search, and follow-up — with approvals before anything acts."
       />
 
-      <OfferSection id="who" title="Who it's for">
+      <OfferSection
+        id="who"
+        title="Who it's for"
+        intro="This is especially useful when the team works across Hebrew and English, and when important context is spread across meetings, emails, documents, calendars, and task lists."
+      >
         <OfferCardGrid items={WHO} />
       </OfferSection>
 

@@ -14,7 +14,7 @@ export const rootMetadata: Metadata = {
     template: "%s · y[AI]r studio",
   },
   description: "AI systems for real business workflows.",
-  // Render shared links as a large card; the image comes from the root
-  // opengraph-image.tsx (Twitter falls back to the Open Graph image).
+  // Render shared links as a large card; Twitter derives its image from each
+  // page's explicit Open Graph image.
   twitter: { card: "summary_large_image" },
 };

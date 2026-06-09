@@ -1,11 +1,10 @@
 import { ImageResponse } from "next/og";
 import { BRAND_COLORS } from "@/lib/brand";
-import { OG_IMAGE_ALT } from "@/lib/site";
 
 /**
- * Branded Open Graph image for the whole site. As a root-level
- * opengraph-image.tsx, Next applies it to every route's metadata, and Twitter
- * falls back to it (the root layout sets twitter.card = "summary_large_image").
+ * Branded Open Graph image served from the stable /opengraph-image route.
+ * Page metadata references this route explicitly, so it is not inherited by
+ * Next's generated routes outside the site's two root layouts.
  *
  * Rendered by next/og (Satori) at build/request time using the default bundled
  * font — no committed font binaries. Brand is carried by color + the bracketed
@@ -14,13 +13,13 @@ import { OG_IMAGE_ALT } from "@/lib/site";
  *
  * Node.js runtime (default) — do NOT switch to the edge runtime.
  */
-export const alt = OG_IMAGE_ALT;
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+export const dynamic = "force-static";
+
+const size = { width: 1200, height: 630 };
 
 const { bg, surface, fg, fgSecondary, fgMuted, accent, rule } = BRAND_COLORS;
 
-export default function Image() {
+export function GET() {
   return new ImageResponse(
     (
       <div
