@@ -8,8 +8,35 @@ import { OFFERS } from "@/lib/offers";
  * sitemap.ts, robots.ts, llms.txt/route.ts, and JsonLd.tsx.
  */
 
-// TODO: Confirm production domain before launch.
-export const SITE_URL = "https://yair.studio";
+/**
+ * Canonical absolute base URL — used ONLY where an absolute URL is required:
+ * `metadataBase` (canonical + Open Graph), `sitemap.ts`, `robots.ts`,
+ * `JsonLd.tsx`, and `llms.txt`. All in-app navigation and asset links are
+ * root-relative and host-agnostic, so they need nothing from here.
+ *
+ * Resolved from the environment so it is correct on every deployment and never
+ * hardcodes a domain (precedence):
+ *   1. NEXT_PUBLIC_SITE_URL          — explicit override; set once a custom domain is live.
+ *   2. VERCEL_PROJECT_PRODUCTION_URL — Vercel's stable production domain (always set,
+ *                                      even on previews; auto-upgrades to the custom
+ *                                      domain when one is assigned).
+ *   3. VERCEL_URL                    — per-deployment URL (preview fallback).
+ *   4. http://localhost:3000         — local development.
+ */
+function resolveSiteUrl(): string {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
+  if (explicit) return explicit.replace(/\/+$/, "");
+
+  const productionDomain = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  if (productionDomain) return `https://${productionDomain}`;
+
+  const deploymentDomain = process.env.VERCEL_URL;
+  if (deploymentDomain) return `https://${deploymentDomain}`;
+
+  return "http://localhost:3000";
+}
+
+export const SITE_URL = resolveSiteUrl();
 
 export const SITE_NAME = "y[AI]r studio";
 export const SITE_ALT_NAME = "Yair Studio";
