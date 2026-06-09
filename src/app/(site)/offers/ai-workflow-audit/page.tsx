@@ -4,6 +4,7 @@ import OfferCardGrid from "@/components/offers/OfferCardGrid";
 import OfferSteps from "@/components/offers/OfferSteps";
 import OfferCTA from "@/components/offers/OfferCTA";
 import WorkflowMap from "@/components/WorkflowMap";
+import ProcessFilm from "@/components/ProcessFilm";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata("/offers/ai-workflow-audit");
@@ -116,6 +117,15 @@ export default function AiWorkflowAuditPage() {
         title="AI Workflow Audit"
         lead="Before automating anything, map the real process. A focused review of one workflow — how it actually runs, where it stalls, and what's worth building."
       />
+
+      <OfferSection id="film" title="From a messy workflow to a first system">
+        <ProcessFilm
+          webm="/videos/ai-workflow-audit-process.webm"
+          mp4="/videos/ai-workflow-audit-process.mp4"
+          poster="/videos/ai-workflow-audit-process-poster.png"
+          caption="A messy workflow, separated into what to automate, what to assist, and what stays human — your first useful system."
+        />
+      </OfferSection>
 
       <OfferSection
         id="who"

@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      /* ============================================================
+         "AI Workflow Audit — Three kinds of work" (redesign v3).
+         Type-forward + reductive: large Inter headlines carry the film;
+         an abstract field of ~15 task tiles goes messy → ordered →
+         sorted into three kinds (Automate / Assist / Human judgment) →
+         one defined system. ONE continuous copper emphasis (a slow sweep
+         + a steady held glow on the human group) — no bloom ring, no
+         color snaps. Palette + type mirror src/app/globals.css.
+         Renders transparent (alpha WebM); #review-bg is REVIEW-ONLY.
+         ============================================================ */
+      @font-face { font-family: "Inter"; font-weight: 400; font-display: block; src: url("assets/fonts/inter-400.woff2") format("woff2"); }
+      @font-face { font-family: "Inter"; font-weight: 600; font-display: block; src: url("assets/fonts/inter-600.woff2") format("woff2"); }
+      @font-face { font-family: "Geist Mono"; font-weight: 400; font-display: block; src: url("assets/fonts/geist-mono-400.woff2") format("woff2"); }
+
+      :root {
+        --bg-0: #121211; --bg-1: #1a1a18; --bg-2: #242420;
+        --fg-1: #f4f1ea; --fg-2: #b9b3aa; --fg-3: #8a847a;
+        --accent: #d96832; --accent-hover: #e67e45;
+        --accent-soft: rgba(217, 104, 50, 0.12); --accent-rule: rgba(217, 104, 50, 0.32);
+        --rule: #2a2a26; --rule-strong: #3a3a34;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden; background: transparent;
+        font-family: "Inter", system-ui, sans-serif; color: var(--fg-1);
+        -webkit-font-smoothing: antialiased;
+      }
+      #stage { position: relative; width: 1920px; height: 1080px; }
+      #camera { position: absolute; inset: 0; transform-origin: 960px 540px; will-change: transform; }
+
+      /* ---------- Wordmark (the one small accent) ---------- */
+      #mark {
+        position: absolute; left: 160px; top: 110px; opacity: 0;
+        font-family: "Geist Mono", ui-monospace, monospace; font-size: 22px;
+        letter-spacing: 0.26em; text-transform: uppercase; color: var(--accent);
+      }
+
+      /* ---------- Headlines (the legibility — large, high-contrast) ---------- */
+      .head {
+        position: absolute; left: 160px; white-space: nowrap;
+        font-weight: 600; letter-spacing: -0.02em; color: var(--fg-1); opacity: 0;
+      }
+      .head.book { top: 540px; transform: translateY(-50%); font-size: 68px; }
+      .head.line { font-size: 60px; }            /* the three "aha" lines */
+      .head .cu { color: var(--accent); }
+
+      /* ---------- Task tiles (abstract, no labels) ---------- */
+      .tile {
+        position: absolute; left: 0; top: 0; width: 56px; height: 38px;
+        border-radius: 7px; background: var(--bg-2); border: 1px solid var(--rule-strong);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.42); opacity: 0; will-change: transform, opacity;
+      }
+
+      /* ---------- Copper sweep (the audit pass — one slow motion) ---------- */
+      #sweep {
+        position: absolute; left: 980px; top: 286px; width: 150px; height: 508px;
+        opacity: 0; pointer-events: none; filter: blur(2px); will-change: transform, opacity;
+        background: linear-gradient(90deg, rgba(217,104,50,0) 0%, rgba(217,104,50,0.10) 30%,
+          rgba(217,104,50,0.5) 50%, rgba(217,104,50,0.10) 70%, rgba(217,104,50,0) 100%);
+      }
+
+      /* ---------- Human-judgment glow (steady, held — no flash) ---------- */
+      #human-glow {
+        position: absolute; left: 1000px; top: 556px; width: 800px; height: 400px;
+        opacity: 0; pointer-events: none; will-change: opacity;
+        background: radial-gradient(ellipse at center, rgba(217,104,50,0.22) 0%, rgba(217,104,50,0) 70%);
+      }
+
+      /* ---------- Human-approval check (wordless, B4) ---------- */
+      #approve { position: absolute; left: 1612px; top: 632px; transform: translateY(-50%); width: 34px; height: 34px; opacity: 0; }
+      #approve path {
+        fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;
+        stroke-dasharray: 34; stroke-dashoffset: 34;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="stage" data-composition-id="root" data-start="0" data-duration="12" data-width="1920" data-height="1080">
+      <div id="camera">
+        <div id="human-glow"></div>
+
+        <!-- ~15 abstract task tiles (positioned entirely by GSAP from 0,0) -->
+        <div class="tile" id="t0"></div><div class="tile" id="t1"></div><div class="tile" id="t2"></div>
+        <div class="tile" id="t3"></div><div class="tile" id="t4"></div><div class="tile" id="t5"></div>
+        <div class="tile" id="t6"></div><div class="tile" id="t7"></div><div class="tile" id="t8"></div>
+        <div class="tile" id="t9"></div><div class="tile" id="t10"></div><div class="tile" id="t11"></div>
+        <div class="tile" id="t12"></div><div class="tile" id="t13"></div><div class="tile" id="t14"></div>
+
+        <!-- copper sweep -->
+        <div id="sweep"></div>
+
+        <!-- human-approval check -->
+        <svg id="approve" viewBox="0 0 24 24"><path d="M4 13 l5 5 l11 -12" /></svg>
+
+        <!-- Wordmark -->
+        <div id="mark">AI Workflow Audit</div>
+
+        <!-- Bookend headlines -->
+        <div class="head book" id="h-messy">Messy by default.</div>
+        <div class="head book" id="h-read">The audit reads it.</div>
+        <div class="head book" id="h-system">Your first useful system.</div>
+
+        <!-- The three "aha" lines (aligned to the three tile bands) -->
+        <div class="head line" id="l-auto"   style="top: 340px; transform: translateY(-50%)">Some things automate.</div>
+        <div class="head line" id="l-assist" style="top: 540px; transform: translateY(-50%)">Some things assist.</div>
+        <div class="head line" id="l-human"  style="top: 740px; transform: translateY(-50%)">Some things <span class="cu">stay human.</span></div>
+      </div>
+    </div>
+
+    <script>
+      /* ============================================================
+         Timeline — 12s, deterministic (no random / Date / setTimeout / async).
+         Messy → audit reads it (copper sweep) → the three-kind decision
+         (PEAK, ~1.8s hold) → first useful system. Continuous, slow, filmic.
+         Registered paused on window.__timelines["root"].
+         ============================================================ */
+      // tile i → grid col = i%5, row = floor(i/5). Row 2 (i 10–14) = human group.
+      const COLX = [1072, 1182, 1292, 1402, 1512];
+      const COMPACT_Y = [453, 533, 613];   // ordered / consolidated grid
+      const SPREAD_Y  = [321, 521, 721];   // split into three kinds (peak)
+      // hand-authored messy scatter (deterministic) — top-left x,y + rotation
+      const MESSY = [
+        { x: 1040, y: 360, r: -8 }, { x: 1286, y: 332, r: 6 },  { x: 1486, y: 384, r: -5 },
+        { x: 1150, y: 470, r: 9 },  { x: 1560, y: 520, r: -7 }, { x: 1002, y: 560, r: 4 },
+        { x: 1330, y: 500, r: -9 }, { x: 1520, y: 644, r: 7 },  { x: 1082, y: 662, r: -4 },
+        { x: 1384, y: 700, r: 8 },  { x: 1232, y: 604, r: -6 }, { x: 1596, y: 452, r: 5 },
+        { x: 984,  y: 442, r: 7 },  { x: 1300, y: 742, r: -8 }, { x: 1448, y: 752, r: 6 },
+      ];
+      const HUMAN = [10, 11, 12, 13, 14].map((i) => "#t" + i);
+
+      const compact = [], spread = [];
+      for (let i = 0; i < 15; i++) {
+        const c = i % 5, r = Math.floor(i / 5);
+        compact.push({ x: COLX[c], y: COMPACT_Y[r] });
+        spread.push({ x: COLX[c], y: SPREAD_Y[r] });
+      }
+
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+
+      // seed tiles at their messy positions, soft (DOF) and hidden
+      for (let i = 0; i < 15; i++) {
+        gsap.set("#t" + i, { x: MESSY[i].x, y: MESSY[i].y, rotation: MESSY[i].r, opacity: 0, filter: "blur(2px)" });
+      }
+
+      // ---- ACT 1 — Messy by default (0.0–2.6) ----
+      tl.to("#mark", { opacity: 1, duration: 0.7 }, 0.3);
+      for (let i = 0; i < 15; i++) {
+        tl.to("#t" + i, { opacity: 0.4, duration: 0.9, ease: "power2.out", overwrite: "auto" }, 0.25 + i * 0.045);
+      }
+      tl.fromTo("#h-messy", { opacity: 0, y: "-50%", x: -24 }, { opacity: 1, x: 0, duration: 0.9 }, 0.6);
+
+      // ---- ACT 2 — The audit reads it (2.6–4.4): copper sweep + chaos→order ----
+      tl.to("#h-messy", { opacity: 0, duration: 0.5 }, 2.55);
+      tl.fromTo("#h-read", { opacity: 0, y: "-50%", x: -24 }, { opacity: 1, x: 0, duration: 0.9 }, 2.85);
+      // the single slow copper sweep
+      tl.fromTo("#sweep", { x: 0, opacity: 0 }, { opacity: 0.6, duration: 0.5 }, 2.7)
+        .to("#sweep", { x: 660, duration: 1.5, ease: "power1.inOut" }, 2.7)
+        .to("#sweep", { opacity: 0, duration: 0.5 }, 3.9);
+      // tiles ease into the ordered grid behind the sweep (focus pull), column-staggered
+      for (let i = 0; i < 15; i++) {
+        const c = i % 5;
+        tl.to("#t" + i, {
+          x: compact[i].x, y: compact[i].y, rotation: 0, opacity: 0.9, filter: "blur(0px)",
+          duration: 1.0, ease: "power2.inOut", overwrite: "auto",
+        }, 2.85 + c * 0.13);
+      }
+
+      // ---- ACT 3 — Three kinds of work (PEAK, ~1.8s hold) (4.4–9.2) ----
+      tl.to("#h-read", { opacity: 0, duration: 0.5 }, 4.35);
+
+      // Beat A — Automate: row 0 rises, line in
+      for (let i = 0; i <= 4; i++) tl.to("#t" + i, { y: spread[i].y, duration: 0.9, ease: "power2.inOut", overwrite: "auto" }, 4.5);
+      tl.fromTo("#l-auto", { opacity: 0, y: "-50%", x: -22 }, { opacity: 1, x: 0, duration: 0.8 }, 4.8);
+
+      // Beat B — Assist: row 1 settles (barely moves), line in
+      for (let i = 5; i <= 9; i++) tl.to("#t" + i, { y: spread[i].y, duration: 0.9, ease: "power2.inOut", overwrite: "auto" }, 5.6);
+      tl.fromTo("#l-assist", { opacity: 0, y: "-50%", x: -22 }, { opacity: 1, x: 0, duration: 0.8 }, 5.95);
+
+      // Beat C — Human judgment: row 2 lowers, warms to copper, steady glow rises + holds
+      for (let i = 10; i <= 14; i++) tl.to("#t" + i, { y: spread[i].y, duration: 0.9, ease: "power2.inOut", overwrite: "auto" }, 6.7);
+      tl.fromTo("#l-human", { opacity: 0, y: "-50%", x: -22 }, { opacity: 1, x: 0, duration: 0.8 }, 7.05);
+      tl.to(HUMAN, { backgroundColor: "rgba(217,104,50,0.16)", borderColor: "#d96832", duration: 0.9, ease: "power2.out" }, 7.05);
+      tl.to("#human-glow", { opacity: 1, duration: 1.1, ease: "power2.out" }, 7.05);
+      // HOLD ~7.9–9.2 — everything still, glow steady (no spike)
+
+      // ---- ACT 4 — Your first useful system (9.2–12.0) ----
+      tl.to(["#l-auto", "#l-assist", "#l-human"], { opacity: 0, duration: 0.55 }, 9.2);
+      // consolidate the three kinds into one tidy block (human tiles stay copper)
+      for (let i = 0; i < 15; i++) {
+        tl.to("#t" + i, { y: compact[i].y, duration: 0.9, ease: "power3.inOut", overwrite: "auto" }, 9.35 + (i % 5) * 0.04);
+      }
+      tl.to("#human-glow", { top: 470, opacity: 0.85, duration: 0.9, ease: "power2.inOut" }, 9.35);
+      tl.fromTo("#h-system", { opacity: 0, y: "-50%", x: -24 }, { opacity: 1, x: 0, duration: 0.9 }, 9.8);
+      tl.to("#approve", { opacity: 1, duration: 0.5 }, 10.25);
+      tl.to("#approve path", { strokeDashoffset: 0, duration: 0.7, ease: "power2.inOut" }, 10.35);
+      // settle to 12.0
+
+      // Camera: restrained, continuous push-in across the whole film
+      tl.fromTo("#camera", { scale: 1.0 }, { scale: 1.025, duration: 12, ease: "sine.inOut" }, 0);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["root"] = tl;
+    </script>
+  </body>
+</html>
