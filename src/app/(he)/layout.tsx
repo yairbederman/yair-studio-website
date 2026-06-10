@@ -4,7 +4,7 @@ import Wordmark from "@/components/Wordmark";
 import LangToggle from "@/components/LangToggle";
 import { fontVariables } from "@/lib/fonts";
 import { rootMetadata } from "@/lib/root-metadata";
-import { CONTACT_MAILTO } from "@/lib/site";
+import { CONTACT_EMAIL, CONTACT_MAILTO } from "@/lib/site";
 
 /**
  * Root layout for the Hebrew site (route group `(he)`). The second of the
@@ -43,7 +43,11 @@ export default function HeLayout({
             <span className="footer-tag">מערכות AI לתהליכי עבודה אמיתיים</span>
           </div>
           <nav className="footer-r" aria-label="קישורים בתחתית">
-            <a href={CONTACT_MAILTO}>צור קשר</a>
+            {/* The visible address (LTR-isolated inside the RTL shell) — works
+                even when no mail client is configured. */}
+            <a href={CONTACT_MAILTO} className="ltr-inline">
+              {CONTACT_EMAIL}
+            </a>
           </nav>
         </footer>
       </body>

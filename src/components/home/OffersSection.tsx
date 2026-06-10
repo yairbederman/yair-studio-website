@@ -22,7 +22,8 @@ export default function OffersSection() {
           webm="/videos/one-system-overview.webm"
           mp4="/videos/one-system-overview.mp4"
           poster="/videos/one-system-overview-poster.png"
-          caption="Four entry points, one operating layer — with human approval where it matters."
+          caption="Four entry points into one system, with a human approval step built in."
+          filmName="one-system overview film"
         />
         <OfferCards />
       </Container>

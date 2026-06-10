@@ -16,12 +16,12 @@ const WHAT_I_BUILD = [
     desc: "Practical assistants for meetings, tasks, email, knowledge search, reporting, and follow-up.",
   },
   {
-    title: "Dashboards & automation layers",
+    title: "Dashboards & automation",
     desc: "A connected view of what needs attention, with the right next action close at hand.",
   },
   {
-    title: "Approval-first operating systems",
-    desc: "Systems that draft and prepare the work, then wait for a human decision where it matters.",
+    title: "Approval-first systems",
+    desc: "Systems that draft and prepare the work, then wait for a human decision.",
   },
 ];
 
@@ -39,7 +39,6 @@ export default function AboutPage() {
     <main id="main">
       <PageHero
         id="about"
-        eyebrow="About"
         title="AI systems for real business workflows"
         lead="y[AI]r studio builds AI workflow systems for real business operations: the everyday processes a growing service business runs on. The work is practical, not a demo. Map the process first, then build only what earns its place, with people in control of the decisions that matter."
       />
@@ -68,6 +67,15 @@ export default function AboutPage() {
           professional offices where meetings, documents, email, deadlines,
           and follow-up all cross paths, often in Hebrew and English.
         </p>
+        <div className="panel-list">
+          <p>
+            <strong>Yair Bederman</strong>
+            <br />
+            Builds and runs y[AI]r studio. Background in R&amp;D and software
+            leadership; maps the workflow, builds the system, and stays
+            involved after it goes live.
+          </p>
+        </div>
       </OfferSection>
 
       <OfferSection
@@ -88,7 +96,7 @@ export default function AboutPage() {
         <p className="section-intro">
           Growing service businesses, operators, founders, professional offices,
           and lean teams running real work across too many tools. Professional
-          offices — including legal, document-heavy, and approval-driven teams —
+          offices, including legal, document-heavy, and approval-driven teams,
           are a strong fit for this approach. The same system fits any service
           business whose workflows have outgrown manual coordination. The work
           runs in Hebrew and English, whichever the team actually uses day to
@@ -97,8 +105,8 @@ export default function AboutPage() {
       </OfferSection>
 
       <OfferCTA
-        heading="Start with one workflow, not a transformation program."
-        body="Pick a real process that slows things down. We map how it runs today before deciding what is worth building."
+        heading="Start with one real workflow."
+        body="Pick a process that slows things down. We map how it runs today before deciding what is worth building."
       />
     </main>
   );

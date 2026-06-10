@@ -1,8 +1,10 @@
 import OfferHero from "@/components/offers/OfferHero";
 import OfferSection from "@/components/offers/OfferSection";
 import OfferCardGrid from "@/components/offers/OfferCardGrid";
+import ProblemsPanel from "@/components/ProblemsPanel";
 import OfferSteps from "@/components/offers/OfferSteps";
 import OfferCTA from "@/components/offers/OfferCTA";
+import WorkflowMap from "@/components/WorkflowMap";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata("/offers/content-ad-operations");
@@ -60,6 +62,15 @@ const DELIVERABLES = [
   },
 ];
 
+/** The loop every piece runs through — generic mechanics, no client data. */
+const APPROVAL_LOOP = [
+  { label: "Intake", sub: "ideas · calls · assets" },
+  { label: "Brief prepared" },
+  { label: "Variants drafted" },
+  { label: "Human approval", human: true },
+  { label: "Published + results fed back", out: true },
+] as const;
+
 const STEPS = [
   {
     title: "Capture inputs",
@@ -75,7 +86,7 @@ const STEPS = [
   },
   {
     title: "Approve before publishing",
-    desc: "Nothing is posted without a human sign-off — no auto-publishing.",
+    desc: "Nothing is posted without a human sign-off.",
     human: true,
   },
   {
@@ -87,7 +98,7 @@ const STEPS = [
 const HUMAN = [
   {
     title: "Publishing",
-    desc: "Nothing goes live without approval — no auto-publishing.",
+    desc: "Nothing goes live without a person approving it.",
   },
   {
     title: "Brand voice",
@@ -105,7 +116,7 @@ export default function ContentAdOperationsPage() {
       <OfferHero
         eyebrow="Content operations"
         title="Content & Ad Operations"
-        lead="Turn ideas, assets, performance data, and approvals into repeatable campaigns. A system for content and ad operations — with approval before anything publishes."
+        lead="Turn ideas, assets, performance data, and approvals into repeatable campaigns. A system for content and ad operations, with approval before anything publishes."
       />
 
       <OfferSection id="who" title="Who it's for">
@@ -113,11 +124,23 @@ export default function ContentAdOperationsPage() {
       </OfferSection>
 
       <OfferSection id="problems" title="Problems it solves">
-        <OfferCardGrid items={PROBLEMS} />
+        <ProblemsPanel items={PROBLEMS} />
       </OfferSection>
 
       <OfferSection id="build" title="What we build">
         <OfferCardGrid items={DELIVERABLES} />
+      </OfferSection>
+
+      <OfferSection
+        id="example"
+        title="What the approval loop looks like"
+        intro="The loop every piece runs through, simplified. Nothing reaches publish without the approval step."
+      >
+        <WorkflowMap
+          caption="Approval loop"
+          ariaLabel="The content and ad approval loop"
+          nodes={APPROVAL_LOOP}
+        />
       </OfferSection>
 
       <OfferSection id="how" title="How it works">
@@ -134,7 +157,7 @@ export default function ContentAdOperationsPage() {
 
       <OfferCTA
         heading="Make content and ad ops repeatable."
-        body="Start with one workflow — intake, calendar, or approvals — and turn scattered output into a system."
+        body="Start with one workflow, such as intake, the calendar, or approvals, and turn scattered output into a system."
       />
     </main>
   );

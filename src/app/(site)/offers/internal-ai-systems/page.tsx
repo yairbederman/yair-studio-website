@@ -1,8 +1,10 @@
 import OfferHero from "@/components/offers/OfferHero";
 import OfferSection from "@/components/offers/OfferSection";
 import OfferCardGrid from "@/components/offers/OfferCardGrid";
+import ProblemsPanel from "@/components/ProblemsPanel";
 import OfferSteps from "@/components/offers/OfferSteps";
 import OfferCTA from "@/components/offers/OfferCTA";
+import WorkflowMap from "@/components/WorkflowMap";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata("/offers/internal-ai-systems");
@@ -60,6 +62,15 @@ const DELIVERABLES = [
   },
 ];
 
+/** The shape every assistant workflow shares — generic mechanics, no client data. */
+const ASSISTANT_SKELETON = [
+  { label: "Incoming work", sub: "meeting · email · request" },
+  { label: "Context gathered", sub: "threads · documents · history" },
+  { label: "Draft + tasks prepared" },
+  { label: "Human approval", human: true },
+  { label: "Tracked action", out: true },
+] as const;
+
 const STEPS = [
   {
     title: "Start from one workflow",
@@ -105,7 +116,7 @@ export default function InternalAiSystemsPage() {
       <OfferHero
         eyebrow="Assistant layer"
         title="Internal AI Systems"
-        lead="A practical AI layer for the day-to-day work of a service team: meetings, email and calendar context, tasks, knowledge search, and follow-up — with approvals before anything acts."
+        lead="A practical AI layer for the day-to-day work of a service team: meetings, email and calendar context, tasks, knowledge search, and follow-up, with approvals before anything acts."
       />
 
       <OfferSection
@@ -117,11 +128,23 @@ export default function InternalAiSystemsPage() {
       </OfferSection>
 
       <OfferSection id="problems" title="Problems it solves">
-        <OfferCardGrid items={PROBLEMS} />
+        <ProblemsPanel items={PROBLEMS} />
       </OfferSection>
 
       <OfferSection id="build" title="What we build">
         <OfferCardGrid items={DELIVERABLES} />
+      </OfferSection>
+
+      <OfferSection
+        id="example"
+        title="What an assistant workflow looks like"
+        intro="The shape every assistant workflow follows, simplified. Note where the approval sits: before anything acts."
+      >
+        <WorkflowMap
+          caption="Assistant workflow"
+          ariaLabel="The shared shape of an assistant workflow"
+          nodes={ASSISTANT_SKELETON}
+        />
       </OfferSection>
 
       <OfferSection id="how" title="How it works">
@@ -137,8 +160,8 @@ export default function InternalAiSystemsPage() {
       </OfferSection>
 
       <OfferCTA
-        heading="Build the operating layer around one real workflow."
-        body="Start with a single process — meetings, follow-up, or knowledge search — and expand from there."
+        heading="Build the system around one real workflow."
+        body="Start with a single process, such as meetings, follow-up, or knowledge search, and expand from there."
       />
     </main>
   );

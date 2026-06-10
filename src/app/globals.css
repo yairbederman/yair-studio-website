@@ -368,6 +368,13 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 .btn-ghost { border-color: transparent; }
 .btn-ghost:hover { background: var(--bg-3); border-color: var(--rule); }
 
+/* Compact button — secondary affordances (film pause/play, copy email). */
+.btn-sm {
+  min-height: 36px;
+  padding: 6px 12px;
+  font-size: var(--fs-sm);
+}
+
 /* ============================================================
    Shell — nav, layout, footer (adapted from site.css)
    ============================================================ */
@@ -377,7 +384,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   top: -100px;
   z-index: 100;
   padding: 10px 14px;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--fs-md);
   background: var(--bg-1);
   color: var(--fg-1);
@@ -439,14 +446,14 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 /* Vertical stack for placeholder content (start-aligned in both directions). */
 .stack { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-4); }
 
+/* Full-bleed like .site-nav — the top rule spans the viewport. */
 .site-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--s-5);
   padding: var(--s-6);
-  max-width: var(--content-max);
-  margin: var(--s-8) auto 0;
+  margin-block-start: var(--s-8);
   border-top: 1px solid var(--rule);
 }
 .footer-l { display: flex; align-items: baseline; gap: var(--s-4); }
@@ -806,6 +813,26 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 }
 .feature-card.is-human .card-title { color: var(--accent); }
 
+/* Odd-count 2-col grids: the lone last card spans the row instead of leaving
+   a hole. No-op in the single-column mobile layout. */
+.feature-grid > li:last-child:nth-child(odd),
+.offers-grid > li:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+/* Visible email + copy affordance (CopyEmail) — sits in a .hero-actions row. */
+.copy-email {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-width: 0;
+}
+.copy-email-address {
+  font-size: var(--fs-md);
+  color: var(--fg-2);
+  overflow-wrap: anywhere;
+}
+
 @media (max-width: 767px) {
   .offer-hero { padding-block: var(--s-8) var(--s-6); }
   .offer-hero h1 { font-size: var(--fs-3xl); }
@@ -831,11 +858,12 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   gap: var(--s-4);
 }
 
-/* Before / mapped, side by side (the /workflows example). */
-/* The process film — a decorative looping video above the Before/Mapped compare.
-   The frame background is --bg-0 (what the transparent WebM was composed against)
-   so the film's --bg-1 chips/cards keep their contrast. The static WorkflowMap
-   below carries the semantics; reduced-motion users get the poster still. */
+/* The process film — a decorative looping video rendered by FilmPlayer.
+   The frame background is --bg-0 (what the films were composed against) so
+   their --bg-1 chips/cards keep their contrast. The poster <img> is the
+   always-visible base layer; FilmPlayer mounts the <video> above it only on
+   ≥768px viewports without a reduced-motion preference, plus a visible
+   pause/play toggle (WCAG 2.2.2). The caption carries the semantics. */
 .workflow-film {
   margin: 0 0 var(--s-6);
   display: flex;
@@ -850,8 +878,8 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   overflow: hidden;
   background: var(--bg-0);
 }
-.workflow-film .film-video,
-.workflow-film .film-poster {
+.workflow-film .film-poster,
+.workflow-film .film-video {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -859,23 +887,18 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   object-fit: contain;
   display: block;
 }
-.workflow-film .film-poster {
-  display: none;
-  background-color: var(--bg-0);
-  background-image: url("/videos/meeting-follow-up-workflow-poster.png");
-  background-position: center;
-  background-size: contain;
-  background-repeat: no-repeat;
-}
-@media (prefers-reduced-motion: reduce) {
-  .workflow-film .film-video { display: none; }
-  .workflow-film .film-poster { display: block; }
+/* Pause/play — a .btn.btn-sm pinned inside the frame with logical insets. */
+.workflow-film .film-toggle {
+  position: absolute;
+  inset-inline-end: var(--s-3);
+  inset-block-end: var(--s-3);
+  background: var(--bg-1);
 }
 /* Caption under an embedded process film (sentence, so not the all-caps .sch-cap) */
 .film-caption {
   font-size: var(--fs-sm);
   line-height: var(--lh-body);
-  color: var(--fg-3);
+  color: var(--fg-2);
   text-align: center;
   text-wrap: balance;
 }

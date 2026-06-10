@@ -74,7 +74,7 @@ const en: HomeContent = {
   hero: {
     eyebrow: "AI workflow systems",
     title: "Turn messy business workflows into clear AI-assisted systems.",
-    lead: "I help growing businesses map stuck processes, connect existing tools, and build dashboards, automations, and AI assistants so teams know the next action, with human approval where it matters. I work in Hebrew and English where your team needs it.",
+    lead: "Work gets stuck when tasks, email, and context live in different tools. I map the process, connect the tools you already use, and build one system that shows the next action, with human approval where it matters.",
     primaryCta: { label: "Map one workflow", href: "/contact" },
     secondaryCta: { label: "See how it works", href: "#how-i-work" },
     schematic: {
@@ -82,7 +82,7 @@ const en: HomeContent = {
       nodes: [
         { label: "scattered inputs", sub: "tasks · email · docs · context" },
         { label: "mapped workflow" },
-        { label: "operating layer", sub: "dashboards · automations · assistants" },
+        { label: "one system", sub: "dashboards · automations · assistants" },
         { label: "human approval", human: true },
         { label: "clear next action", out: true },
       ],
@@ -121,7 +121,7 @@ const en: HomeContent = {
         desc: "We use the systems already in the business: email, calendar, CRM, documents, spreadsheets, APIs, or databases.",
       },
       {
-        title: "Build the operating layer",
+        title: "Build the system",
         desc: "Dashboards, automations, summaries, alerts, and AI assistants are added where they reduce friction.",
       },
       {
@@ -134,7 +134,7 @@ const en: HomeContent = {
   evidence: {
     title: "What “mapped” looks like",
     intro:
-      "An illustration of the approach, not a client case study. The improvement here is structural: scattered, manual work becomes a mapped flow with a human approval step, shown as a structure, not a performance claim.",
+      "An illustration of the approach, not a client case study. The improvement here is structural: scattered, manual work becomes a mapped flow with a human approval step.",
     before: {
       caption: "Before",
       items: [
@@ -175,7 +175,7 @@ const he: HomeContent = {
   hero: {
     eyebrow: "מערכות AI לתהליכי עבודה",
     title: "הופכים תהליכי עבודה מבולגנים למערכות AI ברורות.",
-    lead: "אני עוזר לעסקים צומחים למפות תהליכים תקועים, לחבר את הכלים שכבר קיימים, ולבנות דשבורדים, אוטומציות ועוזרי AI שמייצרים את הצעד הבא הברור. עם אישור אנושי במקומות שבהם זה חשוב. אני עובד בעברית ובאנגלית, לפי הצורך.",
+    lead: "העבודה נתקעת כשמשימות, מיילים והקשר מפוזרים בין כלים שונים. אני ממפה את התהליך, מחבר את הכלים שכבר קיימים, ובונה מערכת אחת שמראה את הצעד הבא, עם אישור אנושי בנקודות ההחלטה.",
     primaryCta: { label: "למפות תהליך אחד", href: CONTACT_MAILTO },
     secondaryCta: { label: "איך זה עובד", href: "#how-i-work" },
     schematic: {
@@ -183,7 +183,7 @@ const he: HomeContent = {
       nodes: [
         { label: "קלט מפוזר", sub: "משימות · מייל · מסמכים · הקשר" },
         { label: "תהליך ממופה" },
-        { label: "שכבת הפעלה", sub: "דשבורדים · אוטומציות · עוזרים" },
+        { label: "מערכת אחת", sub: "דשבורדים · אוטומציות · עוזרים" },
         { label: "אישור אנושי", human: true },
         { label: "צעד הבא ברור", out: true },
       ],
@@ -222,7 +222,7 @@ const he: HomeContent = {
         desc: "משתמשים במערכות שכבר קיימות בעסק: מייל, יומן, CRM, מסמכים, גיליונות, APIs ובסיסי נתונים.",
       },
       {
-        title: "בונים את שכבת ההפעלה",
+        title: "בונים את המערכת",
         desc: "דשבורדים, אוטומציות, סיכומים, התראות ועוזרי AI נכנסים איפה שהם מורידים חיכוך.",
       },
       {
@@ -235,7 +235,7 @@ const he: HomeContent = {
   evidence: {
     title: "איך נראה תהליך ממופה",
     intro:
-      "הדגמה של הגישה, לא מקרה לקוח אמיתי. השיפור כאן מבני: עבודה מפוזרת וידנית הופכת לתהליך ממופה עם שלב אישור אנושי — כמבנה, לא כהבטחת ביצועים.",
+      "הדגמה של הגישה, לא מקרה לקוח אמיתי. השיפור כאן מבני: עבודה מפוזרת וידנית הופכת לתהליך ממופה עם שלב אישור אנושי.",
     before: {
       caption: "לפני",
       items: [

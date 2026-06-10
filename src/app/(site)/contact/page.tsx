@@ -2,10 +2,31 @@ import PageHero from "@/components/PageHero";
 import OfferSection from "@/components/offers/OfferSection";
 import OfferCardGrid from "@/components/offers/OfferCardGrid";
 import OfferSteps from "@/components/offers/OfferSteps";
+import OfferCTA from "@/components/offers/OfferCTA";
 import CTAButton from "@/components/CTAButton";
+import CopyEmail from "@/components/CopyEmail";
 import { pageMetadata, CONTACT_EMAIL, CONTACT_MAILTO } from "@/lib/site";
 
 export const metadata = pageMetadata("/contact");
+
+const NEXT_STEPS = [
+  {
+    title: "Send a short note",
+    desc: "A few lines about the workflow and where it slows down. No formal brief needed.",
+  },
+  {
+    title: "Choose one workflow",
+    desc: "We focus on a single, real process, not the whole business at once.",
+  },
+  {
+    title: "Map the current process",
+    desc: "We document how the work actually runs today: steps, owners, inputs, and outputs.",
+  },
+  {
+    title: "Decide what's worth building",
+    desc: "You get a clear view of what to automate, what to leave alone, and what to do first.",
+  },
+];
 
 const WHAT_TO_SEND = [
   {
@@ -38,25 +59,6 @@ const GOOD_FIRST = [
   "A document-heavy office workflow",
 ];
 
-const NEXT_STEPS = [
-  {
-    title: "Send a short note",
-    desc: "A few lines about the workflow and where it slows down. No formal brief needed.",
-  },
-  {
-    title: "Choose one workflow",
-    desc: "We focus on a single, real process, not the whole business at once.",
-  },
-  {
-    title: "Map the current process",
-    desc: "We document how the work actually runs today: steps, owners, inputs, and outputs.",
-  },
-  {
-    title: "Decide what's worth building",
-    desc: "You get a clear view of what to automate, what to leave alone, and what to do first.",
-  },
-];
-
 const STAYS_HUMAN = [
   {
     title: "Approval stays with you",
@@ -73,10 +75,21 @@ export default function ContactPage() {
     <main id="main">
       <PageHero
         id="contact"
-        eyebrow="Contact"
         title="Map one workflow"
-        lead="Pick one workflow that slows your business down, and we map how it actually runs before deciding whether to build anything. Low pressure, no obligation, and no long brief required."
+        lead="Pick one workflow that slows your business down, and we map how it actually runs before deciding whether to build anything. A few lines by email is enough to start. Hebrew or English is fine."
+        actions={
+          <>
+            <CTAButton href={CONTACT_MAILTO} variant="primary">
+              Send an email
+            </CTAButton>
+            <CopyEmail email={CONTACT_EMAIL} />
+          </>
+        }
       />
+
+      <OfferSection id="next" title="What happens next">
+        <OfferSteps items={NEXT_STEPS} />
+      </OfferSection>
 
       <OfferSection
         id="send"
@@ -100,10 +113,6 @@ export default function ContactPage() {
         </div>
       </OfferSection>
 
-      <OfferSection id="next" title="What happens next">
-        <OfferSteps items={NEXT_STEPS} />
-      </OfferSection>
-
       <OfferSection
         id="human"
         title="What stays human"
@@ -112,21 +121,12 @@ export default function ContactPage() {
         <OfferCardGrid items={STAYS_HUMAN} variant="human" />
       </OfferSection>
 
-      <OfferSection id="reach" title="How to reach out">
-        <div className="panel-list">
-          <span className="sch-cap">Contact</span>
-          <p>
-            Email <a href={CONTACT_MAILTO}>{CONTACT_EMAIL}</a> with a short note
-            about the workflow and where it slows down. A few lines is enough to
-            start. Hebrew or English is fine.
-          </p>
-          <div>
-            <CTAButton href={CONTACT_MAILTO} variant="primary">
-              Send an email
-            </CTAButton>
-          </div>
-        </div>
-      </OfferSection>
+      <OfferCTA
+        heading="A short note is the whole first step."
+        body="Describe the workflow and where it slows down. You write to the person who maps and builds the system."
+        ctaLabel="Send an email"
+        ctaHref={CONTACT_MAILTO}
+      />
     </main>
   );
 }

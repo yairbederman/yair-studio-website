@@ -41,7 +41,7 @@ export const SITE_URL = resolveSiteUrl();
 export const SITE_NAME = "y[AI]r studio";
 export const SITE_ALT_NAME = "Yair Studio";
 export const SITE_DESCRIPTION =
-  "AI workflow systems for growing businesses: process mapping, dashboards, automations, and internal AI assistants with human approval where it matters.";
+  "AI workflow systems for growing businesses: process mapping, dashboards, automations, and internal AI assistants with human approval at the decision points.";
 
 /**
  * Public contact channel (personal Gmail, confirmed for public use). Single
@@ -58,7 +58,7 @@ export const CONTACT_MAILTO = `mailto:${CONTACT_EMAIL}`;
  */
 export const OG_IMAGE_PATH = "/opengraph-image";
 export const OG_IMAGE_ALT =
-  "y[AI]r studio — AI systems for real business workflows";
+  "y[AI]r studio · AI systems for real business workflows";
 
 /**
  * Canonical offer taxonomy (schema.org Service names). Derived from the single
@@ -92,15 +92,15 @@ type PageDef = {
 export const PAGES: PageDef[] = [
   {
     path: "/",
-    absoluteTitle: "y[AI]r studio — AI systems for real business workflows",
+    absoluteTitle: "y[AI]r studio · AI systems for real business workflows",
     description: SITE_DESCRIPTION,
     langAlternates: true,
   },
   {
     path: "/he",
-    title: "עברית",
+    title: "מערכות AI לתהליכי עבודה",
     description:
-      "y[AI]r studio בעברית — מערכות AI לתהליכי עבודה אמיתיים בעסק. ממפים תהליכים תקועים והופכים עבודה מפוזרת לצעד הבא ברור, עם אישור אנושי איפה שזה חשוב.",
+      "y[AI]r studio בעברית: מערכות AI לתהליכי עבודה אמיתיים בעסק. ממפים תהליכים תקועים והופכים עבודה מפוזרת לצעד הבא ברור, עם אישור אנושי בנקודות ההחלטה.",
     locale: "he_IL",
     langAlternates: true,
   },
@@ -114,13 +114,13 @@ export const PAGES: PageDef[] = [
     path: "/offers",
     title: "Offers",
     description:
-      "y[AI]r studio's offers: an AI workflow audit, internal AI systems, a dashboard and automation layer, and content and ad operations — four entry points into one system.",
+      "y[AI]r studio's offers: an AI Workflow Audit, Internal AI Systems, Dashboards & Automation, and Content & Ad Operations. Four entry points into one system.",
   },
   {
     path: "/offers/ai-workflow-audit",
     title: "AI Workflow Audit",
     description:
-      "An AI workflow audit from y[AI]r studio: a focused review of one business process — owners, inputs and outputs, bottlenecks, automation candidates, and what should stay human — before anything is built.",
+      "An AI workflow audit from y[AI]r studio: a focused review of one business process that maps owners, inputs and outputs, bottlenecks, automation candidates, and what should stay human before anything is built.",
   },
   {
     path: "/offers/internal-ai-systems",
@@ -144,7 +144,7 @@ export const PAGES: PageDef[] = [
     path: "/about",
     title: "About",
     description:
-      "About y[AI]r studio — AI workflow systems for growing service businesses, built around human-in-the-loop automation.",
+      "About y[AI]r studio: AI workflow systems for growing service businesses, built around human-in-the-loop automation.",
   },
   {
     path: "/contact",

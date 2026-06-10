@@ -1,10 +1,12 @@
 import OfferHero from "@/components/offers/OfferHero";
 import OfferSection from "@/components/offers/OfferSection";
 import OfferCardGrid from "@/components/offers/OfferCardGrid";
+import ProblemsPanel from "@/components/ProblemsPanel";
 import OfferSteps from "@/components/offers/OfferSteps";
 import OfferCTA from "@/components/offers/OfferCTA";
 import WorkflowMap from "@/components/WorkflowMap";
 import ProcessFilm from "@/components/ProcessFilm";
+import { AUDIT_OFFER } from "@/lib/offers";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata("/offers/ai-workflow-audit");
@@ -54,7 +56,7 @@ const DELIVERABLES = [
   },
   {
     title: "Automation candidates",
-    desc: "A shortlist of steps worth automating — and the ones that shouldn't be.",
+    desc: "A shortlist of steps worth automating, and the ones that should stay human.",
   },
   {
     title: "An implementation roadmap",
@@ -65,7 +67,7 @@ const DELIVERABLES = [
 const STEPS = [
   {
     title: "Scope one workflow",
-    desc: "We pick a single, real process that matters — not the whole business.",
+    desc: "We pick a single, real process that matters to the business now.",
   },
   {
     title: "Map it end to end",
@@ -82,7 +84,7 @@ const STEPS = [
   },
   {
     title: "Hand off a roadmap",
-    desc: "You get a clear, sequenced plan you can act on — with or without us.",
+    desc: "You get a clear, sequenced plan you can act on, with or without us.",
   },
 ];
 
@@ -115,7 +117,7 @@ export default function AiWorkflowAuditPage() {
       <OfferHero
         eyebrow="Start here"
         title="AI Workflow Audit"
-        lead="Before automating anything, map the real process. A focused review of one workflow — how it actually runs, where it stalls, and what's worth building."
+        lead="Before automating anything, map the real process. A focused review of one workflow: how it actually runs, where it stalls, and what's worth building."
       />
 
       <OfferSection id="film" title="From a messy workflow to a first system">
@@ -123,7 +125,8 @@ export default function AiWorkflowAuditPage() {
           webm="/videos/ai-workflow-audit-process.webm"
           mp4="/videos/ai-workflow-audit-process.mp4"
           poster="/videos/ai-workflow-audit-process-poster.png"
-          caption="A messy workflow, separated into what to automate, what to assist, and what stays human — your first useful system."
+          caption="A messy workflow, separated into what to automate, what to assist, and what stays human: your first useful system."
+          filmName="audit process film"
         />
       </OfferSection>
 
@@ -136,13 +139,13 @@ export default function AiWorkflowAuditPage() {
       </OfferSection>
 
       <OfferSection id="problems" title="Problems it solves">
-        <OfferCardGrid items={PROBLEMS} />
+        <ProblemsPanel items={PROBLEMS} />
       </OfferSection>
 
       <OfferSection
         id="build"
         title="What you get"
-        intro="A clear picture of one workflow and a practical plan — not a finished build."
+        intro="A clear picture of one workflow and a practical plan. The build itself is a separate, later decision."
       >
         <OfferCardGrid items={DELIVERABLES} />
       </OfferSection>
@@ -159,7 +162,7 @@ export default function AiWorkflowAuditPage() {
         />
       </OfferSection>
 
-      <OfferSection id="how" title="How it works">
+      <OfferSection id="how" title="How it works" intro={AUDIT_OFFER.engagementNote}>
         <OfferSteps items={STEPS} />
       </OfferSection>
 
@@ -172,8 +175,8 @@ export default function AiWorkflowAuditPage() {
       </OfferSection>
 
       <OfferCTA
-        heading="Start with one workflow, not a transformation program."
-        body="The audit is the first step: a focused map of a real process before anything is built."
+        heading="Map the workflow before you build."
+        body="The audit delivers the map, the bottlenecks, and a sequenced roadmap you can act on."
       />
     </main>
   );

@@ -1,8 +1,10 @@
 import OfferHero from "@/components/offers/OfferHero";
 import OfferSection from "@/components/offers/OfferSection";
 import OfferCardGrid from "@/components/offers/OfferCardGrid";
+import ProblemsPanel from "@/components/ProblemsPanel";
 import OfferSteps from "@/components/offers/OfferSteps";
 import OfferCTA from "@/components/offers/OfferCTA";
+import WorkflowMap from "@/components/WorkflowMap";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata("/offers/dashboards-automation");
@@ -36,8 +38,8 @@ const PROBLEMS = [
     desc: "Updates are assembled by hand for every meeting.",
   },
   {
-    title: "Reactive, not proactive",
-    desc: "Problems are noticed after they happen, not before.",
+    title: "Always reacting",
+    desc: "Problems are noticed only after they happen.",
   },
 ];
 
@@ -60,6 +62,15 @@ const DELIVERABLES = [
   },
 ];
 
+/** The visibility loop the layer runs — generic mechanics, no client data. */
+const WEEKLY_SIGNAL = [
+  { label: "Connected sources", sub: "sheets · CRM · calendar · docs" },
+  { label: "Signals extracted", sub: "stuck · overdue · at risk" },
+  { label: "One weekly view" },
+  { label: "Human decides", human: true },
+  { label: "Next action triggered", out: true },
+] as const;
+
 const STEPS = [
   {
     title: "Map what matters",
@@ -67,7 +78,7 @@ const STEPS = [
   },
   {
     title: "Connect the sources",
-    desc: "Sheets, CRM, calendar, docs, or APIs — whatever holds the data.",
+    desc: "Sheets, CRM, calendar, docs, or APIs: whatever holds the data.",
   },
   {
     title: "Build the view",
@@ -113,7 +124,7 @@ export default function DashboardsAutomationPage() {
       </OfferSection>
 
       <OfferSection id="problems" title="Problems it solves">
-        <OfferCardGrid items={PROBLEMS} />
+        <ProblemsPanel items={PROBLEMS} />
       </OfferSection>
 
       <OfferSection
@@ -122,6 +133,18 @@ export default function DashboardsAutomationPage() {
         intro="Good dashboard signals include open follow-ups, overdue or stuck items, documents waiting for review, decisions waiting for approval, and a weekly operating signal."
       >
         <OfferCardGrid items={DELIVERABLES} />
+      </OfferSection>
+
+      <OfferSection
+        id="example"
+        title="What the visibility loop looks like"
+        intro="The loop the layer runs, simplified. The dashboard surfaces the signal; a person decides what happens next."
+      >
+        <WorkflowMap
+          caption="Visibility loop"
+          ariaLabel="The visibility and automation loop"
+          nodes={WEEKLY_SIGNAL}
+        />
       </OfferSection>
 
       <OfferSection id="how" title="How it works">
@@ -137,7 +160,7 @@ export default function DashboardsAutomationPage() {
       </OfferSection>
 
       <OfferCTA
-        heading="See what needs attention — and act on it."
+        heading="See what needs attention, then act on it."
         body="Start with one workflow's signals, connect the sources, and build the view that drives the next action."
       />
     </main>

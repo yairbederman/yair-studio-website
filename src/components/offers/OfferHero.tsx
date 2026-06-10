@@ -15,7 +15,8 @@ export default function OfferHero({
   ctaLabel = "Map one workflow",
   ctaHref = "/contact",
 }: {
-  eyebrow: string;
+  /** Optional kicker — only for labels that add information beyond the nav. */
+  eyebrow?: string;
   title: ReactNode;
   lead: string;
   ctaLabel?: string;
@@ -25,7 +26,7 @@ export default function OfferHero({
     <section className="offer-hero" aria-labelledby="offer-hero-title">
       <Container>
         <div className="hero-copy">
-          <SectionLabel>{eyebrow}</SectionLabel>
+          {eyebrow ? <SectionLabel>{eyebrow}</SectionLabel> : null}
           <h1 id="offer-hero-title">{title}</h1>
           <p className="lead hero-lead">{lead}</p>
           <div className="hero-actions">

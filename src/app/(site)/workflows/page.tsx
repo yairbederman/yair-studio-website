@@ -3,7 +3,7 @@ import OfferSection from "@/components/offers/OfferSection";
 import OfferCardGrid from "@/components/offers/OfferCardGrid";
 import OfferCTA from "@/components/offers/OfferCTA";
 import WorkflowMap from "@/components/WorkflowMap";
-import WorkflowFilm from "@/components/WorkflowFilm";
+import ProcessFilm from "@/components/ProcessFilm";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata("/workflows");
@@ -54,7 +54,7 @@ const STAYS_HUMAN = [
   },
   {
     title: "Sensitive decisions",
-    desc: "Anything with real consequences waits for a person, not an automation.",
+    desc: "Anything with real consequences waits for a person to decide.",
   },
   {
     title: "Sending messages",
@@ -71,9 +71,8 @@ export default function WorkflowsPage() {
     <main id="main">
       <PageHero
         id="workflows"
-        eyebrow="Workflows"
         title="How a messy workflow becomes a system"
-        lead="The work starts by mapping where a process gets stuck, then turning scattered inputs into clear next actions, with a human approval step where it matters. Here is one workflow mapped end to end."
+        lead="The work starts by mapping where a process gets stuck, then turning scattered inputs into clear next actions with a human approval step built in. Here is one workflow mapped end to end."
       />
 
       <OfferSection
@@ -81,10 +80,16 @@ export default function WorkflowsPage() {
         title="Meeting follow-up workflow"
         intro="An illustration of the approach, not a client case study."
       >
-        <WorkflowFilm />
+        <ProcessFilm
+          webm="/videos/meeting-follow-up-workflow.webm"
+          mp4="/videos/meeting-follow-up-workflow.mp4"
+          poster="/videos/meeting-follow-up-workflow-poster.png"
+          caption="The workflow in motion: meeting notes flow through the approval checkpoint into tracked tasks."
+          filmName="meeting follow-up film"
+        />
         <div className="workflow-compare">
           <div className="panel-list">
-            <span className="sch-cap">Before</span>
+            <span className="sch-cap">The starting state</span>
             <ul>
               {BEFORE.map((item) => (
                 <li key={item}>{item}</li>
@@ -92,7 +97,7 @@ export default function WorkflowsPage() {
             </ul>
           </div>
           <WorkflowMap
-            caption="Mapped workflow"
+            caption="The map you receive"
             ariaLabel="Meeting follow-up, mapped as a workflow"
             nodes={MAPPED}
           />

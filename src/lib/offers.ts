@@ -14,7 +14,7 @@
 export type Offer = {
   /** Stable key for React lists and route folders. */
   key: string;
-  /** Card title (homepage + /offers overview). */
+  /** Card title (homepage + /offers overview) — byte-identical to the page H1. */
   title: string;
   /** schema.org Service name — source for SERVICES in src/lib/site.ts. */
   serviceName: string;
@@ -24,6 +24,12 @@ export type Offer = {
   cta: string;
   /** One- to two-sentence card summary. */
   summary: string;
+  /**
+   * Engagement shape, phrased affirmatively (no prices, no exact day counts).
+   * Rendered on the offer page and the /offers sequence. Currently only the
+   * audit defines one.
+   */
+  engagementNote?: string;
 };
 
 export const OFFERS: readonly Offer[] = [
@@ -35,11 +41,12 @@ export const OFFERS: readonly Offer[] = [
     cta: "Start with an audit",
     summary:
       "A focused review of one business workflow: what happens today, where it breaks, what can be automated, and what should stay human.",
+    engagementNote: "A focused, fixed-scope review delivered within days.",
   },
   {
     key: "internal-ai-systems",
-    title: "Internal AI System",
-    serviceName: "Internal AI System",
+    title: "Internal AI Systems",
+    serviceName: "Internal AI Systems",
     href: "/offers/internal-ai-systems",
     cta: "Build an internal system",
     summary:
@@ -47,8 +54,8 @@ export const OFFERS: readonly Offer[] = [
   },
   {
     key: "dashboards-automation",
-    title: "Dashboard + Automation Layer",
-    serviceName: "Dashboard + Automation Layer",
+    title: "Dashboards & Automation",
+    serviceName: "Dashboards & Automation",
     href: "/offers/dashboards-automation",
     cta: "Create visibility",
     summary:
@@ -64,3 +71,13 @@ export const OFFERS: readonly Offer[] = [
       "A repeatable system for turning raw ideas, calls, assets, and performance data into structured content or ad experiments.",
   },
 ];
+
+const audit = OFFERS.find((o) => o.key === "ai-workflow-audit");
+if (!audit) throw new Error("OFFERS: missing ai-workflow-audit entry");
+
+/**
+ * The audit offer, resolved once — its engagementNote renders on the audit
+ * page's "How it works" intro and the /offers sequence, so the lookup (and the
+ * key string) lives in exactly one place.
+ */
+export const AUDIT_OFFER: Offer = audit;
