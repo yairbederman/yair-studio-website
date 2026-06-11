@@ -8,7 +8,7 @@ brand
 
 Two buyers, often inside the same business: the **owner**, who decides whether to invest, and the **operations leader**, who runs the work day to day and feels the friction first. Both want practical improvement to real workflows, not AI experimentation for its own sake — more done with less chasing, recurring work that stops slipping, and a clear view of where processes get stuck.
 
-Part of this audience reads **Hebrew** and works right-to-left. Hebrew is a real audience to design for, not an afterthought. The work is delivered in Hebrew and English where the business needs it (an operating capability); the website itself serves English today, with a dedicated Hebrew homepage.
+Part of this audience reads **Hebrew** and works right-to-left. Hebrew is a real audience to design for, not an afterthought. The work is delivered in Hebrew and English where the business needs it (an operating capability); the website is fully bilingual — every page has an English version and a Hebrew (RTL) version under `/he`.
 
 ## Product Purpose
 

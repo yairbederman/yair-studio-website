@@ -1,26 +1,23 @@
-import Container from "@/components/Container";
-import CTAButton from "@/components/CTAButton";
+import OfferCTA from "@/components/offers/OfferCTA";
 import type { HomeContent } from "@/content/home";
 
-/** Closing CTA band — one clear next action. Copy + destination from the model. */
+/**
+ * Closing CTA band for the homepage — a thin adapter over OfferCTA (the same
+ * band every other page closes with), so the two bands can never drift in
+ * markup or behavior. Only the content shape differs.
+ */
 export default function FinalCTA({
   content,
 }: {
   content: HomeContent["finalCta"];
 }) {
   return (
-    <section className="section final-cta" aria-labelledby="final-cta-title">
-      <Container>
-        <div className="final-cta-inner">
-          <h2 id="final-cta-title">{content.title}</h2>
-          <p className="final-cta-body">{content.body}</p>
-          <div className="final-cta-actions">
-            <CTAButton href={content.cta.href} variant="primary">
-              {content.cta.label}
-            </CTAButton>
-          </div>
-        </div>
-      </Container>
-    </section>
+    <OfferCTA
+      heading={content.title}
+      body={content.body}
+      ctaLabel={content.cta.label}
+      ctaHref={content.cta.href}
+      secondaryCta={content.secondaryCta}
+    />
   );
 }

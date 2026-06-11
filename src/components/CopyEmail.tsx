@@ -11,7 +11,21 @@ import { useEffect, useRef, useState } from "react";
  * announced via an sr-only status region and a visible label swap; the label
  * reverts after a short pause so repeated copies re-announce.
  */
-export default function CopyEmail({ email }: { email: string }) {
+export type CopyEmailLabels = {
+  copy: string;
+  copied: string;
+  announced: string;
+};
+
+export default function CopyEmail({
+  email,
+  labels,
+}: {
+  email: string;
+  /** Localized button/announcement strings — pass shellContent(locale).copyEmail.
+      REQUIRED so the strings have exactly one source (src/content/shell.ts). */
+  labels: CopyEmailLabels;
+}) {
   const [copied, setCopied] = useState(false);
   const addressRef = useRef<HTMLSpanElement>(null);
   const resetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -51,14 +65,16 @@ export default function CopyEmail({ email }: { email: string }) {
 
   return (
     <span className="copy-email">
-      <span ref={addressRef} className="copy-email-address">
+      {/* LTR-isolated so the address renders intact inside an RTL document
+          (same guard the footer applies to its visible address). */}
+      <span ref={addressRef} className="copy-email-address ltr-inline">
         {email}
       </span>
       <button type="button" className="btn btn-sm" onClick={copy}>
-        {copied ? "Copied" : "Copy"}
+        {copied ? labels.copied : labels.copy}
       </button>
       <span role="status" className="sr-only">
-        {copied ? "Email address copied" : ""}
+        {copied ? labels.announced : ""}
       </span>
     </span>
   );

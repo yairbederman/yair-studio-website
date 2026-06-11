@@ -7,20 +7,23 @@ import CTAButton from "@/components/CTAButton";
  * Offer-page hero: eyebrow + h1 + short lead + one primary CTA.
  * Single-column (no schematic) — reuses the homepage hero-copy/lead/actions
  * rhythm. One per page, so the heading id is fixed.
+ *
+ * ctaLabel/ctaHref are REQUIRED: callers pass locale-resolved values; an
+ * English fallback default would be a silent wrong-language trap on /he.
  */
 export default function OfferHero({
   eyebrow,
   title,
   lead,
-  ctaLabel = "Map one workflow",
-  ctaHref = "/contact",
+  ctaLabel,
+  ctaHref,
 }: {
   /** Optional kicker — only for labels that add information beyond the nav. */
   eyebrow?: string;
   title: ReactNode;
   lead: string;
-  ctaLabel?: string;
-  ctaHref?: string;
+  ctaLabel: string;
+  ctaHref: string;
 }) {
   return (
     <section className="offer-hero" aria-labelledby="offer-hero-title">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { OFFERS } from "@/lib/offers";
+import { PROOF_IS_SAMPLE_DATA } from "@/content/proof";
 
 /**
  * Central site constants + canonical page list + metadata helper.
@@ -52,6 +53,32 @@ export const CONTACT_EMAIL = "yair.bederman@gmail.com";
 export const CONTACT_MAILTO = `mailto:${CONTACT_EMAIL}`;
 
 /**
+ * WhatsApp contact channel — the second lead path beside email (email stays
+ * the primary CTA; WhatsApp is the low-friction secondary).
+ *
+ * ⚠ TODO(LAUNCH-CHECKLIST.md §3): PLACEHOLDER NUMBER — an obviously-unreal
+ * 050-0000000. Replace with the real number (international format, digits
+ * only, no "+") before flipping the launch gate.
+ */
+export const WHATSAPP_NUMBER = "972500000000";
+
+// Launch guard: the sample-data gate cannot be flipped while the WhatsApp
+// number is still the placeholder — a "live" site with a dead lead channel
+// must fail the build, not ship.
+if (!PROOF_IS_SAMPLE_DATA && WHATSAPP_NUMBER === "972500000000") {
+  throw new Error(
+    "WHATSAPP_NUMBER is still the placeholder — set the real number (LAUNCH-CHECKLIST.md §3) before flipping PROOF_IS_SAMPLE_DATA.",
+  );
+}
+
+/** Build a wa.me link, optionally with a prefilled message (locale-specific
+    prefill text lives in the content files). */
+export function waLink(prefill?: string): string {
+  const base = `https://wa.me/${WHATSAPP_NUMBER}`;
+  return prefill ? `${base}?text=${encodeURIComponent(prefill)}` : base;
+}
+
+/**
  * Site-wide Open Graph image served by src/app/opengraph-image/route.tsx.
  * Referenced explicitly in buildMetadata so the route URL and alt text live in
  * one place.
@@ -70,39 +97,32 @@ export const SERVICES: readonly string[] = OFFERS.map((o) => o.serviceName);
 type Locale = "en_US" | "he_IL";
 
 type PageDef = {
-  /** Route path, e.g. "/" or "/offers/internal-ai-systems". */
+  /** Route path, e.g. "/" or "/he/offers/internal-ai-systems". The locale and
+      the hreflang pair are DERIVED from the path prefix (see localePaths). */
   path: string;
   /** String title — the root layout template ("%s · y[AI]r studio") applies. */
   title?: string;
-  /** Absolute title — bypasses the template (homepage only). */
+  /** Absolute title — bypasses the template (homepages only). */
   absoluteTitle?: string;
   /** Factual, restrained description. */
   description: string;
-  /** OG locale; defaults to en_US. */
-  locale?: Locale;
-  /** Emit hreflang en/he alternates (home + /he only). */
-  langAlternates?: boolean;
 };
+
+// Single source of the EN↔HE route-pairing rule — re-exported so existing
+// consumers (sitemap.ts) keep importing it from here.
+import { isHebrewPath, localePaths } from "@/lib/locale-paths";
+export { localePaths } from "@/lib/locale-paths";
 
 /**
  * Every public route, in sitemap order. Single source for per-page metadata,
  * the sitemap, and llms.txt. Descriptions are factual and restrained — they
  * describe the studio and its offers without overclaiming.
  */
-export const PAGES: PageDef[] = [
+const EN_PAGES: PageDef[] = [
   {
     path: "/",
     absoluteTitle: "y[AI]r studio · AI systems for real business workflows",
     description: SITE_DESCRIPTION,
-    langAlternates: true,
-  },
-  {
-    path: "/he",
-    title: "מערכות AI לתהליכי עבודה",
-    description:
-      "y[AI]r studio בעברית: מערכות AI לתהליכי עבודה אמיתיים בעסק. ממפים תהליכים תקועים והופכים עבודה מפוזרת לצעד הבא ברור, עם אישור אנושי בנקודות ההחלטה.",
-    locale: "he_IL",
-    langAlternates: true,
   },
   {
     path: "/workflows",
@@ -154,9 +174,85 @@ export const PAGES: PageDef[] = [
   },
 ];
 
+/**
+ * Hebrew titles/descriptions, keyed by the EN path. The HE PAGES entries are
+ * DERIVED from EN_PAGES + this map (below), so "every page has a Hebrew
+ * mirror" is a property of the data shape: adding an EN page without Hebrew
+ * strings fails the build at module init instead of shipping a broken
+ * he-IL alternate.
+ */
+const HE_PAGE_STRINGS: Record<string, { title: string; description: string }> =
+  {
+    "/": {
+      title: "מערכות AI לתהליכי עבודה",
+      description:
+        "y[AI]r studio בעברית: מערכות AI לתהליכי עבודה אמיתיים בעסק. ממפים תהליכים תקועים והופכים עבודה מפוזרת לצעד הבא ברור, עם אישור אנושי בנקודות ההחלטה.",
+    },
+    "/workflows": {
+      title: "תהליכי עבודה",
+      description:
+        "הגישה של y[AI]r studio לתהליכי עבודה: ממפים איפה העבודה נתקעת והופכים קלט מפוזר לצעדים ברורים בעזרת AI.",
+    },
+    "/offers": {
+      title: "שירותים",
+      description:
+        "השירותים של y[AI]r studio: אבחון תהליכי AI, מערכות AI פנימיות, דשבורדים ואוטומציה, ותפעול תוכן וקמפיינים. ארבע נקודות כניסה למערכת אחת.",
+    },
+    "/offers/ai-workflow-audit": {
+      title: "אבחון תהליכי AI",
+      description:
+        "אבחון תהליכי AI של y[AI]r studio: סקירה ממוקדת של תהליך עסקי אחד שממפה אחראים, קלט ופלט, צווארי בקבוק, מועמדים לאוטומציה ומה שנשאר אנושי, לפני שבונים.",
+    },
+    "/offers/internal-ai-systems": {
+      title: "מערכות AI פנימיות",
+      description:
+        "מערכות AI פנימיות של y[AI]r studio: עוזרים פרקטיים ושכבות תהליך לפגישות, משימות, מייל, חיפוש ידע, דוחות ומעקב.",
+    },
+    "/offers/dashboards-automation": {
+      title: "דשבורדים ואוטומציה",
+      description:
+        "שכבת דשבורדים ואוטומציה של y[AI]r studio: מחוברת לכלים הקיימים, כדי שהצוות יראה מה דורש טיפול ויפעיל את הצעד הנכון הבא.",
+    },
+    "/offers/content-ad-operations": {
+      title: "תפעול תוכן וקמפיינים",
+      description:
+        "מערכת תפעול תוכן וקמפיינים של y[AI]r studio: הופכת רעיונות גולמיים, שיחות, חומרים ונתוני ביצועים לתוכן מובנה או לניסויי קמפיינים.",
+    },
+    "/about": {
+      title: "אודות",
+      description:
+        "על y[AI]r studio: מערכות AI לתהליכי עבודה של עסקי שירותים צומחים, סביב אוטומציה עם אישור אנושי בנקודות ההחלטה.",
+    },
+    "/contact": {
+      title: "צור קשר",
+      description:
+        "יוצרים קשר עם y[AI]r studio כדי למפות תהליך עסקי אחד ולתחום מערכת AI מעשית, עם אישור אנושי בנקודות ההחלטה.",
+    },
+  };
+
+/** Every public route: the EN list plus its derived Hebrew mirror. */
+export const PAGES: PageDef[] = [
+  ...EN_PAGES,
+  ...EN_PAGES.map((p): PageDef => {
+    const strings = HE_PAGE_STRINGS[p.path];
+    if (!strings) {
+      throw new Error(
+        `PAGES: missing Hebrew strings for "${p.path}" — every EN page needs a /he mirror (add it to HE_PAGE_STRINGS)`,
+      );
+    }
+    return {
+      path: localePaths(p.path).he,
+      title: strings.title,
+      description: strings.description,
+    };
+  }),
+];
+
 function buildMetadata(p: PageDef): Metadata {
-  const locale: Locale = p.locale ?? "en_US";
-  const alternateLocale: Locale = locale === "he_IL" ? "en_US" : "he_IL";
+  const isHebrew = isHebrewPath(p.path);
+  const locale: Locale = isHebrew ? "he_IL" : "en_US";
+  const alternateLocale: Locale = isHebrew ? "en_US" : "he_IL";
+  const { en: enPath, he: hePath } = localePaths(p.path);
   const ogTitle = p.absoluteTitle ?? p.title;
 
   return {
@@ -164,9 +260,8 @@ function buildMetadata(p: PageDef): Metadata {
     description: p.description,
     alternates: {
       canonical: p.path,
-      ...(p.langAlternates
-        ? { languages: { "en-US": "/", "he-IL": "/he" } }
-        : {}),
+      // Every page is part of an EN/HE pair — derived, never hand-listed.
+      languages: { "en-US": enPath, "he-IL": hePath, "x-default": enPath },
     },
     openGraph: {
       type: "website",

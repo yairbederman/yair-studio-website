@@ -16,6 +16,7 @@ export default function ProcessFilm({
   poster,
   caption,
   filmName,
+  controls,
 }: {
   webm: string;
   mp4: string;
@@ -23,10 +24,18 @@ export default function ProcessFilm({
   caption: string;
   /** Accessible name for the pause/play toggle; defaults inside FilmPlayer. */
   filmName?: string;
+  /** Localized toggle labels — pass shellContent(locale).filmControls. */
+  controls: { pause: string; play: string };
 }) {
   return (
     <figure className="workflow-film process-film">
-      <FilmPlayer mp4={mp4} webm={webm} poster={poster} filmName={filmName} />
+      <FilmPlayer
+        mp4={mp4}
+        webm={webm}
+        poster={poster}
+        filmName={filmName}
+        controls={controls}
+      />
       <figcaption className="film-caption">{caption}</figcaption>
     </figure>
   );

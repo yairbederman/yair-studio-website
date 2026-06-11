@@ -18,6 +18,13 @@ function isPlainAnchor(href: string) {
   return href.startsWith("#") || /^[a-z][a-z0-9+.-]*:/i.test(href);
 }
 
+/** http(s) destinations are external by construction on this site (in-app
+    links are always root-relative) — they open in a new tab. Derived here so
+    no caller ever has to remember a newTab flag. */
+function isExternal(href: string) {
+  return /^https?:/i.test(href);
+}
+
 /**
  * Button in the body font. Renders an <a> when `href` is given, else a <button>.
  * The bracketed [ ] signature is applied by CSS to the primary variant only;
@@ -39,7 +46,13 @@ export default function CTAButton({
     // and scheme URLs (mailto:, tel:, external) use a plain <a>.
     if (isPlainAnchor(href)) {
       return (
-        <a href={href} className={classes(variant)}>
+        <a
+          href={href}
+          className={classes(variant)}
+          {...(isExternal(href)
+            ? { target: "_blank", rel: "noopener noreferrer" }
+            : {})}
+        >
           {children}
         </a>
       );

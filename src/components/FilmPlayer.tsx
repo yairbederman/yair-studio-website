@@ -27,11 +27,14 @@ export default function FilmPlayer({
   poster,
   /** Accessible name for what the toggle pauses, e.g. "process animation". */
   filmName = "process animation",
+  controls,
 }: {
   mp4: string;
   webm: string;
   poster: string;
   filmName?: string;
+  /** Localized toggle labels — pass shellContent(locale).filmControls. */
+  controls: { pause: string; play: string };
 }) {
   const [showVideo, setShowVideo] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -91,7 +94,7 @@ export default function FilmPlayer({
           {/* Label swap (Pause ⇄ Play) carries the state — no aria-pressed,
               which would conflict with a changing accessible name. */}
           <button type="button" className="btn btn-sm film-toggle" onClick={toggle}>
-            {playing ? "Pause" : "Play"}
+            {playing ? controls.pause : controls.play}
             <span className="sr-only"> {filmName}</span>
           </button>
         </>

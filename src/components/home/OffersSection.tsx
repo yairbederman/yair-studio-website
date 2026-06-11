@@ -1,31 +1,39 @@
 import Container from "@/components/Container";
 import OfferCards from "@/components/offers/OfferCards";
 import ProcessFilm from "@/components/ProcessFilm";
+import { shellContent } from "@/content/shell";
+import type { HomeContent } from "@/content/home";
+import type { Locale } from "@/content/types";
 
 /**
  * Homepage offers — concrete offers, but tied under one system (per brief: not
- * four unrelated services). The cards themselves come from the canonical OFFERS
- * list via <OfferCards>, shared with the /offers overview.
+ * four unrelated services). Section copy comes from the home content model;
+ * the cards themselves from the canonical OFFERS list via <OfferCards>
+ * (locale-aware), shared with both /offers overviews.
  */
-export default function OffersSection() {
+export default function OffersSection({
+  content,
+  locale = "en",
+}: {
+  content: HomeContent["offers"];
+  locale?: Locale;
+}) {
   return (
     <section className="section offers" aria-labelledby="offers-title">
       <Container>
         <div className="section-head">
-          <h2 id="offers-title">Offers</h2>
-          <p className="section-intro">
-            Four entry points into one system built around real workflows, not
-            four separate services.
-          </p>
+          <h2 id="offers-title">{content.title}</h2>
+          <p className="section-intro">{content.intro}</p>
         </div>
         <ProcessFilm
           webm="/videos/one-system-overview.webm"
           mp4="/videos/one-system-overview.mp4"
           poster="/videos/one-system-overview-poster.png"
-          caption="Four entry points into one system, with a human approval step built in."
-          filmName="one-system overview film"
+          caption={content.filmCaption}
+          filmName={content.filmName}
+          controls={shellContent(locale).filmControls}
         />
-        <OfferCards />
+        <OfferCards locale={locale} />
       </Container>
     </section>
   );

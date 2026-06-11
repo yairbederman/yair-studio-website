@@ -1,8 +1,10 @@
 import "../globals.css";
+import { Analytics } from "@vercel/analytics/next";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { fontVariables } from "@/lib/fonts";
 import { rootMetadata } from "@/lib/root-metadata";
+import { shellContent } from "@/content/shell";
 
 /**
  * Root layout for the English site (route group `(site)` → URLs unchanged).
@@ -23,11 +25,13 @@ export default function SiteLayout({
     <html lang="en" className={fontVariables}>
       <body>
         <a href="#main" className="skip-link">
-          Skip to content
+          {shellContent("en").skipLink}
         </a>
         <SiteHeader />
         {children}
         <SiteFooter />
+        {/* Exactly one root layout renders per document, so no double-mount. */}
+        <Analytics />
       </body>
     </html>
   );

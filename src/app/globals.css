@@ -241,10 +241,20 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
    Latin font. The Latin-digit step numbers (.method-step-num) deliberately stay
    mono. */
 [lang="he"] :is(p, .lead, .eyebrow, .label-mono, .section-index, .mono, .btn,
-  .nav-links a, .footer-r a, .footer-tag, .panel-list li, .sch-cap, .sch-label, .sch-sub),
+  .nav-links a, .footer-r a, .footer-tag, .panel-list li, .sch-cap, .sch-label, .sch-sub,
+  .proof-row dt, .sample-badge),
 [dir="rtl"] :is(p, .lead, .eyebrow, .label-mono, .section-index, .mono, .btn,
-  .nav-links a, .footer-r a, .footer-tag, .panel-list li, .sch-cap, .sch-label, .sch-sub) {
+  .nav-links a, .footer-r a, .footer-tag, .panel-list li, .sch-cap, .sch-label, .sch-sub,
+  .proof-row dt, .sample-badge) {
   font-family: var(--font-body-he);
+}
+
+/* Hebrew is never letter-spaced: the mono-voice labels keep their tracking in
+   EN only. (Geist Mono has no Hebrew glyphs — the rule above re-asserts the
+   Hebrew family; this drops the leftover tracking.) */
+[lang="he"] :is(.proof-row dt, .sample-badge, .founder-role),
+[dir="rtl"] :is(.proof-row dt, .sample-badge, .founder-role) {
+  letter-spacing: 0;
 }
 
 [dir="rtl"] :is(h1, h2, h3, p, .lead) { text-align: start; }
@@ -735,6 +745,10 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 }
 .offer-cta-arrow { transition: transform var(--dur) var(--ease); }
 .offer-card:hover .offer-cta-arrow { transform: translateX(3px); }
+/* RTL: the arrow glyph points back along the reading direction, and the hover
+   nudge moves it visually "forward" (left). */
+[dir="rtl"] .offer-cta-arrow { transform: scaleX(-1); }
+[dir="rtl"] .offer-card:hover .offer-cta-arrow { transform: scaleX(-1) translateX(3px); }
 
 /* Keyboard focus rings the whole card (not just the CTA text) where :has() is
    supported; older browsers fall back to the global a:focus-visible ring. */
@@ -762,7 +776,12 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 }
 .final-cta-inner h2 { font-size: var(--fs-2xl); max-width: 24ch; }
 .final-cta-body { max-width: 60ch; color: var(--fg-2); }
-.final-cta-actions { margin-top: var(--s-2); }
+.final-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-2);
+}
 
 /* ---------- Homepage responsive ---------- */
 @media (max-width: 767px) {
@@ -937,4 +956,134 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 
 @media (max-width: 767px) {
   .workflow-compare { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   Founder + proof layer (Step 6)
+   ------------------------------------------------------------
+   The founder presented in the site's schematic language (no portrait):
+   identity + credentials beside a career spine (WorkflowMap), and case-study
+   cards as problem → system → observable change. Sample-data badge uses the
+   --warn token — loud on purpose while the launch gate is on. Tokens only.
+   ============================================================ */
+
+/* Founder band — identity column beside the career spine. */
+.founder-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: var(--s-7);
+  align-items: start;
+}
+.founder-id {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-5);
+}
+/* /about renders the founder block directly under intro prose (no section-head
+   between them, unlike the homepage band) — give the seam real space. */
+.section-intro + .founder-grid {
+  margin-block-start: var(--s-6);
+}
+.founder-head { display: flex; flex-direction: column; gap: var(--s-1); }
+.founder-name {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: 600;
+  letter-spacing: var(--tr-tight);
+  color: var(--fg-1);
+}
+/* Mono role line — the "data / diagram" voice, consistent with .sch-cap. */
+.founder-role {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tr-ui);
+  color: var(--fg-3);
+}
+.founder-bio { color: var(--fg-2); max-width: 52ch; }
+.founder-creds {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-3);
+  align-self: stretch;
+}
+
+/* Proof cards — problem → system → what changed. */
+.proof-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s-4);
+}
+.proof-card {
+  min-width: 0; /* grid child — guard against long-content overflow */
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+  background: var(--bg-1);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  padding: var(--s-6);
+  box-shadow: var(--edge-top);
+}
+/* Uniform two-line head (client type, then badge) at every width — a row
+   layout made the badge wrap depend on the client-type length, so dt rows
+   started at different heights across the 3-up grid. */
+.proof-card-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-2);
+}
+.proof-client { font-size: var(--fs-lg); font-weight: 600; color: var(--fg-1); }
+.proof-rows {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+.proof-row dt {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tr-ui);
+  color: var(--fg-3);
+}
+.proof-row dd { margin: var(--s-1) 0 0; color: var(--fg-2); }
+/* The observable change is the point — slightly brighter. */
+.proof-row--outcome dd { color: var(--fg-1); }
+
+/* /about full treatment — one engagement per row, spine beside the rows. */
+.proof-grid--full { grid-template-columns: 1fr; }
+.proof-grid--full .proof-card {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: var(--s-6);
+  align-items: start;
+}
+.proof-grid--full .proof-card-head { grid-column: 1 / -1; }
+
+/* Sample-data badge — visible while PROOF_IS_SAMPLE_DATA is true. Deliberately
+   loud (warn token, mono, uppercase): sample claims must read as samples. */
+.sample-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tr-ui);
+  color: var(--warn);
+  border: 1px solid currentColor;
+  border-radius: var(--r-sm);
+  padding: 2px var(--s-2);
+}
+
+@media (max-width: 767px) {
+  .founder-grid { grid-template-columns: 1fr; gap: var(--s-6); }
+  .proof-grid { grid-template-columns: 1fr; }
+  .proof-grid--full .proof-card { grid-template-columns: 1fr; }
 }

@@ -3,14 +3,17 @@
 The public website for **y[AI]r studio** (spoken: *Yair Studio*) — AI systems for real business
 workflows.
 
-Built with Next.js (App Router) + TypeScript. This repo currently holds the **visual foundation**
-(design tokens, bilingual EN/HE typography, base styles, and a shared shell originally sourced from the
-design system), a **homepage v1** composing those tokens, **offer pages** (an overview plus four offers),
-and an **SEO/AEO/GEO foundation** (metadata, Open Graph, structured data, and public crawl
-endpoints). A launch-readiness pass then built out `/workflows`, `/about`, and `/contact`, added a
-reusable workflow-map artifact, active nav state, and a branded Open Graph image. `/contact` now uses a
-real `mailto:` contact channel, and `/he` is a self-contained Hebrew (RTL) homepage. The English pages
-remain English-only — only `/he` is translated, so the site is **not** fully bilingual.
+Built with Next.js (App Router) + TypeScript. The site is **fully bilingual**: every page has an
+English version and a Hebrew (RTL) version under `/he`, driven by one locale-keyed content model.
+On top of the visual foundation (design tokens, bilingual typography, shared shell) the site carries
+a homepage with a founder band and proof cards, offer pages (overview + four offers), `/workflows`,
+`/about`, `/contact` (email + WhatsApp), an SEO/AEO/GEO foundation (per-page metadata, hreflang
+pairs, Open Graph, structured data, crawl endpoints), and Vercel Analytics.
+
+> **Before launch:** the founder credentials, career spine, and case studies are visibly-badged
+> **SAMPLE data**, and the whole site is `noindex` until they're replaced — see
+> [`LAUNCH-CHECKLIST.md`](LAUNCH-CHECKLIST.md). The gate is one flag: `PROOF_IS_SAMPLE_DATA` in
+> [`src/content/proof.ts`](src/content/proof.ts).
 
 ## Visual source of truth
 
@@ -39,55 +42,72 @@ Install dependencies first with `npm install`.
 
 ## Routes
 
-All public routes are built. `/he` is a self-contained Hebrew (RTL) homepage (the only translated
-page); `/contact` uses a real `mailto:` contact channel.
+Every content route exists in both languages (`/x` ↔ `/he/x`); the language toggle preserves deep
+links in both directions. `/contact` offers email (primary) and WhatsApp.
 
-| Path | Notes |
-|------|-------|
-| `/` | Home (v1) |
-| `/he` | Hebrew (RTL) homepage — self-contained shell (own root layout), not linked into EN pages |
-| `/workflows` | Approach + worked example (workflow-map artifact) |
-| `/offers` | Offers overview |
-| `/offers/ai-workflow-audit` | Offer (entry / first step) — includes a workflow-map artifact |
-| `/offers/internal-ai-systems` | Offer |
-| `/offers/dashboards-automation` | Offer |
-| `/offers/content-ad-operations` | Offer |
-| `/about` | About the studio |
-| `/contact` | Contact — real `mailto:` channel |
-| `/opengraph-image` | Generated 1200×630 branded OG image (`next/og`) |
+| Path (EN) | Hebrew mirror | Notes |
+|------|------|-------|
+| `/` | `/he` | Home — hero, problems, method, founder band, evidence, proof cards, offers, final CTA |
+| `/workflows` | `/he/workflows` | Approach + worked example (workflow-map artifact + film) |
+| `/offers` | `/he/offers` | Offers overview |
+| `/offers/ai-workflow-audit` | `/he/offers/ai-workflow-audit` | Offer (entry / first step) — film + map artifact |
+| `/offers/internal-ai-systems` | `/he/offers/internal-ai-systems` | Offer |
+| `/offers/dashboards-automation` | `/he/offers/dashboards-automation` | Offer |
+| `/offers/content-ad-operations` | `/he/offers/content-ad-operations` | Offer |
+| `/about` | `/he/about` | Founder profile, badged case studies, principles |
+| `/contact` | `/he/contact` | Email (primary) + WhatsApp + copy-email affordance |
+| `/opengraph-image` | — | Generated 1200×630 branded OG image (`next/og`) |
+
+## Content model
+
+All copy is **data, not JSX**: typed, locale-keyed files in [`src/content/`](src/content)
+(`home.ts`, `about.ts`, `contact.ts`, `workflows.ts`, `offers-index.ts`, `offers/*.ts`, `proof.ts`,
+`shell.ts`, `offer-cards.ts`, shared shapes in `types.ts`). Each exports a `…Content(locale)`
+accessor; pages are thin composers. The four offer detail pages render through one template
+(`src/components/offers/OfferPageBody.tsx`). The canonical offer list (keys, routes, EN card copy)
+stays in [`src/lib/offers.ts`](src/lib/offers.ts).
+
+[`src/content/proof.ts`](src/content/proof.ts) owns the founder + proof layer and the
+`PROOF_IS_SAMPLE_DATA` launch gate: while `true`, every proof surface shows a "sample data" badge,
+the site is `noindex` (meta + robots), and `/llms.txt` declares the samples — flipping it lifts all
+of that at once.
 
 ## SEO / metadata
 
 [`src/lib/site.ts`](src/lib/site.ts) is the **single source** for `SITE_URL`, the canonical route
-list, per-page metadata (titles, descriptions, Open Graph, canonical + `hreflang`), and the service
-taxonomy. Each route's `metadata` export, the sitemap, robots, and `llms.txt` all derive from it —
-so the production domain and route list live in exactly one place.
+list (EN + HE), per-page metadata (titles, descriptions, Open Graph, canonical), the WhatsApp
+contact constants, and the service taxonomy. Every page emits a derived `en-US`/`he-IL`/`x-default`
+hreflang triple (`localePaths`) — never hand-listed. Each route's `metadata` export, the sitemap
+(with per-URL language alternates), robots, and `llms.txt` all derive from the same list.
+
+`SITE_URL` is **environment-derived** (no hardcoded domain): `NEXT_PUBLIC_SITE_URL` override →
+`VERCEL_PROJECT_PRODUCTION_URL` → `VERCEL_URL` → localhost. Attaching a custom domain later requires
+no code change.
 
 Public crawl endpoints:
 
 | Endpoint | Source |
 |----------|--------|
-| `/robots.txt` | `src/app/robots.ts` — allow-all (AI crawlers included) |
-| `/sitemap.xml` | `src/app/sitemap.ts` — all public routes |
-| `/llms.txt` | `src/app/llms.txt/route.ts` — factual brief for answer engines |
-
-> The production domain is not finalized — `SITE_URL` in `src/lib/site.ts` is a placeholder
-> (`https://yair.studio`); update it there before launch.
+| `/robots.txt` | `src/app/robots.ts` — always allow-all (the sample gate works via meta `noindex`, which crawlers can only read on crawlable pages) |
+| `/sitemap.xml` | `src/app/sitemap.ts` — all public routes + EN/HE/x-default alternates |
+| `/llms.txt` | `src/app/llms.txt/route.ts` — factual brief for answer engines (sample-gated note) |
 
 ## Stack
 
 App Router · TypeScript · ESLint · `src/` directory · import alias `@/*`. No Tailwind, no external
-UI library. Fonts are loaded with `next/font` (Inter — EN body/display; Geist Mono — mono accents;
-Assistant — Hebrew body), not a CDN `@import`. Hebrew/RTL is a genuine document, not a subtree: the
-app uses **two root layouts** via route groups — `app/(site)/layout.tsx` (`<html lang="en">` + the full
-shell) and `app/(he)/layout.tsx` (`<html lang="he" dir="rtl">` + a self-contained shell). The shared
-`next/font` loaders and base metadata live once in [`src/lib/fonts.ts`](src/lib/fonts.ts) and
+UI library; the only runtime addition is `@vercel/analytics` (mounted once per root layout). Fonts
+are loaded with `next/font` (Inter — EN body/display; Geist Mono — mono accents; Assistant — Hebrew
+body), not a CDN `@import`. Hebrew/RTL is a genuine document, not a subtree: the app uses **two root
+layouts** via route groups — `app/(site)/layout.tsx` (`<html lang="en">`) and `app/(he)/layout.tsx`
+(`<html lang="he" dir="rtl">`) — both rendering the **same shared shell** (`SiteHeader` /
+`SiteFooter` with a `locale` prop fed from `src/content/shell.ts`). The shared `next/font` loaders
+and base metadata live once in [`src/lib/fonts.ts`](src/lib/fonts.ts) and
 [`src/lib/root-metadata.ts`](src/lib/root-metadata.ts), imported by both. RTL relies on logical CSS
 properties, document-level `[lang]`/`[dir]` selectors, and `<bdi>` for the always-Latin wordmark.
-Homepage copy is externalized, typed, and locale-keyed in [`src/content/home.ts`](src/content/home.ts).
 
 Shared components live in `src/components/` (`Container`, `SiteHeader`, `SiteFooter`, `SectionLabel`,
-`CTAButton`, `Wordmark`, `LangToggle`, `NavLinks` — active-state nav, `WorkflowMap` — the schematic
-process-spine artifact). Design tokens are defined once in `src/app/globals.css` — never hardcode hex
-in UI; reference `var(--*)`. The one allowed exception is `src/lib/brand.ts`, which mirrors the token
-literals for the OG image because `next/og` (Satori) cannot read CSS variables.
+`CTAButton`, `Wordmark`, `LangToggle` — prefix-mapping language toggle, `NavLinks` — active-state nav,
+`WorkflowMap` — the schematic process-spine artifact, `FounderProfile`, `ProofCards`, `SampleBadge`,
+`ProcessFilm`/`FilmPlayer`). Design tokens are defined once in `src/app/globals.css` — never hardcode
+hex in UI; reference `var(--*)`. The one allowed exception is `src/lib/brand.ts`, which mirrors the
+token literals for the OG image because `next/og` (Satori) cannot read CSS variables.

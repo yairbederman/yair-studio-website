@@ -22,9 +22,17 @@ function serializeJsonLd(data: unknown): string {
 }
 
 /**
- * Structured data for the homepage: WebSite + Organization + a Service
- * OfferCatalog. Strictly factual — no postal address, phone, reviews, ratings,
- * sameAs, or logo (nothing we cannot verify). Rendered once, on the homepage.
+ * Structured data for the homepage: WebSite + Organization + founder Person +
+ * a Service OfferCatalog. Strictly factual — no postal address, phone, reviews,
+ * ratings, sameAs, or logo (nothing we cannot verify). Rendered once, on the
+ * homepage.
+ *
+ * HARD RULE: nothing from src/content/proof.ts is emitted here. While
+ * PROOF_IS_SAMPLE_DATA is true the proof surfaces carry sample credentials and
+ * case studies — those are UI-badged samples and must never enter machine-
+ * readable structured data. The Person node states only verifiable identity
+ * facts; sameAs / credential properties are added at launch-gate time
+ * (LAUNCH-CHECKLIST.md) alongside the real data.
  */
 export default function JsonLd() {
   const jsonLd = {
@@ -47,6 +55,7 @@ export default function JsonLd() {
         alternateName: SITE_ALT_NAME,
         url: SITE_URL,
         description: SITE_DESCRIPTION,
+        founder: { "@id": `${SITE_URL}/#founder` },
         hasOfferCatalog: {
           "@type": "OfferCatalog",
           name: "AI workflow systems",
@@ -55,6 +64,15 @@ export default function JsonLd() {
             itemOffered: { "@type": "Service", name },
           })),
         },
+      },
+      {
+        "@type": "Person",
+        "@id": `${SITE_URL}/#founder`,
+        name: "Yair Bederman",
+        jobTitle: "Founder",
+        url: `${SITE_URL}/about`,
+        worksFor: { "@id": `${SITE_URL}/#organization` },
+        knowsLanguage: ["en", "he"],
       },
     ],
   };

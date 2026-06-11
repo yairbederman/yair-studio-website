@@ -2,17 +2,21 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { isHebrewPath, localePaths } from "@/lib/locale-paths";
 
 /**
- * Context-aware language toggle.
- * English pages link to /he; the Hebrew page links back to /.
- * (The only client component in the shell — needs the current path.)
+ * Context-aware language toggle — the shared localePaths pairing, so deep
+ * links are preserved in both directions: /offers/x ↔ /he/offers/x, / ↔ /he.
+ * An unknown target (no mirrored route) lands on that locale's branded 404
+ * catch-all, so the mapping can never crash.
+ * (One of two client components in the shell — needs the current path.)
  */
 export default function LangToggle() {
   const pathname = usePathname();
-  const onHebrew = pathname === "/he" || pathname.startsWith("/he/");
+  const onHebrew = isHebrewPath(pathname);
+  const pair = localePaths(pathname);
 
-  const href = onHebrew ? "/" : "/he";
+  const href = onHebrew ? pair.en : pair.he;
   const label = onHebrew ? "EN" : "עברית";
   const ariaLabel = onHebrew ? "Switch to English" : "Switch to Hebrew";
 

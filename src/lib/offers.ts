@@ -7,8 +7,8 @@
  * so the offer names live in exactly one place.
  *
  * Page-body copy (who it's for, problems, deliverables, steps) is page-specific
- * and lives inside each offer page file — it is intentionally NOT centralized
- * here, since it is not shared across pages.
+ * and lives in the locale-keyed content files (src/content/offers/*.ts) — it is
+ * intentionally NOT centralized here, since it is not shared across pages.
  */
 
 export type Offer = {
@@ -28,6 +28,11 @@ export type Offer = {
    * Engagement shape, phrased affirmatively (no prices, no exact day counts).
    * Rendered on the offer page and the /offers sequence. Currently only the
    * audit defines one.
+   *
+   * ⚠ When editing this, also update its Hebrew translations — they cannot
+   * derive from this EN string and live in:
+   *   - src/content/offers-index.ts (he → start.steps[0].desc tail)
+   *   - src/content/offers/ai-workflow-audit.ts (he → how.intro)
    */
   engagementNote?: string;
 };
