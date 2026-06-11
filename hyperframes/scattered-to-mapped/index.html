@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      /* ============================================================
+         "Scattered → Mapped" film — HyperFrames composition (Film 4).
+         The before BECOMES the after: a tilted ledger of the four real
+         pains (left) + drifting request chips (mid) untangle into a
+         mapped workflow spine (right), gated by a copper human-approval
+         peak. Palette + type mirror src/app/globals.css.
+         Renders transparent (alpha WebM); #review-bg is REVIEW-ONLY.
+         ============================================================ */
+      @font-face { font-family: "Inter"; font-weight: 400; font-display: block; src: url("assets/fonts/inter-400.woff2") format("woff2"); }
+      @font-face { font-family: "Inter"; font-weight: 600; font-display: block; src: url("assets/fonts/inter-600.woff2") format("woff2"); }
+      @font-face { font-family: "Geist Mono"; font-weight: 400; font-display: block; src: url("assets/fonts/geist-mono-400.woff2") format("woff2"); }
+
+      :root {
+        --bg-0: #121211; --bg-1: #1a1a18; --bg-2: #242420;
+        --fg-1: #f4f1ea; --fg-2: #b9b3aa; --fg-3: #8a847a;
+        --accent: #d96832; --accent-hover: #e67e45;
+        --accent-soft: rgba(217, 104, 50, 0.12); --accent-rule: rgba(217, 104, 50, 0.3);
+        --rule: #2a2a26; --rule-strong: #3a3a34;
+
+        --rail-x: 1330px;
+        --rail-top: 168px;
+        --rail-h: 720px; /* nodes 168 → 888, gap 144 */
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden; background: transparent;
+        font-family: "Inter", system-ui, sans-serif; color: var(--fg-1);
+        -webkit-font-smoothing: antialiased;
+      }
+      #stage { position: relative; width: 1920px; height: 1080px; }
+      #camera { position: absolute; inset: 0; transform-origin: 1100px 540px; will-change: transform; }
+
+      /* ---------- Caps (mirror the section's panel captions) ---------- */
+      .cap {
+        position: absolute; top: 116px; font-family: "Geist Mono", ui-monospace, monospace;
+        font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase;
+        color: var(--fg-3); opacity: 0;
+      }
+      #cap-before { left: 130px; }
+      #cap-mapped { left: 1352px; }
+
+      /* ---------- Ledger (left) — the four real before-items ---------- */
+      .led {
+        position: absolute; left: 130px; display: inline-block;
+        font-size: 25px; font-weight: 400; letter-spacing: -0.005em;
+        color: var(--fg-2); white-space: nowrap; opacity: 0;
+        will-change: transform, opacity;
+      }
+      .led .strike {
+        position: absolute; left: -2px; right: -2px; top: 55%; height: 2px;
+        background: var(--fg-3); border-radius: 1px;
+        transform: scaleX(0); transform-origin: left center;
+      }
+
+      /* ---------- Chaos field (mid) — chips + tangle ---------- */
+      #chaos { position: absolute; inset: 0; }
+      .chipw { position: absolute; will-change: transform; } /* drift wrapper — flight tweens live on the inner chip */
+      .chip {
+        display: inline-block; font-family: "Geist Mono", ui-monospace, monospace;
+        font-size: 16px; letter-spacing: 0.04em; color: var(--fg-2);
+        padding: 8px 13px; border: 1px solid var(--rule-strong); border-radius: 4px;
+        background: var(--bg-1); white-space: nowrap; opacity: 0;
+        will-change: transform, opacity;
+      }
+      .tangle {
+        position: absolute; height: 2px; background: var(--rule-strong);
+        border-radius: 2px; opacity: 0; will-change: opacity;
+      }
+
+      /* ---------- Spine (right) ---------- */
+      #spine-glow {
+        position: absolute; left: 880px; top: 90px; width: 900px; height: 900px;
+        background: radial-gradient(circle, rgba(217, 104, 50, 0.07) 0%, rgba(217, 104, 50, 0) 62%);
+        opacity: 0; will-change: transform, opacity;
+      }
+      .spine-rail, .spine-fill {
+        position: absolute; left: var(--rail-x); top: var(--rail-top);
+        width: 2px; height: var(--rail-h); transform: translateX(-50%);
+      }
+      .spine-rail { background: var(--rule); transform: translateX(-50%) scaleY(0); transform-origin: top center; }
+      .spine-fill {
+        background: linear-gradient(var(--accent-hover), var(--accent));
+        transform: translateX(-50%) scaleY(0); transform-origin: top center;
+      }
+
+      .node {
+        position: absolute; left: var(--rail-x);
+        display: flex; align-items: center; gap: 22px;
+        transform: translateY(-50%);
+        filter: blur(1.6px); opacity: 0; /* ghosted in by the mapping pass, focused on activation */
+      }
+      .node .dot {
+        position: relative; flex: 0 0 auto;
+        width: 14px; height: 14px; margin-left: -7px; border-radius: 50%;
+        background: var(--bg-0); border: 2px solid var(--rule-strong);
+        box-shadow: 0 0 0 5px var(--bg-0); /* knock the rail out behind the dot */
+      }
+      .node .body { display: flex; flex-direction: column; gap: 4px; }
+      .node .label {
+        font-size: 30px; font-weight: 600; letter-spacing: -0.01em;
+        color: var(--fg-3); white-space: nowrap;
+      }
+      .node .sub {
+        font-family: "Geist Mono", ui-monospace, monospace; font-size: 16px;
+        letter-spacing: 0.04em; color: var(--fg-3); white-space: nowrap;
+      }
+      .node--human .dot { border-color: var(--accent); }
+      .node--out .label { color: var(--fg-3); }
+
+      #approve-ring {
+        position: absolute; left: var(--rail-x); top: 744px;
+        width: 42px; height: 42px; margin-left: -21px; margin-top: -21px;
+        border-radius: 50%; border: 2px solid var(--accent);
+        opacity: 0; /* initial scale set by GSAP fromTo */
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="stage" data-composition-id="root" data-start="0" data-duration="13" data-width="1920" data-height="1080">
+      <div id="camera" data-layout-allow-overflow>
+        <div id="spine-glow"></div>
+
+        <!-- Caps — the section's two panel captions, both alive in one frame -->
+        <div class="cap" id="cap-before">Before</div>
+        <div class="cap" id="cap-mapped">Mapped workflow</div>
+
+        <!-- Ledger — the four before-items, verbatim from home.ts evidence -->
+        <div class="led" id="led0" style="top: 250px">Requests arrive by email, chat, and calls<span class="strike"></span></div>
+        <div class="led" id="led1" style="top: 392px">Status lives in someone's head<span class="strike"></span></div>
+        <div class="led" id="led2" style="top: 534px">Follow-up depends on remembering<span class="strike"></span></div>
+        <div class="led" id="led3" style="top: 676px">No shared view of what is open<span class="strike"></span></div>
+
+        <!-- Chaos field — request chips at odd angles + tangled hairlines.
+             Overlap here is the point (it untangles). -->
+        <div id="chaos" data-layout-allow-overflow>
+          <div class="tangle" style="left: 720px; top: 300px; width: 240px; transform: rotate(18deg)"></div>
+          <div class="tangle" style="left: 880px; top: 250px; width: 200px; transform: rotate(-25deg)"></div>
+          <div class="tangle" style="left: 700px; top: 520px; width: 280px; transform: rotate(-10deg)"></div>
+          <div class="tangle" style="left: 900px; top: 600px; width: 220px; transform: rotate(30deg)"></div>
+          <div class="tangle" style="left: 760px; top: 740px; width: 260px; transform: rotate(-18deg)"></div>
+          <div class="tangle" style="left: 1020px; top: 420px; width: 180px; transform: rotate(50deg)"></div>
+          <div class="tangle" style="left: 1060px; top: 290px; width: 200px; transform: rotate(-42deg)"></div>
+          <div class="tangle" style="left: 640px; top: 680px; width: 240px; transform: rotate(12deg)"></div>
+          <div class="tangle" style="left: 830px; top: 470px; width: 210px; transform: rotate(-4deg)"></div>
+          <div class="tangle" style="left: 960px; top: 760px; width: 230px; transform: rotate(24deg)"></div>
+
+          <div class="chipw" id="w-email" style="left: 700px; top: 260px"><span class="chip" id="c-email" style="transform: rotate(-5deg)">email</span></div>
+          <div class="chipw" id="w-chat" style="left: 1050px; top: 190px"><span class="chip" id="c-chat" style="transform: rotate(3deg)">chat</span></div>
+          <div class="chipw" id="w-call" style="left: 820px; top: 380px"><span class="chip" id="c-call" style="transform: rotate(-2deg)">call</span></div>
+          <div class="chipw" id="w-status" style="left: 660px; top: 560px"><span class="chip" id="c-status" style="transform: rotate(4deg)">status?</span></div>
+          <div class="chipw" id="w-follow" style="left: 1060px; top: 670px"><span class="chip" id="c-follow" style="transform: rotate(-3.5deg)">follow-up?</span></div>
+          <div class="chipw" id="w-open" style="left: 740px; top: 840px"><span class="chip" id="c-open" style="transform: rotate(2.5deg)">what is open?</span></div>
+        </div>
+
+        <!-- Spine — the mapped workflow, verbatim from home.ts evidence -->
+        <div class="spine-rail" id="spine-rail"></div>
+        <div class="spine-fill" id="spine-fill"></div>
+
+        <div class="node" id="n0" style="top: 168px">
+          <span class="dot"></span>
+          <span class="body">
+            <span class="label">Incoming request</span>
+            <span class="sub">email · chat · call</span>
+          </span>
+        </div>
+        <div class="node" id="n1" style="top: 312px"><span class="dot"></span><span class="body"><span class="label">Captured + categorized</span></span></div>
+        <div class="node" id="n2" style="top: 456px"><span class="dot"></span><span class="body"><span class="label">Owner + due date assigned</span></span></div>
+        <div class="node" id="n3" style="top: 600px"><span class="dot"></span><span class="body"><span class="label">Draft response prepared</span></span></div>
+        <div class="node node--human" id="n4" style="top: 744px"><span class="dot"></span><span class="body"><span class="label">Human approval</span></span></div>
+        <div class="node node--out" id="n5" style="top: 888px"><span class="dot"></span><span class="body"><span class="label">Tracked to done</span></span></div>
+
+        <div id="approve-ring"></div>
+      </div>
+    </div>
+
+    <script>
+      /* ============================================================
+         Timeline — 13s, deterministic (no random / Date / async).
+         scatter → mapping pass → untangle → APPROVAL HOLD → done → settle.
+         Node y-centres: 168,312,456,600,744,888 · rail top 168, h 720.
+         ============================================================ */
+      const NODE_Y = [168, 312, 456, 600, 744, 888];
+      const RAIL_TOP = 168, RAIL_H = 720;
+      const fillTo = (i) => (NODE_Y[i] - RAIL_TOP) / RAIL_H;
+
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+
+      function activate(sel, at, color) {
+        tl.to(sel, { filter: "blur(0px)", opacity: 1, duration: 0.5 }, at);
+        tl.to(sel + " .dot", { backgroundColor: "#d96832", borderColor: "#d96832", duration: 0.4 }, at);
+        tl.to(sel + " .label", { color: color || "#f4f1ea", duration: 0.4, overwrite: "auto" }, at);
+      }
+      /* chip flight: chaos rest → node dot (shrink + dissolve into it) */
+      function fly(sel, dx, dy, at, dur) {
+        tl.to(sel, { x: dx, y: dy, rotation: 0, scale: 0.35, opacity: 0, duration: dur, ease: "power2.inOut" }, at);
+      }
+      /* ledger line resolves: straightens, dims, strikes through */
+      function resolve(sel, at) {
+        tl.to(sel, { x: 0, rotation: 0, color: "#8a847a", duration: 0.5, ease: "power2.out" }, at);
+        tl.to(sel + " .strike", { scaleX: 1, duration: 0.45, ease: "power2.inOut" }, at + 0.08);
+      }
+
+      // ---- ACT 1 — Scatter (0.15–2.9): the mess assembles ----
+      tl.fromTo("#cap-before", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.15);
+      // four pains, four different entrances — landing tilted + jittered
+      tl.fromTo("#led0", { opacity: 0, x: -24, rotation: -1.3 }, { opacity: 1, x: 12, rotation: -1.3, duration: 0.6, ease: "power3.out" }, 0.35);
+      tl.fromTo("#led1", { opacity: 0, x: 38, rotation: 1.0 }, { opacity: 1, x: 38, rotation: 1.0, duration: 0.7, ease: "sine.out" }, 0.55);
+      tl.fromTo("#led2", { opacity: 0, x: 6, y: 24, rotation: -0.8 }, { opacity: 1, x: 6, y: 0, rotation: -0.8, duration: 0.6, ease: "expo.out" }, 0.75);
+      tl.fromTo("#led3", { opacity: 0, x: 58, rotation: 1.6 }, { opacity: 1, x: 30, rotation: 1.6, duration: 0.65, ease: "power2.out" }, 0.95);
+      // chips tumble in (extra spin settles into each chip's resting tilt)
+      const CHIPS = [
+        ["#c-email", -5, "power3.out"], ["#c-chat", 3, "expo.out"], ["#c-call", -2, "power2.out"],
+        ["#c-status", 4, "power3.out"], ["#c-follow", -3.5, "expo.out"], ["#c-open", 2.5, "power2.out"],
+      ];
+      CHIPS.forEach(([sel, rot, ease], i) => {
+        tl.fromTo(sel, { opacity: 0, scale: 0.75, rotation: rot + (i % 2 ? 9 : -9) },
+          { opacity: 1, scale: 1, rotation: rot, duration: 0.55, ease }, 0.6 + i * 0.22);
+      });
+      tl.to(".tangle", { opacity: 0.75, duration: 0.6, ease: "sine.out", stagger: 0.07 }, 1.0);
+      // slow ambient drift on the wrappers (finite, varied) — flights animate
+      // the inner chips, so no property is ever driven twice
+      const DRIFT = [
+        ["#w-email", 10, 1], ["#w-chat", -9, 1], ["#w-call", 8, 1],
+        ["#w-status", -11, 2], ["#w-follow", 9, 3], ["#w-open", -10, 6],
+      ];
+      DRIFT.forEach(([sel, amp, rep]) => {
+        tl.to(sel, { y: amp, duration: 1.4, yoyo: true, repeat: rep, ease: "sine.inOut" }, 1.2);
+      });
+
+      // ---- ACT 2 — The mapping pass (2.9–4.3): the spine draws ----
+      tl.fromTo("#cap-mapped", { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }, 2.9);
+      tl.to("#spine-rail", { scaleY: 1, duration: 1.1, ease: "power1.inOut" }, 3.0);
+      tl.to("#spine-glow", { opacity: 0.8, duration: 1.0, ease: "sine.out" }, 3.2);
+      tl.to("#spine-glow", { scale: 1.05, duration: 1.8, yoyo: true, repeat: 4, ease: "sine.inOut" }, 3.4);
+      tl.to(".node", { opacity: 0.5, duration: 0.5, stagger: 0.12 }, 3.25); // ghosts along the rail
+
+      // ---- ACT 3 — Untangle (4.35–8.2): each piece finds its place ----
+      fly("#c-email", 593, -110, 4.35, 0.85);
+      fly("#c-chat", 248, -40, 4.5, 0.85);
+      fly("#c-call", 478, -230, 4.65, 0.85);
+      activate("#n0", 5.0);
+      resolve("#led0", 5.15);
+
+      tl.to("#spine-fill", { scaleY: fillTo(1), duration: 0.5, ease: "power1.inOut" }, 5.5);
+      activate("#n1", 5.9);
+
+      fly("#c-status", 624, -122, 6.0, 0.85);
+      tl.to("#spine-fill", { scaleY: fillTo(2), duration: 0.5, ease: "power1.inOut" }, 6.3);
+      activate("#n2", 6.8);
+      resolve("#led1", 6.95);
+
+      fly("#c-follow", 209, -88, 6.9, 0.85);
+      tl.to("#spine-fill", { scaleY: fillTo(3), duration: 0.5, ease: "power1.inOut" }, 7.2);
+      activate("#n3", 7.7);
+      resolve("#led2", 7.85);
+
+      tl.to(".tangle", { opacity: 0, duration: 0.8, ease: "sine.in", stagger: 0.12 }, 4.6);
+
+      // ---- ACT 4 — APPROVAL HOLD (peak, 8.2–10.6) ----
+      // Approval receives no chip: it is what the system ADDS, not a
+      // rearranged piece of the mess. `what is open?` keeps drifting — still open.
+      tl.to(["#n0", "#n1", "#n2", "#n3"], { opacity: 0.45, duration: 0.6 }, 8.2);
+      tl.to(["#n0", "#n1", "#n2", "#n3"], { filter: "blur(1.2px)", duration: 0.6 }, 8.2);
+      tl.to("#spine-fill", { scaleY: fillTo(4), duration: 0.6, ease: "power1.inOut" }, 8.25);
+      activate("#n4", 8.3, "#d96832");
+      tl.to("#n4", { scale: 1.06, duration: 0.6, transformOrigin: "left center" }, 8.35);
+      tl.to("#spine-glow", { opacity: 1, duration: 0.6, ease: "sine.out" }, 8.4);
+      tl.fromTo("#approve-ring", { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5 }, 8.7)
+        .to("#approve-ring", { scale: 1.7, opacity: 0, duration: 0.9, ease: "power2.out" }, 9.2);
+      // held beat 9.6–10.6 — stillness (only the open chip drifts)
+
+      // ---- ACT 5 — Tracked to done (10.6–12.4): the last open thing resolves ----
+      tl.to("#n4", { scale: 1, duration: 0.5 }, 10.6);
+      tl.to("#spine-fill", { scaleY: 1, duration: 0.55, ease: "power1.inOut" }, 10.65);
+      fly("#c-open", 515, 30, 10.75, 0.85);
+      activate("#n5", 11.45);
+      resolve("#led3", 11.7);
+
+      // ---- Settle / loop-prep (12.1–13.0) ----
+      tl.to(["#n0", "#n1", "#n2", "#n3"], { opacity: 0.65, filter: "blur(0px)", duration: 0.6, ease: "sine.inOut" }, 12.1);
+      tl.to("#spine-glow", { opacity: 0.7, duration: 0.7, ease: "sine.inOut" }, 12.3);
+
+      // Camera: restrained push-in across the whole film
+      tl.fromTo("#camera", { scale: 1.0 }, { scale: 1.03, duration: 13, ease: "sine.inOut" }, 0);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["root"] = tl;
+    </script>
+  </body>
+</html>

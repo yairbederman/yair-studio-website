@@ -58,6 +58,9 @@ export type HomeContent = {
   evidence: {
     title: string;
     intro: string;
+    /** Caption + accessible name for the scattered-to-mapped process film. */
+    filmCaption: string;
+    filmName: string;
     before: { caption: string; items: readonly string[] };
     mapped: { caption: string; ariaLabel: string; nodes: readonly SpineNode[] };
   };
@@ -143,6 +146,9 @@ const en: HomeContent = {
     title: "What “mapped” looks like",
     intro:
       "An illustration of the approach, not a client case study. The improvement here is structural: scattered, manual work becomes a mapped flow with a human approval step.",
+    filmCaption:
+      "Scattered requests untangle into a mapped flow, with a human approval step before the work is tracked to done.",
+    filmName: "scattered-to-mapped film",
     before: {
       caption: "Before",
       items: [
@@ -252,6 +258,9 @@ const he: HomeContent = {
     title: "איך נראה תהליך ממופה",
     intro:
       "הדגמה של הגישה, לא מקרה לקוח אמיתי. השיפור כאן מבני: עבודה מפוזרת וידנית הופכת לתהליך ממופה עם שלב אישור אנושי.",
+    filmCaption:
+      "בקשות מפוזרות מסתדרות לתהליך ממופה, עם שלב אישור אנושי לפני שהעבודה מנוהלת עד לסגירה.",
+    filmName: "סרטון התהליך הממופה",
     before: {
       caption: "לפני",
       items: [

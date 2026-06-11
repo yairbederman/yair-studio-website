@@ -31,7 +31,7 @@ export default function HomePageBody({ locale }: { locale: Locale }) {
         <ProblemsSection content={content.problems} />
         <MethodSection content={content.method} />
         <FounderSection content={proof.founder} badgeLabel={proof.sampleBadge} />
-        <EvidenceSection content={content.evidence} />
+        <EvidenceSection content={content.evidence} locale={locale} />
         <ProofSection content={proof.cases} badgeLabel={proof.sampleBadge} />
         <OffersSection content={content.offers} locale={locale} />
         <FinalCTA content={content.finalCta} />
