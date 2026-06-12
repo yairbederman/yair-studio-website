@@ -880,9 +880,9 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 /* The process film — a decorative looping video rendered by FilmPlayer.
    The frame background is --bg-0 (what the films were composed against) so
    their --bg-1 chips/cards keep their contrast. The poster <img> is the
-   always-visible base layer; FilmPlayer mounts the <video> above it only on
-   ≥768px viewports without a reduced-motion preference, plus a visible
-   pause/play toggle (WCAG 2.2.2). The caption carries the semantics. */
+   always-visible base layer; FilmPlayer mounts the <video> above it unless
+   the user prefers reduced motion, plus a visible pause/play toggle
+   (WCAG 2.2.2). The caption carries the semantics. */
 .workflow-film {
   margin: 0 0 var(--s-6);
   display: flex;

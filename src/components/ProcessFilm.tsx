@@ -3,10 +3,10 @@ import FilmPlayer from "@/components/FilmPlayer";
 /**
  * ProcessFilm — a looping process film embedded in a content section. The
  * motion is decorative; the <figcaption> carries the accessible idea, so
- * screen-reader, reduced-motion, and mobile users still get the message
+ * screen-reader and reduced-motion users still get the message
  * (poster still + caption).
  *
- * The frame, gating (poster-only on <768px or reduced motion), source order,
+ * The frame, gating (poster-only under reduced motion), source order,
  * and the pause/play control live in FilmPlayer; this component adds the
  * figure/caption shell. Styles: `.workflow-film` / `.film-*` in globals.css.
  */

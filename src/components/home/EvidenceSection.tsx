@@ -11,8 +11,8 @@ import type { Locale } from "@/content/types";
  * untangles into the mapped flow (the transformation a static layout can only
  * imply). Below it, the /workflows before/after composition documents the same
  * content statically — a hairline .panel-list "before" beside a mapped
- * <WorkflowMap> in an asymmetric .workflow-compare grid — so reduced-motion,
- * mobile, and screen-reader users get the full message without the video.
+ * <WorkflowMap> in an asymmetric .workflow-compare grid — so reduced-motion
+ * and screen-reader users get the full message without the video.
  * No fabricated metrics, percentages, or client claims anywhere.
  */
 export default function EvidenceSection({

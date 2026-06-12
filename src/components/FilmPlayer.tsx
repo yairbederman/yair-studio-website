@@ -9,10 +9,10 @@ import { useEffect, useRef, useState } from "react";
  *
  * Loading strategy:
  *   - SSR and first client render show ONLY the poster (a plain <img>), so
- *     reduced-motion and mobile users never fetch a byte of video.
- *   - The <video> mounts after hydration, and only when the viewport is
- *     ≥768px AND the user has no reduced-motion preference (checked via
- *     matchMedia in an effect — never during render, so hydration stays clean).
+ *     reduced-motion users never fetch a byte of video.
+ *   - The <video> mounts after hydration, and only when the user has no
+ *     reduced-motion preference (checked via matchMedia in an effect — never
+ *     during render, so hydration stays clean).
  *   - Sources are mp4-first: the pre-composited mp4 is 2–4× smaller than the
  *     alpha webm and both are rendered against the same --bg-0 charcoal.
  *
@@ -41,11 +41,7 @@ export default function FilmPlayer({
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    // 768px mirrors the site's mobile breakpoint (globals.css uses
-    // max-width: 767px) — keep the two in sync if the breakpoint changes.
-    const query = window.matchMedia(
-      "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
-    );
+    const query = window.matchMedia("(prefers-reduced-motion: no-preference)");
     const apply = () => setShowVideo(query.matches);
     apply();
     query.addEventListener("change", apply);
