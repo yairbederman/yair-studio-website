@@ -24,7 +24,7 @@ const en: AboutContent = {
   },
   build: {
     title: "What I build",
-    intro: "Four kinds of system, built around how the work actually runs.",
+    intro: "Small systems built around how the work actually runs.",
     items: [
       {
         title: "Workflow maps",
@@ -83,7 +83,7 @@ const he: AboutContent = {
   },
   build: {
     title: "מה אני בונה",
-    intro: "ארבעה סוגי מערכות, סביב איך שהעבודה באמת רצה.",
+    intro: "מערכות קטנות סביב איך שהעבודה באמת רצה.",
     items: [
       {
         title: "מפות תהליכים",

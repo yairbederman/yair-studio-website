@@ -17,6 +17,7 @@ export default function OfferHero({
   lead,
   ctaLabel,
   ctaHref,
+  secondaryCta,
 }: {
   /** Optional kicker — only for labels that add information beyond the nav. */
   eyebrow?: string;
@@ -24,6 +25,7 @@ export default function OfferHero({
   lead: string;
   ctaLabel: string;
   ctaHref: string;
+  secondaryCta?: { label: string; href: string };
 }) {
   return (
     <section className="offer-hero" aria-labelledby="offer-hero-title">
@@ -36,6 +38,11 @@ export default function OfferHero({
             <CTAButton href={ctaHref} variant="primary">
               {ctaLabel}
             </CTAButton>
+            {secondaryCta ? (
+              <CTAButton href={secondaryCta.href} variant="ghost">
+                {secondaryCta.label}
+              </CTAButton>
+            ) : null}
           </div>
         </div>
       </Container>

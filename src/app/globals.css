@@ -693,6 +693,9 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   border-color: var(--accent-rule);
 }
 .method-step.is-human .method-step-num { color: var(--accent); }
+.method-list > li:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
 
 /* ---------- Offers ---------- */
 .offers-grid {
@@ -721,11 +724,15 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   transform: translateY(-2px);
   box-shadow: var(--edge-top-strong);
 }
+.offer-card--disabled:hover {
+  border-color: var(--rule);
+  transform: none;
+  box-shadow: var(--edge-top);
+}
 .offer-card .card-desc { flex: 1 1 auto; }
 .offer-card-foot { margin-top: var(--s-5); }
 
-/* Lightweight copper text CTA — replaces the bordered button so four cards don't
-   read as four heavy buttons. The stretched ::after turns the whole card into one
+/* Lightweight copper text CTA. The stretched ::after turns a live card into one
    click target (one clean link per card). */
 .offer-cta {
   display: inline-flex;
@@ -742,6 +749,17 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   position: absolute;
   inset: 0;
   border-radius: var(--r-lg);
+}
+.offer-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 2px var(--s-2);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--r-sm);
+  color: var(--fg-3);
+  font-size: var(--fs-sm);
+  font-weight: 500;
 }
 .offer-cta-arrow { transition: transform var(--dur) var(--ease); }
 .offer-card:hover .offer-cta-arrow { transform: translateX(3px); }

@@ -1,10 +1,10 @@
-import type { CardItem, SpineNode, StepItem } from "@/content/types";
+import type { CardItem, Cta, SpineNode, StepItem } from "@/content/types";
 
 /**
  * Content model for an offer detail page — consumed by the shared
  * OfferPageBody template (src/components/offers/OfferPageBody.tsx).
  *
- * All four offer pages share one section sequence (hero → optional film →
+ * Offer detail pages share one section sequence (hero → optional film →
  * who → problems → build → example → how → human → cta); per-page variation
  * is data: which sections carry an intro, the section titles, and whether a
  * film exists. Section ids are fixed in the template (stable anchors).
@@ -17,6 +17,7 @@ export type OfferPageContent = {
     lead: string;
     ctaLabel: string;
     ctaHref: string;
+    secondaryCta?: Cta;
   };
   /** Optional process film band rendered directly under the hero. */
   film?: {

@@ -11,7 +11,7 @@ import type { OfferPageContent } from "@/content/offers/types";
 import type { Locale } from "@/content/types";
 
 /**
- * Shared offer-page template. All four offer detail pages are the same
+ * Shared offer-page template. Offer detail pages use the same
  * section sequence — hero → optional film → who → problems → build →
  * example map → how → human → closing CTA — so the sequence lives once here
  * and each page file is a thin wrapper passing its locale-resolved content.
@@ -36,6 +36,7 @@ export default function OfferPageBody({
         lead={c.hero.lead}
         ctaLabel={c.hero.ctaLabel}
         ctaHref={c.hero.ctaHref}
+        secondaryCta={c.hero.secondaryCta}
       />
 
       {c.film ? (

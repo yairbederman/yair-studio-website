@@ -1,12 +1,9 @@
-import { AUDIT_OFFER } from "@/lib/offers";
 import { localeAccessor } from "@/content/types";
 import type { Locale, StepItem } from "@/content/types";
 
 /**
- * /offers overview page content — typed and locale-keyed.
- * The sequence's first step embeds AUDIT_OFFER.engagementNote so the
- * engagement shape lives in exactly one place (src/lib/offers.ts).
- * The offer cards themselves stay canonical in src/lib/offers.ts.
+ * /offers overview page content. The service cards themselves stay canonical in
+ * src/lib/offers.ts and localized in src/content/offer-cards.ts.
  */
 
 export type OffersIndexContent = {
@@ -18,81 +15,72 @@ export type OffersIndexContent = {
 
 const en: OffersIndexContent = {
   hero: {
-    title: "Four entry points into one system",
-    lead: "Not four separate services. Each offer is a way into the same system, built around how your workflows actually run.",
-    ctaLabel: "Map one workflow",
+    title: "Services",
+    lead: "Start small: diagnose one workflow, build one pilot, or turn a daily operating process into a practical AI system.",
+    ctaLabel: "Book a diagnostic call",
     ctaHref: "/contact",
   },
   start: {
     title: "Where to start",
     intro:
-      "If you're not sure where to start, start with the AI Workflow Audit. The other offers build on what it finds.",
+      "The safest path is to start with one real process, then build only the workflow that earns its place.",
     steps: [
       {
-        title: "Start with an AI Workflow Audit",
-        desc: `Map one real workflow before building: bottlenecks, owners, and what should stay human.${AUDIT_OFFER.engagementNote ? ` ${AUDIT_OFFER.engagementNote}` : ""}`,
+        title: "Diagnose one workflow",
+        desc: "Map the bottlenecks, owners, automation candidates, and human approval points.",
       },
       {
-        title: "Build Internal AI Systems",
-        desc: "Add a practical assistant layer for meetings, tasks, email, knowledge search, and follow-up.",
+        title: "Build one pilot",
+        desc: "Turn the map into a small working workflow around email, calendar, documents, meetings, clients, or tasks.",
       },
       {
-        title: "Add Dashboards & Automation",
-        desc: "Make stuck, overdue, and at-risk work visible, and trigger the right next action.",
-      },
-      {
-        title: "Systemize Content & Ad Operations",
-        desc: "Turn ideas, assets, and performance data into repeatable campaigns, with approval before publishing.",
+        title: "Keep the operating view visible",
+        desc: "Use a bot, report, dashboard, or table so the next action is visible every day.",
+        human: true,
       },
     ],
   },
-  offers: { title: "The offers" },
+  offers: { title: "Services" },
   cta: {
     heading: "One workflow is enough to start.",
-    body: "The first step is a focused map of a real process: where work enters, where it gets stuck, and what a useful AI-assisted system should do.",
-    ctaLabel: "Map one workflow",
+    body: "Send the process that slows the day down. We can diagnose it first, or pick a narrow pilot if the shape is already clear.",
+    ctaLabel: "Book a diagnostic call",
     ctaHref: "/contact",
   },
 };
 
-/** Hebrew (RTL) offers-overview content — hebrew-quality drafted. The first
-    step folds in the audit engagement note (translation of
-    AUDIT_OFFER.engagementNote, which is EN-only by definition). */
 const he: OffersIndexContent = {
   hero: {
-    title: "ארבע נקודות כניסה למערכת אחת",
-    lead: "לא ארבעה שירותים נפרדים. כל שירות הוא דרך כניסה לאותה מערכת, שנבנית סביב איך שהתהליכים שלכם באמת רצים.",
-    ctaLabel: "למפות תהליך אחד",
+    title: "שירותים",
+    lead: "אפשר להתחיל קטן: אבחון, פיילוט אחד, או מערכת תפעולית שמחזירה שליטה ליום העבודה.",
+    ctaLabel: "לתאם שיחת אבחון",
     ctaHref: "/he/contact",
   },
   start: {
     title: "מאיפה מתחילים",
     intro:
-      "לא בטוחים מאיפה להתחיל? מתחילים מאבחון תהליכי AI. שאר השירותים נבנים על מה שהוא מגלה.",
+      "בוחרים תהליך אחד אמיתי, מבינים איפה הוא נתקע, ואז בונים רק את החלק שצריך לעבוד עכשיו.",
     steps: [
       {
-        title: "מתחילים מאבחון תהליכי AI",
-        desc: "ממפים תהליך אמיתי אחד לפני שבונים: צווארי בקבוק, אחראים, ומה נשאר אנושי. סקירה ממוקדת בהיקף קבוע, בתוך ימים.",
+        title: "אבחון תהליך אחד",
+        desc: "ממפים צווארי בקבוק, אחראים, מועמדים לאוטומציה ונקודות אישור אנושי.",
       },
       {
-        title: "בונים מערכות AI פנימיות",
-        desc: "מוסיפים שכבת עוזרים פרקטית לפגישות, משימות, מייל, חיפוש ידע ומעקב.",
+        title: "פיילוט קטן שעובד",
+        desc: "הופכים את המפה לתהליך עבודה אחד סביב מיילים, יומן, מסמכים, פגישות, לקוחות או משימות.",
       },
       {
-        title: "מוסיפים דשבורדים ואוטומציה",
-        desc: "הופכים עבודה תקועה, באיחור ובסיכון לגלויה, ומפעילים את הצעד הנכון הבא.",
-      },
-      {
-        title: "מסדרים תפעול תוכן וקמפיינים",
-        desc: "הופכים רעיונות, חומרים ונתוני ביצועים לקמפיינים חוזרים, עם אישור לפני פרסום.",
+        title: "תמונת מצב יומית",
+        desc: "בוט, דוח, דשבורד או טבלה פשוטה שמראים מה חדש, מה דחוף ומה תקוע.",
+        human: true,
       },
     ],
   },
   offers: { title: "השירותים" },
   cta: {
     heading: "תהליך אחד מספיק כדי להתחיל.",
-    body: "הצעד הראשון הוא מפה ממוקדת של תהליך אמיתי: איפה העבודה נכנסת, איפה היא נתקעת, ומה מערכת AI שימושית באמת צריכה לעשות.",
-    ctaLabel: "למפות תהליך אחד",
+    body: "שלחו את התהליך שמאט את היום. אפשר להתחיל מאבחון, או לבחור פיילוט צר אם הצורה כבר ברורה.",
+    ctaLabel: "לתאם שיחת אבחון",
     ctaHref: "/he/contact",
   },
 };

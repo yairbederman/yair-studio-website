@@ -1,6 +1,7 @@
 import HeroSection from "@/components/home/HeroSection";
 import ProblemsSection from "@/components/home/ProblemsSection";
 import MethodSection from "@/components/home/MethodSection";
+import SafetySection from "@/components/home/SafetySection";
 import FounderSection from "@/components/home/FounderSection";
 import EvidenceSection from "@/components/home/EvidenceSection";
 import ProofSection from "@/components/home/ProofSection";
@@ -29,11 +30,16 @@ export default function HomePageBody({ locale }: { locale: Locale }) {
       <main id="main" className="home">
         <HeroSection content={content.hero} />
         <ProblemsSection content={content.problems} />
-        <MethodSection content={content.method} />
-        <FounderSection content={proof.founder} badgeLabel={proof.sampleBadge} />
-        <EvidenceSection content={content.evidence} locale={locale} />
-        <ProofSection content={proof.cases} badgeLabel={proof.sampleBadge} />
         <OffersSection content={content.offers} locale={locale} />
+        <MethodSection content={content.method} />
+        <SafetySection content={content.safety} />
+        {locale === "en" ? (
+          <FounderSection content={proof.founder} badgeLabel={proof.sampleBadge} />
+        ) : null}
+        <EvidenceSection content={content.evidence} locale={locale} />
+        {locale === "en" ? (
+          <ProofSection content={proof.cases} badgeLabel={proof.sampleBadge} />
+        ) : null}
         <FinalCTA content={content.finalCta} />
       </main>
     </>

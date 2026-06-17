@@ -1,38 +1,37 @@
 /**
- * Canonical offer list — the single source for the four offers' card copy and
- * routes. Consumed by:
- *   - the homepage Offers section  (src/components/offers/OfferCards.tsx)
+ * Canonical service list. Consumed by:
+ *   - the homepage services section
  *   - the /offers overview page
  *   - src/lib/site.ts, which derives SERVICES (the schema.org taxonomy) from it
- * so the offer names live in exactly one place.
  *
- * Page-body copy (who it's for, problems, deliverables, steps) is page-specific
- * and lives in the locale-keyed content files (src/content/offers/*.ts) — it is
- * intentionally NOT centralized here, since it is not shared across pages.
+ * Page-body copy lives in the locale-keyed content files under
+ * src/content/offers/*.ts. Localized card strings key off these stable keys.
  */
 
+export type OfferStatus = "live" | "comingSoon";
+
 export type Offer = {
-  /** Stable key for React lists and route folders. */
+  /** Stable key for React lists and route folders when a detail page exists. */
   key: string;
-  /** Card title (homepage + /offers overview) — byte-identical to the page H1. */
+  /** Card title (homepage + /offers overview). */
   title: string;
-  /** schema.org Service name — source for SERVICES in src/lib/site.ts. */
+  /** schema.org Service name, source for SERVICES in src/lib/site.ts. */
   serviceName: string;
-  /** Route to the offer's detail page. */
-  href: string;
-  /** Card CTA label. */
+  /** Route to the offer's detail page. Absent means the card is not linked yet. */
+  href?: string;
+  /** Card CTA label for live offers, or status label for future offers. */
   cta: string;
   /** One- to two-sentence card summary. */
   summary: string;
+  /** Future services are shown as "coming soon" cards, not dead links. */
+  status?: OfferStatus;
   /**
-   * Engagement shape, phrased affirmatively (no prices, no exact day counts).
-   * Rendered on the offer page and the /offers sequence. Currently only the
-   * audit defines one.
+   * Engagement shape, phrased affirmatively (no prices).
+   * Rendered on the audit page and the /offers sequence.
    *
-   * ⚠ When editing this, also update its Hebrew translations — they cannot
-   * derive from this EN string and live in:
-   *   - src/content/offers-index.ts (he → start.steps[0].desc tail)
-   *   - src/content/offers/ai-workflow-audit.ts (he → how.intro)
+   * When editing this, also update its Hebrew translations in:
+   *   - src/content/offers-index.ts
+   *   - src/content/offers/ai-workflow-audit.ts
    */
   engagementNote?: string;
 };
@@ -43,46 +42,57 @@ export const OFFERS: readonly Offer[] = [
     title: "AI Workflow Audit",
     serviceName: "AI Workflow Audit",
     href: "/offers/ai-workflow-audit",
-    cta: "Start with an audit",
+    cta: "See the audit",
     summary:
-      "A focused review of one business workflow: what happens today, where it breaks, what can be automated, and what should stay human.",
+      "Map one workflow before building: bottlenecks, automation candidates, and what should stay human.",
     engagementNote: "A focused, fixed-scope review delivered within days.",
   },
   {
-    key: "internal-ai-systems",
-    title: "Internal AI Systems",
-    serviceName: "Internal AI Systems",
-    href: "/offers/internal-ai-systems",
-    cta: "Build an internal system",
+    key: "ai-ops-pilot",
+    title: "AI Operations Pilot",
+    serviceName: "AI Operations Pilot",
+    href: "/offers/ai-ops-pilot",
+    cta: "Build a pilot",
     summary:
-      "A practical assistant or workflow layer for meetings, tasks, email, knowledge search, reporting, or follow-up.",
+      "Build one practical workflow in 7-10 days around email, calendar, documents, meetings, clients, or tasks.",
   },
   {
-    key: "dashboards-automation",
-    title: "Dashboards & Automation",
-    serviceName: "Dashboards & Automation",
-    href: "/offers/dashboards-automation",
-    cta: "Create visibility",
+    key: "follow-up-machine",
+    title: "Follow-Up Machine",
+    serviceName: "Follow-Up Machine",
+    cta: "Coming soon",
     summary:
-      "A visibility layer connected to existing tools so teams can see what needs attention and trigger the right next action.",
+      "A system that makes sure leads, quotes, clients, and open loops do not fall through the cracks.",
+    status: "comingSoon",
   },
   {
-    key: "content-ad-operations",
-    title: "Content & Ad Operations",
-    serviceName: "Content & Ad Operations",
-    href: "/offers/content-ad-operations",
-    cta: "Systemize content ops",
+    key: "meeting-to-tasks",
+    title: "Meetings to Tasks",
+    serviceName: "Meetings to Tasks",
+    cta: "Coming soon",
     summary:
-      "A repeatable system for turning raw ideas, calls, assets, and performance data into structured content or ad experiments.",
+      "Meetings become summaries, decisions, tasks, owners, and deadlines.",
+    status: "comingSoon",
+  },
+  {
+    key: "office-command-center",
+    title: "Office Command Center",
+    serviceName: "Office Command Center",
+    cta: "Coming soon",
+    summary:
+      "A daily operating view across documents, email, calendar, tasks, and items waiting for the owner.",
+    status: "comingSoon",
   },
 ];
 
 const audit = OFFERS.find((o) => o.key === "ai-workflow-audit");
 if (!audit) throw new Error("OFFERS: missing ai-workflow-audit entry");
 
-/**
- * The audit offer, resolved once — its engagementNote renders on the audit
- * page's "How it works" intro and the /offers sequence, so the lookup (and the
- * key string) lives in exactly one place.
- */
+const pilot = OFFERS.find((o) => o.key === "ai-ops-pilot");
+if (!pilot) throw new Error("OFFERS: missing ai-ops-pilot entry");
+
+/** The audit offer, resolved once for shared engagement-note copy. */
 export const AUDIT_OFFER: Offer = audit;
+
+/** The AI operations pilot offer, resolved once for route/content references. */
+export const AI_OPS_PILOT_OFFER: Offer = pilot;

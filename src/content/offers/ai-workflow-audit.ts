@@ -3,105 +3,110 @@ import { localeAccessor } from "@/content/types";
 import type { Locale } from "@/content/types";
 import type { OfferPageContent } from "./types";
 
-/**
- * AI Workflow Audit page content — typed and locale-keyed.
- * The "How it works" intro reuses AUDIT_OFFER.engagementNote so the engagement
- * shape lives in exactly one place (src/lib/offers.ts).
- */
+/** AI Workflow Audit page content, typed and locale-keyed. */
 
 const en: OfferPageContent = {
   hero: {
-    eyebrow: "Start here",
-    title: "AI Workflow Audit",
-    lead: "Before automating anything, map the real process. A focused review of one workflow: how it actually runs, where it stalls, and what's worth building.",
-    ctaLabel: "Map one workflow",
+    eyebrow: "Start before building",
+    title: "AI workflow audit before automation",
+    lead: "A focused review of one business process: how work really moves, where it gets stuck, what can be automated, and what has to stay human.",
+    ctaLabel: "Book a workflow audit",
     ctaHref: "/contact",
+    secondaryCta: { label: "See what you get", href: "#build" },
   },
   film: {
-    sectionTitle: "From a messy workflow to a first system",
+    sectionTitle: "From process noise to buildable map",
     webm: "/videos/ai-workflow-audit-process.webm",
     mp4: "/videos/ai-workflow-audit-process.mp4",
     poster: "/videos/ai-workflow-audit-process-poster.png",
     caption:
-      "A messy workflow, separated into what to automate, what to assist, and what stays human: your first useful system.",
+      "A workflow is separated into what can run automatically, what can be AI-assisted, and what needs a person.",
     filmName: "audit process film",
   },
   who: {
-    title: "Who it's for",
-    intro:
-      "The audit uses an engineering lens: trace the workflow, identify failure points, separate automation candidates from judgment calls, and define what would make the system trustworthy.",
+    title: "This fits if you are saying one of these things",
     items: [
       {
-        title: "Operators & founders",
-        desc: "You run a growing service business and lose time to status-chasing, approvals, and handoffs.",
+        title: "We have too many emails and messages",
+        desc: "It is hard to know what is urgent.",
       },
       {
-        title: "Teams with scattered tools",
-        desc: "Work lives across email, docs, spreadsheets, and chat, and no one has a single clear view.",
+        title: "Tasks disappear after meetings",
+        desc: "Decisions are made, but two days later no one owns the next action.",
       },
       {
-        title: "Anyone weighing AI",
-        desc: "You want to use AI in the business but need to know where it actually pays off first.",
+        title: "We want to use AI",
+        desc: "But we do not know where to start.",
+      },
+      {
+        title: "One process repeats every week",
+        desc: "And someone still does it manually every time.",
+      },
+      {
+        title: "We tried AI tools",
+        desc: "But they did not become a reliable way of working.",
       },
     ],
   },
   problems: {
-    title: "Problems it solves",
+    title: "What the audit clarifies",
     items: [
       {
-        title: "Automating the wrong thing",
-        desc: "Building tools before the process is understood bakes in the existing mess.",
+        title: "Where work enters",
+        desc: "Email, calendar, Drive, meetings, clients, forms, spreadsheets, or task lists.",
       },
       {
-        title: "Unclear ownership",
-        desc: "No one is sure who owns each step, so work waits or gets duplicated.",
+        title: "Where it gets stuck",
+        desc: "The handoff, approval, missing owner, or unclear next action.",
       },
       {
-        title: "Invisible bottlenecks",
-        desc: "The real delays are hard to see until the workflow is mapped end to end.",
+        title: "What AI should assist",
+        desc: "Summaries, classification, extraction, triage, drafts, or search.",
       },
       {
-        title: "Experiments that don't stick",
-        desc: "Prompts and demos look useful but never become a reliable, owned workflow.",
+        title: "What stays human",
+        desc: "Decisions, external messages, sensitive changes, and unclear cases.",
       },
     ],
   },
   build: {
     title: "What you get",
     intro:
-      "A clear picture of one workflow and a practical plan. The build itself is a separate, later decision.",
+      "A clear picture of one workflow and a practical roadmap. The build itself is a separate decision.",
     items: [
       {
-        title: "A workflow map",
-        desc: "One process drawn end to end: steps, owners, inputs, outputs, and handoffs.",
+        title: "Workflow map",
+        desc: "One process drawn end to end: inputs, steps, owners, outputs, and handoffs.",
       },
       {
-        title: "Bottleneck & risk notes",
-        desc: "Where work stalls, where errors enter, and where decisions wait.",
+        title: "Bottleneck notes",
+        desc: "Where work waits, where errors enter, and where decisions get delayed.",
       },
       {
-        title: "Automation candidates",
-        desc: "A shortlist of steps worth automating, and the ones that should stay human.",
+        title: "Automation buckets",
+        desc: "What can be automatic, what should be AI-assisted, and what needs a person.",
       },
       {
-        title: "An implementation roadmap",
-        desc: "A sequenced plan for what to build first, with effort and impact noted.",
+        title: "Build roadmap",
+        desc: "What to build first, what to leave alone, and what risk to manage.",
       },
     ],
   },
   example: {
-    title: "What a workflow map looks like",
+    title: "The process diagram",
     intro:
-      "A simplified example of the artifact you receive, not a client case study.",
+      "A simplified version of the map you receive, not a client case study.",
     map: {
-      caption: "Example workflow map",
-      ariaLabel: "Example of a delivered workflow map",
+      caption: "Audit flow",
+      ariaLabel: "Audit flow from business inputs to first working workflow",
       nodes: [
-        { label: "Current process", sub: "as it runs today" },
-        { label: "Bottlenecks marked" },
-        { label: "Automation candidates" },
-        { label: "Human review", human: true },
-        { label: "Sequenced roadmap", out: true },
+        { label: "Email / calendar / Drive / meetings / clients" },
+        { label: "Mapping" },
+        { label: "Automatic" },
+        { label: "AI-assisted" },
+        { label: "Human", human: true },
+        { label: "Roadmap" },
+        { label: "First working workflow", out: true },
       ],
     },
   },
@@ -110,148 +115,160 @@ const en: OfferPageContent = {
     intro: AUDIT_OFFER.engagementNote,
     steps: [
       {
-        title: "Scope one workflow",
-        desc: "We pick a single, real process that matters to the business now.",
+        title: "Pick one process",
+        desc: "We choose a real workflow that matters to the business now.",
       },
       {
-        title: "Map it end to end",
-        desc: "We document steps, owners, inputs, outputs, and where work gets stuck.",
+        title: "Map the current path",
+        desc: "We trace the inputs, steps, owners, handoffs, and tools.",
       },
       {
-        title: "Mark automation candidates",
-        desc: "We separate what's worth automating from what should stay human.",
+        title: "Sort the work",
+        desc: "Automatic, AI-assisted, human, and not worth automating yet.",
       },
       {
-        title: "Review it together",
-        desc: "We walk the map and roadmap with you before any build decision.",
+        title: "Define the first build",
+        desc: "The roadmap names the smallest useful workflow to build first.",
+      },
+      {
+        title: "Keep approval visible",
+        desc: "Anything unclear or sensitive waits for a person.",
         human: true,
-      },
-      {
-        title: "Hand off a roadmap",
-        desc: "You get a clear, sequenced plan you can act on, with or without us.",
       },
     ],
   },
   human: {
-    title: "What stays human",
-    intro: "The audit informs decisions; people make them.",
+    title: "What you do not get",
+    intro:
+      "This is a sharp map of what to build first, not a promise that AI should touch everything.",
     items: [
       {
-        title: "The decision to build",
-        desc: "The audit informs the call; you decide what gets automated.",
+        title: "Not a full development project",
+        desc: "The audit ends with a map and roadmap, not a finished production system.",
       },
       {
-        title: "Process judgment",
-        desc: "Owners confirm how the work really runs, so the map reflects reality.",
+        title: "Not a new system rollout",
+        desc: "It does not replace your CRM, task tool, inbox, or document system.",
       },
       {
-        title: "Priorities",
-        desc: "What matters most is your call; the roadmap follows it.",
+        title: "Not an AI-solves-everything promise",
+        desc: "Some steps should stay manual, reviewed, or unchanged.",
+      },
+      {
+        title: "A clear first-build recommendation",
+        desc: "You do get a focused view of what is worth building next.",
       },
     ],
   },
   cta: {
-    heading: "Map the workflow before you build.",
-    body: "The audit delivers the map, the bottlenecks, and a sequenced roadmap you can act on.",
-    ctaLabel: "Map one workflow",
-    ctaHref: "/contact",
+    heading: "After the audit",
+    body: "You can stop with the roadmap, or continue into a small pilot: morning report, follow-up, meeting summary, or documents to tasks.",
+    ctaLabel: "Continue to a pilot",
+    ctaHref: "/offers/ai-ops-pilot",
   },
 };
 
-/** Hebrew (RTL) audit-page content — hebrew-quality drafted. The "How it
-    works" intro translates AUDIT_OFFER.engagementNote (EN-only by definition). */
 const he: OfferPageContent = {
   hero: {
-    eyebrow: "מתחילים כאן",
-    title: "אבחון תהליכי AI",
-    lead: "לפני שבונים אוטומציה, ממפים את התהליך האמיתי. סקירה ממוקדת של תהליך אחד: איך הוא באמת רץ, איפה הוא נתקע, ומה שווה לבנות.",
-    ctaLabel: "למפות תהליך אחד",
+    eyebrow: "לפני שבונים",
+    title: "אבחון תהליך AI לפני שבונים אוטומציה",
+    lead: "סקירה ממוקדת של תהליך אחד בעסק: איך העבודה באמת זזה, איפה היא נתקעת, מה אפשר להפוך לאוטומטי, ומה חייב להישאר אנושי.",
+    ctaLabel: "לתאם אבחון תהליך",
     ctaHref: "/he/contact",
+    secondaryCta: { label: "לראות מה מקבלים", href: "#build" },
   },
   film: {
-    sectionTitle: "מתהליך מבולגן למערכת ראשונה",
+    sectionTitle: "מרעש תפעולי למפת דרכים",
     webm: "/videos/ai-workflow-audit-process.webm",
     mp4: "/videos/ai-workflow-audit-process.mp4",
     poster: "/videos/ai-workflow-audit-process-poster.png",
     caption:
-      "תהליך מבולגן, מופרד למה שהופך לאוטומטי, מה נעזר ב-AI ומה נשאר אנושי: המערכת השימושית הראשונה שלכם.",
+      "תהליך אחד מופרד למה שאפשר להפוך לאוטומטי, מה שצריך עזרת AI, ומה שחייב להישאר אנושי.",
     filmName: "סרטון תהליך האבחון",
   },
   who: {
-    title: "למי זה מתאים",
-    intro:
-      "האבחון משתמש בעדשה הנדסית: עוקבים אחרי התהליך, מזהים נקודות כשל, מפרידים מועמדים לאוטומציה משיקול דעת, ומגדירים מה יהפוך את המערכת לאמינה.",
+    title: "זה מתאים אם אתם אומרים אחד מהמשפטים האלה",
     items: [
       {
-        title: "מנהלים ומייסדים",
-        desc: "אתם מנהלים עסק שירותים צומח ומאבדים זמן על רדיפה אחרי סטטוס, אישורים והעברות.",
+        title: "יש לנו הרבה מיילים והודעות",
+        desc: "אבל קשה לדעת מה דחוף.",
       },
       {
-        title: "צוותים עם כלים מפוזרים",
-        desc: "העבודה חיה בין מייל, מסמכים, גיליונות וצ'אט, ולאף אחד אין תמונה אחת ברורה.",
+        title: "משימות נוצרות בפגישות",
+        desc: "ונעלמות אחרי יומיים.",
       },
       {
-        title: "מי ששוקל AI",
-        desc: "רוצים להכניס AI לעסק, אבל צריכים לדעת קודם איפה הוא באמת משתלם.",
+        title: "אנחנו רוצים להשתמש ב-AI",
+        desc: "אבל לא יודעים מאיפה להתחיל.",
+      },
+      {
+        title: "יש תהליך שחוזר על עצמו",
+        desc: "וכל פעם מישהו עושה אותו ידנית.",
+      },
+      {
+        title: "ניסינו כלי AI",
+        desc: "אבל זה לא הפך לשיטת עבודה.",
       },
     ],
   },
   problems: {
-    title: "אילו בעיות זה פותר",
+    title: "מה האבחון מבהיר",
     items: [
       {
-        title: "אוטומציה של הדבר הלא נכון",
-        desc: "בנייה של כלים לפני שמבינים את התהליך מקבעת את הבלגן הקיים.",
+        title: "איפה העבודה נכנסת",
+        desc: "מיילים, יומן, Drive, פגישות, לקוחות, טפסים, גיליונות או משימות.",
       },
       {
-        title: "בעלות לא ברורה",
-        desc: "אף אחד לא בטוח מי אחראי על כל שלב, אז עבודה מחכה או מוכפלת.",
+        title: "איפה היא נתקעת",
+        desc: "העברה בין אנשים, אישור, אחראי חסר או צעד הבא לא ברור.",
       },
       {
-        title: "צווארי בקבוק סמויים",
-        desc: "העיכובים האמיתיים קשים לזיהוי עד שהתהליך ממופה מקצה לקצה.",
+        title: "איפה AI יכול לעזור",
+        desc: "סיכום, סיווג, חילוץ, מיון, טיוטות או חיפוש.",
       },
       {
-        title: "ניסויים שלא מחזיקים",
-        desc: "פרומפטים ודמואים נראים שימושיים, אבל לא הופכים לתהליך אמין עם בעלים.",
+        title: "מה נשאר אנושי",
+        desc: "החלטות, הודעות חיצוניות, שינויים רגישים ומקרים לא ברורים.",
       },
     ],
   },
   build: {
     title: "מה מקבלים",
     intro:
-      "תמונה ברורה של תהליך אחד ותוכנית מעשית. הבנייה עצמה היא החלטה נפרדת, בהמשך.",
+      "תמונה ברורה של תהליך אחד ומפת דרכים מעשית. הבנייה עצמה היא החלטה נפרדת.",
     items: [
       {
         title: "מפת תהליך",
-        desc: "תהליך אחד משורטט מקצה לקצה: שלבים, אחראים, קלט, פלט והעברות.",
+        desc: "תהליך אחד מקצה לקצה: קלטים, שלבים, אחראים, פלטים והעברות.",
       },
       {
-        title: "הערות על צווארי בקבוק וסיכונים",
-        desc: "איפה עבודה נעצרת, איפה נכנסות טעויות, ואיפה החלטות מחכות.",
+        title: "צווארי בקבוק וסיכונים",
+        desc: "איפה עבודה מחכה, איפה נכנסות טעויות, ואיפה החלטות מתעכבות.",
       },
       {
-        title: "מועמדים לאוטומציה",
-        desc: "רשימה ממוקדת של שלבים שכדאי להפוך לאוטומטיים, ושל אלה שצריכים להישאר אנושיים.",
+        title: "חלוקה לסוגי עבודה",
+        desc: "מה אוטומטי, מה נעשה בעזרת AI, ומה דורש אדם.",
       },
       {
-        title: "מפת דרכים ליישום",
-        desc: "תוכנית מסודרת לפי שלבים: מה בונים קודם, עם הערכת מאמץ והשפעה.",
+        title: "מפת דרכים לבנייה",
+        desc: "מה לבנות קודם, מה להשאיר בצד, ואיזה סיכון לנהל.",
       },
     ],
   },
   example: {
-    title: "איך נראית מפת תהליך",
+    title: "תרשים התהליך",
     intro: "דוגמה מפושטת לתוצר שמקבלים, לא מקרה לקוח אמיתי.",
     map: {
-      caption: "דוגמה למפת תהליך",
-      ariaLabel: "דוגמה למפת תהליך כפי שהיא נמסרת",
+      caption: "זרימת האבחון",
+      ariaLabel: "זרימת אבחון מתשומות עסקיות לתהליך עבודה ראשון שעובד",
       nodes: [
-        { label: "התהליך הנוכחי", sub: "כמו שהוא רץ היום" },
-        { label: "צווארי בקבוק מסומנים" },
-        { label: "מועמדים לאוטומציה" },
-        { label: "בדיקה אנושית", human: true },
-        { label: "מפת דרכים מסודרת", out: true },
+        { label: "מיילים / יומן / Drive / פגישות / לקוחות" },
+        { label: "מיפוי" },
+        { label: "אוטומטי" },
+        { label: "בעזרת AI" },
+        { label: "אנושי", human: true },
+        { label: "מפת דרכים" },
+        { label: "תהליך עבודה ראשון שעובד", out: true },
       ],
     },
   },
@@ -260,51 +277,56 @@ const he: OfferPageContent = {
     intro: "סקירה ממוקדת בהיקף קבוע, בתוך ימים.",
     steps: [
       {
-        title: "תוחמים תהליך אחד",
-        desc: "בוחרים תהליך אמיתי אחד שחשוב לעסק עכשיו.",
+        title: "בוחרים תהליך אחד",
+        desc: "מתמקדים בתהליך אמיתי אחד שחשוב לעסק עכשיו.",
       },
       {
-        title: "ממפים מקצה לקצה",
-        desc: "מתעדים שלבים, אחראים, קלט, פלט, ואיפה העבודה נתקעת.",
+        title: "ממפים את המצב הקיים",
+        desc: "עוקבים אחרי קלטים, שלבים, אחראים, העברות וכלים.",
       },
       {
-        title: "מסמנים מועמדים לאוטומציה",
-        desc: "מפרידים בין מה ששווה אוטומציה למה שצריך להישאר אנושי.",
+        title: "ממיינים את העבודה",
+        desc: "אוטומטי, בעזרת AI, אנושי, ומה שלא כדאי להפוך לאוטומטי כרגע.",
       },
       {
-        title: "עוברים על זה יחד",
-        desc: "הולכים יחד על המפה ועל מפת הדרכים, לפני כל החלטת בנייה.",
+        title: "מגדירים את הבנייה הראשונה",
+        desc: "מפת הדרכים מראה מה תהליך העבודה הקטן והשימושי שכדאי לבנות קודם.",
+      },
+      {
+        title: "משאירים אישור גלוי",
+        desc: "כל דבר לא ברור או רגיש מחכה לאדם.",
         human: true,
-      },
-      {
-        title: "מוסרים מפת דרכים",
-        desc: "מקבלים תוכנית ברורה ומסודרת שאפשר לפעול לפיה, איתנו או בלעדינו.",
       },
     ],
   },
   human: {
-    title: "מה נשאר אנושי",
-    intro: "האבחון מזין החלטות; אנשים מקבלים אותן.",
+    title: "מה לא מקבלים",
+    intro:
+      "זה מיפוי חד של מה כדאי לבנות קודם, לא הבטחה ש-AI צריך לגעת בהכול.",
     items: [
       {
-        title: "ההחלטה לבנות",
-        desc: "האבחון מזין את ההחלטה; אתם מחליטים מה הופך לאוטומטי.",
+        title: "זה לא פרויקט פיתוח מלא",
+        desc: "האבחון מסתיים במפה ומפת דרכים, לא במערכת פרודקשן מלאה.",
       },
       {
-        title: "שיקול דעת על התהליך",
-        desc: "האחראים מאשרים איך העבודה באמת רצה, כך שהמפה משקפת מציאות.",
+        title: "זה לא הטמעה של מערכת חדשה",
+        desc: "לא מחליפים CRM, כלי משימות, תיבת מייל או מערכת מסמכים.",
       },
       {
-        title: "סדרי עדיפויות",
-        desc: "מה הכי חשוב — ההחלטה שלכם; מפת הדרכים הולכת לפיה.",
+        title: "זה לא הבטחה ש-AI יפתור הכול",
+        desc: "יש שלבים שצריכים להישאר ידניים, בבדיקה או בלי שינוי.",
+      },
+      {
+        title: "זה כן מראה מה כדאי לבנות קודם",
+        desc: "מקבלים מיפוי חד שמראה מה תהליך העבודה הראשון שכדאי לבנות.",
       },
     ],
   },
   cta: {
-    heading: "ממפים את התהליך לפני שבונים.",
-    body: "האבחון מוסר את המפה, את צווארי הבקבוק, ומפת דרכים מסודרת שאפשר לפעול לפיה.",
-    ctaLabel: "למפות תהליך אחד",
-    ctaHref: "/he/contact",
+    heading: "אחרי האבחון",
+    body: "אפשר לעצור עם מפת דרכים, או להמשיך לפיילוט קטן: דוח בוקר, follow-up, סיכום פגישות, או מסמכים למשימות.",
+    ctaLabel: "להמשיך לפיילוט",
+    ctaHref: "/he/offers/ai-ops-pilot",
   },
 };
 

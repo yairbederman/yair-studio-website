@@ -42,13 +42,15 @@ export type HomeContent = {
     title: string;
     steps: readonly { title: string; desc: string; human?: boolean }[];
   };
+  safety: {
+    title: string;
+    items: readonly string[];
+  };
   /** Offers band — section copy only; the cards stay canonical in
       src/lib/offers.ts (+ localized strings in src/content/offer-cards.ts). */
   offers: {
     title: string;
     intro: string;
-    filmCaption: string;
-    filmName: string;
   };
   /**
    * Evidence — an illustrative before/after, shown structurally via the workflow
@@ -76,10 +78,10 @@ export type HomeContent = {
 const en: HomeContent = {
   hero: {
     eyebrow: "AI workflow systems",
-    title: "Turn messy business workflows into clear AI-assisted systems.",
-    lead: "Work gets stuck when tasks, email, and context live in different tools. I map the process, connect the tools you already use, and build one system that shows the next action, with human approval where it matters.",
-    primaryCta: { label: "Map one workflow", href: "/contact" },
-    secondaryCta: { label: "See how it works", href: "#how-i-work" },
+    title: "Small AI systems for the real work of the business",
+    lead: "I help small businesses and professional offices connect AI to email, calendar, documents, meetings, clients, and tasks without replacing every system or letting unsafe automations run loose.",
+    primaryCta: { label: "Book a diagnostic call", href: "/contact" },
+    secondaryCta: { label: "See services", href: "/offers" },
     schematic: {
       caption: "workflow → next action",
       nodes: [
@@ -95,20 +97,28 @@ const en: HomeContent = {
     title: "Where work gets stuck",
     items: [
       {
-        title: "Scattered tools",
-        desc: "Tasks, notes, emails, files, and customer context live in different places.",
+        title: "Leads do not get a reply",
+        desc: "The next action exists somewhere, but no one owns the follow-up.",
       },
       {
-        title: "Manual follow-up",
-        desc: "People remember what to do by memory, chat threads, or repeated status meetings.",
+        title: "Important emails sink",
+        desc: "Urgent messages sit beside everything else and wait for manual triage.",
       },
       {
-        title: "No operational visibility",
-        desc: "Leaders cannot quickly see what is stuck, overdue, risky, or waiting for a decision.",
+        title: "Meetings do not become tasks",
+        desc: "Decisions are made in the room, then disappear into notes or memory.",
       },
       {
-        title: "AI experiments that do not survive",
-        desc: "Prompts and demos look useful, but never become a reliable workflow.",
+        title: "Documents are not read in time",
+        desc: "Dates, obligations, and red flags are found late, after the work has already waited.",
+      },
+      {
+        title: "Clients wait for answers",
+        desc: "Open loops are visible only when someone checks several tools.",
+      },
+      {
+        title: "Tasks have no clear owner",
+        desc: "Work moves between people without a reliable handoff or deadline.",
       },
     ],
   },
@@ -116,31 +126,42 @@ const en: HomeContent = {
     title: "How I work",
     steps: [
       {
-        title: "Map the workflow",
-        desc: "We identify the real process, owners, inputs, outputs, bottlenecks, and risk points.",
+        title: "Choose one process",
+        desc: "We start with one workflow that already slows the business down.",
       },
       {
-        title: "Connect the tools",
-        desc: "We use the systems already in the business: email, calendar, CRM, documents, spreadsheets, APIs, or databases.",
+        title: "Map how it really works",
+        desc: "Steps, owners, inputs, outputs, bottlenecks, and approval points are made explicit.",
       },
       {
-        title: "Build the system",
-        desc: "Dashboards, automations, summaries, alerts, and AI assistants are added where they reduce friction.",
+        title: "Build a small pilot",
+        desc: "A narrow workflow proves the shape before anything expands.",
       },
       {
-        title: "Keep humans in control",
-        desc: "Approvals, review points, and clear handoff rules stay built into the system.",
+        title: "Connect existing tools",
+        desc: "Email, calendar, documents, CRM, spreadsheets, or task tools stay in place where possible.",
+      },
+      {
+        title: "Add reminders, summaries, and human approval",
+        desc: "The system supports the work, and a person stays responsible where judgment matters.",
         human: true,
       },
     ],
   },
+  safety: {
+    title: "AI with clear boundaries",
+    items: [
+      "Start read-only when possible",
+      "No external messages are sent without approval",
+      "No data is deleted or changed without explicit approval",
+      "Unclear tasks move to human review",
+      "The system supports decisions; it does not replace them",
+    ],
+  },
   offers: {
-    title: "Offers",
+    title: "What I build",
     intro:
-      "Four entry points into one system built around real workflows, not four separate services.",
-    filmCaption:
-      "Four entry points into one system, with a human approval step built in.",
-    filmName: "one-system overview film",
+      "Small operational systems around the places work already happens: morning reports, follow-up, meetings, documents, and daily command centers.",
   },
   evidence: {
     title: "What “mapped” looks like",
@@ -172,9 +193,9 @@ const en: HomeContent = {
     },
   },
   finalCta: {
-    title: "Start with one workflow, not a transformation program.",
-    body: "The first step is a focused map of a real process: where work enters, where it gets stuck, who approves what, and what a useful AI-assisted system should actually do. After it goes live, I stay involved: tuning the summaries, signals, and automations as real use shows what to adjust, and helping the team actually run it.",
-    cta: { label: "Map one workflow", href: "/contact" },
+    title: "Start with one annoying workflow.",
+    body: "Send the workflow that keeps slipping: email triage, follow-up, meeting tasks, documents, or a daily operating view. We map it before deciding what to build.",
+    cta: { label: "Book a diagnostic call", href: "/contact" },
     secondaryCta: shellContent("en").whatsappCta,
   },
 };
@@ -183,45 +204,53 @@ const en: HomeContent = {
  * Hebrew (RTL) homepage content. Drafted with the hebrew-quality protocol
  * (think in English, translate to idiomatic Hebrew; scan for fabrications,
  * AI patterns, grammar, register). The Hero primary and Final CTA point at
- * /he/contact (the full Hebrew mirror exists); the Hero secondary stays the
- * in-page #how-i-work anchor, matching EN.
+ * /he/contact (the full Hebrew mirror exists); the Hero secondary points to
+ * the localized services index.
  */
 const he: HomeContent = {
   hero: {
-    eyebrow: "מערכות AI לתהליכי עבודה",
-    title: "הופכים תהליכי עבודה מבולגנים למערכות AI ברורות.",
-    lead: "העבודה נתקעת כשמשימות, מיילים והקשר מפוזרים בין כלים שונים. אני ממפה את התהליך, מחבר את הכלים שכבר קיימים, ובונה מערכת אחת שמראה את הצעד הבא, עם אישור אנושי בנקודות ההחלטה.",
-    primaryCta: { label: "למפות תהליך אחד", href: "/he/contact" },
-    secondaryCta: { label: "איך זה עובד", href: "#how-i-work" },
+    eyebrow: "מערכות AI לתפעול יומיומי",
+    title: "מערכות AI קטנות לעבודה האמיתית של העסק",
+    lead: "אני עוזר לעסקים קטנים ומשרדים מקצועיים לחבר AI למיילים, יומן, מסמכים, פגישות, לקוחות ומשימות, בלי להחליף את כל המערכות ובלי אוטומציות מסוכנות.",
+    primaryCta: { label: "לתאם שיחת אבחון", href: "/he/contact" },
+    secondaryCta: { label: "לראות שירותים", href: "/he/offers" },
     schematic: {
-      caption: "תהליך ← צעד הבא",
+      caption: "כלים קיימים ← עבודה ברורה",
       nodes: [
-        { label: "קלט מפוזר", sub: "משימות · מייל · מסמכים · הקשר" },
-        { label: "תהליך ממופה" },
-        { label: "מערכת אחת", sub: "דשבורדים · אוטומציות · עוזרים" },
+        { label: "מיילים ויומן", sub: "מה חדש ומה דחוף" },
+        { label: "מסמכים ופגישות", sub: "סיכום, החלטות ומשימות" },
+        { label: "לקוחות ולידים", sub: "מעקב ותזכורות" },
         { label: "אישור אנושי", human: true },
         { label: "צעד הבא ברור", out: true },
       ],
     },
   },
   problems: {
-    title: "איפה העבודה נתקעת",
+    title: "איפה העבודה נופלת?",
     items: [
       {
-        title: "כלים מפוזרים",
-        desc: "משימות, הערות, מיילים, קבצים והקשר על לקוחות נמצאים במקומות שונים.",
+        title: "לידים שלא חוזרים אליהם",
+        desc: "הפנייה נכנסה, אבל אין אחראי ברור לצעד הבא.",
       },
       {
-        title: "מעקב ידני",
-        desc: "אנשים זוכרים מה צריך לעשות מהראש, מצ'אטים, או מפגישות סטטוס חוזרות.",
+        title: "מיילים חשובים שטובעים",
+        desc: "הודעות דחופות יושבות ליד הכול ומחכות למיון ידני.",
       },
       {
-        title: "אין נראות תפעולית",
-        desc: "מנהלים לא יכולים לראות מהר מה תקוע, מה באיחור, מה מסוכן ומה מחכה להחלטה.",
+        title: "פגישות שלא הופכות למשימות",
+        desc: "החלטות מתקבלות בשיחה ואז נעלמות בסיכום, בצ'אט או בזיכרון.",
       },
       {
-        title: "ניסיונות AI שלא שורדים",
-        desc: "פרומפטים ודמואים נראים שימושיים, אבל אף פעם לא הופכים לתהליך אמין.",
+        title: "מסמכים שלא נקראים בזמן",
+        desc: "תאריכים, התחייבויות ודגלים אדומים מתגלים מאוחר מדי.",
+      },
+      {
+        title: "לקוחות שמחכים לתשובה",
+        desc: "לולאות פתוחות מתגלות רק כשמישהו עובר בין כמה כלים.",
+      },
+      {
+        title: "משימות בלי אחראי ברור",
+        desc: "עבודה עוברת בין אנשים בלי העברה מסודרת ודדליין.",
       },
     ],
   },
@@ -229,30 +258,42 @@ const he: HomeContent = {
     title: "איך אני עובד",
     steps: [
       {
-        title: "ממפים את התהליך",
-        desc: "מזהים את התהליך האמיתי, מי אחראי, מה נכנס ומה יוצא, איפה צווארי הבקבוק ואיפה הסיכונים.",
+        title: "בוחרים תהליך אחד",
+        desc: "מתחילים מתהליך אחד שכבר מאט את העסק.",
       },
       {
-        title: "מחברים את הכלים",
-        desc: "משתמשים במערכות שכבר קיימות בעסק: מייל, יומן, CRM, מסמכים, גיליונות, APIs ובסיסי נתונים.",
+        title: "ממפים איך הוא באמת עובד",
+        desc: "שלבים, אחראים, קלט, פלט, צווארי בקבוק ונקודות אישור הופכים לברורים.",
       },
       {
-        title: "בונים את המערכת",
-        desc: "דשבורדים, אוטומציות, סיכומים, התראות ועוזרי AI נכנסים איפה שהם מורידים חיכוך.",
+        title: "בונים פיילוט קטן",
+        desc: "תהליך עבודה צר מוכיח את הצורה לפני שמרחיבים.",
       },
       {
-        title: "משאירים את האדם בשליטה",
-        desc: "אישורים, נקודות בקרה וכללי העברה ברורים נשארים חלק מהמערכת.",
+        title: "מחברים לכלים קיימים",
+        desc: "מייל, יומן, מסמכים, CRM, גיליונות או כלי משימות נשארים במקום כשאפשר.",
+      },
+      {
+        title: "מוסיפים תזכורות, סיכומים ואישור אנושי",
+        desc: "המערכת תומכת בעבודה, ואדם נשאר אחראי איפה שיש שיקול דעת.",
         human: true,
       },
     ],
   },
+  safety: {
+    title: "AI עם גבולות ברורים",
+    items: [
+      "מתחילים מקריאה בלבד כשאפשר",
+      "לא שולחים הודעות חיצוניות בלי אישור",
+      "לא מוחקים או משנים מידע בלי אישור מפורש",
+      "משימות לא ברורות עוברות לבדיקה אנושית",
+      "המערכת תומכת בהחלטות, לא מחליפה אותן",
+    ],
+  },
   offers: {
-    title: "שירותים",
+    title: "מה אני בונה",
     intro:
-      "ארבע נקודות כניסה למערכת אחת שנבנית סביב תהליכי עבודה אמיתיים, לא ארבעה שירותים נפרדים.",
-    filmCaption: "ארבע נקודות כניסה למערכת אחת, עם שלב אישור אנושי מובנה.",
-    filmName: "סרטון המערכת האחת",
+      "מערכות קטנות סביב המקומות שבהם העבודה כבר קורית: דוח בוקר, follow-up, פגישות, מסמכים ו-command center יומי.",
   },
   evidence: {
     title: "איך נראה תהליך ממופה",
@@ -284,9 +325,9 @@ const he: HomeContent = {
     },
   },
   finalCta: {
-    title: "מתחילים מתהליך אחד, לא מפרויקט שינוי גדול.",
-    body: "הצעד הראשון הוא מיפוי ממוקד של תהליך אמיתי: איפה העבודה נכנסת, איפה היא נתקעת, מי מאשר מה, ומה מערכת AI שימושית באמת צריכה לעשות. אחרי שהמערכת עולה לאוויר, אני ממשיך ללוות: מכוונן את הסיכומים, ההתראות והאוטומציות לפי השימוש בפועל, ועוזר לצוות להטמיע את המערכת.",
-    cta: { label: "למפות תהליך אחד", href: "/he/contact" },
+    title: "מתחילים מתהליך אחד שמעצבן אתכם.",
+    body: "שלחו את המקום שבו העבודה נתקעת: מיילים, משימות, לקוחות, מסמכים, פגישות או follow-up. נמפה אותו לפני שמחליטים מה לבנות.",
+    cta: { label: "לתאם שיחת אבחון", href: "/he/contact" },
     secondaryCta: shellContent("he").whatsappCta,
   },
 };

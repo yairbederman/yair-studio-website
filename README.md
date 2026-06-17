@@ -6,7 +6,7 @@ workflows.
 Built with Next.js (App Router) + TypeScript. The site is **fully bilingual**: every page has an
 English version and a Hebrew (RTL) version under `/he`, driven by one locale-keyed content model.
 On top of the visual foundation (design tokens, bilingual typography, shared shell) the site carries
-a homepage with a founder band and proof cards, offer pages (overview + four offers), `/workflows`,
+a homepage with a founder band and proof cards, offer pages (overview + live offers), `/workflows`,
 `/about`, `/contact` (email + WhatsApp), an SEO/AEO/GEO foundation (per-page metadata, hreflang
 pairs, Open Graph, structured data, crawl endpoints), and Vercel Analytics.
 
@@ -63,7 +63,7 @@ links in both directions. `/contact` offers email (primary) and WhatsApp.
 All copy is **data, not JSX**: typed, locale-keyed files in [`src/content/`](src/content)
 (`home.ts`, `about.ts`, `contact.ts`, `workflows.ts`, `offers-index.ts`, `offers/*.ts`, `proof.ts`,
 `shell.ts`, `offer-cards.ts`, shared shapes in `types.ts`). Each exports a `…Content(locale)`
-accessor; pages are thin composers. The four offer detail pages render through one template
+accessor; pages are thin composers. Offer detail pages render through one template
 (`src/components/offers/OfferPageBody.tsx`). The canonical offer list (keys, routes, EN card copy)
 stays in [`src/lib/offers.ts`](src/lib/offers.ts).
 

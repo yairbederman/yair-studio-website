@@ -1,62 +1,65 @@
 import { OFFERS } from "@/lib/offers";
 import { localePaths } from "@/lib/locale-paths";
 import type { Locale } from "@/content/types";
+import type { OfferStatus } from "@/lib/offers";
 
 /**
- * Localized offer-card strings, keyed by the stable offer `key` from the
- * canonical OFFERS list (src/lib/offers.ts) — per that file's rule: localized
- * copy keys off the offer keys; routes and the list itself are never forked.
- *
- * EN derives directly from OFFERS (no duplicated strings). HE adds the
- * translated card strings and prefixes hrefs with /he.
+ * Localized service-card strings, keyed by the stable offer `key` from the
+ * canonical OFFERS list (src/lib/offers.ts). EN derives directly from OFFERS;
+ * HE adds translated strings and prefixes live hrefs with /he.
  */
 
 export type OfferCard = {
   key: string;
-  href: string;
+  href?: string;
   title: string;
   cta: string;
   summary: string;
+  status?: OfferStatus;
 };
 
 type CardStrings = { title: string; cta: string; summary: string };
 
-/** Hebrew card strings per offer key (hebrew-quality drafted). */
+/** Hebrew card strings per offer key. */
 const HE_CARDS: Record<string, CardStrings> = {
   "ai-workflow-audit": {
-    title: "אבחון תהליכי AI",
-    cta: "מתחילים מאבחון",
-    summary:
-      "סקירה ממוקדת של תהליך עסקי אחד: מה קורה היום, איפה הוא נשבר, מה אפשר להפוך לאוטומטי ומה צריך להישאר אנושי.",
+    title: "אבחון תהליך AI",
+    cta: "לראות את האבחון",
+    summary: "מיפוי תהליך אחד, צווארי בקבוק, מועמדים לאוטומציה ומפת דרכים.",
   },
-  "internal-ai-systems": {
-    title: "מערכות AI פנימיות",
-    cta: "בונים מערכת פנימית",
+  "ai-ops-pilot": {
+    title: "פיילוט AI תפעולי",
+    cta: "לראות את הפיילוט",
     summary:
-      "שכבת עוזרים ותהליכים פרקטית לפגישות, משימות, מייל, חיפוש ידע, דוחות ומעקב.",
+      "בונים תהליך עבודה אחד שעובד תוך 7-10 ימים: דוח בוקר, follow-up, סיכום פגישות או מסמכים למשימות.",
   },
-  "dashboards-automation": {
-    title: "דשבורדים ואוטומציה",
-    cta: "יוצרים נראות",
+  "follow-up-machine": {
+    title: "מכונת Follow-Up",
+    cta: "בקרוב",
     summary:
-      "שכבת נראות שמחוברת לכלים הקיימים, כדי שהצוות יראה מה דורש טיפול ויפעיל את הצעד הנכון הבא.",
+      "מערכת שמוודאת שלידים, הצעות מחיר ולקוחות לא נופלים בין הכיסאות.",
   },
-  "content-ad-operations": {
-    title: "תפעול תוכן וקמפיינים",
-    cta: "מסדרים את תפעול התוכן",
+  "meeting-to-tasks": {
+    title: "פגישות למשימות",
+    cta: "בקרוב",
     summary:
-      "מערכת חוזרת שהופכת רעיונות גולמיים, שיחות, חומרים ונתוני ביצועים לתוכן מובנה או לניסויי קמפיינים.",
+      "כל פגישה הופכת לסיכום, החלטות, משימות, בעלי אחריות ודדליין.",
+  },
+  "office-command-center": {
+    title: "Command Center למשרד",
+    cta: "בקרוב",
+    summary:
+      "תמונת מצב יומית של מסמכים, מיילים, יומן, משימות ודברים שמחכים לבעל העסק.",
   },
 };
 
-// Both card arrays precomputed at module init — a missing HE entry fails the
-// build immediately instead of throwing when an HE route first renders.
 const en: readonly OfferCard[] = OFFERS.map((offer) => ({
   key: offer.key,
   href: offer.href,
   title: offer.title,
   cta: offer.cta,
   summary: offer.summary,
+  status: offer.status,
 }));
 
 const he: readonly OfferCard[] = OFFERS.map((offer) => {
@@ -64,12 +67,17 @@ const he: readonly OfferCard[] = OFFERS.map((offer) => {
   if (!strings) {
     throw new Error(`offerCards: no HE strings for offer "${offer.key}"`);
   }
-  return { key: offer.key, href: localePaths(offer.href).he, ...strings };
+  return {
+    key: offer.key,
+    href: offer.href ? localePaths(offer.href).he : undefined,
+    status: offer.status,
+    ...strings,
+  };
 });
 
 const CARDS: Record<Locale, readonly OfferCard[]> = { en, he };
 
-/** Resolve the localized offer cards for a locale. */
+/** Resolve the localized service cards for a locale. */
 export function offerCards(locale: Locale): readonly OfferCard[] {
   return CARDS[locale];
 }

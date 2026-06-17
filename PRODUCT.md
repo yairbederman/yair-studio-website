@@ -12,9 +12,9 @@ Part of this audience reads **Hebrew** and works right-to-left. Hebrew is a real
 
 ## Product Purpose
 
-y[AI]r studio helps the businesses these buyers run map, improve, and optimize real workflows through process mapping, dashboards, automation, and internal AI systems. The website should make the available entry points clear and show that the work produces observable improvement, with human judgment kept in the loop.
+y[AI]r studio helps the businesses these buyers run map, improve, and optimize real workflows through process mapping, small AI operations pilots, dashboards, automation, and internal AI systems. The website should make the available starting points clear and show that the work produces observable improvement, with human judgment kept in the loop.
 
-The offers are entry points into one system, not four separate services: an AI workflow audit, internal AI systems, a dashboard and automation layer, and content and ad operations. **Which offer is the primary wedge — the one the site leads with — is an open strategic question, deliberately left undecided here.** Until it is decided, the site presents the offers as peers.
+The primary wedge is practical AI workflow systems for Israeli SMBs and professional offices. The clearest starting points are an AI workflow audit and an AI operations pilot; future service pages can expand into follow-up, meetings-to-tasks, documents-to-tasks, and office command-center workflows when those offers are ready to stand on their own.
 
 ## Brand Personality
 

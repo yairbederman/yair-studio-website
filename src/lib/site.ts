@@ -42,7 +42,7 @@ export const SITE_URL = resolveSiteUrl();
 export const SITE_NAME = "y[AI]r studio";
 export const SITE_ALT_NAME = "Yair Studio";
 export const SITE_DESCRIPTION =
-  "AI workflow systems for growing businesses: process mapping, dashboards, automations, and internal AI assistants with human approval at the decision points.";
+  "Practical AI workflow systems for small businesses and professional offices: email, calendar, documents, meetings, clients, and tasks with human approval at the decision points.";
 
 /**
  * Public contact channel (personal Gmail, confirmed for public use). Single
@@ -134,13 +134,19 @@ const EN_PAGES: PageDef[] = [
     path: "/offers",
     title: "Offers",
     description:
-      "y[AI]r studio's offers: an AI Workflow Audit, Internal AI Systems, Dashboards & Automation, and Content & Ad Operations. Four entry points into one system.",
+      "y[AI]r studio services: diagnose one workflow, build one AI operations pilot, or create practical workflow systems around follow-up, meetings, documents, and daily operating visibility.",
   },
   {
     path: "/offers/ai-workflow-audit",
     title: "AI Workflow Audit",
     description:
       "An AI workflow audit from y[AI]r studio: a focused review of one business process that maps owners, inputs and outputs, bottlenecks, automation candidates, and what should stay human before anything is built.",
+  },
+  {
+    path: "/offers/ai-ops-pilot",
+    title: "AI Operations Pilot",
+    description:
+      "An AI operations pilot from y[AI]r studio: one practical AI workflow built around email, calendar, documents, meetings, clients, or tasks, with clear human approval boundaries.",
   },
   {
     path: "/offers/internal-ai-systems",
@@ -184,9 +190,9 @@ const EN_PAGES: PageDef[] = [
 const HE_PAGE_STRINGS: Record<string, { title: string; description: string }> =
   {
     "/": {
-      title: "מערכות AI לתהליכי עבודה",
+      title: "מערכות AI קטנות לעבודה האמיתית של העסק",
       description:
-        "y[AI]r studio בעברית: מערכות AI לתהליכי עבודה אמיתיים בעסק. ממפים תהליכים תקועים והופכים עבודה מפוזרת לצעד הבא ברור, עם אישור אנושי בנקודות ההחלטה.",
+        "y[AI]r studio בעברית: מערכות AI קטנות לעסקים קטנים ומשרדים מקצועיים, סביב מיילים, יומן, מסמכים, פגישות, לקוחות ומשימות, עם אישור אנושי בנקודות ההחלטה.",
     },
     "/workflows": {
       title: "תהליכי עבודה",
@@ -196,12 +202,17 @@ const HE_PAGE_STRINGS: Record<string, { title: string; description: string }> =
     "/offers": {
       title: "שירותים",
       description:
-        "השירותים של y[AI]r studio: אבחון תהליכי AI, מערכות AI פנימיות, דשבורדים ואוטומציה, ותפעול תוכן וקמפיינים. ארבע נקודות כניסה למערכת אחת.",
+        "השירותים של y[AI]r studio: אבחון תהליך AI, פיילוט AI תפעולי ומערכות עבודה קטנות סביב follow-up, פגישות, מסמכים ותמונת מצב יומית.",
     },
     "/offers/ai-workflow-audit": {
-      title: "אבחון תהליכי AI",
+      title: "אבחון תהליך AI",
       description:
-        "אבחון תהליכי AI של y[AI]r studio: סקירה ממוקדת של תהליך עסקי אחד שממפה אחראים, קלט ופלט, צווארי בקבוק, מועמדים לאוטומציה ומה שנשאר אנושי, לפני שבונים.",
+        "אבחון תהליך AI של y[AI]r studio: סקירה ממוקדת של תהליך עסקי אחד שממפה איך העבודה זזה, איפה היא נתקעת, מה אפשר לאוטומט ומה חייב להישאר אנושי.",
+    },
+    "/offers/ai-ops-pilot": {
+      title: "פיילוט AI תפעולי",
+      description:
+        "פיילוט AI תפעולי של y[AI]r studio: workflow אחד קטן שעובד סביב מיילים, יומן, מסמכים, פגישות, לקוחות או משימות, עם גבולות אישור אנושי ברורים.",
     },
     "/offers/internal-ai-systems": {
       title: "מערכות AI פנימיות",
