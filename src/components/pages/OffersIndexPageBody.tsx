@@ -1,6 +1,7 @@
 import OfferHero from "@/components/offers/OfferHero";
 import OfferSection from "@/components/offers/OfferSection";
 import OfferSteps from "@/components/offers/OfferSteps";
+import OfferCardGrid from "@/components/offers/OfferCardGrid";
 import OfferCards from "@/components/offers/OfferCards";
 import OfferCTA from "@/components/offers/OfferCTA";
 import { offersIndexContent } from "@/content/offers-index";
@@ -24,6 +25,12 @@ export default function OffersIndexPageBody({ locale }: { locale: Locale }) {
       <OfferSection id="start" title={c.start.title} intro={c.start.intro}>
         <OfferSteps items={c.start.steps} />
       </OfferSection>
+
+      {c.fit ? (
+        <OfferSection id="fit" title={c.fit.title} intro={c.fit.intro}>
+          <OfferCardGrid items={c.fit.items} />
+        </OfferSection>
+      ) : null}
 
       <OfferSection id="offers" title={c.offers.title}>
         <OfferCards locale={locale} />
