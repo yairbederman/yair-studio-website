@@ -35,9 +35,9 @@ const HE_CARDS: Record<string, CardStrings> = {
   },
   "follow-up-machine": {
     title: "מכונת Follow-Up",
-    cta: "בקרוב",
+    cta: "לראות את Follow-Up",
     summary:
-      "מערכת שמוודאת שלידים, הצעות מחיר ולקוחות לא נופלים בין הכיסאות.",
+      "מערכת קטנה שמזהה לידים, הצעות מחיר, לקוחות פתוחים ומשימות שמחכות לתגובה.",
   },
   "meeting-to-tasks": {
     title: "פגישות למשימות",

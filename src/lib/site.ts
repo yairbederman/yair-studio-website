@@ -149,6 +149,12 @@ const EN_PAGES: PageDef[] = [
       "An AI operations pilot from y[AI]r studio: one practical AI workflow built around email, calendar, documents, meetings, clients, or tasks, with clear human approval boundaries.",
   },
   {
+    path: "/offers/follow-up-machine",
+    title: "Follow-Up Machine",
+    description:
+      "A Follow-Up Machine from y[AI]r studio: a small AI-assisted workflow that tracks leads, quotes, waiting clients, and open tasks with human approval before external messages or sensitive changes.",
+  },
+  {
     path: "/offers/internal-ai-systems",
     title: "Internal AI Systems",
     description:
@@ -213,6 +219,11 @@ const HE_PAGE_STRINGS: Record<string, { title: string; description: string }> =
       title: "פיילוט AI תפעולי",
       description:
         "פיילוט AI תפעולי של y[AI]r studio: workflow אחד קטן שעובד סביב מיילים, יומן, מסמכים, פגישות, לקוחות או משימות, עם גבולות אישור אנושי ברורים.",
+    },
+    "/offers/follow-up-machine": {
+      title: "מכונת Follow-Up",
+      description:
+        "מכונת Follow-Up של y[AI]r studio: מערכת קטנה שמזהה לידים, הצעות מחיר, לקוחות פתוחים ומשימות שמחכות לתגובה, עם אישור אנושי לפני הודעות חיצוניות או שינוי רגיש.",
     },
     "/offers/internal-ai-systems": {
       title: "מערכות AI פנימיות",

@@ -60,10 +60,10 @@ export const OFFERS: readonly Offer[] = [
     key: "follow-up-machine",
     title: "Follow-Up Machine",
     serviceName: "Follow-Up Machine",
-    cta: "Coming soon",
+    href: "/offers/follow-up-machine",
+    cta: "See Follow-Up",
     summary:
-      "A system that makes sure leads, quotes, clients, and open loops do not fall through the cracks.",
-    status: "comingSoon",
+      "A small AI-assisted workflow that keeps leads, quotes, clients, and open tasks from falling through the cracks.",
   },
   {
     key: "meeting-to-tasks",
