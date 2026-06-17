@@ -1,3 +1,4 @@
+import Link from "next/link";
 import OfferHero from "@/components/offers/OfferHero";
 import OfferSection from "@/components/offers/OfferSection";
 import OfferSteps from "@/components/offers/OfferSteps";
@@ -23,7 +24,26 @@ export default function OffersIndexPageBody({ locale }: { locale: Locale }) {
       />
 
       <OfferSection id="start" title={c.start.title} intro={c.start.intro}>
-        <OfferSteps items={c.start.steps} />
+        {c.start.choices ? (
+          <ul className="offers-grid">
+            {c.start.choices.map((choice) => (
+              <li key={choice.title} className="offer-card">
+                <h3 className="card-title">{choice.title}</h3>
+                <p className="card-desc">{choice.desc}</p>
+                <div className="offer-card-foot">
+                  <Link href={choice.cta.href} className="offer-cta">
+                    {choice.cta.label}
+                    <span className="offer-cta-arrow" aria-hidden="true">
+                      &rarr;
+                    </span>
+                  </Link>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <OfferSteps items={c.start.steps ?? []} />
+        )}
       </OfferSection>
 
       {c.fit ? (

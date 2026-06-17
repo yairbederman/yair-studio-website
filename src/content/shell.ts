@@ -95,8 +95,8 @@ const he: ShellContent = {
   },
   filmControls: { pause: "השהיה", play: "הפעלה" },
   whatsappCta: {
-    label: "הודעה בוואטסאפ",
-    href: waLink("היי יאיר, אשמח למפות תהליך אחד בעסק."),
+    label: "שלחו בוואטסאפ",
+    href: waLink("היי יאיר, יש לי תהליך אחד שמעצבן את העסק. אשמח למפות אותו."),
   },
 };
 

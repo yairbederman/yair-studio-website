@@ -21,6 +21,9 @@ export default function MethodSection({
       <Container>
         <div className="section-head">
           <h2 id="method-title">{content.title}</h2>
+          {content.intro ? (
+            <p className="section-intro">{content.intro}</p>
+          ) : null}
         </div>
         <ol className="method-list">
           {content.steps.map((step, i) => (

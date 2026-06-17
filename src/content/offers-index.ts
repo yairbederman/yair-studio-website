@@ -1,5 +1,5 @@
 import { localeAccessor } from "@/content/types";
-import type { CardItem, Locale, StepItem } from "@/content/types";
+import type { CardItem, Cta, Locale, StepItem } from "@/content/types";
 
 /**
  * /offers overview page content. The service cards themselves stay canonical in
@@ -8,7 +8,12 @@ import type { CardItem, Locale, StepItem } from "@/content/types";
 
 export type OffersIndexContent = {
   hero: { title: string; lead: string; ctaLabel: string; ctaHref: string };
-  start: { title: string; intro: string; steps: readonly StepItem[] };
+  start: {
+    title: string;
+    intro: string;
+    steps?: readonly StepItem[];
+    choices?: readonly (CardItem & { cta: Cta })[];
+  };
   fit?: { title: string; intro: string; items: readonly CardItem[] };
   offers: { title: string };
   cta: { heading: string; body: string; ctaLabel: string; ctaHref: string };
@@ -58,22 +63,23 @@ const he: OffersIndexContent = {
     ctaHref: "/he/contact",
   },
   start: {
-    title: "מאיפה מתחילים",
-    intro:
-      "בוחרים תהליך אחד אמיתי, מבינים איפה הוא נתקע, ואז בונים רק את החלק שצריך לעבוד עכשיו.",
-    steps: [
+    title: "הדרך הפשוטה להתחיל",
+    intro: "לא צריך לדעת מראש איזו מערכת לבנות. מספיק לדעת איפה משהו נופל.",
+    choices: [
       {
-        title: "אבחון תהליך אחד",
-        desc: "ממפים צווארי בקבוק, אחראים, מועמדים לאוטומציה ונקודות אישור אנושי.",
+        title: "אם אתם לא בטוחים מה הבעיה",
+        desc: "מתחילים באבחון תהליך AI.",
+        cta: { label: "לראות את האבחון", href: "/he/offers/ai-workflow-audit" },
       },
       {
-        title: "פיילוט קטן שעובד",
-        desc: "הופכים את המפה לתהליך עבודה אחד סביב מיילים, יומן, מסמכים, פגישות, לקוחות או משימות.",
+        title: "אם כבר יש תהליך ברור שנתקע",
+        desc: "מתחילים בפיילוט AI תפעולי.",
+        cta: { label: "לראות את הפיילוט", href: "/he/offers/ai-ops-pilot" },
       },
       {
-        title: "תמונת מצב יומית",
-        desc: "בוט, דוח, דשבורד או טבלה פשוטה שמראים מה חדש, מה דחוף ומה תקוע.",
-        human: true,
+        title: "אם לידים, הצעות או לקוחות נופלים בין הכיסאות",
+        desc: "מתחילים במכונת Follow-Up.",
+        cta: { label: "לראות את Follow-Up", href: "/he/offers/follow-up-machine" },
       },
     ],
   },
