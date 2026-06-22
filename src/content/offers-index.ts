@@ -1,4 +1,5 @@
 import { localeAccessor } from "@/content/types";
+import { shellContent } from "@/content/shell";
 import type { CardItem, Cta, Locale, StepItem } from "@/content/types";
 
 /**
@@ -22,14 +23,14 @@ export type OffersIndexContent = {
 const en: OffersIndexContent = {
   hero: {
     title: "Services",
-    lead: "Start small: diagnose one workflow, build one pilot, or turn a daily operating process into a practical AI system.",
-    ctaLabel: "Book a diagnostic call",
-    ctaHref: "/contact",
+    lead: "For owner-led service businesses and professional offices where work moves through email, calendar, documents, meetings, and follow-up. Send one stuck workflow, then choose a focused audit or a narrow pilot.",
+    ctaLabel: shellContent("en").workflowCta.label,
+    ctaHref: shellContent("en").workflowCta.href,
   },
   start: {
     title: "Where to start",
     intro:
-      "The safest path is to start with one real process, then build only the workflow that earns its place.",
+      "Start with one real process. Map how it works now, separate the audit from the build, and only pilot what is ready.",
     steps: [
       {
         title: "Diagnose one workflow",
@@ -48,23 +49,23 @@ const en: OffersIndexContent = {
   },
   offers: { title: "Services" },
   cta: {
-    heading: "One workflow is enough to start.",
-    body: "Send the process that slows the day down. We can diagnose it first, or pick a narrow pilot if the shape is already clear.",
-    ctaLabel: "Book a diagnostic call",
-    ctaHref: "/contact",
+    heading: "Send the workflow that keeps slipping.",
+    body: "A few lines are enough. We map the current process first, then decide whether you need a focused audit or whether the workflow is ready for a narrow pilot.",
+    ctaLabel: shellContent("en").workflowCta.label,
+    ctaHref: shellContent("en").workflowCta.href,
   },
 };
 
 const he: OffersIndexContent = {
   hero: {
     title: "שירותים",
-    lead: "מתחילים מנקודת כניסה מעשית: אבחון תהליך, פיילוט אחד, או מערכת קטנה סביב העבודה שכבר עוברת בין מיילים, יומן, מסמכים, פגישות, לקוחות ומשימות.",
-    ctaLabel: "לתאם אבחון תהליך",
-    ctaHref: "/he/contact",
+    lead: "לעסקי שירותים שמנוהלים בידי הבעלים ולמשרדים מקצועיים שבהם העבודה עוברת בין מייל, יומן, מסמכים, פגישות ומעקב. שולחים תהליך אחד שנתקע, ואז בוחרים אבחון ממוקד או פיילוט צר.",
+    ctaLabel: shellContent("he").workflowCta.label,
+    ctaHref: shellContent("he").workflowCta.href,
   },
   start: {
     title: "הדרך הפשוטה להתחיל",
-    intro: "לא צריך לדעת מראש איזו מערכת לבנות. מספיק לדעת איפה משהו נופל.",
+    intro: "מתחילים מתהליך אמיתי אחד, ממפים איך הוא עובד עכשיו, ומפרידים בין אבחון לבין בנייה. רק תהליך שבשל לכך עובר לפיילוט.",
     choices: [
       {
         title: "אם אתם לא בטוחים מה הבעיה",
@@ -108,10 +109,10 @@ const he: OffersIndexContent = {
   },
   offers: { title: "השירותים" },
   cta: {
-    heading: "תהליך אחד מספיק כדי להתחיל.",
-    body: "שלחו את התהליך שמאט את היום. אפשר להתחיל מאבחון תהליך, או לבחור פיילוט צר אם הצורה כבר ברורה.",
-    ctaLabel: "לתאם אבחון תהליך",
-    ctaHref: "/he/contact",
+    heading: "שלחו את התהליך שממשיך ליפול.",
+    body: "מספיקות כמה שורות. קודם נמפה את התהליך הקיים, ואז נחליט אם צריך אבחון ממוקד או שהתהליך בשל לפיילוט צר.",
+    ctaLabel: shellContent("he").workflowCta.label,
+    ctaHref: shellContent("he").workflowCta.href,
   },
 };
 

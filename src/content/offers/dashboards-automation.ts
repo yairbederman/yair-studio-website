@@ -1,4 +1,5 @@
 import { localeAccessor } from "@/content/types";
+import { shellContent } from "@/content/shell";
 import type { Locale } from "@/content/types";
 import type { OfferPageContent } from "./types";
 
@@ -9,8 +10,8 @@ const en: OfferPageContent = {
     eyebrow: "Visibility layer",
     title: "Dashboards & Automation",
     lead: "See what needs attention and trigger the right next action. A visibility and automation layer connected to the tools you already use.",
-    ctaLabel: "Map one workflow",
-    ctaHref: "/contact",
+    ctaLabel: shellContent("en").workflowCta.label,
+    ctaHref: shellContent("en").workflowCta.href,
   },
   who: {
     title: "Who it's for",
@@ -136,8 +137,8 @@ const en: OfferPageContent = {
   cta: {
     heading: "See what needs attention, then act on it.",
     body: "Start with one workflow's signals, connect the sources, and build the view that drives the next action.",
-    ctaLabel: "Map one workflow",
-    ctaHref: "/contact",
+    ctaLabel: shellContent("en").workflowCta.label,
+    ctaHref: shellContent("en").workflowCta.href,
   },
 };
 
@@ -147,8 +148,8 @@ const he: OfferPageContent = {
     eyebrow: "שכבת הנראות",
     title: "דשבורדים ואוטומציה",
     lead: "לראות מה דורש טיפול ולהפעיל את הצעד הנכון הבא. שכבת נראות ואוטומציה שמחוברת לכלים שכבר בשימוש.",
-    ctaLabel: "למפות תהליך אחד",
-    ctaHref: "/he/contact",
+    ctaLabel: shellContent("he").workflowCta.label,
+    ctaHref: shellContent("he").workflowCta.href,
   },
   who: {
     title: "למי זה מתאים",
@@ -274,8 +275,8 @@ const he: OfferPageContent = {
   cta: {
     heading: "רואים מה דורש טיפול, ופועלים.",
     body: "מתחילים מהאיתותים של תהליך אחד, מחברים את המקורות, ובונים את התצוגה שמניעה את הצעד הבא.",
-    ctaLabel: "למפות תהליך אחד",
-    ctaHref: "/he/contact",
+    ctaLabel: shellContent("he").workflowCta.label,
+    ctaHref: shellContent("he").workflowCta.href,
   },
 };
 

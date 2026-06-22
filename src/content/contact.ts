@@ -29,33 +29,34 @@ export type ContactContent = {
 
 /** The WhatsApp CTA — single-sourced from the shell content (shared with the
     homepage final band). */
+const workflowCtaEn: Cta = shellContent("en").workflowCta;
 const whatsappCtaEn: Cta = shellContent("en").whatsappCta;
 
 const en: ContactContent = {
   hero: {
-    title: "Map one workflow",
-    lead: "Pick one workflow that slows your business down, and we map how it actually runs before deciding whether to build anything. A few lines by email or WhatsApp is enough to start. Hebrew or English is fine.",
-    emailCta: { label: "Send an email", href: CONTACT_MAILTO },
+    title: workflowCtaEn.label,
+    lead: "If you run an owner-led service business or professional office and work keeps stalling between email, calendar, documents, meetings, and follow-up, send the workflow in a few lines. Hebrew or English is fine.",
+    emailCta: { ...workflowCtaEn, href: CONTACT_MAILTO },
     whatsappCta: whatsappCtaEn,
   },
   next: {
-    title: "What happens next",
+    title: "What happens after you send it",
     steps: [
       {
         title: "Send a short note",
         desc: "A few lines about the workflow and where it slows down. No formal brief needed.",
       },
       {
-        title: "Choose one workflow",
-        desc: "We focus on a single, real process, not the whole business at once.",
+        title: "Map the current workflow",
+        desc: "We focus on one real process and document its steps, owners, inputs, handoffs, and approval points.",
       },
       {
-        title: "Map the current process",
-        desc: "We document how the work actually runs today: steps, owners, inputs, and outputs.",
+        title: "Separate the audit from the build",
+        desc: "A workflow map can stand on its own. A pilot is proposed only when the process is ready to build.",
       },
       {
-        title: "Decide what's worth building",
-        desc: "You get a clear view of what to automate, what to leave alone, and what to do first.",
+        title: "Choose the next useful step",
+        desc: "You get a clear recommendation: stop with the map, run a focused audit, or scope a narrow pilot.",
       },
     ],
   },
@@ -111,43 +112,44 @@ const en: ContactContent = {
     ],
   },
   cta: {
-    heading: "A short note is the whole first step.",
-    body: "Describe the workflow and where it slows down. You write to the person who maps and builds the system.",
-    ctaLabel: "Send an email",
+    heading: "One stuck workflow is enough to start.",
+    body: "Describe where the work begins, which tools it crosses, and where it waits or falls through. You write directly to the person who maps the process and, when appropriate, builds the pilot.",
+    ctaLabel: workflowCtaEn.label,
     ctaHref: CONTACT_MAILTO,
     secondaryCta: whatsappCtaEn,
   },
 };
 
 /** The Hebrew WhatsApp CTA — single-sourced from the shell content. */
+const workflowCtaHe: Cta = shellContent("he").workflowCta;
 const whatsappCtaHe: Cta = shellContent("he").whatsappCta;
 
 /** Hebrew (RTL) contact content — hebrew-quality drafted. */
 const he: ContactContent = {
   hero: {
-    title: "שלחו לי תהליך אחד שמעצבן אתכם",
-    lead: "ספרו בקצרה איפה העבודה נתקעת: מיילים, משימות, לקוחות, מסמכים, פגישות או follow-up. כמה שורות במייל או בוואטסאפ מספיקות להתחלה.",
-    emailCta: { label: "שלחו תהליך במייל", href: CONTACT_MAILTO },
+    title: workflowCtaHe.label,
+    lead: "אם אתם מנהלים עסק שירותים בבעלותכם או משרד מקצועי, והעבודה נתקעת בין מייל, יומן, מסמכים, פגישות ומעקב, שלחו את התהליך בכמה שורות. אפשר בעברית או באנגלית.",
+    emailCta: { ...workflowCtaHe, href: CONTACT_MAILTO },
     whatsappCta: whatsappCtaHe,
   },
   next: {
-    title: "מה קורה אחר כך",
+    title: "מה קורה אחרי ששולחים",
     steps: [
       {
         title: "שולחים כמה שורות",
         desc: "כמה משפטים על התהליך ואיפה הוא נתקע. בלי בריף רשמי.",
       },
       {
-        title: "בוחרים תהליך אחד",
-        desc: "מתמקדים בתהליך אמיתי אחד, לא בכל העסק בבת אחת.",
+        title: "ממפים את התהליך הקיים",
+        desc: "מתמקדים בתהליך אמיתי אחד ומתעדים את השלבים, האחראים, הקלט, ההעברות ונקודות האישור.",
       },
       {
-        title: "ממפים את המצב הקיים",
-        desc: "מתעדים איך העבודה באמת רצה היום: שלבים, אחראים, קלט ופלט.",
+        title: "מפרידים בין אבחון לבנייה",
+        desc: "מפת תהליך יכולה לעמוד בפני עצמה. פיילוט מוצע רק כשהתהליך בשל לבנייה.",
       },
       {
-        title: "מחליטים מה שווה לבנות",
-        desc: "מקבלים תמונה ברורה: מה אפשר להפוך לאוטומטי, מה נשאר כמו שהוא, ומה עושים קודם.",
+        title: "בוחרים את הצעד השימושי הבא",
+        desc: "מקבלים המלצה ברורה: לעצור עם המפה, לבצע אבחון ממוקד, או להגדיר פיילוט צר.",
       },
     ],
   },
@@ -205,9 +207,9 @@ const he: ContactContent = {
     ],
   },
   cta: {
-    heading: "הודעה קצרה היא כל הצעד הראשון.",
-    body: "ספרו בקצרה על תהליך אחד שמעצבן אתכם ואיפה הוא נתקע. אתם כותבים ישירות לאדם שממפה ובונה את המערכת.",
-    ctaLabel: "שלחו תהליך במייל",
+    heading: "תהליך אחד שנתקע מספיק כדי להתחיל.",
+    body: "ספרו איפה העבודה מתחילה, בין אילו כלים היא עוברת ואיפה היא מחכה או נופלת. אתם כותבים ישירות לאדם שממפה את התהליך, ואם נכון, גם בונה את הפיילוט.",
+    ctaLabel: workflowCtaHe.label,
     ctaHref: CONTACT_MAILTO,
     secondaryCta: whatsappCtaHe,
   },

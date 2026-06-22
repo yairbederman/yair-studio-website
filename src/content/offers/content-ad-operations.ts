@@ -1,4 +1,5 @@
 import { localeAccessor } from "@/content/types";
+import { shellContent } from "@/content/shell";
 import type { Locale } from "@/content/types";
 import type { OfferPageContent } from "./types";
 
@@ -9,8 +10,8 @@ const en: OfferPageContent = {
     eyebrow: "Content operations",
     title: "Content & Ad Operations",
     lead: "Turn ideas, assets, performance data, and approvals into repeatable campaigns. A system for content and ad operations, with approval before anything publishes.",
-    ctaLabel: "Map one workflow",
-    ctaHref: "/contact",
+    ctaLabel: shellContent("en").workflowCta.label,
+    ctaHref: shellContent("en").workflowCta.href,
   },
   who: {
     title: "Who it's for",
@@ -135,8 +136,8 @@ const en: OfferPageContent = {
   cta: {
     heading: "Make content and ad ops repeatable.",
     body: "Start with one workflow, such as intake, the calendar, or approvals, and turn scattered output into a system.",
-    ctaLabel: "Map one workflow",
-    ctaHref: "/contact",
+    ctaLabel: shellContent("en").workflowCta.label,
+    ctaHref: shellContent("en").workflowCta.href,
   },
 };
 
@@ -146,8 +147,8 @@ const he: OfferPageContent = {
     eyebrow: "תפעול תוכן",
     title: "תפעול תוכן וקמפיינים",
     lead: "הופכים רעיונות, חומרים, נתוני ביצועים ואישורים לקמפיינים חוזרים. מערכת לתפעול תוכן ופרסום, עם אישור לפני כל פרסום.",
-    ctaLabel: "למפות תהליך אחד",
-    ctaHref: "/he/contact",
+    ctaLabel: shellContent("he").workflowCta.label,
+    ctaHref: shellContent("he").workflowCta.href,
   },
   who: {
     title: "למי זה מתאים",
@@ -271,8 +272,8 @@ const he: OfferPageContent = {
   cta: {
     heading: "הופכים תוכן וקמפיינים לתהליך חוזר.",
     body: "מתחילים מתהליך אחד, כמו קליטה, לוח תוכן או אישורים, והופכים תפוקה מפוזרת למערכת.",
-    ctaLabel: "למפות תהליך אחד",
-    ctaHref: "/he/contact",
+    ctaLabel: shellContent("he").workflowCta.label,
+    ctaHref: shellContent("he").workflowCta.href,
   },
 };
 

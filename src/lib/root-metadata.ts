@@ -9,7 +9,7 @@ import { PROOF_IS_SAMPLE_DATA } from "@/content/proof";
  * via `pageMetadata(path)`.
  *
  * While PROOF_IS_SAMPLE_DATA is true the whole site is noindex: the proof
- * surfaces carry visibly-badged SAMPLE credentials/case studies, and sample
+ * surfaces carry visibly-badged SAMPLE credentials and workflow examples, and sample
  * claims must never be indexed as real. Flipping the flag at launch
  * (LAUNCH-CHECKLIST.md) lifts this automatically — robots.txt mirrors it.
  */

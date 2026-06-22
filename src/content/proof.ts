@@ -5,32 +5,31 @@ import type { CardItem, Locale, SpineNode } from "@/content/types";
  * Founder + proof content — typed and locale-keyed.
  *
  * ============================================================
- * ⚠ SAMPLE DATA — ALL credentials, career-spine entries, and case studies
- * below are ILLUSTRATIVE TEST DATA, not real claims. They exist so the
- * design can be built and reviewed at realistic shape. Before launch they
+ * ⚠ SAMPLE DATA — founder credentials and career-spine entries below are
+ * ILLUSTRATIVE TEST DATA, not real claims. The workflow cards are intentionally
+ * illustrative patterns, not client case studies. Before launch, founder data
  * MUST be replaced with real facts — see LAUNCH-CHECKLIST.md (repo root).
  * ============================================================
  *
  * The PROOF_IS_SAMPLE_DATA flag below is the single launch gate. While true:
- *   - every proof surface renders a visible "sample data" badge (SampleBadge),
+ *   - every founder/example surface renders a visible "sample data" badge,
  *   - the whole site is noindex (src/lib/root-metadata.ts) and robots-disallowed
  *     (src/app/robots.ts), so sample claims can never be indexed as real,
- *   - /llms.txt declares the proof content as illustrative samples,
+ *   - /llms.txt distinguishes sample founder data from workflow examples,
  *   - JSON-LD emits NO facts from this file (JsonLd.tsx stays verifiable-only).
  * Flip it to false ONLY when the real data is in (LAUNCH-CHECKLIST.md).
  */
 export const PROOF_IS_SAMPLE_DATA = true;
 
-/** One case study: problem → system → observable change. No invented numbers —
-    `outcome` states what observably changed, never a metric we can't show. */
-export type CaseStudy = {
+/** One illustrative workflow pattern, never a client claim or proven outcome. */
+export type WorkflowPattern = {
   key: string;
-  /** Anonymized client category ("A 12-person law office"), never a name. */
-  clientType: string;
-  problem: string;
-  system: string;
-  outcome: string;
-  /** The engagement's workflow shape, as a schematic spine. */
+  workflowType: string;
+  situation: string;
+  tracking: string;
+  approval: string;
+  firstOutput: string;
+  /** The illustrative workflow shape, as a schematic spine. */
   spine: { caption: string; ariaLabel: string; nodes: readonly SpineNode[] };
 };
 
@@ -52,8 +51,13 @@ export type ProofContent = {
     /** About page section heading + intro (full cards with spines). */
     aboutTitle: string;
     aboutIntro: string;
-    rowLabels: { problem: string; system: string; outcome: string };
-    items: readonly CaseStudy[];
+    rowLabels: {
+      situation: string;
+      tracking: string;
+      approval: string;
+      firstOutput: string;
+    };
+    items: readonly WorkflowPattern[];
   };
   /** Visible badge label rendered while PROOF_IS_SAMPLE_DATA is true. */
   sampleBadge: string;
@@ -100,31 +104,34 @@ const en: ProofContent = {
     },
   },
   cases: {
-    title: "What this looks like in practice",
+    title: "Example workflows this approach fits",
     intro:
-      "Engagements shown the way I map them: the problem, the system, and what observably changed.",
-    aboutTitle: "Selected systems",
+      "Illustrative workflow patterns, not client case studies. Each one shows the situation, what a system would track, where a person approves, and the first useful output.",
+    aboutTitle: "Example workflows this approach fits",
     aboutIntro:
-      "Each engagement, mapped end to end: the problem, the system that was built, the workflow it runs, and what observably changed.",
+      "Illustrative workflow patterns, not client case studies. Each one shows the situation, what a system would track, where a person approves, and the first useful output.",
     rowLabels: {
-      problem: "The problem",
-      system: "The system",
-      outcome: "What changed",
+      situation: "Situation",
+      tracking: "What the system would track",
+      approval: "Human approval point",
+      firstOutput: "First useful output",
     },
-    // ⚠ SAMPLE case studies — replace with real engagements (LAUNCH-CHECKLIST.md §2).
+    // Illustrative workflow patterns. These are not client engagements or proof.
     items: [
       {
         key: "law-office",
-        clientType: "A 12-person law office",
-        problem:
-          "Deadlines, client emails, and document versions lived in separate tools; follow-up depended on whoever remembered.",
-        system:
-          "An intake-to-deadline workflow: email triage, document status tracking, and a daily attention dashboard, with approval before anything is sent.",
-        outcome:
-          "The office starts the day from one view instead of three inboxes, and follow-up no longer depends on memory.",
+        workflowType: "Legal or document-heavy office",
+        situation:
+          "Deadlines, incoming messages, and document versions are spread across separate tools, so follow-up depends on memory.",
+        tracking:
+          "Requests, document status, owners, deadlines, and unresolved follow-up items.",
+        approval:
+          "A staff member reviews extracted dates and any draft before it is saved or sent.",
+        firstOutput:
+          "A daily attention list showing deadlines, missing documents, and follow-ups that need a decision.",
         spine: {
           caption: "Intake to follow-up",
-          ariaLabel: "The law office workflow, mapped",
+          ariaLabel: "Illustrative document-heavy office workflow",
           nodes: [
             { label: "Incoming client email", sub: "requests · documents · dates" },
             { label: "Triage + deadline capture" },
@@ -136,16 +143,18 @@ const en: ProofContent = {
       },
       {
         key: "marketing-agency",
-        clientType: "A boutique marketing agency",
-        problem:
-          "Content ideas piled up in chat threads, and approvals happened late, over scattered messages.",
-        system:
-          "An intake-to-publish pipeline: one intake, structured briefs, and drafts queued behind a single approval step before anything publishes.",
-        outcome:
-          "Every piece now passes one visible approval gate; nothing publishes out of a chat thread.",
+        workflowType: "Marketing and content approvals",
+        situation:
+          "Ideas, assets, and feedback arrive across chats and calls, while approval status is hard to see.",
+        tracking:
+          "The brief, source assets, owner, draft status, approver, feedback, and planned publish date.",
+        approval:
+          "A named approver accepts, edits, or rejects every draft before publication.",
+        firstOutput:
+          "One review queue showing what is ready, what is blocked, and who needs to decide next.",
         spine: {
           caption: "Intake to publish",
-          ariaLabel: "The agency content workflow, mapped",
+          ariaLabel: "Illustrative marketing content approval workflow",
           nodes: [
             { label: "Idea intake", sub: "chats · calls · assets" },
             { label: "Structured brief" },
@@ -157,16 +166,18 @@ const en: ProofContent = {
       },
       {
         key: "logistics-smb",
-        clientType: "A family logistics business",
-        problem:
-          "Order status lived in spreadsheets and phone calls; stuck orders surfaced only when a customer called to ask.",
-        system:
-          "A stuck-order dashboard connected to the existing spreadsheets, with alerts and a weekly operating signal.",
-        outcome:
-          "Stuck orders surface on the dashboard before the customer calls, and the weekly review starts from the same view.",
+        workflowType: "Logistics and order tracking",
+        situation:
+          "Order status is split between spreadsheets and phone calls, so stalled orders are easy to miss.",
+        tracking:
+          "Order ID, current status, owner, promised date, blockers, and time since the last update.",
+        approval:
+          "The operations owner decides whether to chase a supplier, update the customer, or escalate the order.",
+        firstOutput:
+          "A stuck-order list ordered by how long each order has gone without an update.",
         spine: {
           caption: "Order to resolution",
-          ariaLabel: "The logistics visibility workflow, mapped",
+          ariaLabel: "Illustrative logistics order-tracking workflow",
           nodes: [
             { label: "Existing spreadsheets", sub: "orders · status · dates" },
             { label: "Stuck-order signals" },
@@ -228,30 +239,34 @@ const he: ProofContent = {
     },
   },
   cases: {
-    title: "איך זה נראה בפועל",
-    intro: "פרויקטים כפי שאני ממפה אותם: הבעיה, המערכת, ומה השתנה בפועל.",
-    aboutTitle: "מערכות נבחרות",
+    title: "דוגמאות לתהליכים שהגישה הזאת מתאימה להם",
+    intro:
+      "דוגמאות להמחשה, לא מקרי לקוח. כל דוגמה מציגה את המצב, מה המערכת תעקוב אחריו, איפה נדרש אישור אנושי, ומה יהיה הפלט השימושי הראשון.",
+    aboutTitle: "דוגמאות לתהליכים שהגישה הזאת מתאימה להם",
     aboutIntro:
-      "כל פרויקט, ממופה מקצה לקצה: הבעיה, המערכת שנבנתה, התהליך שהיא מריצה, ומה השתנה בפועל.",
+      "דוגמאות להמחשה, לא מקרי לקוח. כל דוגמה מציגה את המצב, מה המערכת תעקוב אחריו, איפה נדרש אישור אנושי, ומה יהיה הפלט השימושי הראשון.",
     rowLabels: {
-      problem: "הבעיה",
-      system: "המערכת",
-      outcome: "מה השתנה",
+      situation: "המצב",
+      tracking: "מה המערכת תעקוב אחריו",
+      approval: "נקודת האישור האנושית",
+      firstOutput: "הפלט השימושי הראשון",
     },
-    // ⚠ SAMPLE case studies — replace with real engagements (LAUNCH-CHECKLIST.md §2).
+    // Illustrative workflow patterns. These are not client engagements or proof.
     items: [
       {
         key: "law-office",
-        clientType: "משרד עורכי דין של 12 איש",
-        problem:
-          "מועדים, מיילים של לקוחות וגרסאות של מסמכים נוהלו בכלים נפרדים; המעקב היה תלוי בזיכרון.",
-        system:
-          "מערכת שמחברת קליטת פניות, מעקב מסמכים ומועדים לדשבורד יומי אחד, עם אישור אנושי לפני כל שליחה.",
-        outcome:
-          "המשרד מתחיל את היום מתצוגה אחת במקום שלוש תיבות מייל, והמעקב כבר לא תלוי בזיכרון.",
+        workflowType: "משרד משפטי או עתיר מסמכים",
+        situation:
+          "מועדים, הודעות נכנסות וגרסאות של מסמכים מפוזרים בין כלים שונים, ולכן המעקב תלוי בזיכרון.",
+        tracking:
+          "פניות, סטטוס מסמכים, אחראים, מועדים ופריטי מעקב שעדיין לא טופלו.",
+        approval:
+          "איש או אשת צוות בודקים את המועדים שחולצו ואת הטיוטה לפני שמירה או שליחה.",
+        firstOutput:
+          "רשימת טיפול יומית שמציגה מועדים, מסמכים חסרים ומעקבים שמחכים להחלטה.",
         spine: {
           caption: "מפנייה ועד מעקב",
-          ariaLabel: "התהליך של משרד עורכי הדין, ממופה",
+          ariaLabel: "דוגמה לתהליך עבודה במשרד עתיר מסמכים",
           nodes: [
             { label: "מייל נכנס מלקוח", sub: "בקשות · מסמכים · מועדים" },
             { label: "מיון וקליטת מועדים" },
@@ -263,16 +278,18 @@ const he: ProofContent = {
       },
       {
         key: "marketing-agency",
-        clientType: "סוכנות שיווק בוטיק",
-        problem:
-          "רעיונות לתוכן נערמו בצ'אטים, והאישורים הגיעו מאוחר, מפוזרים בין הודעות.",
-        system:
-          "תהליך אחד מרעיון ועד פרסום: קליטה אחת, בריפים מובנים, וטיוטות שמחכות לנקודת אישור אחת לפני שמשהו מתפרסם.",
-        outcome:
-          "כל פריט עובר עכשיו נקודת אישור אחת וברורה; שום דבר לא מתפרסם מתוך צ'אט.",
+        workflowType: "אישורי שיווק ותוכן",
+        situation:
+          "רעיונות, חומרים ומשוב מגיעים דרך צ'אטים ושיחות, וקשה לראות מה כבר אושר.",
+        tracking:
+          "הבריף, חומרי המקור, האחראי, סטטוס הטיוטה, המאשר, המשוב ומועד הפרסום המתוכנן.",
+        approval:
+          "גורם מאשר מוגדר בודק, עורך או דוחה כל טיוטה לפני פרסום.",
+        firstOutput:
+          "תור אישורים אחד שמראה מה מוכן, מה חסום ומי צריך לקבל את ההחלטה הבאה.",
         spine: {
           caption: "מרעיון ועד פרסום",
-          ariaLabel: "תהליך התוכן של הסוכנות, ממופה",
+          ariaLabel: "דוגמה לתהליך אישור תוכן שיווקי",
           nodes: [
             { label: "קליטת רעיונות", sub: "צ'אטים · שיחות · חומרים" },
             { label: "בריף מובנה" },
@@ -284,16 +301,18 @@ const he: ProofContent = {
       },
       {
         key: "logistics-smb",
-        clientType: "עסק משפחתי בתחום הלוגיסטיקה",
-        problem:
-          "סטטוס ההזמנות חי בגיליונות ובשיחות טלפון; הזמנות תקועות התגלו רק כשלקוח התקשר לשאול.",
-        system:
-          "דשבורד הזמנות תקועות שמחובר לגיליונות הקיימים, עם התראות וסיכום תפעולי שבועי.",
-        outcome:
-          "הזמנות תקועות עולות בדשבורד לפני שהלקוח מתקשר, והסקירה השבועית מתחילה מאותה תצוגה.",
+        workflowType: "לוגיסטיקה ומעקב הזמנות",
+        situation:
+          "סטטוס ההזמנות מפוצל בין גיליונות לשיחות טלפון, ולכן קל לפספס הזמנות שנתקעו.",
+        tracking:
+          "מספר הזמנה, סטטוס נוכחי, אחראי, תאריך שהובטח, חסמים והזמן שעבר מהעדכון האחרון.",
+        approval:
+          "האחראי על התפעול מחליט אם לפנות לספק, לעדכן את הלקוח או להסלים את הטיפול.",
+        firstOutput:
+          "רשימת הזמנות תקועות שממוינת לפי הזמן שעבר מאז העדכון האחרון.",
         spine: {
           caption: "מהזמנה ועד פתרון",
-          ariaLabel: "תהליך הנראות של העסק הלוגיסטי, ממופה",
+          ariaLabel: "דוגמה לתהליך מעקב אחר הזמנות בלוגיסטיקה",
           nodes: [
             { label: "הגיליונות הקיימים", sub: "הזמנות · סטטוס · תאריכים" },
             { label: "הזמנות תקועות מזוהות" },

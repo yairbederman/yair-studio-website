@@ -1,4 +1,5 @@
 import { localeAccessor } from "@/content/types";
+import { shellContent } from "@/content/shell";
 import type { Locale } from "@/content/types";
 import type { OfferPageContent } from "./types";
 
@@ -9,12 +10,8 @@ const en: OfferPageContent = {
     eyebrow: "Follow-Up",
     title: "Follow-Up Machine",
     lead: "A small AI-assisted workflow that keeps leads, quotes, clients, and open tasks from falling through the cracks — with human approval before external messages or sensitive changes.",
-    ctaLabel: "Book a Follow-Up Review",
-    ctaHref: "/contact",
-    secondaryCta: {
-      label: "Send one annoying follow-up process",
-      href: "/contact#good-first",
-    },
+    ctaLabel: shellContent("en").workflowCta.label,
+    ctaHref: shellContent("en").workflowCta.href,
   },
   who: {
     title: "Why it hurts",
@@ -156,8 +153,8 @@ const en: OfferPageContent = {
   cta: {
     heading: "If something keeps falling through the cracks, this is probably a good place to start.",
     body: "Send one example: a lead, quote, waiting client, or post-meeting task. We will start there.",
-    ctaLabel: "Book a Follow-Up Review",
-    ctaHref: "/contact",
+    ctaLabel: shellContent("en").workflowCta.label,
+    ctaHref: shellContent("en").workflowCta.href,
   },
 };
 
@@ -166,12 +163,8 @@ const he: OfferPageContent = {
     eyebrow: "Follow-Up",
     title: "מכונת Follow-Up שלא נותנת לדברים ליפול",
     lead: "מערכת קטנה שמזהה לידים, הצעות מחיר, לקוחות פתוחים ומשימות שמחכות לתגובה — ומחזירה אותם למסלול עם תזכורת, סיכום וצעד הבא ברור.",
-    ctaLabel: "לתאם Follow-Up",
-    ctaHref: "/he/contact",
-    secondaryCta: {
-      label: "שלחו תהליך מעקב שמעצבן אתכם",
-      href: "/he/contact#good-first",
-    },
+    ctaLabel: shellContent("he").workflowCta.label,
+    ctaHref: shellContent("he").workflowCta.href,
   },
   who: {
     title: "למה זה כואב",
@@ -313,8 +306,8 @@ const he: OfferPageContent = {
   cta: {
     heading: "אם משהו נופל אצלכם בין הכיסאות — זה כנראה מקום טוב להתחיל.",
     body: "שלחו דוגמה אחת: ליד, הצעת מחיר, לקוח שמחכה או משימה אחרי פגישה. נתחיל משם.",
-    ctaLabel: "לתאם Follow-Up",
-    ctaHref: "/he/contact",
+    ctaLabel: shellContent("he").workflowCta.label,
+    ctaHref: shellContent("he").workflowCta.href,
   },
 };
 

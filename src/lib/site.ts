@@ -42,7 +42,7 @@ export const SITE_URL = resolveSiteUrl();
 export const SITE_NAME = "y[AI]r studio";
 export const SITE_ALT_NAME = "Yair Studio";
 export const SITE_DESCRIPTION =
-  "Practical AI workflow systems for small businesses and professional offices: email, calendar, documents, meetings, clients, and tasks with human approval at the decision points.";
+  "Practical AI workflow systems for owner-led service businesses and professional offices where work moves through email, calendar, documents, meetings, and follow-up, with human approval at the decision points.";
 
 /**
  * Public contact channel (personal Gmail, confirmed for public use). Single
@@ -134,7 +134,7 @@ const EN_PAGES: PageDef[] = [
     path: "/offers",
     title: "Offers",
     description:
-      "y[AI]r studio services: diagnose one workflow, build one AI operations pilot, or create practical workflow systems around follow-up, meetings, documents, and daily operating visibility.",
+      "Services for owner-led service businesses and professional offices: map one stuck workflow, run a focused audit, or build a narrow AI operations pilot around email, calendar, documents, meetings, and follow-up.",
   },
   {
     path: "/offers/ai-workflow-audit",
@@ -182,7 +182,7 @@ const EN_PAGES: PageDef[] = [
     path: "/contact",
     title: "Contact",
     description:
-      "Contact y[AI]r studio to map one business workflow and scope a practical, human-in-the-loop AI system.",
+      "Send y[AI]r studio one stuck workflow from an owner-led service business or professional office, then decide whether a focused audit or narrow pilot comes next.",
   },
 ];
 
@@ -198,7 +198,7 @@ const HE_PAGE_STRINGS: Record<string, { title: string; description: string }> =
     "/": {
       title: "מערכות AI קטנות לעבודה האמיתית של העסק",
       description:
-        "y[AI]r studio בעברית: מערכות AI קטנות לעסקים קטנים ומשרדים מקצועיים, סביב מיילים, יומן, מסמכים, פגישות, לקוחות ומשימות, עם אישור אנושי בנקודות ההחלטה.",
+        "y[AI]r studio בעברית: מערכות AI קטנות לעסקי שירותים שמנוהלים בידי הבעלים ולמשרדים מקצועיים, סביב מייל, יומן, מסמכים, פגישות ומעקב, עם אישור אנושי בנקודות ההחלטה.",
     },
     "/workflows": {
       title: "תהליכי עבודה",
@@ -208,7 +208,7 @@ const HE_PAGE_STRINGS: Record<string, { title: string; description: string }> =
     "/offers": {
       title: "שירותים",
       description:
-        "השירותים של y[AI]r studio: אבחון תהליך AI, פיילוט AI תפעולי ומערכות עבודה קטנות סביב follow-up, פגישות, מסמכים ותמונת מצב יומית.",
+        "שירותים לעסקי שירותים שמנוהלים בידי הבעלים ולמשרדים מקצועיים: מיפוי תהליך שנתקע, אבחון ממוקד או פיילוט AI תפעולי צר סביב מייל, יומן, מסמכים, פגישות ומעקב.",
     },
     "/offers/ai-workflow-audit": {
       title: "אבחון תהליך AI",
@@ -248,7 +248,7 @@ const HE_PAGE_STRINGS: Record<string, { title: string; description: string }> =
     "/contact": {
       title: "צור קשר",
       description:
-        "יוצרים קשר עם y[AI]r studio כדי למפות תהליך עסקי אחד ולתחום מערכת AI מעשית, עם אישור אנושי בנקודות ההחלטה.",
+        "שולחים ל־y[AI]r studio תהליך אחד שנתקע בעסק שירותים או במשרד מקצועי, ואז מחליטים אם הצעד הבא הוא אבחון ממוקד או פיילוט צר.",
     },
   };
 

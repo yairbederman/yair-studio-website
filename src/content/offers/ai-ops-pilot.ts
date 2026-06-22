@@ -1,4 +1,5 @@
 import { localeAccessor } from "@/content/types";
+import { shellContent } from "@/content/shell";
 import type { Locale } from "@/content/types";
 import type { OfferPageContent } from "./types";
 
@@ -7,10 +8,10 @@ import type { OfferPageContent } from "./types";
 const en: OfferPageContent = {
   hero: {
     eyebrow: "Pilot",
-    title: "Build one practical AI workflow in 7-10 days",
-    lead: "Instead of talking about AI, we build one small workflow that works around email, calendar, documents, meetings, clients, or tasks.",
-    ctaLabel: "Choose a workflow for the pilot",
-    ctaHref: "/contact",
+    title: "AI Operations Pilot",
+    lead: "If the workflow is ready for a pilot, the first working version is usually scoped around 7–10 days. We keep it narrow around email, calendar, documents, meetings, clients, or tasks.",
+    ctaLabel: shellContent("en").workflowCta.label,
+    ctaHref: shellContent("en").workflowCta.href,
   },
   who: {
     title: "Pilot examples",
@@ -146,20 +147,20 @@ const en: OfferPageContent = {
     ],
   },
   cta: {
-    heading: "Choose one process and build it small.",
-    body: "A pilot is useful when it proves one workflow in real work, with clear inputs, outputs, and approval boundaries.",
-    ctaLabel: "Book a pilot",
-    ctaHref: "/contact",
+    heading: "Send the workflow you want to test.",
+    body: "If the process is clear enough for a pilot, we scope the first working version around 7–10 days, with defined inputs, outputs, and approval boundaries.",
+    ctaLabel: shellContent("en").workflowCta.label,
+    ctaHref: shellContent("en").workflowCta.href,
   },
 };
 
 const he: OfferPageContent = {
   hero: {
     eyebrow: "פיילוט",
-    title: "פיילוט AI תפעולי תוך 7-10 ימים",
-    lead: "במקום לדבר על AI, בונים תהליך עבודה אחד קטן שעובד באמת סביב מיילים, יומן, מסמכים, פגישות, לקוחות או משימות.",
-    ctaLabel: "לבחור תהליך לפיילוט",
-    ctaHref: "/he/contact",
+    title: "פיילוט AI תפעולי",
+    lead: "אם התהליך בשל לפיילוט, בדרך כלל מגדירים את הגרסה העובדת הראשונה למסגרת של 7–10 ימים. שומרים על היקף צר סביב מייל, יומן, מסמכים, פגישות, לקוחות או משימות.",
+    ctaLabel: shellContent("he").workflowCta.label,
+    ctaHref: shellContent("he").workflowCta.href,
   },
   who: {
     title: "דוגמאות לפיילוטים",
@@ -295,10 +296,10 @@ const he: OfferPageContent = {
     ],
   },
   cta: {
-    heading: "בואו נבחר תהליך אחד ונבנה אותו קטן.",
-    body: "פיילוט טוב מוכיח תהליך עבודה אחד בעבודה אמיתית, עם קלטים, פלטים וגבולות אישור ברורים.",
-    ctaLabel: "לתאם פיילוט",
-    ctaHref: "/he/contact",
+    heading: "שלחו את התהליך שתרצו לבדוק.",
+    body: "אם התהליך ברור ובשל לפיילוט, נגדיר את הגרסה העובדת הראשונה למסגרת של 7–10 ימים, עם קלטים, פלטים וגבולות אישור ברורים.",
+    ctaLabel: shellContent("he").workflowCta.label,
+    ctaHref: shellContent("he").workflowCta.href,
   },
 };
 

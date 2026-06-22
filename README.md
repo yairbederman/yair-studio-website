@@ -6,13 +6,14 @@ workflows.
 Built with Next.js (App Router) + TypeScript. The site is **fully bilingual**: every page has an
 English version and a Hebrew (RTL) version under `/he`, driven by one locale-keyed content model.
 On top of the visual foundation (design tokens, bilingual typography, shared shell) the site carries
-a homepage with a founder band and proof cards, offer pages (overview + live offers), `/workflows`,
+a homepage with a founder band and illustrative workflow cards, offer pages (overview + live offers), `/workflows`,
 `/about`, `/contact` (email + WhatsApp), an SEO/AEO/GEO foundation (per-page metadata, hreflang
 pairs, Open Graph, structured data, crawl endpoints), and Vercel Analytics.
 
-> **Before launch:** the founder credentials, career spine, and case studies are visibly-badged
-> **SAMPLE data**, and the whole site is `noindex` until they're replaced — see
-> [`LAUNCH-CHECKLIST.md`](LAUNCH-CHECKLIST.md). The gate is one flag: `PROOF_IS_SAMPLE_DATA` in
+> **Before launch:** the founder credentials and career spine are visibly-badged **SAMPLE data**,
+> and the whole site is `noindex` until they're replaced — see
+> [`LAUNCH-CHECKLIST.md`](LAUNCH-CHECKLIST.md). The workflow cards are illustrative patterns,
+> not client case studies. The gate is one flag: `PROOF_IS_SAMPLE_DATA` in
 > [`src/content/proof.ts`](src/content/proof.ts).
 
 ## Visual source of truth
@@ -54,7 +55,7 @@ links in both directions. `/contact` offers email (primary) and WhatsApp.
 | `/offers/internal-ai-systems` | `/he/offers/internal-ai-systems` | Offer |
 | `/offers/dashboards-automation` | `/he/offers/dashboards-automation` | Offer |
 | `/offers/content-ad-operations` | `/he/offers/content-ad-operations` | Offer |
-| `/about` | `/he/about` | Founder profile, badged case studies, principles |
+| `/about` | `/he/about` | Founder profile, illustrative workflow patterns, principles |
 | `/contact` | `/he/contact` | Email (primary) + WhatsApp + copy-email affordance |
 | `/opengraph-image` | — | Generated 1200×630 branded OG image (`next/og`) |
 

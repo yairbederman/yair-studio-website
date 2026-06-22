@@ -54,7 +54,7 @@ export const OFFERS: readonly Offer[] = [
     href: "/offers/ai-ops-pilot",
     cta: "Build a pilot",
     summary:
-      "Build one practical workflow in 7-10 days around email, calendar, documents, meetings, clients, or tasks.",
+      "If the workflow is ready for a pilot, scope the first working version around 7–10 days across email, calendar, documents, meetings, clients, or tasks.",
   },
   {
     key: "follow-up-machine",

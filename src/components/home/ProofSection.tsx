@@ -3,9 +3,8 @@ import ProofCards from "@/components/ProofCards";
 import type { ProofContent } from "@/content/proof";
 
 /**
- * Proof band — compact case-study cards (problem → system → what changed),
- * placed after Evidence so the illustrative mapping is followed by badged
- * engagement shapes. Full cards with workflow spines live on /about.
+ * Proof band — compact illustrative workflow cards, placed after Evidence.
+ * Full cards with workflow spines live on /about.
  */
 export default function ProofSection({
   content,

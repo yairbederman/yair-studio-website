@@ -1,5 +1,6 @@
 import { AUDIT_OFFER } from "@/lib/offers";
 import { localeAccessor } from "@/content/types";
+import { shellContent } from "@/content/shell";
 import type { Locale } from "@/content/types";
 import type { OfferPageContent } from "./types";
 
@@ -10,8 +11,8 @@ const en: OfferPageContent = {
     eyebrow: "Start before building",
     title: "AI workflow audit before automation",
     lead: "A focused review of one business process: how work really moves, where it gets stuck, what can be automated, and what has to stay human.",
-    ctaLabel: "Book a workflow audit",
-    ctaHref: "/contact",
+    ctaLabel: shellContent("en").workflowCta.label,
+    ctaHref: shellContent("en").workflowCta.href,
     secondaryCta: { label: "See what you get", href: "#build" },
   },
   film: {
@@ -161,10 +162,10 @@ const en: OfferPageContent = {
     ],
   },
   cta: {
-    heading: "After the audit",
-    body: "You can stop with the roadmap, or continue into a small pilot: morning report, follow-up, meeting summary, or documents to tasks.",
-    ctaLabel: "Continue to a pilot",
-    ctaHref: "/offers/ai-ops-pilot",
+    heading: "Start with the workflow before the tool.",
+    body: "Send one stuck process. We map whether a focused audit is enough, and only scope a pilot if the workflow is ready to build.",
+    ctaLabel: shellContent("en").workflowCta.label,
+    ctaHref: shellContent("en").workflowCta.href,
   },
 };
 
@@ -173,8 +174,8 @@ const he: OfferPageContent = {
     eyebrow: "לפני שבונים",
     title: "אבחון תהליך AI לפני שבונים אוטומציה",
     lead: "סקירה ממוקדת של תהליך אחד בעסק: איך העבודה באמת זזה, איפה היא נתקעת, מה אפשר להפוך לאוטומטי, ומה חייב להישאר אנושי.",
-    ctaLabel: "לתאם אבחון תהליך",
-    ctaHref: "/he/contact",
+    ctaLabel: shellContent("he").workflowCta.label,
+    ctaHref: shellContent("he").workflowCta.href,
     secondaryCta: { label: "לראות מה מקבלים", href: "#build" },
   },
   film: {
@@ -323,10 +324,10 @@ const he: OfferPageContent = {
     ],
   },
   cta: {
-    heading: "אחרי האבחון",
-    body: "אפשר לעצור עם מפת דרכים, או להמשיך לפיילוט קטן: דוח בוקר, follow-up, סיכום פגישות, או מסמכים למשימות.",
-    ctaLabel: "לבחור תהליך לפיילוט",
-    ctaHref: "/he/offers/ai-ops-pilot",
+    heading: "מתחילים בתהליך, לפני הכלי.",
+    body: "שלחו תהליך אחד שנתקע. נמפה אם אבחון ממוקד מספיק, ונגדיר פיילוט רק אם התהליך בשל לבנייה.",
+    ctaLabel: shellContent("he").workflowCta.label,
+    ctaHref: shellContent("he").workflowCta.href,
   },
 };
 

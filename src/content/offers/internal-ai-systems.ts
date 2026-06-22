@@ -1,4 +1,5 @@
 import { localeAccessor } from "@/content/types";
+import { shellContent } from "@/content/shell";
 import type { Locale } from "@/content/types";
 import type { OfferPageContent } from "./types";
 
@@ -9,8 +10,8 @@ const en: OfferPageContent = {
     eyebrow: "Assistant layer",
     title: "Internal AI Systems",
     lead: "A practical AI layer for the day-to-day work of a service team: meetings, email and calendar context, tasks, knowledge search, and follow-up, with approvals before anything acts.",
-    ctaLabel: "Map one workflow",
-    ctaHref: "/contact",
+    ctaLabel: shellContent("en").workflowCta.label,
+    ctaHref: shellContent("en").workflowCta.href,
   },
   who: {
     title: "Who it's for",
@@ -136,8 +137,8 @@ const en: OfferPageContent = {
   cta: {
     heading: "Build the system around one real workflow.",
     body: "Start with a single process, such as meetings, follow-up, or knowledge search, and expand from there.",
-    ctaLabel: "Map one workflow",
-    ctaHref: "/contact",
+    ctaLabel: shellContent("en").workflowCta.label,
+    ctaHref: shellContent("en").workflowCta.href,
   },
 };
 
@@ -147,8 +148,8 @@ const he: OfferPageContent = {
     eyebrow: "שכבת העוזרים",
     title: "מערכות AI פנימיות",
     lead: "שכבת AI פרקטית לעבודה היומיומית של צוות שירותים: פגישות, הקשר של מייל ויומן, משימות, חיפוש ידע ומעקב, עם אישורים לפני שמשהו פועל.",
-    ctaLabel: "למפות תהליך אחד",
-    ctaHref: "/he/contact",
+    ctaLabel: shellContent("he").workflowCta.label,
+    ctaHref: shellContent("he").workflowCta.href,
   },
   who: {
     title: "למי זה מתאים",
@@ -274,8 +275,8 @@ const he: OfferPageContent = {
   cta: {
     heading: "בונים את המערכת סביב תהליך אמיתי אחד.",
     body: "מתחילים מתהליך יחיד, כמו פגישות, מעקב או חיפוש ידע, ומרחיבים משם.",
-    ctaLabel: "למפות תהליך אחד",
-    ctaHref: "/he/contact",
+    ctaLabel: shellContent("he").workflowCta.label,
+    ctaHref: shellContent("he").workflowCta.href,
   },
 };
 

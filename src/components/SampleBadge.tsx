@@ -2,7 +2,7 @@ import { PROOF_IS_SAMPLE_DATA } from "@/content/proof";
 
 /**
  * Visible "sample data" marker for proof surfaces (credentials, career spine,
- * case studies) while PROOF_IS_SAMPLE_DATA is true. Renders nothing once the
+ * and workflow examples) while PROOF_IS_SAMPLE_DATA is true. Renders nothing once the
  * flag flips to false at launch (LAUNCH-CHECKLIST.md) — one flag, every badge.
  *
  * Deliberately loud enough to read (warn token, mono, uppercase): sample

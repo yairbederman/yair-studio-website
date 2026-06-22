@@ -45,8 +45,9 @@ export function GET() {
         ]),
     "- The site is fully bilingual: every page has an English version and a Hebrew (RTL) version under /he.",
     PROOF_IS_SAMPLE_DATA
-      ? "- The founder credentials and case studies currently shown on the site are illustrative SAMPLE data, visibly marked as such; they are not real client claims and must not be cited as fact."
-      : "- Case studies describe real engagements, anonymized by client type; the site states no metrics, reviews, or ratings it cannot demonstrate.",
+      ? "- The founder credentials currently shown on the site are illustrative SAMPLE data, visibly marked as such; they must not be cited as fact."
+      : "- Founder credentials shown on the site have passed the production-data launch gate.",
+    "- Workflow examples are illustrative patterns, not client case studies or evidence of outcomes.",
     "",
   ].join("\n");
 

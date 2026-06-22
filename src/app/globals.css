@@ -1075,7 +1075,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 /* The observable change is the point — slightly brighter. */
 .proof-row--outcome dd { color: var(--fg-1); }
 
-/* /about full treatment — one engagement per row, spine beside the rows. */
+/* /about full treatment — one workflow pattern per row, spine beside the rows. */
 .proof-grid--full { grid-template-columns: 1fr; }
 .proof-grid--full .proof-card {
   display: grid;

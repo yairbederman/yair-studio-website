@@ -29,8 +29,8 @@ function serializeJsonLd(data: unknown): string {
  *
  * HARD RULE: nothing from src/content/proof.ts is emitted here. While
  * PROOF_IS_SAMPLE_DATA is true the proof surfaces carry sample credentials and
- * case studies — those are UI-badged samples and must never enter machine-
- * readable structured data. The Person node states only verifiable identity
+ * illustrative workflow examples. Neither enters machine-readable structured
+ * data. The Person node states only verifiable identity
  * facts; sameAs / credential properties are added at launch-gate time
  * (LAUNCH-CHECKLIST.md) alongside the real data.
  */

@@ -80,8 +80,8 @@ const en: HomeContent = {
   hero: {
     eyebrow: "AI workflow systems",
     title: "Small AI systems for the real work of the business",
-    lead: "I help small businesses and professional offices connect AI to email, calendar, documents, meetings, clients, and tasks without replacing every system or letting unsafe automations run loose.",
-    primaryCta: { label: "Book a diagnostic call", href: "/contact" },
+    lead: "Owner-led service businesses and professional offices often run the day through email, calendar, documents, meetings, and follow-up. I turn one stuck workflow into a clear map or a small AI-assisted system, without replacing every tool or removing human approval.",
+    primaryCta: shellContent("en").workflowCta,
     secondaryCta: { label: "See services", href: "/offers" },
     schematic: {
       caption: "workflow → next action",
@@ -124,27 +124,25 @@ const en: HomeContent = {
     ],
   },
   method: {
-    title: "How I work",
+    title: "What happens in the first 7–10 days",
+    intro:
+      "The first step is a workflow map, not an automatic promise to build. If the workflow is ready for a pilot, the first working version is usually scoped around 7–10 days.",
     steps: [
       {
-        title: "Choose one process",
-        desc: "We start with one workflow that already slows the business down.",
+        title: shellContent("en").workflowCta.label,
+        desc: "A few lines are enough: where the work starts, which tools it crosses, and where it waits or falls through.",
       },
       {
-        title: "Map how it really works",
-        desc: "Steps, owners, inputs, outputs, bottlenecks, and approval points are made explicit.",
+        title: "Map the current workflow",
+        desc: "We document the steps, owners, inputs, handoffs, and approval points before recommending automation.",
       },
       {
-        title: "Build a small pilot",
-        desc: "A narrow workflow proves the shape before anything expands.",
+        title: "Choose the right first deliverable",
+        desc: "That may be a focused audit and workflow map, or a narrow pilot when the process is ready to build.",
       },
       {
-        title: "Connect existing tools",
-        desc: "Email, calendar, documents, CRM, spreadsheets, or task tools stay in place where possible.",
-      },
-      {
-        title: "Add reminders, summaries, and human approval",
-        desc: "The system supports the work, and a person stays responsible where judgment matters.",
+        title: "Scope the pilot, if it is ready",
+        desc: "The first working version is usually scoped around 7–10 days, with a person approving the decisions that matter.",
         human: true,
       },
     ],
@@ -194,9 +192,9 @@ const en: HomeContent = {
     },
   },
   finalCta: {
-    title: "Start with one annoying workflow.",
-    body: "Send the workflow that keeps slipping: email triage, follow-up, meeting tasks, documents, or a daily operating view. We map it before deciding what to build.",
-    cta: { label: "Book a diagnostic call", href: "/contact" },
+    title: "Start with one stuck workflow.",
+    body: "Send the workflow that keeps slipping between email, calendar, documents, meetings, and follow-up. We map it first, then decide whether an audit or a narrow pilot makes sense.",
+    cta: shellContent("en").workflowCta,
     secondaryCta: shellContent("en").whatsappCta,
   },
 };
@@ -212,8 +210,8 @@ const he: HomeContent = {
   hero: {
     eyebrow: "מערכות AI לתפעול יומיומי",
     title: "מערכות AI קטנות לעבודה האמיתית של העסק",
-    lead: "לא עוד כלי AI. מערכות קטנות שמחברות AI לעבודה האמיתית של העסק: מיילים, יומן, מסמכים, פגישות, לקוחות ומשימות.",
-    primaryCta: { label: "לתאם שיחת אבחון", href: "/he/contact" },
+    lead: "עסקי שירותים שמנוהלים בידי הבעלים ומשרדים מקצועיים מריצים את היום דרך מייל, יומן, מסמכים, פגישות ומעקב. אני הופך תהליך אחד שנתקע למפה ברורה או למערכת קטנה בסיוע AI, בלי להחליף כל כלי ובלי לוותר על אישור אנושי.",
+    primaryCta: shellContent("he").workflowCta,
     secondaryCta: { label: "לראות פתרונות", href: "/he/offers" },
     schematic: {
       caption: "כלים קיימים ← עבודה ברורה",
@@ -256,26 +254,26 @@ const he: HomeContent = {
     ],
   },
   method: {
-    title: "איך זה עובד",
+    title: "מה קורה ב־7–10 הימים הראשונים",
     intro:
-      "מתחילים מתהליך אחד אמיתי, לא ממערכת ענקית. קודם מבינים איפה העבודה נתקעת, ורק אז מחליטים אם נכון לבנות אבחון, פיילוט או מערכת קטנה.",
+      "הצעד הראשון הוא מפת תהליך, לא הבטחה אוטומטית לבנות. אם התהליך בשל לפיילוט, בדרך כלל מגדירים את הגרסה העובדת הראשונה למסגרת של 7–10 ימים.",
     steps: [
       {
-        title: "שולחים תהליך אחד שמעצבן אתכם",
-        desc: "כמה שורות על המקום שבו העבודה נתקעת: מיילים, משימות, לקוחות, מסמכים, פגישות או follow-up.",
+        title: shellContent("he").workflowCta.label,
+        desc: "מספיקות כמה שורות: איפה העבודה מתחילה, בין אילו כלים היא עוברת, ואיפה היא מחכה או נופלת.",
       },
       {
-        title: "ממפים איך הוא עובד היום",
-        desc: "שלבים, אחראים, כלים, קלט, פלט ונקודות תקיעה.",
+        title: "ממפים את התהליך הקיים",
+        desc: "מתעדים שלבים, אחראים, קלט, העברות ונקודות אישור לפני שממליצים על אוטומציה.",
       },
       {
-        title: "מחליטים מה נשאר אנושי",
-        desc: "מה אפשר לאוטומט, איפה AI עוזר, ומה חייב להישאר באישור אדם.",
+        title: "בוחרים את התוצר הראשון הנכון",
+        desc: "זה יכול להיות אבחון ומפת תהליך ממוקדים, או פיילוט צר כשהתהליך בשל לבנייה.",
+      },
+      {
+        title: "מגדירים פיילוט, אם התהליך בשל",
+        desc: "בדרך כלל מגדירים את הגרסה העובדת הראשונה למסגרת של 7–10 ימים, עם אישור אנושי בהחלטות החשובות.",
         human: true,
-      },
-      {
-        title: "בונים צעד ראשון ברור",
-        desc: "אבחון, פיילוט קטן, או מערכת Follow-Up סביב תהליך אחד.",
       },
     ],
   },
@@ -323,9 +321,9 @@ const he: HomeContent = {
     },
   },
   finalCta: {
-    title: "מתחילים מתהליך אחד שמעצבן אתכם.",
-    body: "שלחו לי תהליך אחד שמעצבן אתכם: מיילים, משימות, לקוחות, מסמכים, פגישות או follow-up. נמפה אותו לפני שמחליטים מה לבנות.",
-    cta: { label: "שלחו תהליך אחד", href: "/he/contact" },
+    title: "מתחילים מתהליך אחד שנתקע.",
+    body: "שלחו תהליך שנופל בין מייל, יומן, מסמכים, פגישות ומעקב. קודם נמפה אותו, ואז נחליט אם נכון להתחיל באבחון או בפיילוט צר.",
+    cta: shellContent("he").workflowCta,
     secondaryCta: shellContent("he").whatsappCta,
   },
 };

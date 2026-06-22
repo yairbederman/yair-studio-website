@@ -3,10 +3,8 @@ import WorkflowMap from "@/components/WorkflowMap";
 import type { ProofContent } from "@/content/proof";
 
 /**
- * Case-study cards: problem → system → observable change, each badged as
- * sample data while the launch gate is on. `full` (the /about treatment)
- * additionally renders each engagement's workflow spine — the case shown
- * the same way the work is delivered, as a mapped process.
+ * Illustrative workflow cards: situation → tracking → human approval → first
+ * useful output. `full` (the /about treatment) also renders the workflow spine.
  *
  * The homepage uses the compact variant inside ProofSection.
  */
@@ -26,21 +24,25 @@ export default function ProofCards({
       {cases.map((cs) => (
         <li key={cs.key} className="proof-card">
           <div className="proof-card-head">
-            <h3 className="proof-client">{cs.clientType}</h3>
+            <h3 className="proof-client">{cs.workflowType}</h3>
             <SampleBadge label={badgeLabel} />
           </div>
           <dl className="proof-rows">
             <div className="proof-row">
-              <dt>{rowLabels.problem}</dt>
-              <dd>{cs.problem}</dd>
+              <dt>{rowLabels.situation}</dt>
+              <dd>{cs.situation}</dd>
             </div>
             <div className="proof-row">
-              <dt>{rowLabels.system}</dt>
-              <dd>{cs.system}</dd>
+              <dt>{rowLabels.tracking}</dt>
+              <dd>{cs.tracking}</dd>
+            </div>
+            <div className="proof-row">
+              <dt>{rowLabels.approval}</dt>
+              <dd>{cs.approval}</dd>
             </div>
             <div className="proof-row proof-row--outcome">
-              <dt>{rowLabels.outcome}</dt>
-              <dd>{cs.outcome}</dd>
+              <dt>{rowLabels.firstOutput}</dt>
+              <dd>{cs.firstOutput}</dd>
             </div>
           </dl>
           {full ? (
