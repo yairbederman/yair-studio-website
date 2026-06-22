@@ -36,7 +36,9 @@ export type HomeContent = {
   };
   problems: {
     title: string;
-    items: readonly { title: string; desc: string }[];
+    intro: string;
+    cards: readonly { title: string; kicker: string; body: string }[];
+    closing: string;
   };
   method: {
     title: string;
@@ -95,33 +97,33 @@ const en: HomeContent = {
     },
   },
   problems: {
-    title: "Where work gets stuck",
-    items: [
+    title: "Where we can start",
+    intro:
+      "We start where work already enters, waits, gets handed off, or disappears. Sometimes the answer is AI. Sometimes it is a clearer workflow, a dashboard, a checklist, or a better approval step.",
+    cards: [
       {
-        title: "Leads do not get a reply",
-        desc: "The next action exists somewhere, but no one owns the follow-up.",
+        title: "Command center",
+        kicker: "See what needs attention",
+        body: "A daily view of meetings, urgent emails, open tasks, waiting clients, deadlines, and approval points.",
       },
       {
-        title: "Important emails sink",
-        desc: "Urgent messages sit beside everything else and wait for manual triage.",
+        title: "Email management",
+        kicker: "Turn inbox noise into decisions",
+        body: "Sort incoming messages, identify urgency, group related context, draft responses, and track what still needs a reply.",
       },
       {
-        title: "Meetings do not become tasks",
-        desc: "Decisions are made in the room, then disappear into notes or memory.",
+        title: "Task management",
+        kicker: "Make ownership visible",
+        body: "Turn meetings, emails, and notes into owners, due dates, reminders, and next actions people can actually follow.",
       },
       {
-        title: "Documents are not read in time",
-        desc: "Dates, obligations, and red flags are found late, after the work has already waited.",
-      },
-      {
-        title: "Clients wait for answers",
-        desc: "Open loops are visible only when someone checks several tools.",
-      },
-      {
-        title: "Tasks have no clear owner",
-        desc: "Work moves between people without a reliable handoff or deadline.",
+        title: "Workflow management",
+        kicker: "Fix the path, not just the task",
+        body: "Map the process end to end: inputs, handoffs, waiting points, approval steps, risks, and what should or should not be automated.",
       },
     ],
+    closing:
+      "The goal is not to automate everything. The goal is to understand the work clearly enough to choose the next useful fix.",
   },
   method: {
     title: "What happens in the first 7–10 days",
@@ -225,33 +227,33 @@ const he: HomeContent = {
     },
   },
   problems: {
-    title: "איפה העבודה נופלת?",
-    items: [
+    title: "מאיפה אפשר להתחיל",
+    intro:
+      "מתחילים במקומות שבהם העבודה כבר נכנסת, מחכה, עוברת הלאה או נעלמת. לפעמים הפתרון הוא AI. לפעמים זו מפה ברורה יותר של התהליך, דשבורד, צ׳קליסט או נקודת אישור טובה יותר.",
+    cards: [
       {
-        title: "לידים שלא חוזרים אליהם",
-        desc: "הפנייה נכנסה, אבל אין אחראי ברור לצעד הבא.",
+        title: "Command Center",
+        kicker: "לראות מה דורש תשומת לב",
+        body: "תמונת מצב יומית של פגישות, מיילים דחופים, משימות פתוחות, לקוחות שמחכים, דדליין ונקודות אישור.",
       },
       {
-        title: "מיילים חשובים שטובעים",
-        desc: "הודעות דחופות יושבות ליד הכול ומחכות למיון ידני.",
+        title: "ניהול מיילים",
+        kicker: "להפוך רעש להחלטות",
+        body: "למיין הודעות נכנסות, לזהות דחיפות, לחבר הקשר רלוונטי, להכין טיוטות תשובה ולעקוב אחרי מה שעדיין מחכה למענה.",
       },
       {
-        title: "פגישות שלא הופכות למשימות",
-        desc: "החלטות מתקבלות בשיחה ואז נעלמות בסיכום, בצ'אט או בזיכרון.",
+        title: "ניהול משימות",
+        kicker: "להפוך אחריות לגלויה",
+        body: "להפוך פגישות, מיילים וסיכומים לאחראים, תאריכי יעד, תזכורות וצעד הבא שאפשר לעקוב אחריו.",
       },
       {
-        title: "מסמכים שלא נקראים בזמן",
-        desc: "תאריכים, התחייבויות ודגלים אדומים מתגלים מאוחר מדי.",
-      },
-      {
-        title: "לקוחות שמחכים לתשובה",
-        desc: "לולאות פתוחות מתגלות רק כשמישהו עובר בין כמה כלים.",
-      },
-      {
-        title: "משימות בלי אחראי ברור",
-        desc: "עבודה עוברת בין אנשים בלי העברה מסודרת ודדליין.",
+        title: "ניהול תהליכים",
+        kicker: "לתקן את הדרך, לא רק את המשימה",
+        body: "למפות את התהליך מקצה לקצה: קלטים, העברות בין אנשים, נקודות המתנה, שלבי אישור, סיכונים ומה כן או לא כדאי להפוך לאוטומטי.",
       },
     ],
+    closing:
+      "המטרה היא לא להפוך הכול לאוטומטי. המטרה היא להבין את העבודה מספיק טוב כדי לבחור את התיקון הראשון שבאמת יעזור.",
   },
   method: {
     title: "מה קורה ב־7–10 הימים הראשונים",

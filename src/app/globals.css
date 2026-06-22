@@ -659,11 +659,27 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 }
 
 /* ---------- Problems ---------- */
-/* A hairline .panel-list (reused), not a card grid — breaks the 2-col card
-   rhythm shared with Offers. The .problem-term emphasis is Problems-scoped and
-   deliberately never touches the shared .card-title / .card-desc classes. */
+/* The shared .feature-grid / .feature-card pattern supplies the 2×2 desktop
+   layout and stacked mobile layout. Only the richer homepage card hierarchy is
+   scoped here; offer-page cards and the shared ProblemsPanel stay unchanged. */
+.problem-card { min-width: 0; overflow: hidden; }
+.problem-card-kicker {
+  margin-top: var(--s-3);
+  color: var(--accent);
+  font-size: var(--fs-md);
+  font-weight: 600;
+}
+.problem-card-body {
+  margin-top: var(--s-3);
+  color: var(--fg-2);
+  overflow-wrap: anywhere;
+}
+.problems-closing {
+  margin-top: var(--s-6);
+  max-width: 72ch;
+  font-size: var(--fs-lg);
+}
 .problems-list .problem-term { color: var(--fg-1); font-weight: 600; }
-
 /* ---------- Method ---------- */
 .method { scroll-margin-top: var(--s-9); }
 .method-list {
@@ -811,6 +827,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   .hero h1 { font-size: var(--fs-3xl); }
   .method-list,
   .offers-grid { grid-template-columns: 1fr; }
+  .problems-grid .feature-card { padding: var(--s-5); }
   .final-cta-inner { padding: var(--s-6); }
 }
 

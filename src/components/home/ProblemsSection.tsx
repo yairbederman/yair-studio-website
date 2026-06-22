@@ -1,11 +1,10 @@
 import Container from "@/components/Container";
-import ProblemsPanel from "@/components/ProblemsPanel";
 import type { HomeContent } from "@/content/home";
 
 /**
- * Problems this fixes — named plainly. Rendered as a hairline problems panel
- * (shared ProblemsPanel) rather than a card grid, so it doesn't repeat the
- * 2-col card rhythm of Offers.
+ * Practical starting points for investigating and improving operational work.
+ * Uses the site's neutral feature-card pattern while keeping this richer
+ * title/kicker/body content model local to the homepage.
  */
 export default function ProblemsSection({
   content,
@@ -17,8 +16,18 @@ export default function ProblemsSection({
       <Container>
         <div className="section-head">
           <h2 id="problems-title">{content.title}</h2>
+          <p className="section-intro">{content.intro}</p>
         </div>
-        <ProblemsPanel items={content.items} />
+        <ul className="feature-grid problems-grid">
+          {content.cards.map((card) => (
+            <li key={card.title} className="feature-card problem-card">
+              <h3 className="card-title">{card.title}</h3>
+              <p className="problem-card-kicker">{card.kicker}</p>
+              <p className="problem-card-body">{card.body}</p>
+            </li>
+          ))}
+        </ul>
+        <p className="problems-closing">{content.closing}</p>
       </Container>
     </section>
   );
