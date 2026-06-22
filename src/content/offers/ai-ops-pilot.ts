@@ -9,7 +9,7 @@ const en: OfferPageContent = {
   hero: {
     eyebrow: "Pilot",
     title: "AI Operations Pilot",
-    lead: "If the workflow is ready for a pilot, the first working version is usually scoped around 7–10 days. We keep it narrow around email, calendar, documents, meetings, clients, or tasks.",
+    lead: "A pilot starts with one focused workflow across email, calendar, documents, meetings, clients, or tasks. We define the first working version before building.",
     ctaLabel: shellContent("en").workflowCta.label,
     ctaHref: shellContent("en").workflowCta.href,
   },
@@ -148,7 +148,7 @@ const en: OfferPageContent = {
   },
   cta: {
     heading: "Send the workflow you want to test.",
-    body: "If the process is clear enough for a pilot, we scope the first working version around 7–10 days, with defined inputs, outputs, and approval boundaries.",
+    body: "If the process is clear enough for a pilot, we define its inputs, outputs, and approval boundaries before building.",
     ctaLabel: shellContent("en").workflowCta.label,
     ctaHref: shellContent("en").workflowCta.href,
   },
@@ -158,7 +158,7 @@ const he: OfferPageContent = {
   hero: {
     eyebrow: "פיילוט",
     title: "פיילוט AI תפעולי",
-    lead: "אם התהליך בשל לפיילוט, בדרך כלל מגדירים את הגרסה העובדת הראשונה למסגרת של 7–10 ימים. שומרים על היקף צר סביב מייל, יומן, מסמכים, פגישות, לקוחות או משימות.",
+    lead: "אם התהליך בשל לפיילוט, מגדירים גרסה עובדת ראשונה וממוקדת סביב מייל, יומן, מסמכים, פגישות, לקוחות או משימות.",
     ctaLabel: shellContent("he").workflowCta.label,
     ctaHref: shellContent("he").workflowCta.href,
   },
@@ -297,7 +297,7 @@ const he: OfferPageContent = {
   },
   cta: {
     heading: "שלחו את התהליך שתרצו לבדוק.",
-    body: "אם התהליך ברור ובשל לפיילוט, נגדיר את הגרסה העובדת הראשונה למסגרת של 7–10 ימים, עם קלטים, פלטים וגבולות אישור ברורים.",
+    body: "אם התהליך ברור ובשל לפיילוט, נגדיר את הקלטים, הפלטים וגבולות האישור לפני שמתחילים לבנות.",
     ctaLabel: shellContent("he").workflowCta.label,
     ctaHref: shellContent("he").workflowCta.href,
   },

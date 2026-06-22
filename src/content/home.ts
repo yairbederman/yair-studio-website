@@ -126,9 +126,9 @@ const en: HomeContent = {
       "The goal is not to automate everything. The goal is to understand the work clearly enough to choose the next useful fix.",
   },
   method: {
-    title: "What happens in the first 7–10 days",
+    title: "What happens in the first week",
     intro:
-      "The first step is a workflow map, not an automatic promise to build. If the workflow is ready for a pilot, the first working version is usually scoped around 7–10 days.",
+      "The first week starts with mapping the workflow. From there, we choose the right first deliverable: a focused audit or a narrow pilot.",
     steps: [
       {
         title: shellContent("en").workflowCta.label,
@@ -144,7 +144,7 @@ const en: HomeContent = {
       },
       {
         title: "Scope the pilot, if it is ready",
-        desc: "The first working version is usually scoped around 7–10 days, with a person approving the decisions that matter.",
+        desc: "If the process is ready, we define the pilot's inputs, outputs, and approval boundaries before building.",
         human: true,
       },
     ],
@@ -256,9 +256,9 @@ const he: HomeContent = {
       "המטרה היא לא להפוך הכול לאוטומטי. המטרה היא להבין את העבודה מספיק טוב כדי לבחור את התיקון הראשון שבאמת יעזור.",
   },
   method: {
-    title: "מה קורה ב־7–10 הימים הראשונים",
+    title: "מה קורה בשבוע הראשון",
     intro:
-      "הצעד הראשון הוא מפת תהליך, לא הבטחה אוטומטית לבנות. אם התהליך בשל לפיילוט, בדרך כלל מגדירים את הגרסה העובדת הראשונה למסגרת של 7–10 ימים.",
+      "השבוע הראשון מתחיל במיפוי התהליך. משם בוחרים את התוצר הראשון הנכון: אבחון ממוקד או פיילוט צר.",
     steps: [
       {
         title: shellContent("he").workflowCta.label,
@@ -274,7 +274,7 @@ const he: HomeContent = {
       },
       {
         title: "מגדירים פיילוט, אם התהליך בשל",
-        desc: "בדרך כלל מגדירים את הגרסה העובדת הראשונה למסגרת של 7–10 ימים, עם אישור אנושי בהחלטות החשובות.",
+        desc: "אם התהליך בשל, מגדירים את הקלטים, הפלטים וגבולות האישור של הפיילוט לפני שמתחילים לבנות.",
         human: true,
       },
     ],
