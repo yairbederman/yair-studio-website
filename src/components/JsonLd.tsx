@@ -27,12 +27,10 @@ function serializeJsonLd(data: unknown): string {
  * ratings, sameAs, or logo (nothing we cannot verify). Rendered once, on the
  * homepage.
  *
- * HARD RULE: nothing from src/content/proof.ts is emitted here. While
- * PROOF_IS_SAMPLE_DATA is true the proof surfaces carry sample credentials and
- * illustrative workflow examples. Neither enters machine-readable structured
- * data. The Person node states only verifiable identity
- * facts; sameAs / credential properties are added at launch-gate time
- * (LAUNCH-CHECKLIST.md) alongside the real data.
+ * HARD RULE: nothing from the illustrative workflow examples in
+ * src/content/proof.ts enters machine-readable structured data. The Person
+ * node states only the restrained identity facts represented on the site;
+ * sameAs or formal credential properties require their own verified sources.
  */
 export default function JsonLd() {
   const jsonLd = {

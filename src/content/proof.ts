@@ -4,20 +4,10 @@ import type { CardItem, Locale, SpineNode } from "@/content/types";
 /**
  * Founder + proof content — typed and locale-keyed.
  *
- * ============================================================
- * ⚠ SAMPLE DATA — founder credentials and career-spine entries below are
- * ILLUSTRATIVE TEST DATA, not real claims. The workflow cards are intentionally
- * illustrative patterns, not client case studies. Before launch, founder data
- * MUST be replaced with real facts — see LAUNCH-CHECKLIST.md (repo root).
- * ============================================================
- *
- * The PROOF_IS_SAMPLE_DATA flag below is the single launch gate. While true:
- *   - every founder/example surface renders a visible "sample data" badge,
- *   - the whole site is noindex (src/lib/root-metadata.ts) and robots-disallowed
- *     (src/app/robots.ts), so sample claims can never be indexed as real,
- *   - /llms.txt distinguishes sample founder data from workflow examples,
- *   - JSON-LD emits NO facts from this file (JsonLd.tsx stays verifiable-only).
- * Flip it to false ONLY when the real data is in (LAUNCH-CHECKLIST.md).
+ * Founder positioning is factual and deliberately modest. Workflow cards are
+ * illustrative patterns, not client case studies or evidence of outcomes.
+ * PROOF_IS_SAMPLE_DATA controls the visible badge on those workflow examples
+ * only; it does not apply to the founder profile or site indexing.
  */
 export const PROOF_IS_SAMPLE_DATA = true;
 
@@ -59,7 +49,7 @@ export type ProofContent = {
     };
     items: readonly WorkflowPattern[];
   };
-  /** Visible badge label rendered while PROOF_IS_SAMPLE_DATA is true. */
+  /** Visible badge label for the illustrative workflow examples. */
   sampleBadge: string;
 };
 
@@ -71,15 +61,14 @@ const en: ProofContent = {
     name: "Yair Bederman",
     role: "Productivity & AI systems · founder of y[AI]r studio",
     bio: "Builds and runs y[AI]r studio. Background in R&D and software leadership; maps the workflow, builds the system, and stays involved after it goes live.",
-    // ⚠ SAMPLE credentials — replace with real ones (LAUNCH-CHECKLIST.md §1).
     credentials: [
       {
         title: "R&D & engineering leadership",
-        desc: "15+ years taking software systems from prototype to production.",
+        desc: "Background in software engineering, R&D, and leading development work.",
       },
       {
-        title: "AI systems in production",
-        desc: "Internal assistants, dashboards, and automations running inside live business operations.",
+        title: "From prototype to production",
+        desc: "Experience taking software systems from early prototypes into production environments.",
       },
       {
         title: "Process & workflow design",
@@ -90,15 +79,14 @@ const en: ProofContent = {
         desc: "Systems, documentation, and support in Hebrew and English.",
       },
     ],
-    // ⚠ SAMPLE career spine — replace with the real path (LAUNCH-CHECKLIST.md §1).
     spine: {
       caption: "The path to this work",
       ariaLabel: "Career path leading to y[AI]r studio",
       nodes: [
-        { label: "Software engineer", sub: "production systems" },
-        { label: "R&D team lead", sub: "shipping under real constraints" },
-        { label: "Engineering leadership", sub: "teams · delivery · systems" },
-        { label: "AI workflow systems", sub: "applied to daily operations" },
+        { label: "Software engineering", sub: "building production systems" },
+        { label: "R&D leadership", sub: "teams · delivery · systems" },
+        { label: "Prototype to production", sub: "working under real constraints" },
+        { label: "Workflow mapping", sub: "understand the process before building" },
         { label: "y[AI]r studio", out: true },
       ],
     },
@@ -193,8 +181,8 @@ const en: ProofContent = {
 };
 
 /**
- * Hebrew (RTL) proof content — hebrew-quality drafted. Same SAMPLE-data
- * status as the EN block above: replace via LAUNCH-CHECKLIST.md.
+ * Hebrew (RTL) proof content — hebrew-quality drafted with factual founder
+ * positioning and the same illustrative-workflow safeguards as English.
  * Note: the Hebrew spelling of the surname ("בדרמן") is a standard
  * transliteration — confirm it at checklist time.
  */
@@ -206,15 +194,14 @@ const he: ProofContent = {
     name: "יאיר בדרמן",
     role: "מערכות AI ופרודוקטיביות · מייסד y[AI]r studio",
     bio: "בונה ומפעיל את y[AI]r studio. רקע במו״פ ובהובלת פיתוח; ממפה את התהליך, בונה את המערכת ונשאר מעורב אחרי שהיא עולה לאוויר.",
-    // ⚠ SAMPLE credentials — replace with real ones (LAUNCH-CHECKLIST.md §1).
     credentials: [
       {
         title: "הובלת מו״פ ופיתוח",
-        desc: "מעל 15 שנה של בניית מערכות תוכנה, מאב־טיפוס ועד פרודקשן.",
+        desc: "רקע בהנדסת תוכנה, במו״פ ובהובלת עבודת פיתוח.",
       },
       {
-        title: "מערכות AI בשטח",
-        desc: "עוזרים פנימיים, דשבורדים ואוטומציות שרצים בתפעול היומיומי של עסקים.",
+        title: "מאב־טיפוס ועד פרודקשן",
+        desc: "ניסיון בהעברת מערכות תוכנה מאב־טיפוס מוקדם לסביבת פרודקשן.",
       },
       {
         title: "תכנון תהליכי עבודה",
@@ -225,15 +212,14 @@ const he: ProofContent = {
         desc: "מערכות, תיעוד וליווי בשתי השפות, לפי מה שהצוות באמת מדבר.",
       },
     ],
-    // ⚠ SAMPLE career spine — replace with the real path (LAUNCH-CHECKLIST.md §1).
     spine: {
       caption: "הדרך לעבודה הזאת",
       ariaLabel: "המסלול המקצועי שמוביל ל-y[AI]r studio",
       nodes: [
-        { label: "מהנדס תוכנה", sub: "מערכות פרודקשן" },
-        { label: "ראש צוות פיתוח", sub: "פיתוח תחת אילוצים אמיתיים" },
-        { label: "הובלת פיתוח", sub: "צוותים · אספקה · מערכות" },
-        { label: "מערכות AI לתהליכי עבודה", sub: "בתפעול יומיומי" },
+        { label: "הנדסת תוכנה", sub: "בניית מערכות פרודקשן" },
+        { label: "הובלת מו״פ", sub: "צוותים · אספקה · מערכות" },
+        { label: "מאב־טיפוס לפרודקשן", sub: "עבודה תחת אילוצים אמיתיים" },
+        { label: "מיפוי תהליכים", sub: "מבינים את התהליך לפני שבונים" },
         { label: "y[AI]r studio", out: true },
       ],
     },

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { OFFERS } from "@/lib/offers";
-import { PROOF_IS_SAMPLE_DATA } from "@/content/proof";
 
 /**
  * Central site constants + canonical page list + metadata helper.
@@ -56,18 +55,14 @@ export const CONTACT_MAILTO = `mailto:${CONTACT_EMAIL}`;
  * WhatsApp contact channel — the second lead path beside email (email stays
  * the primary CTA; WhatsApp is the low-friction secondary).
  *
- * ⚠ TODO(LAUNCH-CHECKLIST.md §3): PLACEHOLDER NUMBER — an obviously-unreal
- * 050-0000000. Replace with the real number (international format, digits
- * only, no "+") before flipping the launch gate.
+ * International format, digits only, with country code and no leading "+".
  */
-export const WHATSAPP_NUMBER = "972500000000";
+export const WHATSAPP_NUMBER = "972522424521";
 
-// Launch guard: the sample-data gate cannot be flipped while the WhatsApp
-// number is still the placeholder — a "live" site with a dead lead channel
-// must fail the build, not ship.
-if (!PROOF_IS_SAMPLE_DATA && WHATSAPP_NUMBER === "972500000000") {
+// Keep generated wa.me links inside the E.164 digit-length envelope.
+if (!/^[1-9]\d{7,14}$/.test(WHATSAPP_NUMBER)) {
   throw new Error(
-    "WHATSAPP_NUMBER is still the placeholder — set the real number (LAUNCH-CHECKLIST.md §3) before flipping PROOF_IS_SAMPLE_DATA.",
+    "WHATSAPP_NUMBER must use international format with digits only and no leading plus sign.",
   );
 }
 

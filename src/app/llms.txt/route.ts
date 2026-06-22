@@ -6,7 +6,6 @@ import {
   SITE_NAME,
   SITE_URL,
 } from "@/lib/site";
-import { PROOF_IS_SAMPLE_DATA } from "@/content/proof";
 
 export const dynamic = "force-static";
 
@@ -44,9 +43,7 @@ export function GET() {
           "- The production domain is not yet finalized; URLs use the expected domain.",
         ]),
     "- The site is fully bilingual: every page has an English version and a Hebrew (RTL) version under /he.",
-    PROOF_IS_SAMPLE_DATA
-      ? "- The founder credentials currently shown on the site are illustrative SAMPLE data, visibly marked as such; they must not be cited as fact."
-      : "- Founder credentials shown on the site have passed the production-data launch gate.",
+    "- Founder/about copy factually describes Yair Bederman's R&D and software leadership background, experience taking systems from prototype to production, workflow-first approach, bilingual delivery, and role as founder/operator of y[AI]r studio.",
     "- Workflow examples are illustrative patterns, not client case studies or evidence of outcomes.",
     "",
   ].join("\n");

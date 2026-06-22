@@ -1,4 +1,5 @@
 import { localeAccessor } from "@/content/types";
+import { shellContent } from "@/content/shell";
 import type { CardItem, Locale } from "@/content/types";
 
 /** /about page content — typed and locale-keyed. */
@@ -9,7 +10,7 @@ export type AboutContent = {
   /**
    * "Who runs this" — the founder section. Narrative paragraphs live here;
    * the founder identity, credentials, and career spine come from
-   * src/content/proof.ts (single source, sample-gated until launch).
+   * src/content/proof.ts (single source of truth).
    */
   whoRuns: { title: string; paragraphs: readonly string[] };
   how: { title: string; intro: string; principles: readonly string[] };
@@ -70,8 +71,8 @@ const en: AboutContent = {
   cta: {
     heading: "Start with one real workflow.",
     body: "Pick a process that slows things down. We map how it runs today before deciding what is worth building.",
-    ctaLabel: "Map one workflow",
-    ctaHref: "/contact",
+    ctaLabel: shellContent("en").workflowCta.label,
+    ctaHref: shellContent("en").workflowCta.href,
   },
 };
 
@@ -129,8 +130,8 @@ const he: AboutContent = {
   cta: {
     heading: "מתחילים מתהליך אמיתי אחד.",
     body: "בוחרים תהליך שמאט את העסק. ממפים איך הוא רץ היום, לפני שמחליטים מה שווה לבנות.",
-    ctaLabel: "למפות תהליך אחד",
-    ctaHref: "/he/contact",
+    ctaLabel: shellContent("he").workflowCta.label,
+    ctaHref: shellContent("he").workflowCta.href,
   },
 };
 

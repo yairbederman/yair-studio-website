@@ -34,7 +34,7 @@ export default function HomePageBody({ locale }: { locale: Locale }) {
         <MethodSection content={content.method} />
         <SafetySection content={content.safety} />
         {locale === "en" ? (
-          <FounderSection content={proof.founder} badgeLabel={proof.sampleBadge} />
+          <FounderSection content={proof.founder} />
         ) : null}
         <EvidenceSection content={content.evidence} locale={locale} />
         {locale === "en" ? (

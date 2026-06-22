@@ -1,5 +1,4 @@
 import ProblemsPanel from "@/components/ProblemsPanel";
-import SampleBadge from "@/components/SampleBadge";
 import WorkflowMap from "@/components/WorkflowMap";
 import type { ProofContent } from "@/content/proof";
 
@@ -14,11 +13,9 @@ import type { ProofContent } from "@/content/proof";
  */
 export default function FounderProfile({
   content,
-  badgeLabel,
   showBio = true,
 }: {
   content: ProofContent["founder"];
-  badgeLabel: string;
   /** /about renders the block under prose that already covers the bio —
       hide it there to avoid saying the same facts twice in one viewport. */
   showBio?: boolean;
@@ -33,7 +30,6 @@ export default function FounderProfile({
         {showBio ? <p className="founder-bio">{content.bio}</p> : null}
         <div className="founder-creds">
           <ProblemsPanel items={content.credentials} />
-          <SampleBadge label={badgeLabel} />
         </div>
       </div>
       <WorkflowMap

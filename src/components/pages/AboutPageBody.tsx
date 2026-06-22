@@ -28,7 +28,6 @@ export default function AboutPageBody({ locale }: { locale: Locale }) {
         ))}
         <FounderProfile
           content={proof.founder}
-          badgeLabel={proof.sampleBadge}
           showBio={false}
         />
       </OfferSection>

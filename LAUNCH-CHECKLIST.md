@@ -1,31 +1,22 @@
-# Launch Checklist — replace sample founder data before going live
+# Launch Checklist
 
-The founder profile uses **clearly-marked SAMPLE data** until its facts are
-confirmed. While the sample gate is on, the whole site carries a meta
-`noindex` and founder/example surfaces show a visible "Sample data" badge,
-so sample claims cannot silently ship as real.
-(robots.txt deliberately stays allow-all: crawlers can only read the noindex
-on pages they're allowed to fetch.)
-
-**The single gate:** `PROOF_IS_SAMPLE_DATA` in `src/content/proof.ts`.
-Flip it to `false` ONLY after every item below is done. Flipping it removes
-all badges, lifts the sitewide noindex (`src/lib/root-metadata.ts`), and
-switches the founder-data note in `/llms.txt`. The workflow cards remain
-illustrative patterns before and after the flip. A build-time guard in
-`src/lib/site.ts` refuses to build with the flag off while the WhatsApp
-number is still the placeholder.
+Founder/about copy is factual, modest positioning. The workflow cards remain
+illustrative patterns, not client case studies or evidence of outcomes; their
+visible badges are controlled by `PROOF_IS_SAMPLE_DATA` in
+`src/content/proof.ts`. That flag applies only to workflow examples. It does not
+apply to founder content and does not control site indexing.
 
 ## 1. Founder facts — `src/content/proof.ts` → `founder`
 
-- [ ] `role` — confirm the expert positioning line (currently "Productivity & AI systems · founder of y[AI]r studio").
-- [ ] `credentials` (4 sample entries) — replace with your real track record: years, leadership scope, systems shipped. No claims you can't back in a call.
-- [ ] `spine` (career path) — replace the 5 sample nodes with your real path. Short labels; the final node stays `y[AI]r studio`.
-- [ ] `bio` — already real (matches the pre-existing About copy); confirm it still fits.
+- [x] Keep the role and bio limited to founder/operator positioning plus the existing R&D and software leadership background.
+- [x] Keep credentials generic and verifiable: software/R&D leadership, prototype-to-production work, workflow mapping before building, and bilingual delivery.
+- [x] Keep the career path free of employers, dates, client names, metrics, and implied outcomes.
+- [ ] Re-check factual wording whenever the founder profile changes. Correct the claim directly if needed; do not relabel founder copy as illustrative.
 
 ## 2. Illustrative workflow patterns — `src/content/proof.ts` → `cases.items`
 
-The three cards are intentionally illustrative workflow patterns.
-They must never be presented as client engagements or evidence of outcomes.
+The three cards are intentionally illustrative workflow patterns. They must
+never be presented as client engagements or evidence of outcomes.
 
 - [ ] Keep the EN/HE heading and disclaimer explicit that these are illustrative patterns, not client case studies.
 - [ ] Keep each card structured as situation, tracking, human approval, and first useful output.
@@ -33,26 +24,29 @@ They must never be presented as client engagements or evidence of outcomes.
 
 ## 3. WhatsApp — `src/lib/site.ts`
 
-- [ ] Replace the placeholder `WHATSAPP_NUMBER` (`972500000000`) with your real number in international format, no `+`/spaces (e.g. `9725XXXXXXXX`). Until then the wa.me links go nowhere real.
+- [x] Use the real number in international format, digits only, with no `+` or spaces.
+- [ ] Re-test the footer, contact, homepage, offers, and Hebrew WhatsApp links after any contact-channel change.
 
 ## 4. Hebrew copy review
 
-- [ ] Read every `/he` page as a native speaker (drafted AI-first under the hebrew-quality protocol). Fix register/word choices directly in the `he` objects in `src/content/*.ts`.
-- [ ] Confirm the Hebrew spelling of the surname in `src/content/proof.ts` (`יאיר בדרמן` is a standard transliteration of Bederman — correct it if you spell it differently).
+- [ ] Read every `/he` page as a native speaker. Fix register and word choices directly in the `he` objects in `src/content/*.ts`.
+- [ ] Confirm the Hebrew spelling of the surname in `src/content/proof.ts` remains correct.
 
-## 5. Structured data upgrade (optional, at flip time)
+## 5. Structured data
 
-- [ ] `src/components/JsonLd.tsx` — the Person node holds verifiable-only facts by design. When flipping the gate, optionally add `sameAs` (LinkedIn profile URL) and real credential properties. Never add them while sample data is on.
+- [ ] Keep `src/components/JsonLd.tsx` limited to verifiable facts. Add `sameAs` or formal credential properties only when their source URLs or records are available.
 
-## 6. Flip + verify
+## 6. Verify before deployment
 
-- [ ] Set `PROOF_IS_SAMPLE_DATA = false` in `src/content/proof.ts`.
-- [ ] `npm run build && npm run lint` (the build fails here if the WhatsApp number is still the placeholder — that's the guard working).
-- [ ] Verify: no "Sample data" badges anywhere; page source has **no** `noindex` meta; `/llms.txt` says the workflow cards are illustrative patterns.
-- [ ] Redeploy, then re-verify the three checks above on the live URL.
+- [ ] Run `npm run lint`, `npm run build`, and `git diff --check`.
+- [ ] Verify founder surfaces contain no sample-data badge or description.
+- [ ] Verify workflow examples still state that they are illustrative patterns, not client case studies or outcome evidence.
+- [ ] Verify page source has no unintended `noindex` meta.
+- [ ] Verify `/llms.txt` preserves the founder/workflow distinction.
+- [ ] Redeploy, then re-check the same items on the live URL.
 
 ## 7. Custom domain (separate, post-launch OK)
 
-- [ ] Buy the domain, attach it to the Vercel project.
-- [ ] Set `NEXT_PUBLIC_SITE_URL=https://<domain>` in Vercel env (or rely on `VERCEL_PROJECT_PRODUCTION_URL`, which auto-upgrades).
-- [ ] Re-verify canonical/OG URLs + sitemap on the new domain.
+- [ ] Buy the domain and attach it to the Vercel project.
+- [ ] Set `NEXT_PUBLIC_SITE_URL=https://<domain>` in Vercel env, or rely on `VERCEL_PROJECT_PRODUCTION_URL`.
+- [ ] Re-verify canonical and Open Graph URLs plus the sitemap on the new domain.

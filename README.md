@@ -10,11 +10,10 @@ a homepage with a founder band and illustrative workflow cards, offer pages (ove
 `/about`, `/contact` (email + WhatsApp), an SEO/AEO/GEO foundation (per-page metadata, hreflang
 pairs, Open Graph, structured data, crawl endpoints), and Vercel Analytics.
 
-> **Before launch:** the founder credentials and career spine are visibly-badged **SAMPLE data**,
-> and the whole site is `noindex` until they're replaced — see
-> [`LAUNCH-CHECKLIST.md`](LAUNCH-CHECKLIST.md). The workflow cards are illustrative patterns,
-> not client case studies. The gate is one flag: `PROOF_IS_SAMPLE_DATA` in
-> [`src/content/proof.ts`](src/content/proof.ts).
+> Founder/about copy uses modest factual positioning. The workflow cards remain visibly labeled
+> illustrative patterns, not client case studies or evidence of outcomes. The
+> `PROOF_IS_SAMPLE_DATA` flag in [`src/content/proof.ts`](src/content/proof.ts) controls only
+> those workflow-example badges.
 
 ## Visual source of truth
 
@@ -68,10 +67,9 @@ accessor; pages are thin composers. Offer detail pages render through one templa
 (`src/components/offers/OfferPageBody.tsx`). The canonical offer list (keys, routes, EN card copy)
 stays in [`src/lib/offers.ts`](src/lib/offers.ts).
 
-[`src/content/proof.ts`](src/content/proof.ts) owns the founder + proof layer and the
-`PROOF_IS_SAMPLE_DATA` launch gate: while `true`, every proof surface shows a "sample data" badge,
-the site is `noindex` (meta + robots), and `/llms.txt` declares the samples — flipping it lifts all
-of that at once.
+[src/content/proof.ts](src/content/proof.ts) owns the founder + proof layer. Founder copy is
+factual and deliberately modest. `PROOF_IS_SAMPLE_DATA` controls the visible badge on illustrative
+workflow examples only; it does not apply to founder positioning or site indexing.
 
 ## SEO / metadata
 
@@ -89,9 +87,9 @@ Public crawl endpoints:
 
 | Endpoint | Source |
 |----------|--------|
-| `/robots.txt` | `src/app/robots.ts` — always allow-all (the sample gate works via meta `noindex`, which crawlers can only read on crawlable pages) |
+| `/robots.txt` | `src/app/robots.ts` — allow-all rules plus the canonical sitemap and host |
 | `/sitemap.xml` | `src/app/sitemap.ts` — all public routes + EN/HE/x-default alternates |
-| `/llms.txt` | `src/app/llms.txt/route.ts` — factual brief for answer engines (sample-gated note) |
+| `/llms.txt` | `src/app/llms.txt/route.ts` — factual brief for answer engines |
 
 ## Stack
 
