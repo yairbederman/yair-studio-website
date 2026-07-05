@@ -9,7 +9,7 @@ const en: OfferPageContent = {
   hero: {
     eyebrow: "Pilot",
     title: "AI Operations Pilot",
-    lead: "A pilot starts with one focused workflow across email, calendar, documents, meetings, clients, or tasks. We define the first working version before building.",
+    lead: "A pilot starts with one focused workflow across email, calendar, documents, meetings, clients, or tasks. We define a first private assistant around that workflow before building anything bigger.",
     ctaLabel: shellContent("en").workflowCta.label,
     ctaHref: shellContent("en").workflowCta.href,
   },
@@ -51,7 +51,7 @@ const en: OfferPageContent = {
       },
       {
         title: "The team needs a working example",
-        desc: "One live workflow is clearer than a long AI strategy deck.",
+        desc: "One live assistant around a real workflow is clearer than a long AI strategy deck.",
       },
     ],
   },
@@ -60,7 +60,7 @@ const en: OfferPageContent = {
     items: [
       {
         title: "One working workflow",
-        desc: "A narrow process that runs in real use.",
+        desc: "A narrow assistant or workflow that runs in real use.",
       },
       {
         title: "Defined inputs and outputs",
@@ -86,13 +86,13 @@ const en: OfferPageContent = {
   },
   example: {
     title: "Pilot shape",
-    intro: "One small workflow, with the approval boundary visible.",
+    intro: "One small AI operations assistant, with the approval boundary visible.",
     map: {
       caption: "AI operations pilot",
       ariaLabel: "AI operations pilot workflow",
       nodes: [
         { label: "Existing tool", sub: "email / calendar / docs" },
-        { label: "AI reads + prepares" },
+        { label: "AI assistant reads + prepares" },
         { label: "Report / bot / table" },
         { label: "Human approval", human: true },
         { label: "Next action tracked", out: true },
@@ -158,7 +158,7 @@ const he: OfferPageContent = {
   hero: {
     eyebrow: "פיילוט",
     title: "פיילוט AI תפעולי",
-    lead: "אם התהליך בשל לפיילוט, מגדירים גרסה עובדת ראשונה וממוקדת סביב מייל, יומן, מסמכים, פגישות, לקוחות או משימות.",
+    lead: "אם התהליך בשל לפיילוט, מגדירים עוזר AI תפעולי פרטי סביב תהליך ממוקד אחד: מייל, יומן, מסמכים, פגישות, לקוחות או משימות.",
     ctaLabel: shellContent("he").workflowCta.label,
     ctaHref: shellContent("he").workflowCta.href,
   },
@@ -200,7 +200,7 @@ const he: OfferPageContent = {
       },
       {
         title: "הצוות צריך לראות משהו עובד",
-        desc: "תהליך עבודה אחד שפועל בפועל ברור יותר ממצגת AI ארוכה.",
+        desc: "עוזר אחד שפועל סביב תהליך אמיתי ברור יותר ממצגת AI ארוכה.",
       },
     ],
   },
@@ -209,7 +209,7 @@ const he: OfferPageContent = {
     items: [
       {
         title: "תהליך עבודה אחד שעובד",
-        desc: "תהליך צר שרץ בשימוש אמיתי.",
+        desc: "עוזר או תהליך צר שרץ בשימוש אמיתי.",
       },
       {
         title: "הגדרת קלטים ופלטים",
@@ -235,13 +235,13 @@ const he: OfferPageContent = {
   },
   example: {
     title: "צורת הפיילוט",
-    intro: "תהליך עבודה קטן אחד, עם גבול אישור גלוי.",
+    intro: "עוזר AI תפעולי קטן אחד, עם גבול אישור גלוי.",
     map: {
       caption: "פיילוט AI תפעולי",
       ariaLabel: "זרימת פיילוט AI תפעולי",
       nodes: [
         { label: "כלי קיים", sub: "מייל / יומן / מסמכים" },
-        { label: "AI קורא ומכין" },
+        { label: "עוזר AI קורא ומכין" },
         { label: "דוח / בוט / טבלה" },
         { label: "אישור אנושי", human: true },
         { label: "הצעד הבא במעקב", out: true },

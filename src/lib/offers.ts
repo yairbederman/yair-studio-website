@@ -54,7 +54,7 @@ export const OFFERS: readonly Offer[] = [
     href: "/offers/ai-ops-pilot",
     cta: "Build a pilot",
     summary:
-      "If the workflow is ready for a pilot, we define a focused first working version across email, calendar, documents, meetings, clients, or tasks.",
+      "If the workflow is ready for a pilot, we define a focused private assistant across email, calendar, documents, meetings, clients, or tasks.",
   },
   {
     key: "follow-up-machine",
@@ -80,7 +80,7 @@ export const OFFERS: readonly Offer[] = [
     serviceName: "Office Command Center",
     cta: "Coming soon",
     summary:
-      "A daily operating view across documents, email, calendar, tasks, and items waiting for the owner.",
+      "A daily operating view across documents, email, calendar, tasks, approvals, and items waiting for the owner.",
     status: "comingSoon",
   },
 ];

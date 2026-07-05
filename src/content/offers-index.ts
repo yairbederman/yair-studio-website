@@ -23,14 +23,14 @@ export type OffersIndexContent = {
 const en: OffersIndexContent = {
   hero: {
     title: "Services",
-    lead: "For owner-led service businesses and professional offices where work moves through email, calendar, documents, meetings, and follow-up. Send one stuck workflow, then choose a focused audit or a narrow pilot.",
+    lead: "For owner-led service businesses and professional offices where work moves through email, calendar, documents, meetings, and follow-up. I use agent-backed delivery to turn one stuck workflow into an audit, a narrow pilot, or a private AI operations assistant.",
     ctaLabel: shellContent("en").workflowCta.label,
     ctaHref: shellContent("en").workflowCta.href,
   },
   start: {
     title: "Where to start",
     intro:
-      "Start with one real process. Map how it works now, separate the audit from the build, and only pilot what is ready.",
+      "Start with one real process. Map how it works now, separate the audit from the build, and only pilot what is ready. The client buys clearer operations; the agent system is the leverage behind the delivery.",
     steps: [
       {
         title: "Diagnose one workflow",
@@ -38,7 +38,7 @@ const en: OffersIndexContent = {
       },
       {
         title: "Build one pilot",
-        desc: "Turn the map into a small working workflow around email, calendar, documents, meetings, clients, or tasks.",
+        desc: "Turn the map into a small working assistant around email, calendar, documents, meetings, clients, or tasks.",
       },
       {
         title: "Keep the operating view visible",
@@ -50,7 +50,7 @@ const en: OffersIndexContent = {
   offers: { title: "Services" },
   cta: {
     heading: "Send the workflow that keeps slipping.",
-    body: "A few lines are enough. We map the current process first, then decide whether you need a focused audit or whether the workflow is ready for a narrow pilot.",
+    body: "A few lines are enough. We map the current process first, then decide whether you need a focused audit, a narrow pilot, or a private assistant around the work.",
     ctaLabel: shellContent("en").workflowCta.label,
     ctaHref: shellContent("en").workflowCta.href,
   },
@@ -59,13 +59,13 @@ const en: OffersIndexContent = {
 const he: OffersIndexContent = {
   hero: {
     title: "שירותים",
-    lead: "לעסקי שירותים שמנוהלים בידי הבעלים ולמשרדים מקצועיים שבהם העבודה עוברת בין מייל, יומן, מסמכים, פגישות ומעקב. שולחים תהליך אחד שנתקע, ואז בוחרים אבחון ממוקד או פיילוט צר.",
+    lead: "לעסקי שירותים ולמשרדים מקצועיים שבהם העבודה עוברת בין מייל, יומן, מסמכים, פגישות ומעקב. אני משתמש בתהליך עבודה מבוסס סוכן כדי להפוך תהליך אחד שנתקע לאבחון, פיילוט צר או עוזר AI תפעולי פרטי.",
     ctaLabel: shellContent("he").workflowCta.label,
     ctaHref: shellContent("he").workflowCta.href,
   },
   start: {
     title: "הדרך הפשוטה להתחיל",
-    intro: "מתחילים מתהליך אמיתי אחד, ממפים איך הוא עובד עכשיו, ומפרידים בין אבחון לבין בנייה. רק תהליך שבשל לכך עובר לפיילוט.",
+    intro: "מתחילים מתהליך אמיתי אחד, ממפים איך הוא עובד עכשיו, ומפרידים בין אבחון לבין בנייה. הלקוח קונה תפעול ברור יותר; מערכת הסוכן היא המנוע מאחורי הביצוע.",
     choices: [
       {
         title: "אם אתם לא בטוחים מה הבעיה",
@@ -110,7 +110,7 @@ const he: OffersIndexContent = {
   offers: { title: "השירותים" },
   cta: {
     heading: "שלחו את התהליך שממשיך ליפול.",
-    body: "מספיקות כמה שורות. קודם נמפה את התהליך הקיים, ואז נחליט אם צריך אבחון ממוקד או שהתהליך בשל לפיילוט צר.",
+    body: "מספיקות כמה שורות. קודם נמפה את התהליך הקיים, ואז נחליט אם צריך אבחון ממוקד, פיילוט צר או עוזר פרטי סביב העבודה.",
     ctaLabel: shellContent("he").workflowCta.label,
     ctaHref: shellContent("he").workflowCta.href,
   },

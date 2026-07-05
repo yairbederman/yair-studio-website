@@ -82,7 +82,7 @@ const en: HomeContent = {
   hero: {
     eyebrow: "AI workflow systems",
     title: "Small AI systems for the real work of the business",
-    lead: "Owner-led service businesses and professional offices often run the day through email, calendar, documents, meetings, and follow-up. I turn one stuck workflow into a clear map or a small AI-assisted system, without replacing every tool or removing human approval.",
+    lead: "I help owner-led service businesses and professional offices turn scattered email, calendar, documents, meetings, and follow-up into a private AI operations assistant. Behind the scenes, I use an agent-backed workflow to map the work, prototype the system, and keep human approval where judgment matters.",
     primaryCta: shellContent("en").workflowCta,
     secondaryCta: { label: "See services", href: "/offers" },
     schematic: {
@@ -99,7 +99,7 @@ const en: HomeContent = {
   problems: {
     title: "Where we can start",
     intro:
-      "We start where work already enters, waits, gets handed off, or disappears. Sometimes the answer is AI. Sometimes it is a clearer workflow, a dashboard, a checklist, or a better approval step.",
+      "We start where work already enters, waits, gets handed off, or disappears. The goal is not a chatbot demo; it is operational relief: clearer inputs, prepared drafts, visible next actions, and approval points where the business still needs a person.",
     cards: [
       {
         title: "Command center",
@@ -162,7 +162,7 @@ const en: HomeContent = {
   offers: {
     title: "What I build",
     intro:
-      "Small operational systems around the places work already happens: morning reports, follow-up, meetings, documents, and daily command centers.",
+      "Private AI operations assistants and small workflow systems around the places work already happens: morning reports, follow-up, meetings, documents, approvals, and daily command centers.",
   },
   evidence: {
     title: "What “mapped” looks like",
@@ -195,7 +195,7 @@ const en: HomeContent = {
   },
   finalCta: {
     title: "Start with one stuck workflow.",
-    body: "Send the workflow that keeps slipping between email, calendar, documents, meetings, and follow-up. We map it first, then decide whether an audit or a narrow pilot makes sense.",
+    body: "Send the workflow that keeps slipping between email, calendar, documents, meetings, and follow-up. I map it first, then decide whether you need an audit, a narrow pilot, or a private assistant around that work.",
     cta: shellContent("en").workflowCta,
     secondaryCta: shellContent("en").whatsappCta,
   },
@@ -212,7 +212,7 @@ const he: HomeContent = {
   hero: {
     eyebrow: "מערכות AI לתפעול יומיומי",
     title: "מערכות AI קטנות לעבודה האמיתית של העסק",
-    lead: "עסקי שירותים שמנוהלים בידי הבעלים ומשרדים מקצועיים מריצים את היום דרך מייל, יומן, מסמכים, פגישות ומעקב. אני הופך תהליך אחד שנתקע למפה ברורה או למערכת קטנה בסיוע AI, בלי להחליף כל כלי ובלי לוותר על אישור אנושי.",
+    lead: "אני עוזר לעסקי שירותים ולמשרדים מקצועיים להפוך מיילים, יומן, מסמכים, פגישות ומעקב למערכת תפעולית קטנה בסיוע AI. מאחורי הקלעים אני משתמש בתהליך עבודה מבוסס סוכן כדי למפות, לבנות אבטיפוס ולשמור אישור אנושי איפה שצריך שיקול דעת.",
     primaryCta: shellContent("he").workflowCta,
     secondaryCta: { label: "לראות פתרונות", href: "/he/offers" },
     schematic: {
@@ -229,7 +229,7 @@ const he: HomeContent = {
   problems: {
     title: "מאיפה אפשר להתחיל",
     intro:
-      "מתחילים במקומות שבהם העבודה כבר נכנסת, מחכה, עוברת הלאה או נעלמת. לפעמים הפתרון הוא AI. לפעמים זו מפה ברורה יותר של התהליך, דשבורד, צ׳קליסט או נקודת אישור טובה יותר.",
+      "מתחילים במקומות שבהם העבודה כבר נכנסת, מחכה, עוברת הלאה או נעלמת. המטרה היא לא דמו של צ׳אטבוט, אלא הקלה תפעולית: קלט ברור, טיוטות מוכנות, צעדים גלויים ונקודות אישור שבהן עדיין צריך אדם.",
     cards: [
       {
         title: "Command Center",
@@ -291,7 +291,7 @@ const he: HomeContent = {
   offers: {
     title: "מה אני בונה",
     intro:
-      "מערכות קטנות סביב המקומות שבהם העבודה כבר קורית: דוח בוקר, follow-up, פגישות, מסמכים ותמונת מצב יומית.",
+      "עוזרי AI תפעוליים פרטיים ומערכות קטנות סביב המקומות שבהם העבודה כבר קורית: דוח בוקר, follow-up, פגישות, מסמכים, אישורים ותמונת מצב יומית.",
   },
   evidence: {
     title: "איך נראה תהליך ממופה",
@@ -324,7 +324,7 @@ const he: HomeContent = {
   },
   finalCta: {
     title: "מתחילים מתהליך אחד שנתקע.",
-    body: "שלחו תהליך שנופל בין מייל, יומן, מסמכים, פגישות ומעקב. קודם נמפה אותו, ואז נחליט אם נכון להתחיל באבחון או בפיילוט צר.",
+    body: "שלחו תהליך שנופל בין מייל, יומן, מסמכים, פגישות ומעקב. קודם נמפה אותו, ואז נחליט אם נכון להתחיל באבחון, בפיילוט צר או בעוזר פרטי סביב העבודה הזו.",
     cta: shellContent("he").workflowCta,
     secondaryCta: shellContent("he").whatsappCta,
   },
