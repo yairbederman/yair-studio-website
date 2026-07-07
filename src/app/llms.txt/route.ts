@@ -22,7 +22,7 @@ export function GET() {
     `> ${SITE_DESCRIPTION}`,
     "",
     "## About",
-    "y[AI]r studio designs and builds AI workflow systems for growing small and medium service businesses. The work is practical business process automation: mapping stuck processes, automating repetitive work, adding dashboard automation and internal AI assistants, and turning scattered tasks into clear next actions, with human-in-the-loop approval at the decision points.",
+    "y[AI]r studio runs a managed AI office assistant for small professional offices (morning briefings, email triage, document workflows, follow-up tracking) and offers a fixed-price AI workflow sprint, a managed LinkedIn content engine, and AI enablement workshops for engineering teams. The work is practical business process automation: mapping stuck processes, automating repetitive work, and turning scattered tasks into clear next actions, with human-in-the-loop approval at the decision points.",
     "",
     "## Services",
     ...SERVICES.map((name) => `- ${name}`),

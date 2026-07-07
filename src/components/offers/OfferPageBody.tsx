@@ -72,9 +72,27 @@ export default function OfferPageBody({
         />
       </OfferSection>
 
+      {c.caseStudy ? (
+        <OfferSection
+          id="case-study"
+          title={c.caseStudy.title}
+          intro={c.caseStudy.intro}
+          badge={c.caseStudy.badge}
+        >
+          <OfferCardGrid items={c.caseStudy.facts} />
+        </OfferSection>
+      ) : null}
+
       <OfferSection id="how" title={c.how.title} intro={c.how.intro}>
         <OfferSteps items={c.how.steps} />
       </OfferSection>
+
+      {c.pricing ? (
+        <OfferSection id="pricing" title={c.pricing.title} intro={c.pricing.intro}>
+          <OfferCardGrid items={c.pricing.items} />
+          {c.pricing.note ? <p className="pricing-note">{c.pricing.note}</p> : null}
+        </OfferSection>
+      ) : null}
 
       <OfferSection id="human" title={c.human.title} intro={c.human.intro}>
         <OfferCardGrid items={c.human.items} variant="human" />

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import OfferHero from "@/components/offers/OfferHero";
 import OfferSection from "@/components/offers/OfferSection";
-import OfferSteps from "@/components/offers/OfferSteps";
 import OfferCardGrid from "@/components/offers/OfferCardGrid";
 import OfferCards from "@/components/offers/OfferCards";
 import OfferCTA from "@/components/offers/OfferCTA";
@@ -24,33 +23,27 @@ export default function OffersIndexPageBody({ locale }: { locale: Locale }) {
       />
 
       <OfferSection id="start" title={c.start.title} intro={c.start.intro}>
-        {c.start.choices ? (
-          <ul className="offers-grid">
-            {c.start.choices.map((choice) => (
-              <li key={choice.title} className="offer-card">
-                <h3 className="card-title">{choice.title}</h3>
-                <p className="card-desc">{choice.desc}</p>
-                <div className="offer-card-foot">
-                  <Link href={choice.cta.href} className="offer-cta">
-                    {choice.cta.label}
-                    <span className="offer-cta-arrow" aria-hidden="true">
-                      &rarr;
-                    </span>
-                  </Link>
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <OfferSteps items={c.start.steps ?? []} />
-        )}
+        <ul className="offers-grid">
+          {c.start.choices.map((choice) => (
+            <li key={choice.title} className="offer-card">
+              <h3 className="card-title">{choice.title}</h3>
+              <p className="card-desc">{choice.desc}</p>
+              <div className="offer-card-foot">
+                <Link href={choice.cta.href} className="offer-cta">
+                  {choice.cta.label}
+                  <span className="offer-cta-arrow" aria-hidden="true">
+                    &rarr;
+                  </span>
+                </Link>
+              </div>
+            </li>
+          ))}
+        </ul>
       </OfferSection>
 
-      {c.fit ? (
-        <OfferSection id="fit" title={c.fit.title} intro={c.fit.intro}>
-          <OfferCardGrid items={c.fit.items} />
-        </OfferSection>
-      ) : null}
+      <OfferSection id="fit" title={c.fit.title} intro={c.fit.intro}>
+        <OfferCardGrid items={c.fit.items} />
+      </OfferSection>
 
       <OfferSection id="offers" title={c.offers.title}>
         <OfferCards locale={locale} />

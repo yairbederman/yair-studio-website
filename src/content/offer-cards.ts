@@ -1,7 +1,6 @@
 import { OFFERS } from "@/lib/offers";
 import { localePaths } from "@/lib/locale-paths";
 import type { Locale } from "@/content/types";
-import type { OfferStatus } from "@/lib/offers";
 
 /**
  * Localized service-card strings, keyed by the stable offer `key` from the
@@ -15,41 +14,35 @@ export type OfferCard = {
   title: string;
   cta: string;
   summary: string;
-  status?: OfferStatus;
 };
 
 type CardStrings = { title: string; cta: string; summary: string };
 
 /** Hebrew card strings per offer key. */
 const HE_CARDS: Record<string, CardStrings> = {
-  "ai-workflow-audit": {
-    title: "אבחון תהליך AI",
-    cta: "לראות את האבחון",
-    summary: "מיפוי תהליך אחד, צווארי בקבוק, מועמדים לאוטומציה ומפת דרכים.",
-  },
-  "ai-ops-pilot": {
-    title: "פיילוט AI תפעולי",
-    cta: "לראות את הפיילוט",
+  "ai-office-assistant": {
+    title: "עוזר AI מנוהל למשרד",
+    cta: "לראות את העוזר",
     summary:
-      "אם התהליך בשל לפיילוט, מגדירים גרסה עובדת ראשונה לתהליך אחד ממוקד: דוח בוקר, follow-up, סיכום פגישות או מסמכים למשימות.",
+      "תדריך בוקר, מיון מיילים, תהליכי מסמכים ומעקב, כשירות מנוהל בסביבה פרטית של המשרד שלכם.",
   },
-  "follow-up-machine": {
-    title: "מכונת Follow-Up",
-    cta: "לראות את Follow-Up",
+  "ai-workflow-sprint": {
+    title: "ספרינט תהליך AI",
+    cta: "לראות את הספרינט",
     summary:
-      "מערכת קטנה שמזהה לידים, הצעות מחיר, לקוחות פתוחים ומשימות שמחכות לתגובה.",
+      "תהליך תקוע אחד ממופה מקצה לקצה, ואז שלוש אוטומציות ממוקדות במחיר קבוע. הדרך המהירה להתחיל.",
   },
-  "meeting-to-tasks": {
-    title: "פגישות למשימות",
-    cta: "בקרוב",
+  "linkedin-content-engine": {
+    title: "מנוע תוכן ללינקדאין",
+    cta: "לראות את המנוע",
     summary:
-      "כל פגישה הופכת לסיכום, החלטות, משימות, בעלי אחריות ודדליין.",
+      "מערך מנוהל שהופך חומר אמיתי שלכם לנוכחות קבועה בלינקדאין, ומפרסם רק אחרי אישור שלכם.",
   },
-  "office-command-center": {
-    title: "Command Center למשרד",
-    cta: "בקרוב",
+  "ai-enablement": {
+    title: "סדנאות הטמעת AI",
+    cta: "לראות את הסדנאות",
     summary:
-      "תמונת מצב יומית של מסמכים, מיילים, יומן, משימות ודברים שמחכים לבעל העסק.",
+      "סדנאות מעשיות שמקנות לצוותי פיתוח ומו״פ שליטה בקידוד בעזרת AI וב-agent workflows, על הקוד שלהם.",
   },
 };
 
@@ -59,7 +52,6 @@ const en: readonly OfferCard[] = OFFERS.map((offer) => ({
   title: offer.title,
   cta: offer.cta,
   summary: offer.summary,
-  status: offer.status,
 }));
 
 const he: readonly OfferCard[] = OFFERS.map((offer) => {
@@ -70,7 +62,6 @@ const he: readonly OfferCard[] = OFFERS.map((offer) => {
   return {
     key: offer.key,
     href: offer.href ? localePaths(offer.href).he : undefined,
-    status: offer.status,
     ...strings,
   };
 });
@@ -80,4 +71,21 @@ const CARDS: Record<Locale, readonly OfferCard[]> = { en, he };
 /** Resolve the localized service cards for a locale. */
 export function offerCards(locale: Locale): readonly OfferCard[] {
   return CARDS[locale];
+}
+
+/**
+ * Resolve one LIVE offer's localized card by key — the single source for any
+ * surface that links an offer outside the card grid (homepage hero, the
+ * /offers decision router). Throws at module init on a missing or href-less
+ * key, so a renamed offer fails the build instead of shipping a dead link.
+ */
+export function offerCard(
+  locale: Locale,
+  key: string,
+): OfferCard & { href: string } {
+  const card = CARDS[locale].find((c) => c.key === key);
+  if (!card?.href) {
+    throw new Error(`offerCard: no live offer "${key}" for locale "${locale}"`);
+  }
+  return { ...card, href: card.href };
 }

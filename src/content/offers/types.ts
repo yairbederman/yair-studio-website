@@ -36,7 +36,30 @@ export type OfferPageContent = {
     intro?: string;
     map: { caption: string; ariaLabel: string; nodes: readonly SpineNode[] };
   };
+  /**
+   * Optional anonymized real-client case study. Every fact must be true and
+   * traceable to a real engagement; the required badge keeps the "anonymized
+   * client" framing visible so it is never confused with the illustrative
+   * "sample data" patterns elsewhere on the site.
+   */
+  caseStudy?: {
+    title: string;
+    intro?: string;
+    /** Visible marker, e.g. "Anonymized client" — required, honesty label. */
+    badge: string;
+    facts: readonly CardItem[];
+  };
   how: { title: string; intro?: string; steps: readonly StepItem[] };
+  /**
+   * Optional engagement-pricing shape (model only — setup fee, retainer,
+   * fixed price). Never carries numbers; amounts stay a conversation.
+   */
+  pricing?: {
+    title: string;
+    intro?: string;
+    items: readonly CardItem[];
+    note?: string;
+  };
   human: { title: string; intro?: string; items: readonly CardItem[] };
   cta: { heading: string; body: string; ctaLabel: string; ctaHref: string };
 };

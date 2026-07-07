@@ -51,12 +51,12 @@ const en: ContactContent = {
         desc: "We focus on one real process and document its steps, owners, inputs, handoffs, and approval points.",
       },
       {
-        title: "Separate the audit from the build",
-        desc: "A workflow map can stand on its own. A pilot is proposed only when the process is ready to build.",
+        title: "Separate the map from the build",
+        desc: "A workflow map can stand on its own. Building is proposed only when the process is ready for it.",
       },
       {
         title: "Choose the next useful step",
-        desc: "You get a clear recommendation: stop with the map, run a focused audit, or scope a narrow pilot.",
+        desc: "You get a clear recommendation: stop with the map, run a fixed-price sprint, or start a managed-assistant setup.",
       },
     ],
   },
@@ -113,7 +113,7 @@ const en: ContactContent = {
   },
   cta: {
     heading: "One stuck workflow is enough to start.",
-    body: "Describe where the work begins, which tools it crosses, and where it waits or falls through. You write directly to the person who maps the process and, when appropriate, builds the pilot.",
+    body: "Describe where the work begins, which tools it crosses, and where it waits or falls through. You write directly to the person who maps the process and builds the system.",
     ctaLabel: workflowCtaEn.label,
     ctaHref: CONTACT_MAILTO,
     secondaryCta: whatsappCtaEn,
@@ -144,12 +144,12 @@ const he: ContactContent = {
         desc: "מתמקדים בתהליך אמיתי אחד ומתעדים את השלבים, האחראים, הקלט, ההעברות ונקודות האישור.",
       },
       {
-        title: "מפרידים בין אבחון לבנייה",
-        desc: "מפת תהליך יכולה לעמוד בפני עצמה. פיילוט מוצע רק כשהתהליך בשל לבנייה.",
+        title: "מפרידים בין המפה לבנייה",
+        desc: "מפת תהליך יכולה לעמוד בפני עצמה. בנייה מוצעת רק כשהתהליך בשל לזה.",
       },
       {
         title: "בוחרים את הצעד השימושי הבא",
-        desc: "מקבלים המלצה ברורה: לעצור עם המפה, לבצע אבחון ממוקד, או להגדיר פיילוט צר.",
+        desc: "מקבלים המלצה ברורה: לעצור עם המפה, לרוץ ספרינט במחיר קבוע, או להתחיל הקמה של העוזר המנוהל.",
       },
     ],
   },
@@ -208,7 +208,7 @@ const he: ContactContent = {
   },
   cta: {
     heading: "תהליך אחד שנתקע מספיק כדי להתחיל.",
-    body: "ספרו איפה העבודה מתחילה, בין אילו כלים היא עוברת ואיפה היא מחכה או נופלת. אתם כותבים ישירות לאדם שממפה את התהליך, ואם נכון, גם בונה את הפיילוט.",
+    body: "ספרו איפה העבודה מתחילה, בין אילו כלים היא עוברת ואיפה היא מחכה או נופלת. אתם כותבים ישירות לאדם שממפה את התהליך ובונה את המערכת.",
     ctaLabel: workflowCtaHe.label,
     ctaHref: CONTACT_MAILTO,
     secondaryCta: whatsappCtaHe,

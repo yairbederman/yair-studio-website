@@ -47,16 +47,20 @@ links in both directions. `/contact` offers email (primary) and WhatsApp.
 
 | Path (EN) | Hebrew mirror | Notes |
 |------|------|-------|
-| `/` | `/he` | Home — hero, problems, method, founder band, evidence, proof cards, offers, final CTA |
+| `/` | `/he` | Home — flagship-led hero, problems, offers, method, safety, founder band, evidence, proof cards, final CTA (both locales share one composition) |
 | `/workflows` | `/he/workflows` | Approach + worked example (workflow-map artifact + film) |
-| `/offers` | `/he/offers` | Offers overview |
-| `/offers/ai-workflow-audit` | `/he/offers/ai-workflow-audit` | Offer (entry / first step) — film + map artifact |
-| `/offers/internal-ai-systems` | `/he/offers/internal-ai-systems` | Offer |
-| `/offers/dashboards-automation` | `/he/offers/dashboards-automation` | Offer |
-| `/offers/content-ad-operations` | `/he/offers/content-ad-operations` | Offer |
+| `/offers` | `/he/offers` | Services overview — decision router + who-it-fits + the 4 service cards |
+| `/offers/ai-office-assistant` | `/he/offers/ai-office-assistant` | Flagship offer — managed service (setup + retainer), pricing-model band |
+| `/offers/ai-workflow-sprint` | `/he/offers/ai-workflow-sprint` | Entry offer — fixed price, map + three automations |
+| `/offers/linkedin-content-engine` | `/he/offers/linkedin-content-engine` | Managed content pipeline |
+| `/offers/ai-enablement` | `/he/offers/ai-enablement` | Workshops for R&D / engineering teams |
 | `/about` | `/he/about` | Founder profile, illustrative workflow patterns, principles |
 | `/contact` | `/he/contact` | Email (primary) + WhatsApp + copy-email affordance |
 | `/opengraph-image` | — | Generated 1200×630 branded OG image (`next/og`) |
+
+Six retired offer routes (`ai-workflow-audit`, `ai-ops-pilot`, `follow-up-machine`,
+`internal-ai-systems`, `dashboards-automation`, `content-ad-operations`) 308-redirect to their
+successors in both locales — see `next.config.ts`.
 
 ## Content model
 

@@ -242,18 +242,18 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
    mono. */
 [lang="he"] :is(p, .lead, .eyebrow, .label-mono, .section-index, .mono, .btn,
   .nav-links a, .footer-r a, .footer-tag, .panel-list li, .sch-cap, .sch-label, .sch-sub,
-  .proof-row dt, .sample-badge),
+  .proof-row dt, .sample-badge, .case-badge),
 [dir="rtl"] :is(p, .lead, .eyebrow, .label-mono, .section-index, .mono, .btn,
   .nav-links a, .footer-r a, .footer-tag, .panel-list li, .sch-cap, .sch-label, .sch-sub,
-  .proof-row dt, .sample-badge) {
+  .proof-row dt, .sample-badge, .case-badge) {
   font-family: var(--font-body-he);
 }
 
 /* Hebrew is never letter-spaced: the mono-voice labels keep their tracking in
    EN only. (Geist Mono has no Hebrew glyphs — the rule above re-asserts the
    Hebrew family; this drops the leftover tracking.) */
-[lang="he"] :is(.proof-row dt, .sample-badge, .founder-role),
-[dir="rtl"] :is(.proof-row dt, .sample-badge, .founder-role) {
+[lang="he"] :is(.proof-row dt, .sample-badge, .case-badge, .founder-role),
+[dir="rtl"] :is(.proof-row dt, .sample-badge, .case-badge, .founder-role) {
   letter-spacing: 0;
 }
 
@@ -568,7 +568,9 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   margin-top: var(--s-2);
 }
 
-/* Hero schematic — decorative process spine (aria-hidden, hidden on mobile). */
+/* Hero schematic — decorative process spine (aria-hidden). Renders on every
+   viewport: on mobile it stacks compactly below the hero CTAs, so the brand's
+   most distinctive element is not desktop-only. */
 .hero-schematic { display: flex; flex-direction: column; gap: var(--s-5); }
 .sch-cap {
   font-family: var(--font-mono);
@@ -682,6 +684,10 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 .problems-list .problem-term { color: var(--fg-1); font-weight: 600; }
 /* ---------- Method ---------- */
 .method { scroll-margin-top: var(--s-9); }
+
+/* Offer-page sections are in-page anchor targets (hero secondary CTAs like
+   "#pricing"); keep the sticky header clear of the landed heading. */
+.section[id] { scroll-margin-top: var(--s-9); }
 .method-list {
   list-style: none;
   margin: 0;
@@ -823,7 +829,8 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   .section-head { margin-bottom: var(--s-6); }
   .hero { padding-block: var(--s-8) var(--s-7); }
   .hero-inner { grid-template-columns: 1fr; gap: var(--s-7); }
-  .hero-schematic { display: none; }
+  /* Compact spine below the CTAs — never hidden (the motif IS the brand). */
+  .hero-schematic { gap: var(--s-4); }
   .hero h1 { font-size: var(--fs-3xl); }
   .method-list,
   .offers-grid { grid-template-columns: 1fr; }
@@ -1104,7 +1111,8 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 
 /* Sample-data badge — visible while PROOF_IS_SAMPLE_DATA is true. Deliberately
    loud (warn token, mono, uppercase): sample claims must read as samples. */
-.sample-badge {
+.sample-badge,
+.case-badge {
   display: inline-flex;
   align-items: center;
   font-family: var(--font-mono);
@@ -1115,6 +1123,28 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   border: 1px solid currentColor;
   border-radius: var(--r-sm);
   padding: 2px var(--s-2);
+}
+
+/* Anonymized-real-client marker (offer case-study sections). Shares the
+   .sample-badge chip shape (see the grouped rule on .sample-badge) but in
+   copper, not the --warn sample token: a real engagement is signal, not a
+   caution — the two badges must never read as the same thing. Rendered as a
+   block under the section h2 (never inside it — the heading's accessible
+   name stays the title alone). */
+.case-badge {
+  color: var(--accent);
+  border-color: var(--accent-rule);
+  font-weight: 400;
+  margin-block-start: var(--s-3);
+  align-self: start;
+}
+
+/* Engagement-model footnote under the pricing card grid (no numbers). */
+.pricing-note {
+  margin-block-start: var(--s-5);
+  color: var(--fg-3);
+  font-size: var(--fs-sm);
+  max-width: 65ch;
 }
 
 @media (max-width: 767px) {

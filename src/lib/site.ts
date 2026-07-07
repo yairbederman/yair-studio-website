@@ -41,7 +41,7 @@ export const SITE_URL = resolveSiteUrl();
 export const SITE_NAME = "y[AI]r studio";
 export const SITE_ALT_NAME = "Yair Studio";
 export const SITE_DESCRIPTION =
-  "Practical AI workflow systems for owner-led service businesses and professional offices where work moves through email, calendar, documents, meetings, and follow-up, with human approval at the decision points.";
+  "A managed AI office assistant for small professional offices, plus fixed-price AI workflow sprints, a LinkedIn content engine, and AI enablement workshops, with human approval at the decision points.";
 
 /**
  * Public contact channel (personal Gmail, confirmed for public use). Single
@@ -92,7 +92,7 @@ export const SERVICES: readonly string[] = OFFERS.map((o) => o.serviceName);
 type Locale = "en_US" | "he_IL";
 
 type PageDef = {
-  /** Route path, e.g. "/" or "/he/offers/internal-ai-systems". The locale and
+  /** Route path, e.g. "/" or "/he/offers/ai-office-assistant". The locale and
       the hreflang pair are DERIVED from the path prefix (see localePaths). */
   path: string;
   /** String title — the root layout template ("%s · y[AI]r studio") applies. */
@@ -129,43 +129,31 @@ const EN_PAGES: PageDef[] = [
     path: "/offers",
     title: "Offers",
     description:
-      "Services for owner-led service businesses and professional offices: map one stuck workflow, run a focused audit, or build a narrow AI operations pilot around email, calendar, documents, meetings, and follow-up.",
+      "Four services from y[AI]r studio: a managed AI office assistant, a fixed-price AI workflow sprint, a LinkedIn content engine, and AI enablement workshops for engineering teams, all with human approval on the decisions that matter.",
   },
   {
-    path: "/offers/ai-workflow-audit",
-    title: "AI Workflow Audit",
+    path: "/offers/ai-office-assistant",
+    title: "Managed AI Office Assistant",
     description:
-      "An AI workflow audit from y[AI]r studio: a focused review of one business process that maps owners, inputs and outputs, bottlenecks, automation candidates, and what should stay human before anything is built.",
+      "A managed AI office assistant from y[AI]r studio: morning briefings, email triage, document workflows, and follow-up tracking, running in the office's own private environment with human approval on everything that matters. Setup plus monthly retainer.",
   },
   {
-    path: "/offers/ai-ops-pilot",
-    title: "AI Operations Pilot",
+    path: "/offers/ai-workflow-sprint",
+    title: "AI Workflow Sprint",
     description:
-      "An AI operations pilot from y[AI]r studio: one practical AI workflow built around email, calendar, documents, meetings, clients, or tasks, with clear human approval boundaries.",
+      "An AI workflow sprint from y[AI]r studio: one business process mapped end to end, sorted into automatic, AI-assisted, and human work, and three focused automations built at a fixed price.",
   },
   {
-    path: "/offers/follow-up-machine",
-    title: "Follow-Up Machine",
+    path: "/offers/linkedin-content-engine",
+    title: "LinkedIn Content Engine",
     description:
-      "A Follow-Up Machine from y[AI]r studio: a small AI-assisted workflow that tracks leads, quotes, waiting clients, and open tasks with human approval before external messages or sensitive changes.",
+      "A managed LinkedIn content engine from y[AI]r studio: drafts written in the client's voice from their real material, held in one review queue, and published only after human approval.",
   },
   {
-    path: "/offers/internal-ai-systems",
-    title: "Internal AI Systems",
+    path: "/offers/ai-enablement",
+    title: "AI Enablement Workshops",
     description:
-      "Internal AI systems from y[AI]r studio: practical assistants and workflow layers for meetings, tasks, email, knowledge search, reporting, and follow-up.",
-  },
-  {
-    path: "/offers/dashboards-automation",
-    title: "Dashboards & Automation",
-    description:
-      "A dashboard and automation layer from y[AI]r studio: connected to existing tools so teams can see what needs attention and trigger the right next action.",
-  },
-  {
-    path: "/offers/content-ad-operations",
-    title: "Content & Ad Operations",
-    description:
-      "A content and ad operations system from y[AI]r studio: turning raw ideas, calls, assets, and performance data into structured content or ad experiments.",
+      "AI enablement workshops from y[AI]r studio: hands-on sessions that teach R&D and engineering teams AI-assisted coding and agent workflows on their own codebase, with a playbook that stays.",
   },
   {
     path: "/about",
@@ -177,7 +165,7 @@ const EN_PAGES: PageDef[] = [
     path: "/contact",
     title: "Contact",
     description:
-      "Send y[AI]r studio one stuck workflow from an owner-led service business or professional office, then decide whether a focused audit or narrow pilot comes next.",
+      "Send y[AI]r studio one stuck workflow from your office or team, then pick the starting point that fits: a fixed-price sprint or the managed office assistant.",
   },
 ];
 
@@ -191,9 +179,9 @@ const EN_PAGES: PageDef[] = [
 const HE_PAGE_STRINGS: Record<string, { title: string; description: string }> =
   {
     "/": {
-      title: "מערכות AI קטנות לעבודה האמיתית של העסק",
+      title: "עוזר AI מנוהל לעבודה האמיתית של המשרד",
       description:
-        "y[AI]r studio בעברית: מערכות AI קטנות לעסקי שירותים שמנוהלים בידי הבעלים ולמשרדים מקצועיים, סביב מייל, יומן, מסמכים, פגישות ומעקב, עם אישור אנושי בנקודות ההחלטה.",
+        "y[AI]r studio בעברית: עוזר AI מנוהל למשרדים מקצועיים קטנים, ספרינט תהליך במחיר קבוע, מנוע תוכן ללינקדאין וסדנאות הטמעת AI, עם אישור אנושי בנקודות ההחלטה.",
     },
     "/workflows": {
       title: "תהליכי עבודה",
@@ -203,37 +191,27 @@ const HE_PAGE_STRINGS: Record<string, { title: string; description: string }> =
     "/offers": {
       title: "שירותים",
       description:
-        "שירותים לעסקי שירותים שמנוהלים בידי הבעלים ולמשרדים מקצועיים: מיפוי תהליך שנתקע, אבחון ממוקד או פיילוט AI תפעולי צר סביב מייל, יומן, מסמכים, פגישות ומעקב.",
+        "ארבעה שירותים מבית y[AI]r studio: עוזר AI מנוהל למשרד, ספרינט תהליך במחיר קבוע, מנוע תוכן ללינקדאין וסדנאות הטמעת AI לצוותי פיתוח, עם אישור אנושי על ההחלטות שחשובות.",
     },
-    "/offers/ai-workflow-audit": {
-      title: "אבחון תהליך AI",
+    "/offers/ai-office-assistant": {
+      title: "עוזר AI מנוהל למשרד",
       description:
-        "אבחון תהליך AI של y[AI]r studio: סקירה ממוקדת של תהליך עסקי אחד שממפה איך העבודה זזה, איפה היא נתקעת, מה אפשר לאוטומט ומה חייב להישאר אנושי.",
+        "עוזר AI מנוהל למשרד מבית y[AI]r studio: תדריך בוקר, מיון מיילים, תהליכי מסמכים ומעקב, בסביבה פרטית של המשרד ועם אישור אנושי על כל מה שחשוב. הקמה ועלות חודשית.",
     },
-    "/offers/ai-ops-pilot": {
-      title: "פיילוט AI תפעולי",
+    "/offers/ai-workflow-sprint": {
+      title: "ספרינט תהליך AI",
       description:
-        "פיילוט AI תפעולי של y[AI]r studio: workflow אחד קטן שעובד סביב מיילים, יומן, מסמכים, פגישות, לקוחות או משימות, עם גבולות אישור אנושי ברורים.",
+        "ספרינט תהליך AI של y[AI]r studio: תהליך עסקי אחד ממופה מקצה לקצה, ממוין לאוטומטי, בעזרת AI ואנושי, ושלוש אוטומציות ממוקדות נבנות במחיר קבוע.",
     },
-    "/offers/follow-up-machine": {
-      title: "מכונת Follow-Up",
+    "/offers/linkedin-content-engine": {
+      title: "מנוע תוכן ללינקדאין",
       description:
-        "מכונת Follow-Up של y[AI]r studio: מערכת קטנה שמזהה לידים, הצעות מחיר, לקוחות פתוחים ומשימות שמחכות לתגובה, עם אישור אנושי לפני הודעות חיצוניות או שינוי רגיש.",
+        "מנוע תוכן מנוהל ללינקדאין מבית y[AI]r studio: טיוטות בקול של הלקוח מתוך חומר אמיתי שלו, בתור אישורים אחד, ומתפרסמות רק אחרי אישור אנושי.",
     },
-    "/offers/internal-ai-systems": {
-      title: "מערכות AI פנימיות",
+    "/offers/ai-enablement": {
+      title: "סדנאות הטמעת AI",
       description:
-        "מערכות AI פנימיות של y[AI]r studio: עוזרים פרקטיים ושכבות תהליך לפגישות, משימות, מייל, חיפוש ידע, דוחות ומעקב.",
-    },
-    "/offers/dashboards-automation": {
-      title: "דשבורדים ואוטומציה",
-      description:
-        "שכבת דשבורדים ואוטומציה של y[AI]r studio: מחוברת לכלים הקיימים, כדי שהצוות יראה מה דורש טיפול ויפעיל את הצעד הנכון הבא.",
-    },
-    "/offers/content-ad-operations": {
-      title: "תפעול תוכן וקמפיינים",
-      description:
-        "מערכת תפעול תוכן וקמפיינים של y[AI]r studio: הופכת רעיונות גולמיים, שיחות, חומרים ונתוני ביצועים לתוכן מובנה או לניסויי קמפיינים.",
+        "סדנאות הטמעת AI של y[AI]r studio: מפגשים מעשיים שמלמדים צוותי פיתוח ומו״פ קידוד בעזרת AI ו-agent workflows על הקוד שלהם, עם פלייבוק שנשאר אצל הצוות.",
     },
     "/about": {
       title: "אודות",
@@ -243,7 +221,7 @@ const HE_PAGE_STRINGS: Record<string, { title: string; description: string }> =
     "/contact": {
       title: "צור קשר",
       description:
-        "שולחים ל־y[AI]r studio תהליך אחד שנתקע בעסק שירותים או במשרד מקצועי, ואז מחליטים אם הצעד הבא הוא אבחון ממוקד או פיילוט צר.",
+        "שולחים ל־y[AI]r studio תהליך אחד שנתקע במשרד או בצוות, ואז בוחרים את נקודת ההתחלה שמתאימה: ספרינט במחיר קבוע או העוזר המנוהל.",
     },
   };
 

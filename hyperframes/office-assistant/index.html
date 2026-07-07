@@ -1,0 +1,451 @@
+<!doctype html>
+<html
+  lang="en"
+  data-resolution="landscape"
+  data-composition-variables='[{"id":"lang","type":"string","label":"Locale (en | he)","default":"en"}]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"
+      integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      /* ============================================================
+         "Office Assistant" flagship film — HyperFrames composition.
+         One office day: overnight inputs → four work streams (briefing,
+         triage, documents, follow-up), each pausing at ONE copper
+         human-approval gate, settling into a decided day.
+         One composition, two locales (`lang` variable; HE mirrors RTL).
+         Palette + type mirror src/app/globals.css. Renders transparent
+         (alpha MOV master → VP9-alpha WebM + charcoal MP4; see REVIEW.md).
+         ============================================================ */
+      @font-face { font-family: "Inter"; font-weight: 600; font-display: block; src: url("assets/fonts/inter-600.woff2") format("woff2"); }
+      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+      :root {
+        --bg-0: #121211; --bg-1: #1a1a18; --bg-2: #242420;
+        --fg-1: #f4f1ea; --fg-2: #b9b3aa; --fg-3: #8a847a;
+        --accent: #d96832;
+        --accent-soft: rgba(217, 104, 50, 0.12); --accent-rule: rgba(217, 104, 50, 0.3);
+        --rule: #2a2a26; --rule-strong: #3a3a34;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden; background: transparent;
+        font-family: "Inter", system-ui, sans-serif; /* HE swaps to Assistant at init */
+        color: var(--fg-1);
+        -webkit-font-smoothing: antialiased;
+      }
+      #stage { position: relative; width: 1920px; height: 1080px; }
+      #camera { position: absolute; inset: 0; transform-origin: 960px 540px; will-change: transform; }
+
+      /* ---------- Act labels (7 stacked text moments — the ONLY text) ---------- */
+      /* Mobile rule: the frame renders ~330px wide on phones (scale ~0.17), so
+         act labels are 84px (~14px effective), approval 64px, closing 96px. */
+      .act-label {
+        position: absolute; left: 0; top: 118px; width: 1920px; text-align: center;
+        font-size: 84px; font-weight: 600; letter-spacing: -0.015em;
+        color: var(--fg-1); opacity: 0; will-change: transform, opacity;
+      }
+      #lbl-approval {
+        position: absolute; left: 0; top: 716px; width: 1920px; text-align: center;
+        font-size: 64px; font-weight: 600; letter-spacing: -0.01em;
+        color: var(--accent); opacity: 0;
+      }
+      #lbl-closing {
+        position: absolute; left: 0; top: 108px; width: 1920px; text-align: center;
+        font-size: 96px; font-weight: 600; letter-spacing: -0.02em;
+        color: var(--fg-1); opacity: 0;
+      }
+
+      /* ---------- Rail (SVG, path set at init — mirrored for HE) ---------- */
+      #rails { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+      .rail-base { fill: none; stroke: #4a4842; stroke-width: 2.5; stroke-dasharray: 1; stroke-dashoffset: 1; }
+
+      /* ---------- Origin: overnight input glyphs (shape, not text) ---------- */
+      .glyph { position: absolute; opacity: 0; will-change: transform, opacity; }
+      .glyph svg { display: block; }
+      .glyph path, .glyph rect, .glyph line, .glyph polyline {
+        fill: none; stroke: var(--fg-2); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;
+      }
+
+      /* ---------- Chips (the four streams; schematic contents) ---------- */
+      .chip {
+        position: absolute; width: 200px; height: 114px; border-radius: 12px;
+        background: var(--bg-2); border: 1.5px solid #45433c;
+        opacity: 0; will-change: transform, opacity;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .chip svg { display: block; }
+      /* chip 1 — briefing: three hairlines + a copper tick (assembled brief) */
+      #chip1 .inner { width: 132px; }
+      #chip1 .hl { height: 8px; border-radius: 4px; background: #55524a; margin: 12px 0; }
+      #chip1 .hl:nth-child(2) { width: 78%; }
+      #chip1 .tick path { fill: none; stroke: var(--accent); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+      /* chip 2 — triage: envelope glyph */
+      #chip2 polyline, #chip2 rect { fill: none; stroke: var(--fg-2); stroke-width: 3; stroke-linejoin: round; }
+      /* chip 3 — documents: progress bar (stalls, is surfaced, completes) */
+      #chip3 .track { width: 132px; height: 14px; border-radius: 7px; background: var(--bg-1); border: 1.5px solid #55524a; overflow: hidden; }
+      #chip3 .fill { width: 0%; height: 100%; border-radius: 7px; background: var(--accent); opacity: 0.9; }
+      /* chip 4 — follow-up: an open loop that closes (copper draws the circle) */
+      #chip4 .arc-base { fill: none; stroke: var(--fg-3); stroke-width: 3; }
+      #chip4 .arc-draw { fill: none; stroke: var(--accent); stroke-width: 3.5; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+
+      /* mini envelopes (act 2 sources; middle one lifts as urgent) */
+      .mini-env { position: absolute; opacity: 0; will-change: transform, opacity; }
+      .mini-env rect, .mini-env polyline { fill: none; stroke: var(--fg-2); stroke-width: 3; stroke-linejoin: round; }
+
+      /* ---------- Gate: the ONE human-approval checkpoint ---------- */
+      #gate-node {
+        position: absolute; width: 30px; height: 30px; border-radius: 50%;
+        background: var(--bg-0); border: 3px solid #55524a;
+        box-shadow: 0 0 0 8px var(--bg-0); /* knock the rail out behind the node */
+        opacity: 0; will-change: transform;
+      }
+      #gate-pulse, #gate-bloom {
+        position: absolute; width: 76px; height: 76px; border-radius: 50%;
+        border: 2.5px solid var(--accent); opacity: 0; will-change: transform, opacity;
+      }
+      #gate-check { position: absolute; width: 48px; height: 48px; opacity: 0; }
+      #gate-check path {
+        fill: none; stroke: var(--fg-1); stroke-width: 4.5; stroke-linecap: round;
+        stroke-linejoin: round; stroke-dasharray: 44; stroke-dashoffset: 44;
+      }
+
+      /* ---------- Day panel: four abstract rows accumulate ---------- */
+      #panel {
+        position: absolute; width: 500px; height: 470px; top: 370px;
+        border: 1.5px solid #45433c; border-radius: 16px;
+        background: rgba(36, 36, 32, 0.5);
+        opacity: 0; will-change: transform, opacity;
+      }
+      .row {
+        position: absolute; width: 400px; height: 84px;
+        display: flex; align-items: center; gap: 22px; padding: 0 24px;
+        border: 1.5px solid #45433c; border-radius: 10px; background: var(--bg-2);
+        opacity: 0; will-change: transform, opacity;
+      }
+      .row .st { width: 30px; height: 30px; border-radius: 6px; border: 2.5px solid #55524a; flex: 0 0 auto; background: transparent; }
+      .row .bar { height: 11px; border-radius: 5px; background: #45433c; flex: 1 1 auto; }
+      .row .own { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); opacity: 0.8; flex: 0 0 auto; }
+    </style>
+  </head>
+
+  <body>
+    <div id="stage" data-composition-id="root" data-start="0" data-duration="18" data-width="1920" data-height="1080">
+      <div id="camera" data-layout-allow-overflow>
+        <!-- Rail -->
+        <svg id="rails" viewBox="0 0 1920 1080">
+          <path class="rail-base" id="rail" pathLength="1" d="" />
+        </svg>
+
+        <!-- Origin: overnight input glyphs (mail / calendar / document) -->
+        <div class="glyph" id="g-mail">
+          <svg width="80" height="60" viewBox="0 0 80 60">
+            <rect x="4" y="5" width="72" height="50" rx="6" />
+            <polyline points="7,9 40,36 73,9" />
+          </svg>
+        </div>
+        <div class="glyph" id="g-cal">
+          <svg width="70" height="70" viewBox="0 0 70 70">
+            <rect x="4" y="10" width="62" height="55" rx="6" />
+            <line x1="4" y1="28" x2="66" y2="28" />
+            <line x1="21" y1="4" x2="21" y2="17" />
+            <line x1="49" y1="4" x2="49" y2="17" />
+          </svg>
+        </div>
+        <div class="glyph" id="g-doc">
+          <svg width="58" height="70" viewBox="0 0 58 70">
+            <path d="M5 5 h32 l16 16 v44 h-48 z" />
+            <polyline points="37,5 37,21 53,21" />
+            <line x1="15" y1="38" x2="43" y2="38" />
+            <line x1="15" y1="50" x2="35" y2="50" />
+          </svg>
+        </div>
+
+        <!-- Mini envelopes (act 2 — the middle one is the urgent one) -->
+        <div class="mini-env" id="env0">
+          <svg width="56" height="40" viewBox="0 0 56 40"><rect x="3" y="3" width="50" height="34" rx="5" /><polyline points="5,7 28,25 51,7" /></svg>
+        </div>
+        <div class="mini-env" id="env1">
+          <svg width="56" height="40" viewBox="0 0 56 40"><rect x="3" y="3" width="50" height="34" rx="5" /><polyline points="5,7 28,25 51,7" /></svg>
+        </div>
+        <div class="mini-env" id="env2">
+          <svg width="56" height="40" viewBox="0 0 56 40"><rect x="3" y="3" width="50" height="34" rx="5" /><polyline points="5,7 28,25 51,7" /></svg>
+        </div>
+
+        <!-- The four stream chips -->
+        <div class="chip" id="chip1">
+          <div class="inner">
+            <div class="hl"></div>
+            <div class="hl"></div>
+            <svg class="tick" width="26" height="22" viewBox="0 0 26 22"><path d="M3 12 l7 7 l13 -15" /></svg>
+          </div>
+        </div>
+        <div class="chip" id="chip2">
+          <svg width="84" height="62" viewBox="0 0 84 62"><rect x="4" y="5" width="76" height="52" rx="7" /><polyline points="7,9 42,38 77,9" /></svg>
+        </div>
+        <div class="chip" id="chip3"><div class="track"><div class="fill"></div></div></div>
+        <div class="chip" id="chip4">
+          <svg width="64" height="64" viewBox="0 0 64 64">
+            <circle class="arc-base" cx="32" cy="32" r="24" pathLength="1" stroke-dasharray="0.75 0.25" />
+            <circle class="arc-draw" cx="32" cy="32" r="24" pathLength="1" transform="rotate(-90 32 32)" />
+          </svg>
+        </div>
+
+        <!-- Gate: the one human-approval checkpoint -->
+        <div id="gate-pulse"></div>
+        <div id="gate-bloom"></div>
+        <div id="gate-node"></div>
+        <svg id="gate-check" viewBox="0 0 44 44"><path d="M11 23 l8 8 l15 -18" /></svg>
+
+        <!-- Day panel + four rows -->
+        <div id="panel"></div>
+        <div class="row" id="row1"><span class="st"></span><span class="bar"></span><span class="own"></span></div>
+        <div class="row" id="row2"><span class="st"></span><span class="bar"></span><span class="own"></span></div>
+        <div class="row" id="row3"><span class="st"></span><span class="bar"></span><span class="own"></span></div>
+        <div class="row" id="row4"><span class="st"></span><span class="bar"></span><span class="own"></span></div>
+
+        <!-- Text moments (populated from COPY at init) -->
+        <div class="act-label" id="lbl-overnight"></div>
+        <div class="act-label" id="lbl-briefing"></div>
+        <div class="act-label" id="lbl-triage"></div>
+        <div class="act-label" id="lbl-docs"></div>
+        <div class="act-label" id="lbl-followup"></div>
+        <div id="lbl-approval"></div>
+        <div id="lbl-closing"></div>
+      </div>
+    </div>
+
+    <script>
+      /* ============================================================
+         Deterministic 18s timeline. No random / Date / setTimeout /
+         async / timeline callbacks (label text is set once at init).
+         The `lang` variable picks copy + mirrors the layout for HE.
+         ============================================================ */
+
+      // ---- Locale (three-source rule: every string traces to
+      //      src/content/offers/ai-office-assistant.ts) ----
+      const vars = (window.__hyperframes && window.__hyperframes.getVariables)
+        ? window.__hyperframes.getVariables() : {};
+      const lang = vars.lang === "he" ? "he" : "en";
+      const COPY = {
+        en: {
+          overnight: "Overnight inputs",            // example.map.nodes[0]
+          briefing: "Morning briefing",             // build.items[0]
+          triage: "Email triage",                   // build.items[1]
+          docs: "Document workflows",               // build.items[2]
+          followup: "Follow-up and meetings",       // build.items[3]
+          approval: "Human approval",               // example.map.nodes[4]
+          closing: "The day starts decided",        // example.map.nodes[5]
+        },
+        he: {
+          overnight: "קלט שנצבר בלילה",
+          briefing: "תדריך בוקר",
+          triage: "מיון מיילים",
+          docs: "תהליכי מסמכים",
+          followup: "מעקב ופגישות",
+          approval: "אישור אנושי",
+          closing: "היום מתחיל מוכרע",
+        },
+      }[lang];
+
+      document.documentElement.lang = lang;
+      // Do NOT set dir="rtl" on <html> — it blanks the hyperframes RENDER
+      // pipeline (every captured frame comes out empty; snapshots tolerate
+      // it). The layout is mirrored positionally via X(), so only the flex
+      // rows and the text elements need an explicit direction.
+      if (lang === "he") {
+        document.body.style.fontFamily = '"Assistant", system-ui, sans-serif';
+        document.querySelectorAll("#stage .row").forEach((r) => { r.dir = "rtl"; });
+        document.querySelectorAll("#stage .act-label, #lbl-approval, #lbl-closing")
+          .forEach((el) => { el.dir = "rtl"; });
+      }
+
+      const setText = (id, t) => { document.getElementById(id).textContent = t; };
+      setText("lbl-overnight", COPY.overnight);
+      setText("lbl-briefing", COPY.briefing);
+      setText("lbl-triage", COPY.triage);
+      setText("lbl-docs", COPY.docs);
+      setText("lbl-followup", COPY.followup);
+      setText("lbl-approval", COPY.approval);
+      setText("lbl-closing", COPY.closing);
+
+      // ---- Geometry (EN coordinates; HE mirrors x → 1920 − x) ----
+      const X = lang === "he" ? (x) => 1920 - x : (x) => x;
+      const RAIL_Y = 590;
+      const ORIGIN = X(300);            // chip origin (center)
+      const GATE = X(960);              // human-approval gate (mirror-invariant)
+      const MID = X(660);               // where the document chip stalls
+      const DOCK = X(1340);             // where chips hand off to the panel
+      const PANEL_LEFT = lang === "he" ? 110 : 1310; // panel: x 1310–1810 (EN)
+
+      const place = (id, cx, cy, w, h) => {
+        const el = document.getElementById(id);
+        el.style.left = cx - w / 2 + "px";
+        el.style.top = cy - h / 2 + "px";
+      };
+
+      // Rail: origin → gate → panel edge
+      document.getElementById("rail").setAttribute(
+        "d", `M${ORIGIN} ${RAIL_Y} L${GATE} ${RAIL_Y} L${DOCK + (lang === "he" ? -30 : 30)} ${RAIL_Y}`
+      );
+
+      // Origin glyph cluster (mail above, calendar on rail, document below)
+      place("g-mail", X(258), 462, 80, 60);
+      place("g-cal", X(335), 590, 70, 70);
+      place("g-doc", X(262), 714, 58, 70);
+
+      // Mini envelopes (act 2)
+      place("env0", X(230), 590, 56, 40);
+      place("env1", X(300), 590, 56, 40);
+      place("env2", X(370), 590, 56, 40);
+
+      // Chips start at the origin, centered on the rail
+      ["chip1", "chip2", "chip3", "chip4"].forEach((id) => place(id, ORIGIN, RAIL_Y, 200, 114));
+
+      // Gate cluster
+      place("gate-node", GATE, RAIL_Y, 30, 30);
+      place("gate-pulse", GATE, RAIL_Y, 76, 76);
+      place("gate-bloom", GATE, RAIL_Y, 76, 76);
+      place("gate-check", GATE, RAIL_Y, 48, 48);
+
+      // Panel + rows (panel y 370–840; rows y 398..812)
+      document.getElementById("panel").style.left = PANEL_LEFT + "px";
+      [1, 2, 3, 4].forEach((i) => {
+        const row = document.getElementById("row" + i);
+        row.style.left = PANEL_LEFT + 50 + "px";
+        row.style.top = 398 + (i - 1) * 110 + "px";
+      });
+
+      // Chip travel distances (sign flips automatically for HE via X())
+      // Chips pause just BEFORE the gate so the checkpoint stays visible.
+      const DX_PAUSE = X(818) - ORIGIN;
+      const DX_MID = MID - ORIGIN;
+      const DX_DOCK = DOCK - ORIGIN;
+
+      // ---- Timeline ----
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out", overwrite: "auto" } });
+      const labelIn = (id, at) =>
+        tl.fromTo("#" + id, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.55 }, at);
+      const labelOut = (id, at) =>
+        tl.to("#" + id, { opacity: 0, y: -12, duration: 0.35, ease: "power2.in" }, at);
+      // A chip pauses at the gate: small bounded pulse + node warms copper
+      const gatePass = (at) => {
+        tl.fromTo("#gate-pulse",
+          { scale: 0.5, opacity: 0.9, transformOrigin: "center" },
+          { scale: 1.35, opacity: 0, duration: 0.55, ease: "power2.out" }, at);
+        tl.to("#gate-node", { borderColor: "#d96832", duration: 0.25 }, at);
+      };
+      const dockRow = (chip, row, at) => {
+        tl.to(chip, { x: DX_DOCK, duration: 0.55, ease: "power1.inOut" }, at);
+        tl.to(chip, { opacity: 0, scale: 0.92, duration: 0.3, ease: "power2.in" }, at + 0.4);
+        tl.fromTo(row, { opacity: 0, x: (lang === "he" ? -26 : 26) },
+          { opacity: 1, x: 0, duration: 0.5 }, at + 0.55);
+      };
+
+      // ---- ACT 0 — Overnight (0.0–2.4) ----
+      labelIn("lbl-overnight", 0.25);
+      tl.to("#rail", { strokeDashoffset: 0, duration: 1.2, ease: "power1.inOut" }, 0.35);
+      tl.fromTo("#g-mail", { opacity: 0, y: 18 }, { opacity: 0.9, y: 0, duration: 0.6 }, 0.55);
+      tl.fromTo("#g-cal", { opacity: 0, y: 18 }, { opacity: 0.9, y: 0, duration: 0.6 }, 0.73);
+      tl.fromTo("#g-doc", { opacity: 0, y: 18 }, { opacity: 0.9, y: 0, duration: 0.6 }, 0.91);
+      tl.to("#panel", { opacity: 0.45, duration: 0.7 }, 0.9);
+      tl.to("#gate-node", { opacity: 1, duration: 0.5 }, 1.1);
+      labelOut("lbl-overnight", 2.15);
+
+      // ---- ACT 1 — Morning briefing (2.4–5.4) ----
+      labelIn("lbl-briefing", 2.5);
+      // glyphs converge into the briefing chip
+      tl.to("#g-mail", { x: X(300) - X(258), y: 128, opacity: 0, scale: 0.6, duration: 0.55, ease: "power2.in" }, 2.55);
+      tl.to("#g-cal", { x: X(300) - X(335), y: 0, opacity: 0, scale: 0.6, duration: 0.55, ease: "power2.in" }, 2.65);
+      tl.to("#g-doc", { x: X(300) - X(262), y: -124, opacity: 0, scale: 0.6, duration: 0.55, ease: "power2.in" }, 2.75);
+      tl.fromTo("#chip1", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.5 }, 3.0);
+      tl.to("#chip1", { x: DX_PAUSE, duration: 0.85, ease: "power1.inOut" }, 3.55);
+      gatePass(4.45);
+      dockRow("#chip1", "#row1", 4.75);
+      labelOut("lbl-briefing", 5.15);
+
+      // ---- ACT 2 — Email triage (5.4–8.2) ----
+      labelIn("lbl-triage", 5.5);
+      tl.fromTo("#env0", { opacity: 0, y: 14 }, { opacity: 0.85, y: 0, duration: 0.45 }, 5.55);
+      tl.fromTo("#env1", { opacity: 0, y: 14 }, { opacity: 0.85, y: 0, duration: 0.45 }, 5.67);
+      tl.fromTo("#env2", { opacity: 0, y: 14 }, { opacity: 0.85, y: 0, duration: 0.45 }, 5.79);
+      // the urgent one lifts, copper-edged
+      tl.to("#env1", { y: -30, opacity: 1, duration: 0.4 }, 6.15);
+      tl.to("#env1 rect, #env1 polyline", { stroke: "#d96832", duration: 0.3 }, 6.15);
+      // merge into the triage chip
+      tl.to("#env0", { x: X(300) - X(230), opacity: 0, scale: 0.6, duration: 0.4, ease: "power2.in" }, 6.6);
+      tl.to("#env1", { y: 0, opacity: 0, scale: 0.6, duration: 0.4, ease: "power2.in" }, 6.6);
+      tl.to("#env2", { x: X(300) - X(370), opacity: 0, scale: 0.6, duration: 0.4, ease: "power2.in" }, 6.6);
+      tl.fromTo("#chip2", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.45 }, 6.95);
+      tl.to("#chip2", { x: DX_PAUSE, duration: 0.75, ease: "power1.inOut" }, 7.3);
+      gatePass(8.05);
+      dockRow("#chip2", "#row2", 8.3);
+      labelOut("lbl-triage", 8.0);
+
+      // ---- ACT 3 — Document workflows (8.2–11.0) ----
+      labelIn("lbl-docs", 8.35);
+      tl.fromTo("#chip3", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.5 }, 8.5);
+      tl.to("#chip3 .fill", { width: "45%", duration: 0.5, ease: "power1.inOut" }, 8.7);
+      tl.to("#chip3", { x: DX_MID, duration: 0.6, ease: "power1.inOut" }, 8.9);
+      // ...stalls (dips, dims)...
+      tl.to("#chip3", { y: 6, opacity: 0.6, duration: 0.45, ease: "power2.inOut" }, 9.55);
+      // ...is surfaced: copper edge, lifts back, bar completes
+      tl.to("#chip3", { y: 0, opacity: 1, borderColor: "#d96832", duration: 0.45 }, 10.05);
+      tl.to("#chip3 .fill", { width: "100%", duration: 0.45, ease: "power1.inOut" }, 10.15);
+      tl.to("#chip3", { x: DX_PAUSE, duration: 0.55, ease: "power1.inOut" }, 10.55);
+      gatePass(11.1);
+      dockRow("#chip3", "#row3", 11.35);
+      labelOut("lbl-docs", 11.05);
+
+      // ---- ACT 4 — Follow-up and meetings (11.0–13.6) ----
+      labelIn("lbl-followup", 11.4);
+      tl.fromTo("#chip4", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.5 }, 11.55);
+      // the open loop closes (the chase no longer depends on memory)
+      tl.to("#chip4 .arc-draw", { strokeDashoffset: 0, duration: 0.6, ease: "power1.inOut" }, 11.9);
+      tl.to("#chip4", { x: DX_PAUSE, duration: 0.7, ease: "power1.inOut" }, 12.35);
+      gatePass(13.05);
+      dockRow("#chip4", "#row4", 13.3);
+      labelOut("lbl-followup", 13.5);
+
+      // ---- ACT 5 — Human approval HOLD (13.6–15.8, the peak) ----
+      tl.to(["#panel", "#stage .row", "#rails"], { opacity: 0.35, duration: 0.5 }, 14.0);
+      tl.to("#gate-node", { scale: 1.6, backgroundColor: "#d96832", duration: 0.45 }, 14.0);
+      labelIn("lbl-approval", 14.1);
+      tl.fromTo("#gate-bloom",
+        { scale: 0.4, opacity: 0, transformOrigin: "center" },
+        { scale: 1, opacity: 1, duration: 0.5 }, 14.25);
+      tl.to("#gate-bloom", { scale: 2.1, opacity: 0, duration: 1.25, ease: "power2.out" }, 14.75);
+      tl.to("#gate-check", { opacity: 1, duration: 0.25 }, 14.7);
+      tl.to("#gate-check path", { strokeDashoffset: 0, duration: 0.55, ease: "power2.inOut" }, 14.75);
+      // approval releases the day: rows return + status squares tick copper
+      tl.to(["#panel", "#stage .row"], { opacity: 1, duration: 0.5 }, 15.1);
+      tl.to("#stage .row .st", {
+        backgroundColor: "rgba(217, 104, 50, 0.35)", borderColor: "#d96832",
+        duration: 0.3, stagger: 0.16,
+      }, 15.2);
+
+      // ---- ACT 6 — The day starts decided (15.8–18.0) ----
+      tl.to("#lbl-approval", { opacity: 0, duration: 0.4, ease: "power2.in" }, 15.9);
+      tl.to("#rails", { opacity: 0.55, duration: 0.5 }, 15.9);
+      labelIn("lbl-closing", 16.15);
+      tl.to("#panel", {
+        borderColor: "rgba(217, 104, 50, 0.3)",
+        boxShadow: "0 0 42px 0 rgba(217, 104, 50, 0.10)",
+        duration: 0.7,
+      }, 16.2);
+      tl.to("#gate-node", { scale: 1.2, duration: 0.8, ease: "sine.inOut" }, 16.4);
+
+      // Camera: restrained push-in across the film
+      tl.fromTo("#camera", { scale: 1.0 }, { scale: 1.03, duration: 18, ease: "sine.inOut" }, 0);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["root"] = tl;
+    </script>
+  </body>
+</html>

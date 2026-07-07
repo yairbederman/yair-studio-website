@@ -1,56 +1,96 @@
 import { localeAccessor } from "@/content/types";
 import { shellContent } from "@/content/shell";
-import type { CardItem, Cta, Locale, StepItem } from "@/content/types";
+import { offerCard } from "@/content/offer-cards";
+import type { CardItem, Cta, Locale } from "@/content/types";
 
 /**
  * /offers overview page content. The service cards themselves stay canonical in
  * src/lib/offers.ts and localized in src/content/offer-cards.ts.
+ *
+ * Both locales carry the same structure: a decision router (choices) that
+ * points each visitor at the one offer that fits, plus a "who it fits"
+ * section. Structural EN/HE parity is deliberate — don't let one locale
+ * grow a section the other lacks.
  */
 
 export type OffersIndexContent = {
   hero: { title: string; lead: string; ctaLabel: string; ctaHref: string };
+  /** The decision router — required in both locales (structural parity). */
   start: {
     title: string;
     intro: string;
-    steps?: readonly StepItem[];
-    choices?: readonly (CardItem & { cta: Cta })[];
+    choices: readonly (CardItem & { cta: Cta })[];
   };
-  fit?: { title: string; intro: string; items: readonly CardItem[] };
+  fit: { title: string; intro: string; items: readonly CardItem[] };
   offers: { title: string };
   cta: { heading: string; body: string; ctaLabel: string; ctaHref: string };
+};
+
+/** Router link for one offer — label + href stay canonical in offer-cards. */
+const routeTo = (locale: Locale, key: string): Cta => {
+  const card = offerCard(locale, key);
+  return { label: card.cta, href: card.href };
 };
 
 const en: OffersIndexContent = {
   hero: {
     title: "Services",
-    lead: "For owner-led service businesses and professional offices where work moves through email, calendar, documents, meetings, and follow-up. Send one stuck workflow, then choose a focused audit or a narrow pilot.",
+    lead: "Four ways to put AI to work on your operations: a managed office assistant, a fixed-price workflow sprint, a LinkedIn content engine, and enablement workshops for engineering teams. Every one keeps a person approving what matters.",
     ctaLabel: shellContent("en").workflowCta.label,
     ctaHref: shellContent("en").workflowCta.href,
   },
   start: {
-    title: "Where to start",
-    intro:
-      "Start with one real process. Map how it works now, separate the audit from the build, and only pilot what is ready.",
-    steps: [
+    title: "Pick by the problem in front of you",
+    intro: "Each service starts from a different pain. Choose the one that sounds like your week.",
+    choices: [
       {
-        title: "Diagnose one workflow",
-        desc: "Map the bottlenecks, owners, automation candidates, and human approval points.",
+        title: "The office runs on chasing and triage",
+        desc: "Mornings, inbox, documents, and follow-up eat the day. Start with the managed assistant.",
+        cta: routeTo("en", "ai-office-assistant"),
       },
       {
-        title: "Build one pilot",
-        desc: "Turn the map into a small working workflow around email, calendar, documents, meetings, clients, or tasks.",
+        title: "One workflow keeps getting stuck",
+        desc: "A single process slips every week. Start with a fixed-price sprint.",
+        cta: routeTo("en", "ai-workflow-sprint"),
       },
       {
-        title: "Keep the operating view visible",
-        desc: "Use a bot, report, dashboard, or table so the next action is visible every day.",
-        human: true,
+        title: "Your LinkedIn is silent while you work",
+        desc: "The expertise exists; the posts don't. Start with the content engine.",
+        cta: routeTo("en", "linkedin-content-engine"),
+      },
+      {
+        title: "Your engineers should be faster with AI",
+        desc: "Licensed tools, unchanged habits. Start with an enablement workshop.",
+        cta: routeTo("en", "ai-enablement"),
       },
     ],
   },
-  offers: { title: "Services" },
+  fit: {
+    title: "Who this fits",
+    intro: "Small operations where the work crosses email, calendar, documents, meetings, clients, and tasks, and nothing lives in one clear place.",
+    items: [
+      {
+        title: "Professional offices",
+        desc: "Law, accounting, consulting, and other document-heavy, deadline-driven practices.",
+      },
+      {
+        title: "Growing small businesses",
+        desc: "More requests, tasks, and follow-up than anyone can hold in their head.",
+      },
+      {
+        title: "Founders and experts",
+        desc: "People whose knowledge should be visible while they stay busy with the actual work.",
+      },
+      {
+        title: "R&D and engineering teams",
+        desc: "Teams that licensed AI tools and now want the working habits to match.",
+      },
+    ],
+  },
+  offers: { title: "The services" },
   cta: {
-    heading: "Send the workflow that keeps slipping.",
-    body: "A few lines are enough. We map the current process first, then decide whether you need a focused audit or whether the workflow is ready for a narrow pilot.",
+    heading: "Not sure which fits? Send the problem.",
+    body: "Describe the office, the workflow, or the team in a few lines. You get back the starting point that fits and what it would look like, before any commitment.",
     ctaLabel: shellContent("en").workflowCta.label,
     ctaHref: shellContent("en").workflowCta.href,
   },
@@ -59,58 +99,62 @@ const en: OffersIndexContent = {
 const he: OffersIndexContent = {
   hero: {
     title: "שירותים",
-    lead: "לעסקי שירותים שמנוהלים בידי הבעלים ולמשרדים מקצועיים שבהם העבודה עוברת בין מייל, יומן, מסמכים, פגישות ומעקב. שולחים תהליך אחד שנתקע, ואז בוחרים אבחון ממוקד או פיילוט צר.",
+    lead: "ארבע דרכים להכניס AI לתפעול שלכם: עוזר משרדי מנוהל, ספרינט תהליך במחיר קבוע, מנוע תוכן ללינקדאין וסדנאות הטמעה לצוותי פיתוח. בכל אחת מהן אדם מאשר את מה שחשוב.",
     ctaLabel: shellContent("he").workflowCta.label,
     ctaHref: shellContent("he").workflowCta.href,
   },
   start: {
-    title: "הדרך הפשוטה להתחיל",
-    intro: "מתחילים מתהליך אמיתי אחד, ממפים איך הוא עובד עכשיו, ומפרידים בין אבחון לבין בנייה. רק תהליך שבשל לכך עובר לפיילוט.",
+    title: "בוחרים לפי הבעיה שעל השולחן",
+    intro: "כל שירות מתחיל מכאב אחר. בחרו את זה שנשמע כמו השבוע שלכם.",
     choices: [
       {
-        title: "אם אתם לא בטוחים מה הבעיה",
-        desc: "מתחילים באבחון תהליך AI.",
-        cta: { label: "לראות את האבחון", href: "/he/offers/ai-workflow-audit" },
+        title: "המשרד רץ על רדיפות ומיונים",
+        desc: "בקרים, מיילים, מסמכים ומעקב אוכלים את היום. מתחילים בעוזר המנוהל.",
+        cta: routeTo("he", "ai-office-assistant"),
       },
       {
-        title: "אם כבר יש תהליך ברור שנתקע",
-        desc: "מתחילים בפיילוט AI תפעולי.",
-        cta: { label: "לראות את הפיילוט", href: "/he/offers/ai-ops-pilot" },
+        title: "תהליך אחד ממשיך להיתקע",
+        desc: "אותו תהליך נופל כל שבוע. מתחילים בספרינט במחיר קבוע.",
+        cta: routeTo("he", "ai-workflow-sprint"),
       },
       {
-        title: "אם לידים, הצעות או לקוחות נופלים בין הכיסאות",
-        desc: "מתחילים במכונת Follow-Up.",
-        cta: { label: "לראות את Follow-Up", href: "/he/offers/follow-up-machine" },
+        title: "הלינקדאין שקט בזמן שאתם עובדים",
+        desc: "המומחיות קיימת; הפוסטים לא. מתחילים במנוע התוכן.",
+        cta: routeTo("he", "linkedin-content-engine"),
+      },
+      {
+        title: "המהנדסים שלכם צריכים לרוץ מהר יותר עם AI",
+        desc: "הכלים מורשים, ההרגלים לא השתנו. מתחילים בסדנת הטמעה.",
+        cta: routeTo("he", "ai-enablement"),
       },
     ],
   },
   fit: {
-    title: "למי זה מתאים?",
-    intro:
-      "מתאים לעסקים קטנים ומשרדים מקצועיים שבהם העבודה עוברת בין מיילים, יומן, מסמכים, פגישות, לקוחות ומשימות, ושום דבר לא חי במקום אחד ברור.",
+    title: "למי זה מתאים",
+    intro: "תפעול קטן שבו העבודה עוברת בין מיילים, יומן, מסמכים, פגישות, לקוחות ומשימות, ושום דבר לא חי במקום אחד ברור.",
     items: [
       {
         title: "משרדים מקצועיים",
-        desc: "עורכי דין, רואי חשבון, יועצים וספקי שירות עם הרבה מסמכים, לקוחות ודדליין.",
+        desc: "עורכי דין, רואי חשבון, יועצים ופרקטיקות עתירות מסמכים ודדליין.",
       },
       {
         title: "עסקים קטנים בצמיחה",
-        desc: "כשיש יותר פניות, משימות ומעקב ממה שאפשר להחזיק בראש.",
+        desc: "יותר פניות, משימות ומעקב ממה שאפשר להחזיק בראש.",
       },
       {
-        title: "צוותים בלי מנהל תפעול מלא",
-        desc: "כשהבעלים או הצוות מחזיקים את התפעול בין מיילים, וואטסאפ, יומן וגיליונות.",
+        title: "מייסדים ומומחים",
+        desc: "אנשים שהידע שלהם צריך להיראות בחוץ בזמן שהם עסוקים בעבודה עצמה.",
       },
       {
-        title: "עסקים עם הרבה Follow-Up",
-        desc: "לידים, הצעות מחיר, לקוחות פתוחים ומשימות שחייבים לחזור אליהן בזמן.",
+        title: "צוותי פיתוח ומו״פ",
+        desc: "צוותים שרכשו כלי AI ועכשיו רוצים שהרגלי העבודה יתאימו.",
       },
     ],
   },
   offers: { title: "השירותים" },
   cta: {
-    heading: "שלחו את התהליך שממשיך ליפול.",
-    body: "מספיקות כמה שורות. קודם נמפה את התהליך הקיים, ואז נחליט אם צריך אבחון ממוקד או שהתהליך בשל לפיילוט צר.",
+    heading: "לא בטוחים מה מתאים? שלחו את הבעיה.",
+    body: "תארו את המשרד, את התהליך או את הצוות בכמה שורות. תקבלו חזרה את נקודת ההתחלה שמתאימה ואיך היא נראית, לפני כל התחייבות.",
     ctaLabel: shellContent("he").workflowCta.label,
     ctaHref: shellContent("he").workflowCta.href,
   },

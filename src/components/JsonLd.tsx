@@ -11,7 +11,7 @@ import {
  * `<`, `>`, and `&` are replaced with their \uXXXX escapes so the markup
  * cannot be broken out of (no `</script>` injection) and React's text
  * escaping is a no-op. JSON parsers decode the escapes back to the originals,
- * so e.g. "Content & Ad Operations" round-trips intact. This avoids
+ * so names containing `&` round-trip intact. This avoids
  * dangerouslySetInnerHTML while staying strictly factual and static.
  */
 function serializeJsonLd(data: unknown): string {

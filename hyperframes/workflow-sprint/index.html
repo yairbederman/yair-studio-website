@@ -1,0 +1,375 @@
+<!doctype html>
+<html
+  lang="en"
+  data-resolution="landscape"
+  data-composition-variables='[{"id":"lang","type":"string","label":"Locale (en | he)","default":"en"}]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"
+      integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      /* ============================================================
+         "Workflow Sprint" film — HyperFrames composition.
+         One stuck workflow → mapped → sorted (automatic / AI-assisted /
+         human) → three automations click in → human approval → the
+         workflow runs with less friction. 15 abstract tiles, no labels.
+         One composition, two locales (`lang` variable; HE mirrors
+         positionally — dir set per-element, NEVER on <html>: that
+         blanks the render pipeline, see office-assistant/REVIEW.md).
+         Renders transparent (alpha MOV master route).
+         ============================================================ */
+      @font-face { font-family: "Inter"; font-weight: 600; font-display: block; src: url("assets/fonts/inter-600.woff2") format("woff2"); }
+      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+      :root {
+        --bg-0: #121211; --bg-1: #1a1a18; --bg-2: #242420;
+        --fg-1: #f4f1ea; --fg-2: #b9b3aa; --fg-3: #8a847a;
+        --accent: #d96832;
+        --accent-soft: rgba(217, 104, 50, 0.12); --accent-rule: rgba(217, 104, 50, 0.3);
+        --rule: #2a2a26; --rule-strong: #3a3a34;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden; background: transparent;
+        font-family: "Inter", system-ui, sans-serif; /* HE swaps to Assistant at init */
+        color: var(--fg-1);
+        -webkit-font-smoothing: antialiased;
+      }
+      #stage { position: relative; width: 1920px; height: 1080px; }
+      #camera { position: absolute; inset: 0; transform-origin: 960px 540px; will-change: transform; }
+
+      /* ---------- Headlines (6 stacked text moments) ----------
+         Mobile rule: frame renders ~330px wide on phones (scale ~0.17):
+         headlines 84px, closing 92px, row/approval labels 64px. */
+      .headline {
+        position: absolute; left: 0; top: 118px; width: 1920px; text-align: center;
+        font-size: 84px; font-weight: 600; letter-spacing: -0.015em;
+        color: var(--fg-1); opacity: 0; will-change: transform, opacity;
+      }
+      #hl-closing { top: 112px; font-size: 92px; letter-spacing: -0.02em; }
+      #lbl-approval {
+        position: absolute; left: 0; top: 968px; width: 1920px; text-align: center;
+        font-size: 64px; font-weight: 600; letter-spacing: -0.01em;
+        color: var(--accent); opacity: 0;
+      }
+
+      /* ---------- Row labels (sorted kinds of work) ---------- */
+      .row-label {
+        position: absolute; width: 420px;
+        font-size: 64px; font-weight: 600; letter-spacing: -0.01em;
+        color: var(--fg-2); opacity: 0; will-change: transform, opacity;
+        line-height: 1;
+      }
+      #lbl-human-row { color: var(--accent); }
+
+      /* ---------- Tiles (abstract work units, no text) ---------- */
+      .tile {
+        position: absolute; width: 90px; height: 60px; border-radius: 8px;
+        background: var(--bg-2); border: 1.5px solid var(--rule-strong);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+        opacity: 0; will-change: transform, opacity;
+      }
+
+      /* automation ticks (three, drawn on chosen tiles at act 4) */
+      .auto-tick { position: absolute; width: 34px; height: 34px; opacity: 0; }
+      .auto-tick path {
+        fill: none; stroke: var(--accent); stroke-width: 4; stroke-linecap: round;
+        stroke-linejoin: round; stroke-dasharray: 34; stroke-dashoffset: 34;
+      }
+
+      /* ---------- Rail: "mapped end to end" (snakes the grid once) ---------- */
+      #rails { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+      #rail {
+        fill: none; stroke: #4a4842; stroke-width: 2.5;
+        stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0.9;
+      }
+
+      /* ---------- Approval gate (compact peak; motif shared with film 1) ---------- */
+      #gate-node {
+        position: absolute; width: 30px; height: 30px; border-radius: 50%;
+        background: var(--bg-0); border: 3px solid var(--accent);
+        opacity: 0; will-change: transform;
+      }
+      #gate-pulse {
+        position: absolute; width: 76px; height: 76px; border-radius: 50%;
+        border: 2.5px solid var(--accent); opacity: 0; will-change: transform, opacity;
+      }
+      #gate-check { position: absolute; width: 44px; height: 44px; opacity: 0; }
+      #gate-check path {
+        fill: none; stroke: var(--fg-1); stroke-width: 4.5; stroke-linecap: round;
+        stroke-linejoin: round; stroke-dasharray: 44; stroke-dashoffset: 44;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="stage" data-composition-id="root" data-start="0" data-duration="14" data-width="1920" data-height="1080">
+      <div id="camera" data-layout-allow-overflow>
+        <!-- Rail (path set at init — mirrored for HE) -->
+        <svg id="rails" viewBox="0 0 1920 1080"><path id="rail" pathLength="1" d="" /></svg>
+
+        <!-- 15 abstract tiles (positions driven entirely by JS/GSAP) -->
+        <div class="tile" id="t0"></div><div class="tile" id="t1"></div>
+        <div class="tile" id="t2"></div><div class="tile" id="t3"></div>
+        <div class="tile" id="t4"></div><div class="tile" id="t5"></div>
+        <div class="tile" id="t6"></div><div class="tile" id="t7"></div>
+        <div class="tile" id="t8"></div><div class="tile" id="t9"></div>
+        <div class="tile" id="t10"></div><div class="tile" id="t11"></div>
+        <div class="tile" id="t12"></div><div class="tile" id="t13"></div>
+        <div class="tile" id="t14"></div>
+
+        <!-- three automation ticks -->
+        <svg class="auto-tick" id="tick0" viewBox="0 0 34 34"><path d="M7 18 l7 7 l13 -15" /></svg>
+        <svg class="auto-tick" id="tick1" viewBox="0 0 34 34"><path d="M7 18 l7 7 l13 -15" /></svg>
+        <svg class="auto-tick" id="tick2" viewBox="0 0 34 34"><path d="M7 18 l7 7 l13 -15" /></svg>
+
+        <!-- approval gate -->
+        <div id="gate-pulse"></div>
+        <div id="gate-node"></div>
+        <svg id="gate-check" viewBox="0 0 44 44"><path d="M11 23 l8 8 l15 -18" /></svg>
+
+        <!-- text moments (populated from COPY at init) -->
+        <div class="headline" id="hl-stuck"></div>
+        <div class="headline" id="hl-mapped"></div>
+        <div class="headline" id="hl-sorted"></div>
+        <div class="headline" id="hl-built"></div>
+        <div class="headline" id="hl-closing"></div>
+        <div class="row-label" id="lbl-auto-row"></div>
+        <div class="row-label" id="lbl-ai-row"></div>
+        <div class="row-label" id="lbl-human-row"></div>
+        <div id="lbl-approval"></div>
+      </div>
+    </div>
+
+    <script>
+      /* ============================================================
+         Deterministic 14s timeline. No random / Date / callbacks.
+         Every string traces to src/content/offers/ai-workflow-sprint.ts.
+         ============================================================ */
+      const vars = (window.__hyperframes && window.__hyperframes.getVariables)
+        ? window.__hyperframes.getVariables() : {};
+      const lang = vars.lang === "he" ? "he" : "en";
+      const COPY = {
+        en: {
+          stuck: "One stuck workflow",                 // example.map.nodes[0]
+          mapped: "Mapped end to end",                 // example.map.nodes[1]
+          sorted: "Sorted",                            // example.map.nodes[2]
+          auto: "Automatic",                           // nodes[2].sub
+          ai: "AI-assisted",                           // nodes[2].sub
+          human: "Human",                              // nodes[2].sub
+          built: "Three automations built",            // example.map.nodes[3]
+          approval: "Human approval",                  // example.map.nodes[4]
+          closing: "Workflow runs with less friction", // example.map.nodes[5]
+        },
+        he: {
+          stuck: "תהליך אחד שנתקע",
+          mapped: "ממופה מקצה לקצה",
+          sorted: "ממוין",
+          auto: "אוטומטי",
+          ai: "בעזרת AI",
+          human: "אנושי",
+          built: "שלוש אוטומציות נבנות",
+          approval: "אישור אנושי",
+          closing: "התהליך רץ עם פחות חיכוך",
+        },
+      }[lang];
+
+      document.documentElement.lang = lang;
+      if (lang === "he") {
+        document.body.style.fontFamily = '"Assistant", system-ui, sans-serif';
+        // dir per-element only — html[dir=rtl] blanks the render pipeline.
+        document.querySelectorAll("#stage .headline, #stage .row-label, #lbl-approval")
+          .forEach((el) => { el.dir = "rtl"; });
+      }
+
+      const setText = (id, t) => { document.getElementById(id).textContent = t; };
+      setText("hl-stuck", COPY.stuck);
+      setText("hl-mapped", COPY.mapped);
+      setText("hl-sorted", COPY.sorted);
+      setText("hl-built", COPY.built);
+      setText("hl-closing", COPY.closing);
+      setText("lbl-auto-row", COPY.auto);
+      setText("lbl-ai-row", COPY.ai);
+      setText("lbl-human-row", COPY.human);
+      setText("lbl-approval", COPY.approval);
+
+      // ---- Geometry (EN coordinates; HE mirrors x → 1920 − x) ----
+      const X = lang === "he" ? (x) => 1920 - x : (x) => x;
+      const TILE_W = 90, TILE_H = 60;
+
+      // Scatter (deterministic hand-picked mess), grid (5×3), sorted rows.
+      // Each tile: [scatterX, scatterY, rotDeg]
+      const SCATTER = [
+        [700, 420, -8], [1180, 380, 6], [880, 520, -3], [1300, 560, 10], [620, 640, 4],
+        [1060, 500, -12], [760, 760, 7], [980, 700, -5], [1240, 720, 3], [560, 500, -10],
+        [1400, 440, -6], [860, 360, 12], [1120, 820, -9], [660, 860, 5], [1340, 840, -4],
+      ];
+      const COLS = [660, 810, 960, 1110, 1260];
+      const ROWS = [480, 620, 760];
+      // Sorted rows: automatic (6) / AI-assisted (5) / human (4) —
+      // shifted right so the label+tiles block reads centered.
+      const SORT = {
+        auto: { y: 440, tiles: [0, 2, 5, 8, 11, 13], xs: [750, 880, 1010, 1140, 1270, 1400] },
+        ai: { y: 620, tiles: [1, 4, 6, 9, 12], xs: [750, 880, 1010, 1140, 1270] },
+        human: { y: 800, tiles: [3, 7, 10, 14], xs: [750, 880, 1010, 1140] },
+      };
+      // The three automations (offer promises exactly three):
+      // tile 5 = automatic row @1010, tile 6 = AI-assisted row @1010,
+      // tile 11 = automatic row @1270 (indices into SORT rows above).
+      const AUTOS = [
+        { tick: "tick0", tile: 5, x: 1010, y: 440 },
+        { tick: "tick1", tile: 6, x: 1010, y: 620 },
+        { tick: "tick2", tile: 11, x: 1270, y: 440 },
+      ];
+      const STUCK = 7; // the tile that sags in act 0
+
+      // Tiles start at their scatter positions (center-based placement).
+      SCATTER.forEach(([sx, sy, rot], i) => {
+        const el = document.getElementById("t" + i);
+        el.style.left = X(sx) - TILE_W / 2 + "px";
+        el.style.top = sy - TILE_H / 2 + "px";
+        el.style.transform = `rotate(${lang === "he" ? -rot : rot}deg)`;
+      });
+
+      // Ticks sit on their tiles' sorted positions (revealed in act 4).
+      AUTOS.forEach(({ tick, x, y }) => {
+        const el = document.getElementById(tick);
+        el.style.left = X(x) - 17 + "px";
+        el.style.top = y - 17 + "px";
+      });
+
+      // Rail snakes through the three grid rows (drawn during "mapped").
+      document.getElementById("rail").setAttribute(
+        "d",
+        `M${X(585)} ${ROWS[0]} L${X(1335)} ${ROWS[0]} L${X(1335)} ${ROWS[1]} ` +
+        `L${X(585)} ${ROWS[1]} L${X(585)} ${ROWS[2]} L${X(1335)} ${ROWS[2]}`
+      );
+
+      // Row labels: box beside the rows (right-aligned EN, mirrored for HE).
+      const placeRowLabel = (id, y) => {
+        const el = document.getElementById(id);
+        el.style.left = (lang === "he" ? 1920 - 250 - 420 : 250) + "px";
+        el.style.top = y - 32 + "px";
+        el.style.textAlign = lang === "he" ? "left" : "right";
+      };
+      placeRowLabel("lbl-auto-row", SORT.auto.y);
+      placeRowLabel("lbl-ai-row", SORT.ai.y);
+      placeRowLabel("lbl-human-row", SORT.human.y);
+
+      // Gate cluster — below the rows so the peak never collides with them.
+      const GATE = { x: X(960), y: 915 };
+      const placeCenter = (id, w, h) => {
+        const el = document.getElementById(id);
+        el.style.left = GATE.x - w / 2 + "px";
+        el.style.top = GATE.y - h / 2 + "px";
+      };
+      placeCenter("gate-node", 30, 30);
+      placeCenter("gate-pulse", 76, 76);
+      placeCenter("gate-check", 44, 44);
+
+      // Motion deltas from each tile's scatter anchor (GSAP x/y are offsets).
+      const gridDelta = (i) => ({
+        x: X(COLS[i % 5]) - X(SCATTER[i][0]),
+        y: ROWS[Math.floor(i / 5)] - SCATTER[i][1],
+      });
+      const sortDelta = (i) => {
+        for (const row of Object.values(SORT)) {
+          const k = row.tiles.indexOf(i);
+          if (k !== -1) return { x: X(row.xs[k]) - X(SCATTER[i][0]), y: row.y - SCATTER[i][1] };
+        }
+      };
+
+      // ---- Timeline ----
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out", overwrite: "auto" } });
+      const headIn = (id, at) =>
+        tl.fromTo("#" + id, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.55 }, at);
+      const headOut = (id, at) =>
+        tl.to("#" + id, { opacity: 0, y: -12, duration: 0.35, ease: "power2.in" }, at);
+
+      // ---- ACT 0 — One stuck workflow (0.0–2.2) ----
+      headIn("hl-stuck", 0.25);
+      SCATTER.forEach((_, i) => {
+        tl.fromTo("#t" + i, { opacity: 0, y: 16, filter: "blur(2px)" },
+          { opacity: 0.85, y: 0, duration: 0.5 }, 0.35 + i * 0.055);
+      });
+      // one step sags — the stuck one
+      tl.to("#t" + STUCK, { y: "+=26", opacity: 0.45, duration: 0.55, ease: "power2.inOut" }, 1.45);
+      headOut("hl-stuck", 2.0);
+
+      // ---- ACT 1 — Mapped end to end (2.2–5.0) ----
+      headIn("hl-mapped", 2.3);
+      SCATTER.forEach((_, i) => {
+        const d = gridDelta(i);
+        tl.to("#t" + i, {
+          x: d.x, y: d.y, rotate: 0, opacity: 1, filter: "blur(0px)",
+          duration: 1.0, ease: "power2.inOut",
+        }, 2.45 + i * 0.045);
+      });
+      tl.to("#rail", { strokeDashoffset: 0, duration: 1.15, ease: "power1.inOut" }, 3.6);
+      headOut("hl-mapped", 4.75);
+
+      // ---- ACT 2 — Sorted (5.0–8.1) ----
+      headIn("hl-sorted", 5.05);
+      tl.to("#rail", { opacity: 0, duration: 0.45 }, 5.05);
+      SCATTER.forEach((_, i) => {
+        const d = sortDelta(i);
+        tl.to("#t" + i, { x: d.x, y: d.y, duration: 0.9, ease: "power2.inOut" }, 5.2 + i * 0.035);
+      });
+      tl.fromTo("#lbl-auto-row", { opacity: 0, x: (lang === "he" ? -20 : 20) }, { opacity: 1, x: 0, duration: 0.5 }, 6.25);
+      tl.fromTo("#lbl-ai-row", { opacity: 0, x: (lang === "he" ? -20 : 20) }, { opacity: 1, x: 0, duration: 0.5 }, 6.45);
+      tl.fromTo("#lbl-human-row", { opacity: 0, x: (lang === "he" ? -20 : 20) }, { opacity: 1, x: 0, duration: 0.5 }, 6.65);
+      // the human row warms copper and HOLDS (no flash)
+      SORT.human.tiles.forEach((i, k) => {
+        tl.to("#t" + i, {
+          borderColor: "#d96832", backgroundColor: "rgba(217, 104, 50, 0.12)",
+          duration: 0.7,
+        }, 6.9 + k * 0.08);
+      });
+      headOut("hl-sorted", 7.85);
+
+      // ---- ACT 3 — Three automations built (8.1–10.9) ----
+      headIn("hl-built", 8.2);
+      AUTOS.forEach(({ tick, tile: idx }, k) => {
+        const at = 8.65 + k * 0.7;
+        tl.to("#t" + idx, {
+          borderColor: "#d96832", scale: 1.08, duration: 0.28, ease: "power2.out",
+        }, at);
+        tl.to("#t" + idx, { scale: 1, duration: 0.3, ease: "power2.inOut" }, at + 0.28);
+        tl.to("#" + tick, { opacity: 1, duration: 0.2 }, at + 0.1);
+        tl.to("#" + tick + " path", { strokeDashoffset: 0, duration: 0.4, ease: "power2.inOut" }, at + 0.15);
+      });
+      headOut("hl-built", 10.7);
+
+      // ---- ACT 4 — Human approval (compact peak, 10.9–12.5) ----
+      tl.to(["#stage .tile", "#stage .row-label", "#stage .auto-tick"], { opacity: 0.3, duration: 0.45 }, 10.95);
+      tl.fromTo("#gate-node", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1.6, backgroundColor: "#d96832", duration: 0.5 }, 11.05);
+      headIn("lbl-approval", 11.15);
+      tl.fromTo("#gate-pulse",
+        { scale: 0.4, opacity: 0.9, transformOrigin: "center" },
+        { scale: 1.9, opacity: 0, duration: 1.0, ease: "power2.out", immediateRender: false }, 11.4);
+      tl.to("#gate-check", { opacity: 1, duration: 0.25 }, 11.5);
+      tl.to("#gate-check path", { strokeDashoffset: 0, duration: 0.5, ease: "power2.inOut" }, 11.55);
+
+      // ---- ACT 5 — Workflow runs with less friction (12.5–14.0) ----
+      tl.to("#lbl-approval", { opacity: 0, duration: 0.35, ease: "power2.in" }, 12.45);
+      tl.to(["#gate-node", "#gate-check"], { opacity: 0, duration: 0.45 }, 12.55);
+      tl.to("#stage .tile", { opacity: 1, duration: 0.5 }, 12.6);
+      tl.to(["#stage .row-label", "#stage .auto-tick"], { opacity: 1, duration: 0.5 }, 12.65);
+      headIn("hl-closing", 12.8);
+      // gentle forward drift — the workflow is running
+      tl.to("#stage .tile", { x: "+=" + (lang === "he" ? -14 : 14), duration: 1.1, ease: "sine.inOut" }, 12.85);
+
+      // Camera: restrained push-in
+      tl.fromTo("#camera", { scale: 1.0 }, { scale: 1.025, duration: 14, ease: "sine.inOut" }, 0);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["root"] = tl;
+    </script>
+  </body>
+</html>

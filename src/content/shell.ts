@@ -65,7 +65,7 @@ const en: ShellContent = {
   workflowCta: { label: "Send one stuck workflow", href: "/contact" },
   whatsappCta: {
     label: "Message on WhatsApp",
-    href: waLink("Hi Yair — I'd like to map one workflow."),
+    href: waLink("Hi Yair, I'd like to map one workflow."),
   },
 };
 

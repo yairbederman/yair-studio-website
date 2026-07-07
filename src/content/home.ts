@@ -18,6 +18,7 @@
 
 import { localeAccessor } from "@/content/types";
 import { shellContent } from "@/content/shell";
+import { offerCard } from "@/content/offer-cards";
 import type { Locale, Cta, SpineNode } from "@/content/types";
 
 // Re-export the shared primitives (now defined once in src/content/types.ts)
@@ -31,7 +32,7 @@ export type HomeContent = {
     lead: string;
     primaryCta: Cta;
     secondaryCta: Cta;
-    /** Decorative hero motif (aria-hidden, hidden on mobile). */
+    /** Decorative hero motif (aria-hidden; renders on all viewports). */
     schematic: { caption: string; nodes: readonly SpineNode[] };
   };
   problems: {
@@ -80,19 +81,22 @@ export type HomeContent = {
 
 const en: HomeContent = {
   hero: {
-    eyebrow: "AI workflow systems",
-    title: "Small AI systems for the real work of the business",
-    lead: "Owner-led service businesses and professional offices often run the day through email, calendar, documents, meetings, and follow-up. I turn one stuck workflow into a clear map or a small AI-assisted system, without replacing every tool or removing human approval.",
-    primaryCta: shellContent("en").workflowCta,
-    secondaryCta: { label: "See services", href: "/offers" },
+    eyebrow: "Managed AI for professional offices",
+    title: "A managed AI assistant for the real work of your office",
+    lead: "y[AI]r studio runs the recurring work of small professional offices: morning briefings ready before you sit down, email triaged into decisions, documents and follow-up chased to done. Your people approve everything that matters. The easiest first step is a fixed-price sprint: one workflow mapped, three automations built.",
+    primaryCta: {
+      label: offerCard("en", "ai-office-assistant").cta,
+      href: offerCard("en", "ai-office-assistant").href,
+    },
+    secondaryCta: { label: "See all services", href: "/offers" },
     schematic: {
-      caption: "workflow → next action",
+      caption: "one office morning",
       nodes: [
-        { label: "scattered inputs", sub: "tasks · email · docs · context" },
-        { label: "mapped workflow" },
-        { label: "one system", sub: "dashboards · automations · assistants" },
+        { label: "overnight inputs", sub: "email · calendar · documents" },
+        { label: "morning briefing" },
+        { label: "triage + drafts ready" },
         { label: "human approval", human: true },
-        { label: "clear next action", out: true },
+        { label: "the day starts decided", out: true },
       ],
     },
   },
@@ -128,7 +132,7 @@ const en: HomeContent = {
   method: {
     title: "What happens in the first week",
     intro:
-      "The first week starts with mapping the workflow. From there, we choose the right first deliverable: a focused audit or a narrow pilot.",
+      "The first week starts with mapping the workflow. From there, we choose the right first deliverable: a fixed-price sprint or a managed-assistant setup.",
     steps: [
       {
         title: shellContent("en").workflowCta.label,
@@ -140,11 +144,11 @@ const en: HomeContent = {
       },
       {
         title: "Choose the right first deliverable",
-        desc: "That may be a focused audit and workflow map, or a narrow pilot when the process is ready to build.",
+        desc: "That may be a workflow map on its own, a fixed-price sprint, or the start of a managed-assistant setup.",
       },
       {
-        title: "Scope the pilot, if it is ready",
-        desc: "If the process is ready, we define the pilot's inputs, outputs, and approval boundaries before building.",
+        title: "Scope the sprint or the setup",
+        desc: "We define the inputs, outputs, and approval boundaries before anything is built.",
         human: true,
       },
     ],
@@ -160,9 +164,9 @@ const en: HomeContent = {
     ],
   },
   offers: {
-    title: "What I build",
+    title: "What I offer",
     intro:
-      "Small operational systems around the places work already happens: morning reports, follow-up, meetings, documents, and daily command centers.",
+      "Four services around the places work already happens: a managed office assistant, a fixed-price workflow sprint, a LinkedIn content engine, and enablement workshops for engineering teams.",
   },
   evidence: {
     title: "What “mapped” looks like",
@@ -195,7 +199,7 @@ const en: HomeContent = {
   },
   finalCta: {
     title: "Start with one stuck workflow.",
-    body: "Send the workflow that keeps slipping between email, calendar, documents, meetings, and follow-up. We map it first, then decide whether an audit or a narrow pilot makes sense.",
+    body: "Send the workflow that keeps slipping between email, calendar, documents, meetings, and follow-up. We map it first, then pick the right starting point: a fixed-price sprint or the managed assistant.",
     cta: shellContent("en").workflowCta,
     secondaryCta: shellContent("en").whatsappCta,
   },
@@ -210,19 +214,22 @@ const en: HomeContent = {
  */
 const he: HomeContent = {
   hero: {
-    eyebrow: "מערכות AI לתפעול יומיומי",
-    title: "מערכות AI קטנות לעבודה האמיתית של העסק",
-    lead: "עסקי שירותים שמנוהלים בידי הבעלים ומשרדים מקצועיים מריצים את היום דרך מייל, יומן, מסמכים, פגישות ומעקב. אני הופך תהליך אחד שנתקע למפה ברורה או למערכת קטנה בסיוע AI, בלי להחליף כל כלי ובלי לוותר על אישור אנושי.",
-    primaryCta: shellContent("he").workflowCta,
-    secondaryCta: { label: "לראות פתרונות", href: "/he/offers" },
+    eyebrow: "AI מנוהל למשרדים מקצועיים",
+    title: "עוזר AI מנוהל לעבודה האמיתית של המשרד",
+    lead: "y[AI]r studio מריץ את העבודה השוטפת של משרדים מקצועיים קטנים: תדריך בוקר מוכן לפני שהתיישבתם, מיילים ממוינים להחלטות, מסמכים ומעקב מקודמים עד לסגירה. הצוות שלכם מאשר כל דבר שחשוב. הצעד הראשון הקל הוא ספרינט במחיר קבוע: תהליך אחד ממופה, שלוש אוטומציות נבנות.",
+    primaryCta: {
+      label: offerCard("he", "ai-office-assistant").cta,
+      href: offerCard("he", "ai-office-assistant").href,
+    },
+    secondaryCta: { label: "לראות את כל השירותים", href: "/he/offers" },
     schematic: {
-      caption: "כלים קיימים ← עבודה ברורה",
+      caption: "בוקר אחד במשרד",
       nodes: [
-        { label: "מיילים ויומן", sub: "מה חדש ומה דחוף" },
-        { label: "מסמכים ופגישות", sub: "סיכום, החלטות ומשימות" },
-        { label: "לקוחות ולידים", sub: "מעקב ותזכורות" },
+        { label: "קלט שנצבר בלילה", sub: "מייל · יומן · מסמכים" },
+        { label: "תדריך בוקר מוכן" },
+        { label: "מיון וטיוטות מוכנות" },
         { label: "אישור אנושי", human: true },
-        { label: "צעד הבא ברור", out: true },
+        { label: "היום מתחיל מוכרע", out: true },
       ],
     },
   },
@@ -258,7 +265,7 @@ const he: HomeContent = {
   method: {
     title: "מה קורה בשבוע הראשון",
     intro:
-      "השבוע הראשון מתחיל במיפוי התהליך. משם בוחרים את התוצר הראשון הנכון: אבחון ממוקד או פיילוט צר.",
+      "השבוע הראשון מתחיל במיפוי התהליך. משם בוחרים את התוצר הראשון הנכון: ספרינט במחיר קבוע או הקמה של העוזר המנוהל.",
     steps: [
       {
         title: shellContent("he").workflowCta.label,
@@ -270,11 +277,11 @@ const he: HomeContent = {
       },
       {
         title: "בוחרים את התוצר הראשון הנכון",
-        desc: "זה יכול להיות אבחון ומפת תהליך ממוקדים, או פיילוט צר כשהתהליך בשל לבנייה.",
+        desc: "זה יכול להיות מפת תהליך בפני עצמה, ספרינט במחיר קבוע, או תחילת הקמה של העוזר המנוהל.",
       },
       {
-        title: "מגדירים פיילוט, אם התהליך בשל",
-        desc: "אם התהליך בשל, מגדירים את הקלטים, הפלטים וגבולות האישור של הפיילוט לפני שמתחילים לבנות.",
+        title: "מגדירים את הספרינט או את ההקמה",
+        desc: "מגדירים קלט, פלט וגבולות אישור לפני שבונים.",
         human: true,
       },
     ],
@@ -289,9 +296,9 @@ const he: HomeContent = {
     ],
   },
   offers: {
-    title: "מה אני בונה",
+    title: "מה אני מציע",
     intro:
-      "מערכות קטנות סביב המקומות שבהם העבודה כבר קורית: דוח בוקר, follow-up, פגישות, מסמכים ותמונת מצב יומית.",
+      "ארבעה שירותים סביב המקומות שבהם העבודה כבר קורית: עוזר משרדי מנוהל, ספרינט תהליך במחיר קבוע, מנוע תוכן ללינקדאין וסדנאות הטמעה לצוותי פיתוח.",
   },
   evidence: {
     title: "איך נראה תהליך ממופה",
@@ -324,7 +331,7 @@ const he: HomeContent = {
   },
   finalCta: {
     title: "מתחילים מתהליך אחד שנתקע.",
-    body: "שלחו תהליך שנופל בין מייל, יומן, מסמכים, פגישות ומעקב. קודם נמפה אותו, ואז נחליט אם נכון להתחיל באבחון או בפיילוט צר.",
+    body: "שלחו תהליך שנופל בין מייל, יומן, מסמכים, פגישות ומעקב. קודם נמפה אותו, ואז נבחר את נקודת ההתחלה הנכונה: ספרינט במחיר קבוע או העוזר המנוהל.",
     cta: shellContent("he").workflowCta,
     secondaryCta: shellContent("he").whatsappCta,
   },
