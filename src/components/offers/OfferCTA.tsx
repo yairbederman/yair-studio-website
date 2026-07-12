@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Container from "@/components/Container";
 import CTAButton from "@/components/CTAButton";
 import type { Cta } from "@/content/types";
@@ -10,6 +11,12 @@ import type { Cta } from "@/content/types";
  * ctaLabel/ctaHref are REQUIRED: every caller passes locale-resolved values
  * from its content model, and an English fallback default would be a silent
  * wrong-language trap on the Hebrew pages.
+ *
+ * `extraAction` renders after the buttons in the actions row — /contact passes
+ * its CopyEmail affordance so a mailto: primary has a visible failure path at
+ * the band where the click actually happens, not only in the page hero. It is
+ * an ACTION slot (laid out as a flex item in the button row), not a slot for
+ * prose or disclaimers.
  */
 export default function OfferCTA({
   heading,
@@ -17,12 +24,14 @@ export default function OfferCTA({
   ctaLabel,
   ctaHref,
   secondaryCta,
+  extraAction,
 }: {
   heading: string;
   body: string;
   ctaLabel: string;
   ctaHref: string;
   secondaryCta?: Cta;
+  extraAction?: ReactNode;
 }) {
   return (
     <section className="section final-cta" aria-labelledby="offer-cta-title">
@@ -39,6 +48,7 @@ export default function OfferCTA({
                 {secondaryCta.label}
               </CTAButton>
             ) : null}
+            {extraAction}
           </div>
         </div>
       </Container>

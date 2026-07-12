@@ -69,6 +69,7 @@ export default function ContactPageBody({ locale }: { locale: Locale }) {
         ctaLabel={c.cta.ctaLabel}
         ctaHref={c.cta.ctaHref}
         secondaryCta={c.cta.secondaryCta}
+        extraAction={<CopyEmail email={CONTACT_EMAIL} labels={shell.copyEmail} />}
       />
     </main>
   );

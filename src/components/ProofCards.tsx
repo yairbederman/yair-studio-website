@@ -6,6 +6,12 @@ import type { ProofContent } from "@/content/proof";
  * Illustrative workflow cards: situation → tracking → human approval → first
  * useful output. `full` (the /about treatment) also renders the workflow spine.
  *
+ * ONE section-level SampleBadge renders above the grid, not one per card:
+ * three yellow badges as the final pre-CTA impression read as "no clients"
+ * three times over (2026-07-12 critique P1). badgeLabel stays REQUIRED so
+ * every ProofCards render is disclosure-paired at compile time — the honesty
+ * guard is structural, not caller discipline.
+ *
  * The homepage uses the compact variant inside ProofSection.
  */
 export default function ProofCards({
@@ -20,13 +26,12 @@ export default function ProofCards({
   full?: boolean;
 }) {
   return (
-    <ul className={full ? "proof-grid proof-grid--full" : "proof-grid"}>
-      {cases.map((cs) => (
+    <>
+      <SampleBadge label={badgeLabel} />
+      <ul className={full ? "proof-grid proof-grid--full" : "proof-grid"}>
+        {cases.map((cs) => (
         <li key={cs.key} className="proof-card">
-          <div className="proof-card-head">
-            <h3 className="proof-client">{cs.workflowType}</h3>
-            <SampleBadge label={badgeLabel} />
-          </div>
+          <h3 className="proof-client">{cs.workflowType}</h3>
           <dl className="proof-rows">
             <div className="proof-row">
               <dt>{rowLabels.situation}</dt>
@@ -52,8 +57,9 @@ export default function ProofCards({
               nodes={cs.spine.nodes}
             />
           ) : null}
-        </li>
-      ))}
-    </ul>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }

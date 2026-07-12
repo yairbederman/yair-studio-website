@@ -959,7 +959,9 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   grid-column: 1 / -1;
 }
 
-/* Visible email + copy affordance (CopyEmail) — sits in a .hero-actions row. */
+/* Visible email + copy affordance (CopyEmail) — mounts in the /contact hero
+   (.hero-actions) AND the /contact closing band (.final-cta-actions, via
+   OfferCTA's extraAction slot). Styles must stay context-free. */
 .copy-email {
   display: inline-flex;
   align-items: center;
@@ -1194,15 +1196,11 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   padding: var(--s-6);
   box-shadow: var(--edge-top);
 }
-/* Uniform two-line head (client type, then badge) at every width — a row
-   layout made the badge wrap depend on the client-type length, so dt rows
-   started at different heights across the 3-up grid. */
-.proof-card-head {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--s-2);
-}
+/* Card head is the client-type h3 alone — the sample-data badge is section
+   level (.proof-section-badge, one per surface, rendered by ProofCards). If a
+   per-card chip ever returns, use a COLUMN layout beside the h3, not a row:
+   a row made badge wrap depend on client-type length, so dt rows started at
+   different heights across the 3-up grid. */
 .proof-client { font-size: var(--fs-lg); font-weight: 600; color: var(--fg-1); }
 .proof-rows {
   margin: 0;
@@ -1229,7 +1227,12 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   gap: var(--s-6);
   align-items: start;
 }
-.proof-grid--full .proof-card-head { grid-column: 1 / -1; }
+.proof-grid--full .proof-client { grid-column: 1 / -1; }
+
+/* Section-level sample-data disclosure — SampleBadge renders this block once
+   per proof surface, directly above the card grid it qualifies (the component
+   owns the wrapper, so a null return removes the element entirely). */
+.proof-section-badge { margin-block: 0 var(--s-4); }
 
 /* Sample-data badge — visible while PROOF_IS_SAMPLE_DATA is true. Deliberately
    loud (warn token, mono, uppercase): sample claims must read as samples. */
