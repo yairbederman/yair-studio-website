@@ -361,18 +361,28 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   color: var(--fg-1);
   cursor: pointer;
   text-decoration: none;
-  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease),
+    transform var(--dur-fast) var(--ease);
 }
 /* color + text-decoration are re-asserted on :hover so the global a:hover rule
    (color: accent-hover; underline) can't leak into button-styled anchors. */
 .btn:hover { background: var(--bg-3); border-color: var(--fg-3); color: var(--fg-1); text-decoration: none; }
+/* Uniform press feedback — every button dips slightly on tap/click. */
+.btn:active { transform: scale(0.98); }
 
 .btn-primary { background: var(--accent); color: var(--bg-0); border-color: var(--accent); }
 /* Bracketed [ ] signature — primary action only. */
-.btn-primary::before { content: "["; color: var(--bg-0); opacity: 0.6; transition: opacity var(--dur) var(--ease); }
-.btn-primary::after  { content: "]"; color: var(--bg-0); opacity: 0.6; transition: opacity var(--dur) var(--ease); }
+.btn-primary::before { content: "["; color: var(--bg-0); opacity: 0.6; transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease); }
+.btn-primary::after  { content: "]"; color: var(--bg-0); opacity: 0.6; transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease); }
 .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: var(--bg-0); }
 .btn-primary:hover::before, .btn-primary:hover::after { opacity: 0.85; }
+/* Brackets breathe outward on hover — the signature reacts to the pointer.
+   RTL flips the sign (the pseudos render on the opposite side under flex-rtl),
+   same direction-aware idea as .offer-cta-arrow. */
+.btn-primary:hover::before { transform: translateX(-2px); }
+.btn-primary:hover::after  { transform: translateX(2px); }
+[dir="rtl"] .btn-primary:hover::before { transform: translateX(2px); }
+[dir="rtl"] .btn-primary:hover::after  { transform: translateX(-2px); }
 .btn-primary:active { background: var(--accent-press); }
 
 .btn-ghost { border-color: transparent; }
@@ -517,6 +527,17 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
     margin-top: var(--s-7);
   }
   .footer-r { flex-wrap: wrap; gap: 16px 20px; }
+
+  /* Auto-hide the sticky header as the reader scrolls down (HeaderAutoHide
+     toggles .is-hidden), reclaiming the ~112px the wrapped nav costs on a small
+     screen. Any upward scroll restores it; it is always visible near the top;
+     and keyboard focus inside reveals it even mid-hide. Desktop keeps the header
+     pinned (this block is mobile-only). Reduced-motion: the global reset zeroes
+     the transition, so the show/hide is an instant state swap — still fully
+     functional (hiding is state, not decoration). */
+  .site-nav { transition: transform var(--dur-slow) var(--ease); }
+  .site-nav.is-hidden { transform: translateY(-100%); }
+  .site-nav.is-hidden:focus-within { transform: none; }
 }
 
 /* ============================================================
@@ -621,35 +642,60 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   color: var(--fg-3);
 }
 .sch-node--human .sch-dot {
+  /* Single source for the dot's rest glow — the approval-pulse keyframe reuses
+     this via var() so the pulse's 0%/100% stops can never drift from it. */
+  --dot-rest-shadow: 0 0 0 3px var(--accent-soft);
   background: var(--accent);
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
+  box-shadow: var(--dot-rest-shadow);
 }
 .sch-node--human .sch-label { color: var(--accent); }
 .sch-node--out .sch-label { color: var(--fg-1); }
 
-/* ---------- Hero spine entrance ----------
-   One on-brand page-load moment, scoped to the decorative hero schematic ONLY
-   (aria-hidden, desktop-only) so the content spines on Evidence / /workflows /
-   the audit page (same .sch-* classes) stay static. Transform-only: nothing
-   starts at opacity:0, so content is visible even if the animation never runs
-   (paused tab / headless render). The connector line draws top→down; nodes rise
-   in sequence, reinforcing the "mapping" idea. Neutralized by the global
-   reduced-motion reset; gated again here for clarity. */
+/* ---------- Spine entrance ----------
+   Two contexts share one draw-in: the decorative hero schematic plays it on page
+   load; every content spine plays it once when it scrolls into view (SpineReveal
+   adds .is-inview via IntersectionObserver, then unobserves). Content spines were
+   deliberately static before — animating them on entry makes each of the 8+ spine
+   renders an event instead of wallpaper, without touching the hero moment.
+   Transform-only (nothing starts at opacity:0): the spine is fully visible even
+   if the animation never runs (paused tab, headless render, JS/IO absent — the
+   is-inview class then simply never lands). The connector line draws top→down;
+   nodes + caption rise in sequence, reinforcing the "mapping" idea. The copper
+   human-approval checkpoint then pulses once, just after the spine settles —
+   restating "a person approves" in motion on every spine. Neutralized by the
+   global reduced-motion reset; gated again here for clarity. */
 @media (prefers-reduced-motion: no-preference) {
-  .hero-schematic .sch-flow::before {
+  .hero-schematic .sch-flow::before,
+  .workflow-map.is-inview .sch-flow::before {
     transform-origin: top;
     animation: sch-draw var(--dur-slow) var(--ease) both;
   }
   .hero-schematic .sch-cap,
-  .hero-schematic .sch-node {
+  .hero-schematic .sch-node,
+  .workflow-map.is-inview .sch-cap,
+  .workflow-map.is-inview .sch-node {
     animation: sch-rise var(--dur-slow) var(--ease) both;
   }
-  .hero-schematic .sch-node:nth-child(1) { animation-delay: 80ms; }
-  .hero-schematic .sch-node:nth-child(2) { animation-delay: 140ms; }
-  .hero-schematic .sch-node:nth-child(3) { animation-delay: 200ms; }
-  .hero-schematic .sch-node:nth-child(4) { animation-delay: 260ms; }
-  .hero-schematic .sch-node:nth-child(5) { animation-delay: 320ms; }
+  .hero-schematic .sch-node:nth-child(1),
+  .workflow-map.is-inview .sch-node:nth-child(1) { animation-delay: 80ms; }
+  .hero-schematic .sch-node:nth-child(2),
+  .workflow-map.is-inview .sch-node:nth-child(2) { animation-delay: 140ms; }
+  .hero-schematic .sch-node:nth-child(3),
+  .workflow-map.is-inview .sch-node:nth-child(3) { animation-delay: 200ms; }
+  .hero-schematic .sch-node:nth-child(4),
+  .workflow-map.is-inview .sch-node:nth-child(4) { animation-delay: 260ms; }
+  .hero-schematic .sch-node:nth-child(5),
+  .workflow-map.is-inview .sch-node:nth-child(5) { animation-delay: 320ms; }
+  .workflow-map.is-inview .sch-node:nth-child(6) { animation-delay: 380ms; }
+
+  /* The pulse waits out the draw (hero settles ~560ms, content ~620ms) before
+     glowing once. Fill `both` holds the rest box-shadow before/after, so there
+     is no flash outside the pulse window. */
+  .hero-schematic .sch-node--human .sch-dot,
+  .workflow-map.is-inview .sch-node--human .sch-dot {
+    animation: approval-pulse 700ms var(--ease) 700ms both;
+  }
 }
 @keyframes sch-draw {
   from { transform: scaleY(0); }
@@ -658,6 +704,13 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 @keyframes sch-rise {
   from { transform: translateY(8px); }
   to { transform: translateY(0); }
+}
+/* One-shot copper glow on the human-approval dot. 0%/100% reuse the dot's rest
+   shadow via --dot-rest-shadow (single source) so the pulse blends seamlessly. */
+@keyframes approval-pulse {
+  0%   { box-shadow: var(--dot-rest-shadow); }
+  45%  { box-shadow: 0 0 0 8px var(--accent-rule); }
+  100% { box-shadow: var(--dot-rest-shadow); }
 }
 
 /* ---------- Problems ---------- */
@@ -892,6 +945,14 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   font-size: var(--fs-md);
   color: var(--fg-2);
   overflow-wrap: anywhere;
+}
+/* Brief copper wash when a copy succeeds — a visual echo of the button's label
+   swap (CopyEmail toggles .is-copied). One-shot; the global reduced-motion reset
+   collapses it to nothing. */
+.copy-email-address.is-copied { animation: copy-flash 600ms var(--ease); }
+@keyframes copy-flash {
+  from { background: var(--accent-soft); }
+  to   { background: transparent; }
 }
 
 @media (max-width: 767px) {

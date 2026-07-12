@@ -67,7 +67,10 @@ export default function CopyEmail({
     <span className="copy-email">
       {/* LTR-isolated so the address renders intact inside an RTL document
           (same guard the footer applies to its visible address). */}
-      <span ref={addressRef} className="copy-email-address ltr-inline">
+      <span
+        ref={addressRef}
+        className={"copy-email-address ltr-inline" + (copied ? " is-copied" : "")}
+      >
         {email}
       </span>
       <button type="button" className="btn btn-sm" onClick={copy}>

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import SpineReveal from "@/components/SpineReveal";
 
 export type WorkflowNode = {
   /** Short, terse label — the spine is built for phrases, not sentences. */
@@ -64,13 +65,12 @@ export default function WorkflowMap({
     );
   }
 
+  // Content spine: SpineReveal owns the .workflow-map panel and draws it in once
+  // when it scrolls into view (see globals.css .workflow-map.is-inview).
   return (
-    <div
-      className="workflow-map"
-      {...(ariaLabel ? { role: "group", "aria-label": ariaLabel } : {})}
-    >
+    <SpineReveal ariaLabel={ariaLabel}>
       {caption ? <span className="sch-cap">{caption}</span> : null}
       {flow}
-    </div>
+    </SpineReveal>
   );
 }
