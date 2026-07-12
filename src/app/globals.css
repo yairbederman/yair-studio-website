@@ -240,10 +240,10 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
    Hebrew family in RTL for every Hebrew-bearing element so none falls back to a
    Latin font. The Latin-digit step numbers (.method-step-num) deliberately stay
    mono. */
-[lang="he"] :is(p, .lead, .eyebrow, .label-mono, .section-index, .mono, .btn,
+[lang="he"] :is(p, .lead, .eyebrow, .label-mono, .mono, .btn,
   .nav-links a, .footer-r a, .footer-tag, .panel-list li, .sch-cap, .sch-label, .sch-sub,
   .proof-row dt, .sample-badge, .case-badge),
-[dir="rtl"] :is(p, .lead, .eyebrow, .label-mono, .section-index, .mono, .btn,
+[dir="rtl"] :is(p, .lead, .eyebrow, .label-mono, .mono, .btn,
   .nav-links a, .footer-r a, .footer-tag, .panel-list li, .sch-cap, .sch-label, .sch-sub,
   .proof-row dt, .sample-badge, .case-badge) {
   font-family: var(--font-body-he);
@@ -314,31 +314,12 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   color: var(--fg-2);
 }
 
-.section-index {
-  font-family: var(--font-body);
-  font-size: var(--fs-xs);
-  text-transform: uppercase;
-  letter-spacing: var(--tr-ui);
-  color: var(--fg-3);
-  display: inline-flex;
-  gap: var(--s-2);
-  align-items: center;
-}
-.section-index .num { color: var(--accent); }
-
 .lead {
   font-family: var(--font-body);
   font-size: var(--fs-xl);
   line-height: var(--lh-snug);
   color: var(--fg-2);
   font-weight: 400;
-}
-
-/* Optional dot-grid utility (available; not applied globally to avoid clutter). */
-.dot-grid {
-  background-image: radial-gradient(circle, var(--fg-3) 1px, transparent 1.5px);
-  background-size: 24px 24px;
-  opacity: 0.18;
 }
 
 /* ============================================================
@@ -927,6 +908,50 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 }
 .feature-card.is-human .card-title { color: var(--accent); }
 
+/* Who-it's-for scenario rows (ScenarioList). The buyer's own words, each row led
+   by an oversized copper opening-quote. Deliberately not a card grid — hairline-
+   separated rows break the who → build → human card repetition on offer pages
+   (impeccable: identical card grids are an absolute ban). */
+.scenario-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.scenario {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--s-4);
+  align-items: start;
+  padding-block: var(--s-5);
+}
+.scenario + .scenario { border-block-start: 1px solid var(--rule); }
+.scenario::before {
+  content: "\201C"; /* left double quote — the buyer, overheard */
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: var(--fs-4xl);
+  line-height: 1;
+  /* the glyph's ink sits high in its em box — nudge it onto the symptom cap line */
+  margin-block-start: -0.14em;
+}
+[dir="rtl"] .scenario::before { content: "\201D"; } /* opens on the start (right) side */
+.scenario-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  min-width: 0; /* let long symptom text wrap, never overflow the row */
+}
+.scenario-symptom {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  color: var(--fg-1);
+  line-height: var(--lh-snug);
+}
+.scenario-note {
+  color: var(--fg-2);
+  line-height: var(--lh-body);
+}
+
 /* Odd-count 2-col grids: the lone last card spans the row instead of leaving
    a hole. No-op in the single-column mobile layout. */
 .feature-grid > li:last-child:nth-child(odd),
@@ -1055,6 +1080,42 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   width: 8px;
   height: 1px;
   background: var(--fg-3);
+}
+
+/* Safety band — copper approval-dot markers. Reuses the .panel-list chrome but
+   swaps the hairline dash for the workflow spine's copper checkpoint dot, so
+   every boundary reads as a human-controlled guarantee, not a disclaimer. Text
+   is fg-1 (these are promises, not captions). */
+.safety .panel-list li { color: var(--fg-1); }
+.safety .panel-list li::before {
+  content: "";
+  top: 0.5em;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* Sibling stagger: each copper dot pops in as the panel scrolls into view
+   (SpineReveal adds .is-inview). Fires once. Scale-only + `both`, so the dots are
+   fully visible at rest — the class only adds an entrance; a paused tab, headless
+   render, or reduced-motion leaves every dot at its final copper state. This is a
+   single list's sibling stagger, not a uniform per-section reveal. */
+@media (prefers-reduced-motion: no-preference) {
+  .safety .safety-guards.is-inview li::before {
+    animation: safety-fill var(--dur-slow) var(--ease) both;
+  }
+  .safety .safety-guards.is-inview li:nth-child(1)::before { animation-delay: 60ms; }
+  .safety .safety-guards.is-inview li:nth-child(2)::before { animation-delay: 120ms; }
+  .safety .safety-guards.is-inview li:nth-child(3)::before { animation-delay: 180ms; }
+  .safety .safety-guards.is-inview li:nth-child(4)::before { animation-delay: 240ms; }
+  .safety .safety-guards.is-inview li:nth-child(5)::before { animation-delay: 300ms; }
+  .safety .safety-guards.is-inview li:nth-child(6)::before { animation-delay: 360ms; }
+}
+@keyframes safety-fill {
+  from { transform: scale(0.2); }
+  to   { transform: scale(1); }
 }
 
 @media (max-width: 767px) {

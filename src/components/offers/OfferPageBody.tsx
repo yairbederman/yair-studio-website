@@ -1,6 +1,7 @@
 import OfferHero from "@/components/offers/OfferHero";
 import OfferSection from "@/components/offers/OfferSection";
 import OfferCardGrid from "@/components/offers/OfferCardGrid";
+import ScenarioList from "@/components/offers/ScenarioList";
 import ProblemsPanel from "@/components/ProblemsPanel";
 import OfferSteps from "@/components/offers/OfferSteps";
 import OfferCTA from "@/components/offers/OfferCTA";
@@ -54,7 +55,7 @@ export default function OfferPageBody({
       ) : null}
 
       <OfferSection id="who" title={c.who.title} intro={c.who.intro}>
-        <OfferCardGrid items={c.who.items} />
+        <ScenarioList items={c.who.items} />
       </OfferSection>
 
       <OfferSection id="problems" title={c.problems.title}>

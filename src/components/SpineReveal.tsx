@@ -3,27 +3,32 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 /**
- * Wraps a *content* workflow-map spine (the visible .workflow-map panel) and
- * draws it in once, when it scrolls into view. An IntersectionObserver fires a
- * single time then disconnects, adding the `is-inview` class that globals.css
- * hangs the draw-in + approval-pulse off of.
+ * Reveal-on-scroll primitive: adds the `is-inview` class once, when the wrapped
+ * panel first scrolls into view. An IntersectionObserver fires a single time then
+ * disconnects; globals.css hangs the entrance off `is-inview`. `className`
+ * defaults to the workflow-map spine (draw-in + approval-pulse) but any panel can
+ * reuse this — the safety band passes `panel-list safety-guards` for its copper
+ * marker stagger.
  *
- * Isolated-client-child pattern: WorkflowMap stays a Server Component and passes
- * the already-rendered caption + spine as `children`. Only this thin wrapper is
- * client, mirroring FilmPlayer.
+ * Isolated-client-child pattern: the caller (WorkflowMap, SafetySection) stays a
+ * Server Component and passes its already-rendered content as `children`. Only
+ * this thin wrapper is client, mirroring FilmPlayer.
  *
- * Headless-safe: the draw-in keyframes are transform/box-shadow only, so the
- * spine is fully visible even if this never runs (no JS) — the class only *adds*
- * an entrance, it never gates visibility. Above-the-fold spines are covered too:
- * the observer reports the current intersection on its first callback, so a spine
- * already in view draws in on mount.
+ * Headless-safe: every entrance keyframe is transform/box-shadow only, so the
+ * content is fully visible even if this never runs (no JS) — the class only *adds*
+ * an entrance, it never gates visibility. Above-the-fold panels are covered too:
+ * the observer reports the current intersection on its first callback, so a panel
+ * already in view reveals on mount.
  */
 export default function SpineReveal({
   children,
   ariaLabel,
+  className = "workflow-map",
 }: {
   children: ReactNode;
   ariaLabel?: string;
+  /** Base class on the wrapper; `is-inview` is appended on entry. */
+  className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
@@ -47,7 +52,7 @@ export default function SpineReveal({
   return (
     <div
       ref={ref}
-      className={"workflow-map" + (inView ? " is-inview" : "")}
+      className={className + (inView ? " is-inview" : "")}
       {...(ariaLabel ? { role: "group", "aria-label": ariaLabel } : {})}
     >
       {children}

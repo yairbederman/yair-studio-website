@@ -307,6 +307,11 @@ const he: HomeContent = {
       },
     ],
   },
+  // Deliberate EN/HE divergence: the Hebrew safety band is locale-native, not a
+  // translation of the EN "AI with clear boundaries" set. It runs 4 blunter
+  // boundaries ("what doesn't happen here") against EN's 5 — the copper markers
+  // (SafetySection) stagger over whatever count each locale ships. Not drift; do
+  // not reconcile the counts.
   safety: {
     title: "מה לא קורה פה",
     items: [

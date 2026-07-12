@@ -30,11 +30,11 @@ export default function HomePageBody({ locale }: { locale: Locale }) {
       <main id="main" className="home">
         <HeroSection content={content.hero} />
         <ProblemsSection content={content.problems} />
+        <EvidenceSection content={content.evidence} locale={locale} />
         <OffersSection content={content.offers} locale={locale} />
         <MethodSection content={content.method} />
         <SafetySection content={content.safety} />
         <FounderSection content={proof.founder} />
-        <EvidenceSection content={content.evidence} locale={locale} />
         <ProofSection content={proof.cases} badgeLabel={proof.sampleBadge} />
         <FinalCTA content={content.finalCta} />
       </main>
