@@ -548,12 +548,75 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 .card-desc { margin-top: var(--s-2); color: var(--fg-2); }
 
 /* ---------- Hero ---------- */
-.hero { padding-block: var(--s-9) var(--s-8); }
+.hero { position: relative; padding-block: var(--s-9) var(--s-8); }
 .hero-inner {
+  position: relative;
+  z-index: 2;
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   gap: var(--s-8);
   align-items: center;
+}
+
+/* ---------- Hero ambient backdrop ----------
+   The hero-ambient loop sits behind the copy, full-bleed, mounted via FilmPlayer
+   with frameClassName="hero-backdrop". Neither .hero (position:relative, z:auto)
+   nor the backdrop frame create a stacking context, so the layers order cleanly:
+   backdrop media (z:0, DOM order) < scrim (z:1) < content (.hero-inner z:2) <
+   pause toggle (z:3) — so the WCAG 2.2.2 pause control stays clickable above the
+   scrim and content. object-fit:cover clips within the media box (== .hero), so
+   the video never overflows the section. */
+.hero-backdrop { position: absolute; inset: 0; }
+.hero-backdrop .film-poster,
+.hero-backdrop .film-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  /* Darker over the text zone (inline-start), fading out — plus a fade into the
+     next section at the bottom. RTL flips the horizontal direction below.
+     The first (fallback) declaration uses no color-mix, so a browser without
+     color-mix (pre-2023) keeps the bottom fade rather than dropping the whole
+     background — legibility degrades gracefully instead of failing silently. */
+  background: linear-gradient(to bottom, transparent 42%, var(--bg-0) 100%);
+  background:
+    linear-gradient(
+      to right,
+      color-mix(in srgb, var(--bg-0) 64%, transparent) 0%,
+      color-mix(in srgb, var(--bg-0) 30%, transparent) 44%,
+      transparent 74%
+    ),
+    linear-gradient(to bottom, transparent 52%, var(--bg-0) 100%);
+}
+[dir="rtl"] .hero-scrim {
+  background: linear-gradient(to bottom, transparent 42%, var(--bg-0) 100%);
+  background:
+    linear-gradient(
+      to left,
+      color-mix(in srgb, var(--bg-0) 64%, transparent) 0%,
+      color-mix(in srgb, var(--bg-0) 30%, transparent) 44%,
+      transparent 74%
+    ),
+    linear-gradient(to bottom, transparent 52%, var(--bg-0) 100%);
+}
+.hero-backdrop .film-toggle {
+  /* Top-inline-end: lands in the hero's top padding, above the copy and the
+     (vertically centered) schematic on desktop, and above the fold on mobile —
+     where a bottom-pinned control would sit below the fold on the tall mobile
+     hero and graze the full-width schematic. */
+  position: absolute;
+  inset-block-start: var(--s-4);
+  inset-inline-end: var(--s-4);
+  z-index: 3;
+  background: var(--bg-1);
 }
 .hero-copy {
   display: flex;
@@ -894,6 +957,19 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   .section-head { margin-bottom: var(--s-6); }
   .hero { padding-block: var(--s-8) var(--s-7); }
   .hero-inner { grid-template-columns: 1fr; gap: var(--s-7); }
+  /* One column: the copy is full-width at the top, so the desktop scrim's
+     inline-start bias no longer covers it. Switch to a top-weighted vertical
+     scrim so full-width copy stays legible over the ambient backdrop. */
+  .hero-scrim {
+    background: linear-gradient(to bottom, var(--bg-0), transparent 62%);
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--bg-0) 72%, transparent) 0%,
+      color-mix(in srgb, var(--bg-0) 44%, transparent) 48%,
+      color-mix(in srgb, var(--bg-0) 22%, transparent) 78%,
+      transparent 100%
+    );
+  }
   /* Compact spine below the CTAs — never hidden (the motif IS the brand). */
   .hero-schematic { gap: var(--s-4); }
   .hero h1 { font-size: var(--fs-3xl); }

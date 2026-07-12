@@ -28,7 +28,7 @@ export default function HomePageBody({ locale }: { locale: Locale }) {
     <>
       {locale === "en" ? <JsonLd /> : null}
       <main id="main" className="home">
-        <HeroSection content={content.hero} />
+        <HeroSection content={content.hero} locale={locale} />
         <ProblemsSection content={content.problems} />
         <EvidenceSection content={content.evidence} locale={locale} />
         <OffersSection content={content.offers} locale={locale} />

@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"
+      integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      /* ============================================================
+         "Wordmark Sting" — a ~2.5s y[AI]r brand lockup. Used as a
+         play-once intro on the flagship command-center film, and as a
+         standalone social / OG asset. Latin-only (the wordmark is
+         ALWAYS Latin + LTR, per HEBREW.md §1), so one asset serves both
+         locales.
+
+         Beats: copper brackets DRAW in (SVG stroke) -> y and r RISE and
+         settle (restrained overshoot) -> AI RESOLVES between them -> one
+         soft copper bloom -> hold the lockup (studio fades in) -> the
+         whole thing fades to bare --bg-0 in the last ~350ms. That final
+         fade BAKES the handoff: as a film intro it lands on clean
+         charcoal and the film begins — no client-side crossfade needed.
+
+         Type treatment mirrors src/components/Wordmark.tsx + globals.css
+         `.wordmark*`: y/r Inter 600 cream, AI Inter 700 copper, brackets
+         copper, studio Geist Mono tracked + muted. Opaque against
+         --bg-0. See DESIGN.md.
+         ============================================================ */
+      @font-face { font-family: "Inter"; font-weight: 600; font-display: block; src: url("assets/fonts/inter-600.woff2") format("woff2"); }
+      @font-face { font-family: "Inter"; font-weight: 700; font-display: block; src: url("assets/fonts/inter-700.woff2") format("woff2"); }
+      @font-face { font-family: "Geist Mono"; font-weight: 400; font-display: block; src: url("assets/fonts/geist-mono-400.woff2") format("woff2"); }
+
+      :root {
+        --bg-0: #121211;
+        --fg-1: #f4f1ea;
+        --fg-3: #8a847a;
+        --accent: #d96832;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden; background: var(--bg-0);
+        font-family: "Inter", system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      #stage { position: relative; width: 1920px; height: 1080px; }
+      /* Base fill on a full-bleed CHILD, never the root (producer can drop the
+         root's own background -> black frame). */
+      #bg-fill { position: absolute; inset: 0; background: var(--bg-0); }
+
+      /* One soft copper bloom behind the lockup. Sized for its PEAK. */
+      #bloom {
+        position: absolute; left: 960px; top: 512px;
+        width: 760px; height: 760px; margin: -380px 0 0 -380px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(217,104,50,0.42) 0%, rgba(217,104,50,0.12) 34%, rgba(217,104,50,0) 66%);
+        opacity: 0; will-change: transform, opacity;
+      }
+
+      /* Centered lockup: the wordmark row, with "studio" tracked below. */
+      #lockup {
+        position: absolute; left: 960px; top: 512px; transform: translate(-50%, -50%);
+        display: flex; flex-direction: column; align-items: center; gap: 34px;
+      }
+      .wm { display: flex; align-items: center; line-height: 1; }
+      .g {
+        display: inline-block; font-size: 210px; line-height: 1;
+        letter-spacing: -0.02em; will-change: transform, opacity;
+      }
+      .g.y, .g.r { font-weight: 600; color: var(--fg-1); }
+      .g.ai { font-weight: 700; color: var(--accent); text-transform: uppercase; }
+
+      /* Drawn copper brackets replace the text [ ] so they can stroke in.
+         Negative margins hug them to AI (the wordmark's tight tracking). */
+      .br { display: inline-flex; align-items: center; }
+      .br-l { margin-left: 6px; margin-right: -6px; }
+      .br-r { margin-left: -6px; margin-right: 6px; }
+      .br-svg { height: 168px; width: auto; display: block; overflow: visible; }
+      .br-path {
+        fill: none; stroke: var(--accent); stroke-width: 15;
+        stroke-linecap: round; stroke-linejoin: round;
+      }
+
+      #studio {
+        font-family: "Geist Mono", ui-monospace, monospace; font-weight: 400;
+        font-size: 62px; letter-spacing: 0.6em; text-indent: 0.6em;
+        text-transform: uppercase; color: var(--fg-3);
+        opacity: 0; will-change: transform, opacity;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div
+      id="stage"
+      data-composition-id="wordmark-sting"
+      data-start="0"
+      data-duration="2.5"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div id="bg-fill"></div>
+      <div id="bloom"></div>
+
+      <div id="lockup">
+        <div class="wm">
+          <span class="g y">y</span>
+          <span class="br br-l">
+            <svg class="br-svg" viewBox="0 0 60 180">
+              <path class="br-path" d="M 46 10 L 18 10 L 18 170 L 46 170" pathLength="1"
+                    stroke-dasharray="1" stroke-dashoffset="1" />
+            </svg>
+          </span>
+          <span class="g ai">AI</span>
+          <span class="br br-r">
+            <svg class="br-svg" viewBox="0 0 60 180">
+              <path class="br-path" d="M 14 10 L 42 10 L 42 170 L 14 170" pathLength="1"
+                    stroke-dasharray="1" stroke-dashoffset="1" />
+            </svg>
+          </span>
+          <span class="g r">r</span>
+        </div>
+        <div id="studio">studio</div>
+      </div>
+    </div>
+
+    <script>
+      /* Deterministic 2.5s sting. One paused GSAP timeline; every element is
+         present at load (single scene), so initial states are set synchronously
+         with gsap.set. No random / clock / infinite repeats. */
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+
+      // ---- initial (pre-reveal) states ----
+      gsap.set([".g.y", ".g.r"], { opacity: 0, y: 46 });
+      gsap.set(".g.ai", { opacity: 0, scale: 0.86, transformOrigin: "center" });
+      gsap.set("#studio", { opacity: 0, y: 14 });
+
+      // ===== brackets draw in copper (0.15–0.75) =====
+      tl.to(".br-l .br-path", { strokeDashoffset: 0, duration: 0.55, ease: "power2.out" }, 0.15);
+      tl.to(".br-r .br-path", { strokeDashoffset: 0, duration: 0.55, ease: "power2.out" }, 0.22);
+
+      // ===== y and r rise and settle — restrained overshoot (0.5–1.05) =====
+      tl.to(".g.y", { opacity: 1, y: 0, duration: 0.55, ease: "back.out(1.5)" }, 0.5);
+      tl.to(".g.r", { opacity: 1, y: 0, duration: 0.55, ease: "back.out(1.5)" }, 0.62);
+
+      // ===== AI resolves between the brackets (0.85–1.35) =====
+      tl.to(".g.ai", { opacity: 1, scale: 1, duration: 0.5, ease: "power3.out" }, 0.85);
+
+      // ===== one soft copper bloom (1.1–2.0), peak ~1.45 =====
+      tl.fromTo("#bloom",
+        { scale: 0.55, opacity: 0, transformOrigin: "center" },
+        {
+          scale: 1.55, duration: 0.9, ease: "power2.out", immediateRender: false,
+          keyframes: { opacity: [0, 0.5, 0], ease: "sine.inOut" },
+        }, 1.1);
+
+      // ===== studio fades in during the hold (1.35–1.85) =====
+      tl.to("#studio", { opacity: 1, y: 0, duration: 0.5 }, 1.35);
+
+      // ===== fade the whole lockup to bare charcoal (2.15–2.5) =====
+      tl.to(["#lockup"], { opacity: 0, duration: 0.35, ease: "power2.in" }, 2.15);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["wordmark-sting"] = tl;
+    </script>
+  </body>
+</html>

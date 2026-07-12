@@ -34,6 +34,9 @@ const en: OfferPageContent = {
     caption:
       "The command center your office logs into: the day's work in one view — meetings, urgent email, waiting clients, deadlines — with what matters waiting for a person's approval. Taking shape, shown with sample data.",
     filmName: "command center film",
+    // Play-once y[AI]r wordmark sting before the film (the flagship product
+    // face opens as a branded system). Locale-neutral (Latin, LTR).
+    intro: { mp4: "/videos/wordmark-sting.mp4", webm: "/videos/wordmark-sting.webm" },
   },
   who: {
     title: "Built for offices that sound like this",
@@ -237,6 +240,8 @@ const he: OfferPageContent = {
     caption:
       "מוקד הבקרה שהמשרד שלכם נכנס אליו: כל העבודה של היום בתצוגה אחת — פגישות, מיילים דחופים, לקוחות שמחכים, דדליין — כשמה שחשוב מחכה לאישור של אדם. בהתהוות, מוצג עם נתוני דוגמה.",
     filmName: "סרטון מוקד הבקרה",
+    // Same locale-neutral y[AI]r wordmark sting (Latin, LTR) as the EN film.
+    intro: { mp4: "/videos/wordmark-sting.mp4", webm: "/videos/wordmark-sting.webm" },
   },
   who: {
     title: "נבנה למשרדים שנשמעים ככה",

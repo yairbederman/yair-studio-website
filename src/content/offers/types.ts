@@ -34,6 +34,8 @@ export type OfferPageContent = {
     poster: string;
     caption: string;
     filmName: string;
+    /** Optional play-once intro (the wordmark sting) shown before the loop. */
+    intro?: { mp4: string; webm: string };
   };
   who: { title: string; intro?: string; items: readonly CardItem[] };
   problems: { title: string; items: readonly CardItem[] };

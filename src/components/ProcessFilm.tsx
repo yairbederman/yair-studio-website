@@ -17,6 +17,7 @@ export default function ProcessFilm({
   caption,
   filmName,
   controls,
+  intro,
 }: {
   webm: string;
   mp4: string;
@@ -26,6 +27,8 @@ export default function ProcessFilm({
   filmName?: string;
   /** Localized toggle labels — pass shellContent(locale).filmControls. */
   controls: { pause: string; play: string };
+  /** Optional play-once intro (the wordmark sting) shown before the loop. */
+  intro?: { mp4: string; webm: string };
 }) {
   return (
     <figure className="workflow-film process-film">
@@ -35,6 +38,7 @@ export default function ProcessFilm({
         poster={poster}
         filmName={filmName}
         controls={controls}
+        intro={intro}
       />
       <figcaption className="film-caption">{caption}</figcaption>
     </figure>

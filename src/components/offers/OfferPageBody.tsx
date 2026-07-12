@@ -50,6 +50,7 @@ export default function OfferPageBody({
             caption={c.film.caption}
             filmName={c.film.filmName}
             controls={shellContent(locale).filmControls}
+            intro={c.film.intro}
           />
         </OfferSection>
       ) : null}

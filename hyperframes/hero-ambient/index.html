@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"
+      integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Three.js as a browser global (UMD). r160.1 is the last version that
+         still ships build/three.min.js; ≥0.161 dropped the UMD build. The
+         `three` adapter drives the shader plate via `hf-seek`. -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"
+      integrity="sha384-qOkzR5Ke/XkQxuGVJ9hpFEpDlcoLtWwVYhnJf06cLIZa2vaIptSqaubivErzmD5O"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      /* ============================================================
+         "Hero Ambient" — text-free ambient loop behind the homepage
+         hero. Three layers: (1) a WebGL FBM shader plate (Three.js,
+         driven by HyperFrames `hf-seek` time) — a near-black
+         domain-warped drift with faint copper embers; (2) a couple of
+         SVG hairline schematic paths that draw in and fade out (the
+         brand's workflow-spine language, kept very quiet); (3) one soft
+         copper bloom per loop. OPAQUE render against --bg-0 — this IS
+         the background, so no alpha master.
+
+         Seamless loop (the whole point): the shader's noise is driven
+         along a CLOSED CIRCULAR PATH in noise space — the animated
+         offset is (cos θ, sin θ)·R with θ = 2π·(t / DURATION), so the
+         field at t=0 is identical to t=DURATION. Every DOM overlay is
+         at opacity 0 at both loop boundaries, so the seam is pure
+         continuous drift. Palette + tokens mirror src/app/globals.css
+         (accepted practice — HyperFrames can't read CSS variables from
+         the site). See DESIGN.md.
+         ============================================================ */
+      :root {
+        --bg-0: #121211;
+        --accent: #d96832;
+        --rule-strong: #3a3a34;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden; background: var(--bg-0);
+      }
+      #stage { position: relative; width: 1920px; height: 1080px; }
+
+      /* A full-bleed CHILD carries the base fill — never the root itself
+         (the producer's frame compositing can drop the root element's own
+         background and render black). Insurance behind the opaque canvas. */
+      #bg-fill { position: absolute; inset: 0; background: var(--bg-0); }
+
+      /* The shader plate. Opaque, full-frame; it is the visible background. */
+      #ambient { position: absolute; inset: 0; width: 1920px; height: 1080px; display: block; }
+
+      /* Hairline schematic overlay — the workflow-spine language, faint.
+         Center-right biased (the hero copy sits left, under a scrim). */
+      #schematic { position: absolute; inset: 0; width: 1920px; height: 1080px; opacity: 0.5; }
+      #schematic path {
+        fill: none; stroke: var(--rule-strong); stroke-width: 1.5;
+        stroke-linecap: round;
+      }
+      #schematic .node {
+        fill: var(--bg-0); stroke: #8a847a; stroke-width: 1.5; opacity: 0;
+      }
+      #schematic .node--human { fill: var(--accent); stroke: var(--accent); }
+
+      /* One soft copper bloom per loop. Positioned for its PEAK size so it
+         never clips the frame edge; opacity 0 at both loop boundaries. */
+      #bloom {
+        position: absolute; left: 1180px; top: 430px;
+        width: 220px; height: 220px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(217,104,50,0.55) 0%, rgba(217,104,50,0.12) 38%, rgba(217,104,50,0) 70%);
+        opacity: 0; will-change: transform, opacity;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div
+      id="stage"
+      data-composition-id="hero-ambient"
+      data-start="0"
+      data-duration="18"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div id="bg-fill"></div>
+      <canvas id="ambient" width="1920" height="1080"></canvas>
+
+      <svg id="schematic" viewBox="0 0 1920 1080">
+        <!-- Two gentle hairlines that echo a workflow spine, drawn in then out.
+             pathLength=1 so a single dashoffset drives the draw regardless of
+             the path's real length. -->
+        <path id="line-1" d="M 1120 640 C 1300 560, 1360 760, 1560 660"
+              pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0" />
+        <path id="line-2" d="M 1160 470 C 1320 520, 1420 380, 1600 452"
+              pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" opacity="0" />
+        <!-- A few nodes along the flow; one copper (the human checkpoint). -->
+        <circle class="node" id="node-1" cx="1120" cy="640" r="7" />
+        <circle class="node node--human" id="node-2" cx="1360" cy="672" r="8" />
+        <circle class="node" id="node-3" cx="1560" cy="660" r="7" />
+      </svg>
+
+      <div id="bloom"></div>
+    </div>
+
+    <!-- The WebGL shader plate. Three.js is detected by HyperFrames' `three`
+         adapter, which dispatches `hf-seek` on every seek so the plate renders
+         the exact frame time (no wall-clock, fully deterministic). -->
+    <script>
+      const DURATION = 18; // seconds — matches root data-duration
+      const TAU = Math.PI * 2;
+
+      const canvas = document.getElementById("ambient");
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: false,
+        alpha: false,
+        preserveDrawingBuffer: true, // hold the buffer for frame capture
+      });
+      renderer.setSize(1920, 1080, false);
+      renderer.setPixelRatio(1);
+      renderer.setClearColor(0x121211, 1);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.Camera(); // full-screen quad ignores the camera
+
+      const uniforms = {
+        uTheta: { value: 0 },
+        uAspect: { value: 1920 / 1080 },
+      };
+
+      const material = new THREE.ShaderMaterial({
+        uniforms,
+        vertexShader: /* glsl */ `
+          varying vec2 vUv;
+          void main() {
+            vUv = uv;
+            gl_Position = vec4(position, 1.0); // position spans clip space
+          }
+        `,
+        fragmentShader: /* glsl */ `
+          precision highp float;
+          varying vec2 vUv;
+          uniform float uTheta;
+          uniform float uAspect;
+
+          // --- deterministic value-noise FBM (no random; hash-based) ---
+          float hash(vec2 p) {
+            p = fract(p * vec2(123.34, 456.21));
+            p += dot(p, p + 45.32);
+            return fract(p.x * p.y);
+          }
+          float noise(vec2 p) {
+            vec2 i = floor(p);
+            vec2 f = fract(p);
+            vec2 u = f * f * (3.0 - 2.0 * f);
+            float a = hash(i);
+            float b = hash(i + vec2(1.0, 0.0));
+            float c = hash(i + vec2(0.0, 1.0));
+            float d = hash(i + vec2(1.0, 1.0));
+            return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+          }
+          float fbm(vec2 p) {
+            float v = 0.0, a = 0.5;
+            for (int i = 0; i < 5; i++) {
+              v += a * noise(p);
+              p *= 2.0;
+              a *= 0.5;
+            }
+            return v;
+          }
+
+          void main() {
+            // Aspect-corrected field coordinate.
+            vec2 p = vec2(vUv.x * uAspect, vUv.y) * 2.4;
+
+            // Closed circular flow in noise space -> seamless period.
+            vec2 flow = vec2(cos(uTheta), sin(uTheta)) * 0.55;
+
+            // Domain warp: two fbm fields displace a third.
+            float w1 = fbm(p + flow);
+            float w2 = fbm(p + flow.yx * 1.3 + 7.3);
+            vec2 warp = vec2(w1, w2);
+            float f = fbm(p + warp * 1.6 - flow * 0.4);
+
+            vec3 base = vec3(0.071, 0.071, 0.067); // #121211
+            // Subtle warm brightness lift across the field (a calm smoke).
+            float lift = smoothstep(0.35, 0.95, f);
+            vec3 col = base + lift * vec3(0.045, 0.042, 0.038);
+
+            // Faint copper embers — a second, higher-freq field, thresholded high
+            // so they stay sparse and near-subliminal (the brand signal, quiet).
+            float ember = smoothstep(0.64, 0.86, fbm(p * 1.9 + warp + flow * 0.6));
+            col += ember * vec3(0.851, 0.408, 0.196) * 0.055;
+
+            // Gentle vignette for depth.
+            float vig = smoothstep(1.25, 0.25, length(vUv - 0.5) * 1.45);
+            col *= mix(0.80, 1.0, vig);
+
+            gl_FragColor = vec4(col, 1.0);
+          }
+        `,
+      });
+
+      const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material);
+      scene.add(quad);
+
+      function renderAt(time) {
+        const phase = ((time % DURATION) + DURATION) % DURATION; // wrap to [0,DUR)
+        uniforms.uTheta.value = (phase / DURATION) * TAU;
+        renderer.render(scene, camera);
+      }
+
+      // HyperFrames drives the plate: render exactly the seeked time.
+      window.addEventListener("hf-seek", (event) => renderAt(event.detail.time));
+      renderAt(window.__hfThreeTime || 0);
+    </script>
+
+    <!-- DOM overlays (schematic draw-in/out + one copper bloom) on a single
+         paused GSAP timeline. Every overlay rests at opacity 0 at t=0 and
+         t=DURATION so the loop boundary is pure shader drift. -->
+    <script>
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power2.out" } });
+
+      // ---- Schematic hairlines draw in (2.0–6.0), hold faint, fade out (12.5–15.8) ----
+      tl.to("#line-1", { opacity: 0.9, duration: 0.8 }, 2.0);
+      tl.to("#line-1", { strokeDashoffset: 0, duration: 3.6, ease: "power1.inOut" }, 2.0);
+      tl.to("#line-2", { opacity: 0.9, duration: 0.8 }, 2.7);
+      tl.to("#line-2", { strokeDashoffset: 0, duration: 3.6, ease: "power1.inOut" }, 2.7);
+
+      // Nodes tick in along the flow, one after the lines reach them.
+      tl.to("#node-1", { opacity: 0.85, duration: 0.5 }, 3.4);
+      tl.to("#node-3", { opacity: 0.85, duration: 0.5 }, 5.4);
+      tl.to("#node-2", { opacity: 0.95, duration: 0.5 }, 6.0);
+      // The copper human node pulses once, gently, after it lands (finite yoyo).
+      tl.to("#node-2", {
+        scale: 1.5, transformOrigin: "center", duration: 0.9,
+        ease: "sine.inOut", repeat: 1, yoyo: true,
+      }, 6.6);
+
+      // ---- One soft copper bloom per loop (7.2–10.8) ----
+      // opacity rises then falls (keyframes) so it blooms and clears; scale
+      // expands throughout. immediateRender:false so the "from" state doesn't
+      // paint at t=0.
+      tl.fromTo("#bloom",
+        { scale: 0.5, opacity: 0, transformOrigin: "center" },
+        {
+          scale: 1.7, duration: 3.6, ease: "power2.out", immediateRender: false,
+          keyframes: { opacity: [0, 0.14, 0.14, 0], ease: "sine.inOut" },
+        }, 7.2);
+
+      // ---- Everything returns to rest before the loop boundary ----
+      tl.to(["#line-1", "#line-2"], { opacity: 0, duration: 2.8, ease: "power2.in" }, 12.6);
+      tl.to(["#node-1", "#node-2", "#node-3"], { opacity: 0, duration: 2.6, ease: "power2.in" }, 12.8);
+      // (bloom already cleared to opacity 0 by ~10.8; lines/nodes clear by ~15.6)
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["hero-ambient"] = tl;
+    </script>
+  </body>
+</html>

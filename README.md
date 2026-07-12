@@ -114,3 +114,11 @@ Shared components live in `src/components/` (`Container`, `SiteHeader`, `SiteFoo
 `ProcessFilm`/`FilmPlayer`). Design tokens are defined once in `src/app/globals.css` — never hardcode
 hex in UI; reference `var(--*)`. The one allowed exception is `src/lib/brand.ts`, which mirrors the
 token literals for the OG image because `next/og` (Satori) cannot read CSS variables.
+
+Motion is **pre-rendered video**, never a client-side animation library: the films are HyperFrames
+compositions under [`hyperframes/`](hyperframes/) (one directory per film, each with a `DESIGN.md`),
+rendered to `public/videos/` and played through `FilmPlayer` (poster-first, reduced-motion gated,
+WCAG 2.2.2 pause control). Inventory: `command-center` (flagship product face) · `workflow-sprint` ·
+`meeting-workflow` · `scattered-to-mapped`, plus two ambient/brand pieces — `hero-ambient` (a
+text-free WebGL FBM shader loop behind the homepage hero) and `wordmark-sting` (a ~2.5s `y[AI]r`
+lockup used as a play-once intro on the flagship film).
