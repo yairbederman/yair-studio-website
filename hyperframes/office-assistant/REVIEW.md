@@ -44,6 +44,12 @@
 4. `film` blocks wired into `src/content/offers/ai-office-assistant.ts`
    (locale-keyed: EN files on the EN page, `-he` files on `/he`).
 
+> **Superseded 2026-07-12.** The flagship `film` block now points at the
+> **Command Center** film (`hyperframes/command-center`, Film 5) — a product-UI
+> face rather than this process abstraction. `office-assistant-process*` assets
+> stay on disk (retired, unreferenced) pending cleanup. This project remains the
+> bilingual-render precedent (`lang` variable, one composition).
+
 ## BUG (render-blocking, non-obvious — keep for the next film)
 
 **`document.documentElement.dir = "rtl"` makes `hyperframes render` emit

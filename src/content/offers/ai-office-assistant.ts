@@ -27,13 +27,13 @@ const en: OfferPageContent = {
     secondaryCta: { label: "How pricing works", href: "#pricing" },
   },
   film: {
-    sectionTitle: "The office day, in motion",
-    webm: "/videos/office-assistant-process.webm",
-    mp4: "/videos/office-assistant-process.mp4",
-    poster: "/videos/office-assistant-process-poster.png",
+    sectionTitle: "What your office logs into",
+    webm: "/videos/command-center.webm",
+    mp4: "/videos/command-center.mp4",
+    poster: "/videos/command-center-poster.png",
     caption:
-      "The office morning in motion: overnight inputs become briefing, triage, documents, and follow-up — all through one human approval.",
-    filmName: "office day film",
+      "The command center your office logs into: the day's work in one view — meetings, urgent email, waiting clients, deadlines — with what matters waiting for a person's approval. Taking shape, shown with sample data.",
+    filmName: "command center film",
   },
   who: {
     title: "Built for offices that sound like this",
@@ -230,13 +230,13 @@ const he: OfferPageContent = {
     secondaryCta: { label: "איך התמחור עובד", href: "#pricing" },
   },
   film: {
-    sectionTitle: "יום המשרד, בתנועה",
-    webm: "/videos/office-assistant-process-he.webm",
-    mp4: "/videos/office-assistant-process-he.mp4",
-    poster: "/videos/office-assistant-process-he-poster.png",
+    sectionTitle: "מה שהמשרד שלכם נכנס אליו",
+    webm: "/videos/command-center-he.webm",
+    mp4: "/videos/command-center-he.mp4",
+    poster: "/videos/command-center-he-poster.png",
     caption:
-      "בוקר המשרד בתנועה: הקלט שנצבר בלילה הופך לתדריך, למיון, למסמכים ולמעקב — והכול עובר דרך אישור אנושי אחד.",
-    filmName: "סרטון יום המשרד",
+      "מוקד הבקרה שהמשרד שלכם נכנס אליו: כל העבודה של היום בתצוגה אחת — פגישות, מיילים דחופים, לקוחות שמחכים, דדליין — כשמה שחשוב מחכה לאישור של אדם. בהתהוות, מוצג עם נתוני דוגמה.",
+    filmName: "סרטון מוקד הבקרה",
   },
   who: {
     title: "נבנה למשרדים שנשמעים ככה",

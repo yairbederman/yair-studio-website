@@ -1,0 +1,403 @@
+<!doctype html>
+<html
+  lang="en"
+  data-resolution="landscape"
+  data-composition-variables='[{"id":"lang","type":"string","label":"Locale (en | he)","default":"en"}]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"
+      integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      /* ============================================================
+         "The Command Center" — Film 5. HyperFrames composition.
+         The office morning assembles itself INTO the product: overnight
+         chips (email · calendar · documents) fly into a settling
+         interface; panels populate; the copper APPROVAL column becomes
+         the peak — one item approved by a person, ONE deliberately left
+         waiting (approval is never automatic); the day starts decided.
+         First film permitted to show interface (product is real); the
+         honesty grammar rides along: persistent "Sample data" chip, zero
+         names / matter numbers / metrics — rows are generic schematic
+         echoes under the Sample-data banner. One composition, two locales
+         (`lang` variable; HE mirrors RTL). Palette + type mirror
+         src/app/globals.css. Renders transparent. See DESIGN.md.
+         ============================================================ */
+      @font-face { font-family: "Inter"; font-weight: 400; font-display: block; src: url("assets/fonts/inter-400.woff2") format("woff2"); }
+      @font-face { font-family: "Inter"; font-weight: 600; font-display: block; src: url("assets/fonts/inter-600.woff2") format("woff2"); }
+      @font-face { font-family: "Geist Mono"; font-weight: 400; font-display: block; src: url("assets/fonts/geist-mono-400.woff2") format("woff2"); }
+      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+      :root {
+        --bg-0: #121211; --bg-1: #1a1a18; --bg-2: #242420;
+        --fg-1: #f4f1ea; --fg-2: #b9b3aa; --fg-3: #8a847a;
+        --accent: #d96832;
+        --accent-soft: rgba(217, 104, 50, 0.12); --accent-rule: rgba(217, 104, 50, 0.35);
+        --rule: #2a2a26; --rule-strong: #3a3a34;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden; background: transparent;
+        font-family: "Inter", system-ui, sans-serif; /* HE swaps to Assistant at init */
+        color: var(--fg-1);
+        -webkit-font-smoothing: antialiased;
+      }
+      #stage { position: relative; width: 1920px; height: 1080px; }
+      #camera { position: absolute; inset: 0; transform-origin: 960px 540px; will-change: transform; }
+      /* REVIEW/CHECK/SNAPSHOT ONLY — charcoal backdrop so contrast reads true.
+         Remove before the transparent alpha render; the charcoal MP4 is
+         post-composited from the alpha master (see DESIGN.md → Renders). */
+      #review-bg { position: absolute; inset: 0; background: var(--bg-0); }
+      .mono { font-family: "Geist Mono", ui-monospace, monospace; } /* HE swaps to Assistant at init */
+
+      /* ---------- Overnight chips (the pile: email · calendar · documents) ---------- */
+      .ov { position: absolute; opacity: 0; will-change: transform, opacity; }
+      .ov-inner {
+        display: inline-block; padding: 16px 26px; border-radius: 10px;
+        background: var(--bg-2); border: 1.5px solid #45433c;
+        font-size: 34px; letter-spacing: 0.02em; color: var(--fg-2); white-space: nowrap;
+        will-change: transform;
+      }
+      /* tangled overnight hairlines */
+      #tangle { position: absolute; inset: 0; width: 1920px; height: 1080px; opacity: 0; }
+      #tangle path { fill: none; stroke: var(--rule-strong); stroke-width: 2; }
+
+      /* ---------- The interface window ---------- */
+      #ui { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+      #frame-svg { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+      #frame { fill: none; stroke: var(--rule-strong); stroke-width: 2; }
+      #divider { stroke: var(--rule); stroke-width: 1.5; opacity: 0; }
+
+      /* header */
+      #tagline {
+        position: absolute; top: 154px; font-family: "Inter", sans-serif; font-weight: 600;
+        font-size: 56px; letter-spacing: -0.015em; color: var(--fg-1); opacity: 0;
+        white-space: nowrap; will-change: transform, opacity;
+      }
+      #badge {
+        position: absolute; top: 168px; padding: 9px 16px; border-radius: 6px;
+        border: 1.5px solid var(--accent-rule); background: var(--accent-soft);
+        font-size: 22px; letter-spacing: 0.14em; text-transform: uppercase;
+        color: var(--accent); opacity: 0; white-space: nowrap;
+      }
+
+      /* ---------- Panels ---------- */
+      .panel {
+        position: absolute; border: 1.5px solid #45433c; border-radius: 14px;
+        background: rgba(36, 36, 32, 0.5); opacity: 0; will-change: transform, opacity;
+        padding: 26px 28px;
+      }
+      .ptitle {
+        font-size: 26px; letter-spacing: 0.12em; text-transform: uppercase;
+        color: var(--fg-3); margin-bottom: 22px; white-space: nowrap;
+      }
+      .prow {
+        display: flex; align-items: center; gap: 20px; height: 52px;
+        opacity: 0; will-change: transform, opacity;
+      }
+      .prow .st { width: 26px; height: 26px; border-radius: 6px; border: 2px solid #55524a; flex: 0 0 auto; background: transparent; }
+      .prow .rl { font-size: 30px; color: var(--fg-2); white-space: nowrap; }
+
+      /* the approval column — the emphasis */
+      #p-appr { background: rgba(36, 36, 32, 0.62); }
+      #p-appr .ptitle { color: var(--accent); }
+      .arow {
+        display: flex; align-items: center; gap: 24px; height: 74px;
+        opacity: 0; will-change: transform, opacity;
+      }
+      .ast {
+        position: relative; width: 40px; height: 40px; border-radius: 9px;
+        border: 2.5px solid var(--accent-rule); flex: 0 0 auto;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .ast .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); opacity: 0.85; }
+      .ast .chk { position: absolute; width: 34px; height: 34px; opacity: 0; }
+      .ast .chk path { fill: none; stroke: var(--accent); stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 40; stroke-dashoffset: 40; }
+      .arow .al { font-size: 34px; color: var(--fg-1); white-space: nowrap; }
+
+      /* peak ring bloom over the approval column */
+      #bloom {
+        position: absolute; width: 120px; height: 120px; border-radius: 50%;
+        border: 2.5px solid var(--accent); opacity: 0; will-change: transform, opacity;
+      }
+
+      /* ---------- Caption / closing (single text moments, below the frame) ---------- */
+      #caption {
+        position: absolute; left: 0; top: 996px; width: 1920px; text-align: center;
+        font-family: "Inter", sans-serif; font-weight: 400; font-size: 38px;
+        letter-spacing: 0.005em; color: var(--fg-2); opacity: 0;
+      }
+      #closing {
+        position: absolute; left: 0; top: 982px; width: 1920px; text-align: center;
+        font-family: "Inter", sans-serif; font-weight: 600; font-size: 62px;
+        letter-spacing: -0.01em; color: var(--fg-1); opacity: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="stage" data-composition-id="root" data-start="0" data-duration="14" data-width="1920" data-height="1080">
+      <div id="camera" data-layout-allow-overflow>
+        <div id="review-bg"></div>
+
+        <!-- overnight hairlines + chips (the pile) -->
+        <svg id="tangle" viewBox="0 0 1920 1080">
+          <path d="M760 470 C 880 380, 1010 610, 1120 500" />
+          <path d="M820 600 C 940 660, 1010 420, 1110 470" />
+          <path d="M800 430 C 900 560, 1000 560, 1090 610" />
+        </svg>
+        <div class="ov" id="ov1"><span class="ov-inner mono" id="ovt1"></span></div>
+        <div class="ov" id="ov2"><span class="ov-inner mono" id="ovt2"></span></div>
+        <div class="ov" id="ov3"><span class="ov-inner mono" id="ovt3"></span></div>
+
+        <!-- the interface -->
+        <div id="ui">
+          <svg id="frame-svg" viewBox="0 0 1920 1080">
+            <rect id="frame" x="120" y="120" width="1680" height="840" rx="24" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+            <line id="divider" x1="160" y1="256" x2="1760" y2="256" />
+          </svg>
+
+          <div id="tagline"></div>
+          <div id="badge" class="mono"></div>
+
+          <!-- status grid (2x2) -->
+          <div class="panel" id="p-meet">
+            <div class="ptitle mono" id="t-meet"></div>
+            <div class="prow" id="rw-meet-1"><span class="st"></span><span class="rl mono" id="rl-meet-1"></span></div>
+            <div class="prow" id="rw-meet-2"><span class="st"></span><span class="rl mono" id="rl-meet-2"></span></div>
+          </div>
+          <div class="panel" id="p-mail">
+            <div class="ptitle mono" id="t-mail"></div>
+            <div class="prow" id="rw-mail-1"><span class="st" id="st-mail-1"></span><span class="rl mono" id="rl-mail-1"></span></div>
+            <div class="prow" id="rw-mail-2"><span class="st"></span><span class="rl mono" id="rl-mail-2"></span></div>
+          </div>
+          <div class="panel" id="p-wait">
+            <div class="ptitle mono" id="t-wait"></div>
+            <div class="prow" id="rw-wait-1"><span class="st"></span><span class="rl mono" id="rl-wait-1"></span></div>
+            <div class="prow" id="rw-wait-2"><span class="st"></span><span class="rl mono" id="rl-wait-2"></span></div>
+          </div>
+          <div class="panel" id="p-dead">
+            <div class="ptitle mono" id="t-dead"></div>
+            <div class="prow" id="rw-dead-1"><span class="st"></span><span class="rl mono" id="rl-dead-1"></span></div>
+            <div class="prow" id="rw-dead-2"><span class="st"></span><span class="rl mono" id="rl-dead-2"></span></div>
+          </div>
+
+          <!-- approval column (emphasis) -->
+          <div class="panel" id="p-appr">
+            <div class="ptitle mono" id="t-appr"></div>
+            <div class="arow" id="ar-1">
+              <span class="ast" id="ast-1">
+                <span class="dot" id="dot-1"></span>
+                <svg class="chk" id="chk-1" viewBox="0 0 34 34"><path d="M8 18 l6 6 l12 -14" /></svg>
+              </span>
+              <span class="al mono" id="al-1"></span>
+            </div>
+            <div class="arow" id="ar-2">
+              <span class="ast" id="ast-2"><span class="dot"></span></span>
+              <span class="al mono" id="al-2"></span>
+            </div>
+          </div>
+
+          <div id="bloom"></div>
+        </div>
+
+        <!-- text moments -->
+        <div id="caption"></div>
+        <div id="closing"></div>
+      </div>
+    </div>
+
+    <script>
+      /* ============================================================
+         Deterministic 14s timeline. No random / Date / setTimeout /
+         async / timeline callbacks (all text set once at init).
+         The `lang` variable picks copy + mirrors the layout for HE.
+         Every on-frame string traces to a site content file (below);
+         generic row labels are illustrative under the "Sample data"
+         banner (honesty grammar — see DESIGN.md).
+         ============================================================ */
+      const vars = (window.__hyperframes && window.__hyperframes.getVariables)
+        ? window.__hyperframes.getVariables() : {};
+      const lang = vars.lang === "he" ? "he" : "en";
+
+      const COPY = {
+        en: {
+          ov: ["email", "calendar", "documents"], // ai-office-assistant.ts:109 sub "email · calendar · documents"
+          tagline: "See what needs attention",     // home.ts:123 command-center card kicker
+          badge: "Sample data",                     // proof.ts:184 sampleBadge (uppercase = CSS)
+          meet: "Meetings", mail: "Urgent emails", wait: "Waiting clients", dead: "Deadlines", appr: "Approval", // home.ts:124 card nouns
+          rMeet: ["Client meeting", "Case review"],
+          rMail: ["Draft reply", "Client reply"],
+          rWait: ["Signature", "Documents"],
+          rDead: ["Court filing", "Response due"],
+          a1: "Reply draft", a2: "Signature",
+          caption: "No external messages are sent without approval", // home.ts:173 safety item
+          closing: "The day starts decided",        // ai-office-assistant.ts:114 map out-node
+        },
+        he: {
+          ov: ["מייל", "יומן", "מסמכים"],           // ai-office-assistant.ts:312
+          tagline: "לראות מה דורש תשומת לב",         // home.ts:264
+          badge: "נתוני דוגמה",                      // proof.ts:318
+          meet: "פגישות", mail: "מיילים דחופים", wait: "לקוחות שמחכים", dead: "דדליין", appr: "אישור", // home.ts:265
+          rMeet: ["פגישת לקוח", "סקירת תיק"],
+          rMail: ["טיוטת מענה", "מענה ללקוח"],
+          rWait: ["חתימה", "מסמכים"],
+          rDead: ["הגשה לבית משפט", "מועד מענה"],
+          a1: "טיוטת מענה", a2: "חתימה",
+          caption: "לא שולחים הודעות בלי אישור",       // home.ts:319
+          closing: "היום מתחיל מוכרע",                // ai-office-assistant.ts:317
+        },
+      }[lang];
+
+      document.documentElement.lang = lang;
+      // Do NOT set dir="rtl" on <html> — it blanks the hyperframes RENDER
+      // pipeline (every captured frame comes out empty). Mirror positionally
+      // via X(); set dir only on the flex rows + text elements.
+      const isHE = lang === "he";
+      if (isHE) {
+        document.body.style.fontFamily = '"Assistant", system-ui, sans-serif';
+        document.querySelectorAll(".mono").forEach((el) => { el.style.fontFamily = '"Assistant", system-ui, sans-serif'; });
+        // dir=rtl on the panels (so titles AND rows right-align/flip), plus the
+        // header/badge/caption/closing. NOT on <html> (blanks the render).
+        document.querySelectorAll("#stage .panel, #stage .prow, #stage .arow, #tagline, #badge, #caption, #closing")
+          .forEach((el) => { el.dir = "rtl"; });
+      }
+
+      const setText = (id, t) => { document.getElementById(id).textContent = t; };
+      setText("ovt1", COPY.ov[0]); setText("ovt2", COPY.ov[1]); setText("ovt3", COPY.ov[2]);
+      setText("tagline", COPY.tagline); setText("badge", COPY.badge);
+      setText("t-meet", COPY.meet); setText("t-mail", COPY.mail);
+      setText("t-wait", COPY.wait); setText("t-dead", COPY.dead); setText("t-appr", COPY.appr);
+      setText("rl-meet-1", COPY.rMeet[0]); setText("rl-meet-2", COPY.rMeet[1]);
+      setText("rl-mail-1", COPY.rMail[0]); setText("rl-mail-2", COPY.rMail[1]);
+      setText("rl-wait-1", COPY.rWait[0]); setText("rl-wait-2", COPY.rWait[1]);
+      setText("rl-dead-1", COPY.rDead[0]); setText("rl-dead-2", COPY.rDead[1]);
+      setText("al-1", COPY.a1); setText("al-2", COPY.a2);
+      setText("caption", COPY.caption); setText("closing", COPY.closing);
+
+      // ---- Geometry (EN coordinates; HE mirrors x → 1920 − x) ----
+      const X = isHE ? (x) => 1920 - x : (x) => x;
+      const placeCenter = (id, cx, cy, w, h) => {
+        const el = document.getElementById(id);
+        el.style.left = X(cx) - w / 2 + "px";
+        el.style.top = cy - h / 2 + "px";
+      };
+      // panel boxes given by EN left/top/size; mirror left edge for HE
+      const placeBox = (id, enLeft, top, w, h) => {
+        const el = document.getElementById(id);
+        el.style.left = (isHE ? 1920 - enLeft - w : enLeft) + "px";
+        el.style.top = top + "px";
+        el.style.width = w + "px";
+        el.style.height = h + "px";
+      };
+
+      // overnight chips — clustered mid-frame at odd rotations (width est. for centering)
+      placeCenter("ov1", 830, 452, 168, 66);
+      placeCenter("ov2", 1030, 512, 190, 66);
+      placeCenter("ov3", 892, 596, 210, 66);
+      gsap.set("#ov1 .ov-inner", { rotation: -8 });
+      gsap.set("#ov2 .ov-inner", { rotation: 6 });
+      gsap.set("#ov3 .ov-inner", { rotation: -4 });
+
+      // header
+      const tagline = document.getElementById("tagline");
+      const badge = document.getElementById("badge");
+      if (isHE) { tagline.style.right = "170px"; tagline.style.textAlign = "right"; badge.style.left = "170px"; }
+      else { tagline.style.left = "170px"; badge.style.right = "170px"; }
+
+      // status grid (2x2) + approval column
+      placeBox("p-meet", 180, 310, 440, 250);
+      placeBox("p-mail", 660, 310, 440, 250);
+      placeBox("p-wait", 180, 588, 440, 250);
+      placeBox("p-dead", 660, 588, 440, 250);
+      placeBox("p-appr", 1160, 310, 560, 528);
+
+      // ring bloom centered on the approval column
+      placeCenter("bloom", 1440, 574, 120, 120);
+
+      // ---- Timeline ----
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out", overwrite: "auto" } });
+
+      // ===== BEAT 0 — Overnight pile (0.0–2.0) =====
+      tl.to("#tangle", { opacity: 0.6, duration: 0.6 }, 0.15);
+      tl.fromTo("#ov1", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.55 }, 0.2);
+      tl.fromTo("#ov2", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.55 }, 0.38);
+      tl.fromTo("#ov3", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.55 }, 0.56);
+      // gentle finite drift on the inner (rotation), never overlapping the flight
+      tl.to("#ov1 .ov-inner", { rotation: -4, duration: 0.7, ease: "sine.inOut", repeat: 1, yoyo: true }, 0.9);
+      tl.to("#ov2 .ov-inner", { rotation: 9, duration: 0.7, ease: "sine.inOut", repeat: 1, yoyo: true }, 0.8);
+      tl.to("#ov3 .ov-inner", { rotation: -1, duration: 0.7, ease: "sine.inOut", repeat: 1, yoyo: true }, 1.0);
+
+      // ===== BEAT 1 — The interface draws itself (2.0–4.5) =====
+      // chips fly up into the frame and dissolve
+      tl.to("#tangle", { opacity: 0, duration: 0.5, ease: "power2.in" }, 2.05);
+      tl.to("#ov1", { x: X(940) - X(830), y: 180 - 452, scale: 0.7, opacity: 0, duration: 0.7, ease: "power2.inOut" }, 2.1);
+      tl.to("#ov2", { x: X(940) - X(1030), y: 180 - 512, scale: 0.7, opacity: 0, duration: 0.7, ease: "power2.inOut" }, 2.22);
+      tl.to("#ov3", { x: X(940) - X(892), y: 180 - 596, scale: 0.7, opacity: 0, duration: 0.7, ease: "power2.inOut" }, 2.34);
+      // frame strokes in, header + badge + divider
+      tl.to("#frame", { strokeDashoffset: 0, duration: 1.3, ease: "power1.inOut" }, 2.3);
+      tl.fromTo("#tagline", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6 }, 3.2);
+      tl.fromTo("#badge", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5 }, 3.55);
+      tl.to("#divider", { opacity: 1, duration: 0.5 }, 3.5);
+
+      // ===== BEAT 2 — Panels populate (4.5–7.5) =====
+      const panelIn = (id, at) =>
+        tl.fromTo("#" + id, { opacity: 0, y: 20, scale: 0.98 }, { opacity: 1, y: 0, scale: 1, duration: 0.55 }, at);
+      const rowIn = (sel, at) =>
+        tl.fromTo(sel, { opacity: 0, y: 12, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.5 }, at);
+      panelIn("p-meet", 4.55); panelIn("p-mail", 4.68); panelIn("p-wait", 4.81); panelIn("p-dead", 4.94);
+      rowIn("#rw-meet-1", 5.15); rowIn("#rw-meet-2", 5.28);
+      rowIn("#rw-mail-1", 5.4); rowIn("#rw-mail-2", 5.53);
+      rowIn("#rw-wait-1", 5.66); rowIn("#rw-wait-2", 5.79);
+      rowIn("#rw-dead-1", 5.92); rowIn("#rw-dead-2", 6.05);
+      // one urgent-email row copper-flagged
+      tl.to("#st-mail-1", { borderColor: "#d96832", backgroundColor: "rgba(217,104,50,0.12)", duration: 0.4 }, 6.3);
+      // approval column arrives, both items waiting (copper pending dots)
+      panelIn("p-appr", 6.5);
+      tl.fromTo("#ar-1", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5 }, 6.8);
+      tl.fromTo("#ar-2", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5 }, 6.98);
+
+      // ===== BEAT 3 — PEAK: the approval queue (7.5–10.0) =====
+      // everything dims except the approval column
+      tl.to(["#p-meet", "#p-mail", "#p-wait", "#p-dead", "#tagline", "#divider", "#frame"],
+        { opacity: 0.32, duration: 0.55 }, 7.6);
+      tl.to("#p-appr", { borderColor: "rgba(217,104,50,0.35)", boxShadow: "0 0 46px 0 rgba(217,104,50,0.12)", duration: 0.5 }, 7.6);
+      // one bounded copper ring bloom (immediateRender:false — else the
+      // visible "from" state paints from t=0 before the tween starts)
+      tl.fromTo("#bloom", { scale: 0.45, opacity: 0.9, transformOrigin: "center" },
+        { scale: 1.9, opacity: 0, duration: 1.1, ease: "power2.out", immediateRender: false }, 7.9);
+      // item 1 approved by a person: dot → check draws in
+      tl.to("#dot-1", { opacity: 0, duration: 0.25 }, 8.5);
+      tl.to("#ast-1", { borderColor: "#d96832", duration: 0.3 }, 8.5);
+      tl.to("#chk-1", { opacity: 1, duration: 0.2 }, 8.6);
+      tl.to("#chk-1 path", { strokeDashoffset: 0, duration: 0.55, ease: "power2.inOut" }, 8.65);
+      // the safety line appears verbatim
+      tl.fromTo("#caption", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.55 }, 8.7);
+
+      // ===== BEAT 4 — Fails safely (10.0–12.0) =====
+      // the day settles back; item 1 done (copper), item 2 DELIBERATELY still waiting
+      tl.to(["#p-meet", "#p-mail", "#p-wait", "#p-dead", "#tagline", "#divider", "#frame"],
+        { opacity: 1, duration: 0.6 }, 10.1);
+      tl.to("#ar-1", { opacity: 1, duration: 0.4 }, 10.1);
+      tl.to("#al-1", { color: "#8a847a", duration: 0.4 }, 10.2); // approved item recedes
+      // item 2 pending dot gives a slow finite copper pulse — still waiting for a person
+      tl.to("#ar-2 .dot", { opacity: 0.35, duration: 0.7, ease: "sine.inOut", repeat: 1, yoyo: true }, 10.6);
+
+      // ===== BEAT 5 — The day starts decided (12.0–14.0) =====
+      tl.to("#caption", { opacity: 0, y: -10, duration: 0.45, ease: "power2.in" }, 12.0);
+      tl.fromTo("#closing", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.7 }, 12.35);
+      tl.to("#p-appr", { boxShadow: "0 0 40px 0 rgba(217,104,50,0.10)", duration: 0.8, ease: "sine.inOut" }, 12.4);
+
+      // Camera: restrained push-in across the film
+      tl.fromTo("#camera", { scale: 1.0 }, { scale: 1.03, duration: 14, ease: "sine.inOut" }, 0);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["root"] = tl;
+    </script>
+  </body>
+</html>

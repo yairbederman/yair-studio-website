@@ -38,7 +38,16 @@ export type HomeContent = {
   problems: {
     title: string;
     intro: string;
-    cards: readonly { title: string; kicker: string; body: string }[];
+    cards: readonly {
+      title: string;
+      kicker: string;
+      body: string;
+      /** Optional teaser poster + link (only the Command-center card uses these:
+          the settled film poster, linking to the flagship film section). */
+      poster?: string;
+      href?: string;
+      linkLabel?: string;
+    }[];
     closing: string;
   };
   method: {
@@ -122,6 +131,9 @@ const en: HomeContent = {
         title: "Command center",
         kicker: "See what needs attention",
         body: "A daily view of meetings, urgent emails, open tasks, waiting clients, deadlines, and approval points.",
+        poster: "/videos/command-center-poster.png",
+        href: "/offers/ai-office-assistant#film",
+        linkLabel: "See it in motion",
       },
       {
         title: "Email management",
@@ -263,6 +275,9 @@ const he: HomeContent = {
         title: "Command Center",
         kicker: "לראות מה דורש תשומת לב",
         body: "תמונת מצב יומית של פגישות, מיילים דחופים, משימות פתוחות, לקוחות שמחכים, דדליין ונקודות אישור.",
+        poster: "/videos/command-center-he-poster.png",
+        href: "/he/offers/ai-office-assistant#film",
+        linkLabel: "לראות בתנועה",
       },
       {
         title: "ניהול מיילים",

@@ -710,6 +710,37 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   color: var(--fg-2);
   overflow-wrap: anywhere;
 }
+/* Command-center card → clickable settled-poster teaser linking to the
+   flagship film section (#film). Only the first problem card carries these. */
+.problem-card-film {
+  display: block;
+  margin-top: var(--s-4);
+  color: var(--accent);
+  text-decoration: none;
+}
+.problem-card-poster {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-md);
+}
+.problem-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-top: var(--s-3);
+  font-weight: 600;
+}
+.problem-card-cta::after { content: "\2192"; }
+[dir="rtl"] .problem-card-cta::after { content: "\2190"; }
+.problem-card-film:hover .problem-card-poster { border-color: var(--accent-rule); }
+.problem-card-film:hover .problem-card-cta { text-decoration: underline; }
+.problem-card-film:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
 .problems-closing {
   margin-top: var(--s-6);
   max-width: 72ch;
