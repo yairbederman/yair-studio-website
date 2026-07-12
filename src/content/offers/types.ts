@@ -18,6 +18,13 @@ export type OfferPageContent = {
     ctaLabel: string;
     ctaHref: string;
     secondaryCta?: Cta;
+    /**
+     * Optional external proof link rendered under the lead — makes a claim in
+     * the lead one-click verifiable (e.g. the engine's "runs the studio's own
+     * LinkedIn today" pointing at that profile). External by construction, so
+     * it opens in a new tab.
+     */
+    proofLink?: Cta;
   };
   /** Optional process film band rendered directly under the hero. */
   film?: {
@@ -50,6 +57,19 @@ export type OfferPageContent = {
     facts: readonly CardItem[];
   };
   how: { title: string; intro?: string; steps: readonly StepItem[] };
+  /**
+   * Optional data-handling section (rendered as a ProblemsPanel, id `#data`,
+   * after `how`). Like `pricing`/`caseStudy`, it is opt-in per offer. v1 copy
+   * restates only existing site assertions (safety + how steps) — never invent
+   * hosting, certification, or vendor facts. The optional `note` invites
+   * environment specifics in the first conversation, mirroring the pricing note.
+   */
+  dataHandling?: {
+    title: string;
+    intro?: string;
+    items: readonly CardItem[];
+    note?: string;
+  };
   /**
    * Optional engagement-pricing shape (model only — setup fee, retainer,
    * fixed price). Never carries numbers; amounts stay a conversation.

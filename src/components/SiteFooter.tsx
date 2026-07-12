@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Wordmark from "@/components/Wordmark";
-import { CONTACT_EMAIL, CONTACT_MAILTO, waLink } from "@/lib/site";
+import { CONTACT_EMAIL, CONTACT_MAILTO, LINKEDIN_URL, waLink } from "@/lib/site";
 import { shellContent } from "@/content/shell";
 import type { Locale } from "@/content/types";
 
@@ -29,6 +29,9 @@ export default function SiteFooter({ locale = "en" }: { locale?: Locale }) {
         </a>
         <a href={waLink()} target="_blank" rel="noopener noreferrer">
           {shell.footer.whatsappLabel}
+        </a>
+        <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer">
+          {shell.footer.linkedinLabel}
         </a>
       </nav>
     </footer>

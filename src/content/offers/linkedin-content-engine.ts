@@ -1,5 +1,6 @@
 import { localeAccessor } from "@/content/types";
 import { shellContent } from "@/content/shell";
+import { LINKEDIN_URL } from "@/lib/site";
 import type { Locale } from "@/content/types";
 import type { OfferPageContent } from "./types";
 
@@ -23,6 +24,7 @@ const en: OfferPageContent = {
     ctaLabel: "Start from your material",
     ctaHref: shellContent("en").workflowCta.href,
     secondaryCta: { label: "See how it runs", href: "#how" },
+    proofLink: { label: "See the studio's LinkedIn", href: LINKEDIN_URL },
   },
   who: {
     title: "This fits if you are saying one of these things",
@@ -170,6 +172,7 @@ const he: OfferPageContent = {
     ctaLabel: "להתחיל מהחומר שלכם",
     ctaHref: shellContent("he").workflowCta.href,
     secondaryCta: { label: "לראות איך זה רץ", href: "#how" },
+    proofLink: { label: "לראות את הלינקדאין של הסטודיו", href: LINKEDIN_URL },
   },
   who: {
     title: "זה מתאים אם אתם אומרים אחד מהמשפטים האלה",

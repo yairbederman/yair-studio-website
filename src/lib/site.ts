@@ -74,6 +74,14 @@ export function waLink(prefill?: string): string {
 }
 
 /**
+ * Founder's public LinkedIn profile — the studio's one verifiable proof
+ * surface (it also runs the LinkedIn content engine live). Single source for
+ * every link: the footer, the founder block, the engine page's proof link, and
+ * the JSON-LD `sameAs` on the Person node.
+ */
+export const LINKEDIN_URL = "https://www.linkedin.com/in/yair-bederman/";
+
+/**
  * Site-wide Open Graph image served by src/app/opengraph-image/route.tsx.
  * Referenced explicitly in buildMetadata so the route URL and alt text live in
  * one place.

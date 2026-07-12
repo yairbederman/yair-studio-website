@@ -37,6 +37,7 @@ export default function OfferPageBody({
         ctaLabel={c.hero.ctaLabel}
         ctaHref={c.hero.ctaHref}
         secondaryCta={c.hero.secondaryCta}
+        proofLink={c.hero.proofLink}
       />
 
       {c.film ? (
@@ -86,6 +87,19 @@ export default function OfferPageBody({
       <OfferSection id="how" title={c.how.title} intro={c.how.intro}>
         <OfferSteps items={c.how.steps} />
       </OfferSection>
+
+      {c.dataHandling ? (
+        <OfferSection
+          id="data"
+          title={c.dataHandling.title}
+          intro={c.dataHandling.intro}
+        >
+          <ProblemsPanel items={c.dataHandling.items} />
+          {c.dataHandling.note ? (
+            <p className="pricing-note">{c.dataHandling.note}</p>
+          ) : null}
+        </OfferSection>
+      ) : null}
 
       {c.pricing ? (
         <OfferSection id="pricing" title={c.pricing.title} intro={c.pricing.intro}>

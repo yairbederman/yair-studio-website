@@ -24,6 +24,7 @@ export type ShellContent = {
     ariaLabel: string;
     links: readonly Cta[];
     whatsappLabel: string;
+    linkedinLabel: string;
   };
   copyEmail: CopyEmailLabels;
   /** Pause/play labels for the process-film toggle (FilmPlayer). */
@@ -55,6 +56,7 @@ const en: ShellContent = {
       { label: "Contact", href: "/contact" },
     ],
     whatsappLabel: "WhatsApp",
+    linkedinLabel: "LinkedIn",
   },
   copyEmail: {
     copy: "Copy",
@@ -90,6 +92,7 @@ const he: ShellContent = {
       { label: "צור קשר", href: "/he/contact" },
     ],
     whatsappLabel: "וואטסאפ",
+    linkedinLabel: "לינקדאין",
   },
   copyEmail: {
     copy: "העתקה",

@@ -1,5 +1,6 @@
 import ProblemsPanel from "@/components/ProblemsPanel";
 import WorkflowMap from "@/components/WorkflowMap";
+import { LINKEDIN_URL } from "@/lib/site";
 import type { ProofContent } from "@/content/proof";
 
 /**
@@ -28,6 +29,9 @@ export default function FounderProfile({
           <p className="founder-role">{content.role}</p>
         </div>
         {showBio ? <p className="founder-bio">{content.bio}</p> : null}
+        <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer">
+          {content.linkedinLabel}
+        </a>
         <div className="founder-creds">
           <ProblemsPanel items={content.credentials} />
         </div>

@@ -64,9 +64,19 @@ export type HomeContent = {
   evidence: {
     title: string;
     intro: string;
-    /** Caption + accessible name for the scattered-to-mapped process film. */
-    filmCaption: string;
-    filmName: string;
+    /**
+     * Optional scattered-to-mapped process film. Omit to show only the static
+     * before/after compare (the reduced-motion fallback) — e.g. /he, until a
+     * localized film is composed. When present it carries its own paths plus
+     * the caption + accessible name.
+     */
+    film?: {
+      webm: string;
+      mp4: string;
+      poster: string;
+      caption: string;
+      filmName: string;
+    };
     before: { caption: string; items: readonly string[] };
     mapped: { caption: string; ariaLabel: string; nodes: readonly SpineNode[] };
   };
@@ -83,12 +93,15 @@ const en: HomeContent = {
   hero: {
     eyebrow: "Managed AI for professional offices",
     title: "A managed AI assistant for the real work of your office",
-    lead: "y[AI]r studio runs the recurring work of small professional offices: morning briefings ready before you sit down, email triaged into decisions, documents and follow-up chased to done. Your people approve everything that matters. The easiest first step is a fixed-price sprint: one workflow mapped, three automations built.",
+    lead: "y[AI]r studio runs the recurring work of small professional offices: morning briefings ready before you sit down, email triaged into decisions, documents and follow-up chased to done. Your people approve everything that matters.",
     primaryCta: {
       label: offerCard("en", "ai-office-assistant").cta,
       href: offerCard("en", "ai-office-assistant").href,
     },
-    secondaryCta: { label: "See all services", href: "/offers" },
+    secondaryCta: {
+      label: "Start with a fixed-price sprint",
+      href: offerCard("en", "ai-workflow-sprint").href,
+    },
     schematic: {
       caption: "one office morning",
       nodes: [
@@ -172,9 +185,14 @@ const en: HomeContent = {
     title: "What “mapped” looks like",
     intro:
       "An illustration of the approach, not a client case study. The improvement here is structural: scattered, manual work becomes a mapped flow with a human approval step.",
-    filmCaption:
-      "Scattered requests untangle into a mapped flow, with a human approval step before the work is tracked to done.",
-    filmName: "scattered-to-mapped film",
+    film: {
+      webm: "/videos/scattered-to-mapped.webm",
+      mp4: "/videos/scattered-to-mapped.mp4",
+      poster: "/videos/scattered-to-mapped-poster.png",
+      caption:
+        "Scattered requests untangle into a mapped flow, with a human approval step before the work is tracked to done.",
+      filmName: "scattered-to-mapped film",
+    },
     before: {
       caption: "Before",
       items: [
@@ -216,12 +234,15 @@ const he: HomeContent = {
   hero: {
     eyebrow: "AI מנוהל למשרדים מקצועיים",
     title: "עוזר AI מנוהל לעבודה האמיתית של המשרד",
-    lead: "y[AI]r studio מריץ את העבודה השוטפת של משרדים מקצועיים קטנים: תדריך בוקר מוכן לפני שהתיישבתם, מיילים ממוינים להחלטות, מסמכים ומעקב מקודמים עד לסגירה. הצוות שלכם מאשר כל דבר שחשוב. הצעד הראשון הקל הוא ספרינט במחיר קבוע: תהליך אחד ממופה, שלוש אוטומציות נבנות.",
+    lead: "y[AI]r studio מריץ את העבודה השוטפת של משרדים מקצועיים קטנים: תדריך בוקר מוכן לפני שהתיישבתם, מיילים ממוינים להחלטות, מסמכים ומעקב מקודמים עד לסגירה. הצוות שלכם מאשר כל דבר שחשוב.",
     primaryCta: {
       label: offerCard("he", "ai-office-assistant").cta,
       href: offerCard("he", "ai-office-assistant").href,
     },
-    secondaryCta: { label: "לראות את כל השירותים", href: "/he/offers" },
+    secondaryCta: {
+      label: "להתחיל בספרינט במחיר קבוע",
+      href: offerCard("he", "ai-workflow-sprint").href,
+    },
     schematic: {
       caption: "בוקר אחד במשרד",
       nodes: [
@@ -304,9 +325,9 @@ const he: HomeContent = {
     title: "איך נראה תהליך ממופה",
     intro:
       "הדגמה של הגישה, לא מקרה לקוח אמיתי. השיפור כאן מבני: עבודה מפוזרת וידנית הופכת לתהליך ממופה עם שלב אישור אנושי.",
-    filmCaption:
-      "בקשות מפוזרות מסתדרות לתהליך ממופה, עם שלב אישור אנושי לפני שהעבודה מנוהלת עד לסגירה.",
-    filmName: "סרטון התהליך הממופה",
+    // No `film` yet: the scattered-to-mapped video is English-only. Until a
+    // Hebrew film is composed, /he shows the fully localized before/after
+    // compare below on its own (the designed reduced-motion fallback).
     before: {
       caption: "לפני",
       items: [

@@ -142,6 +142,38 @@ const en: OfferPageContent = {
       },
     ],
   },
+  dataHandling: {
+    title: "How your office's data is handled",
+    intro:
+      "The boundaries the assistant runs inside — the same ones the studio applies to every office.",
+    items: [
+      {
+        title: "A private environment per office",
+        desc: "The assistant runs in an environment dedicated to your office, not a shared pool.",
+      },
+      {
+        title: "Read-only where possible",
+        desc: "Where a workflow only needs to read, it starts read-only.",
+      },
+      {
+        title: "No message leaves without approval",
+        desc: "Nothing is sent to a client or outside the office until a person approves it.",
+      },
+      {
+        title: "Nothing changed or deleted silently",
+        desc: "No data is changed or deleted without explicit approval.",
+      },
+      {
+        title: "Unclear items go to a person",
+        desc: "Anything the assistant is unsure about is routed to a person, not guessed.",
+      },
+      {
+        title: "Your data stays yours",
+        desc: "The office's data belongs to the office, start to finish.",
+      },
+    ],
+    note: "The specifics of your environment — where it runs and which tools it touches — are agreed in the first conversation, not decided here.",
+  },
   pricing: {
     title: "How the engagement is priced",
     intro: "Two parts, agreed before anything is built.",
@@ -312,6 +344,38 @@ const he: OfferPageContent = {
         human: true,
       },
     ],
+  },
+  dataHandling: {
+    title: "איך מטופל המידע של המשרד שלכם",
+    intro:
+      "הגבולות שבתוכם העוזר רץ — אותם גבולות שהסטודיו מיישם בכל משרד.",
+    items: [
+      {
+        title: "סביבה פרטית לכל משרד",
+        desc: "העוזר רץ בסביבה ייעודית למשרד שלכם, לא במאגר משותף.",
+      },
+      {
+        title: "קריאה בלבד כשאפשר",
+        desc: "כשתהליך צריך רק לקרוא, הוא מתחיל במצב קריאה בלבד.",
+      },
+      {
+        title: "שום הודעה לא יוצאת בלי אישור",
+        desc: "שום דבר לא נשלח ללקוח או אל מחוץ למשרד עד שאדם מאשר.",
+      },
+      {
+        title: "שום דבר לא משתנה או נמחק בשקט",
+        desc: "מידע לא משתנה ולא נמחק בלי אישור מפורש.",
+      },
+      {
+        title: "פריטים לא ברורים עוברים לאדם",
+        desc: "כל דבר שהעוזר לא בטוח לגביו מנותב לאדם, לא מנוחש.",
+      },
+      {
+        title: "המידע שלכם נשאר שלכם",
+        desc: "המידע של המשרד שייך למשרד, מההתחלה ועד הסוף.",
+      },
+    ],
+    note: "הפרטים של הסביבה שלכם — היכן היא רצה ובאילו כלים היא נוגעת — נסגרים בשיחה הראשונה, לא כאן.",
   },
   pricing: {
     title: "איך ההתקשרות מתומחרת",

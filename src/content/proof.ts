@@ -31,6 +31,9 @@ export type ProofContent = {
     name: string;
     role: string;
     bio: string;
+    /** Label for the founder's public LinkedIn link (destination is the
+        single-sourced LINKEDIN_URL) — the one-click identity check. */
+    linkedinLabel: string;
     credentials: readonly CardItem[];
     spine: { caption: string; ariaLabel: string; nodes: readonly SpineNode[] };
   };
@@ -61,6 +64,7 @@ const en: ProofContent = {
     name: "Yair Bederman",
     role: "Productivity & AI systems · founder of y[AI]r studio",
     bio: "Builds and runs y[AI]r studio. Background in R&D and software leadership; maps the workflow, builds the system, and stays involved after it goes live.",
+    linkedinLabel: "View LinkedIn profile",
     credentials: [
       {
         title: "R&D & engineering leadership",
@@ -194,6 +198,7 @@ const he: ProofContent = {
     name: "יאיר בדרמן",
     role: "מערכות AI ופרודוקטיביות · מייסד y[AI]r studio",
     bio: "בונה ומפעיל את y[AI]r studio. רקע במו״פ ובהובלת פיתוח; ממפה את התהליך, בונה את המערכת ונשאר מעורב אחרי שהיא עולה לאוויר.",
+    linkedinLabel: "לצפייה בפרופיל בלינקדאין",
     credentials: [
       {
         title: "הובלת מו״פ ופיתוח",

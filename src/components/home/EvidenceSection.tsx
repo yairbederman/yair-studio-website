@@ -7,12 +7,13 @@ import type { Locale } from "@/content/types";
 
 /**
  * Evidence — shows improvement structurally rather than claiming it (PRODUCT.md
- * Principle 1). The scattered-to-mapped film leads: the before literally
+ * Principle 1). When a film is provided it leads: the before literally
  * untangles into the mapped flow (the transformation a static layout can only
- * imply). Below it, the /workflows before/after composition documents the same
- * content statically — a hairline .panel-list "before" beside a mapped
- * <WorkflowMap> in an asymmetric .workflow-compare grid — so reduced-motion
- * and screen-reader users get the full message without the video.
+ * imply). Below it (and on its own when no film exists yet — e.g. /he), the
+ * before/after composition documents the same content statically — a hairline
+ * .panel-list "before" beside a mapped <WorkflowMap> in an asymmetric
+ * .workflow-compare grid — so reduced-motion and screen-reader users get the
+ * full message without the video.
  * No fabricated metrics, percentages, or client claims anywhere.
  */
 export default function EvidenceSection({
@@ -29,14 +30,16 @@ export default function EvidenceSection({
           <h2 id="evidence-title">{content.title}</h2>
           <p className="section-intro">{content.intro}</p>
         </div>
-        <ProcessFilm
-          webm="/videos/scattered-to-mapped.webm"
-          mp4="/videos/scattered-to-mapped.mp4"
-          poster="/videos/scattered-to-mapped-poster.png"
-          caption={content.filmCaption}
-          filmName={content.filmName}
-          controls={shellContent(locale).filmControls}
-        />
+        {content.film ? (
+          <ProcessFilm
+            webm={content.film.webm}
+            mp4={content.film.mp4}
+            poster={content.film.poster}
+            caption={content.film.caption}
+            filmName={content.film.filmName}
+            controls={shellContent(locale).filmControls}
+          />
+        ) : null}
         <div className="workflow-compare">
           <div className="panel-list">
             <span className="sch-cap">{content.before.caption}</span>

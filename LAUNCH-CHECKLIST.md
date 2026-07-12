@@ -34,7 +34,7 @@ never be presented as client engagements or evidence of outcomes.
 
 ## 5. Structured data
 
-- [ ] Keep `src/components/JsonLd.tsx` limited to verifiable facts. Add `sameAs` or formal credential properties only when their source URLs or records are available.
+- [ ] Keep `src/components/JsonLd.tsx` limited to verifiable facts. The Person node's `sameAs` carries the founder's public LinkedIn profile (`LINKEDIN_URL` in `src/lib/site.ts`, verifiable and linked site-wide); confirm that URL resolves. Add any further `sameAs` or formal credential properties only when their source URLs or records are available.
 
 ## 6. Verify before deployment
 

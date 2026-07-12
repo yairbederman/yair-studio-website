@@ -1,4 +1,5 @@
 import {
+  LINKEDIN_URL,
   SERVICES,
   SITE_ALT_NAME,
   SITE_DESCRIPTION,
@@ -24,13 +25,15 @@ function serializeJsonLd(data: unknown): string {
 /**
  * Structured data for the homepage: WebSite + Organization + founder Person +
  * a Service OfferCatalog. Strictly factual — no postal address, phone, reviews,
- * ratings, sameAs, or logo (nothing we cannot verify). Rendered once, on the
- * homepage.
+ * ratings, or logo (nothing we cannot verify). The only `sameAs` is the
+ * founder's public LinkedIn profile, which is verifiable and linked site-wide.
+ * Rendered once, on the homepage.
  *
  * HARD RULE: nothing from the illustrative workflow examples in
  * src/content/proof.ts enters machine-readable structured data. The Person
  * node states only the restrained identity facts represented on the site;
- * sameAs or formal credential properties require their own verified sources.
+ * any further sameAs or formal credential property requires its own verified
+ * source.
  */
 export default function JsonLd() {
   const jsonLd = {
@@ -71,6 +74,7 @@ export default function JsonLd() {
         url: `${SITE_URL}/about`,
         worksFor: { "@id": `${SITE_URL}/#organization` },
         knowsLanguage: ["en", "he"],
+        sameAs: [LINKEDIN_URL],
       },
     ],
   };

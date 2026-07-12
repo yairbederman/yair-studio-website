@@ -18,6 +18,7 @@ export default function OfferHero({
   ctaLabel,
   ctaHref,
   secondaryCta,
+  proofLink,
 }: {
   /** Optional kicker — only for labels that add information beyond the nav. */
   eyebrow?: string;
@@ -26,6 +27,8 @@ export default function OfferHero({
   ctaLabel: string;
   ctaHref: string;
   secondaryCta?: { label: string; href: string };
+  /** Optional external proof link rendered under the lead (opens in a new tab). */
+  proofLink?: { label: string; href: string };
 }) {
   return (
     <section className="offer-hero" aria-labelledby="offer-hero-title">
@@ -34,6 +37,15 @@ export default function OfferHero({
           {eyebrow ? <SectionLabel>{eyebrow}</SectionLabel> : null}
           <h1 id="offer-hero-title">{title}</h1>
           <p className="lead hero-lead">{lead}</p>
+          {proofLink ? (
+            <a
+              href={proofLink.href}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {proofLink.label}
+            </a>
+          ) : null}
           <div className="hero-actions">
             <CTAButton href={ctaHref} variant="primary">
               {ctaLabel}
