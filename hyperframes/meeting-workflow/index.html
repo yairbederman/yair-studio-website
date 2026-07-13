@@ -273,7 +273,7 @@
       tl.to("#inputs .frag, #inputs .frag-line", {
         x: (i, t) => (470 - (parseFloat(t.style.left) || 0)) * 0.82,
         y: (i, t) => (168 - (parseFloat(t.style.top) || 0)) * 0.82,
-        opacity: 0, scale: 0.6, duration: 1.1, stagger: 0.05, ease: "power2.in",
+        opacity: 0, scale: 0.6, filter: "blur(10px)", duration: 1.1, stagger: 0.05, ease: "power2.in", // velocity-matched exit (accelerate + blur)
       }, 1.45);
       activate("#n0", 2.35, false);
 
@@ -295,8 +295,10 @@
       travel(4, 6.35, 0.95);
 
       // ---- ACT 3 — APPROVAL HOLD (peak) (7.3–10.0) ----
+      // RACK FOCUS — deepen the defocus on the upstream nodes (1.6→4px) so the
+      // copper Human-approval node reads as the sole in-focus plane at the peak.
       tl.to(["#n0", "#n1", "#n2", "#n3", "#art-extract", "#art-assign", "#art-draft"], { opacity: 0.3, duration: 0.6 }, 7.3);
-      tl.to(["#n0", "#n1", "#n2", "#n3"], { filter: "blur(1.6px)", duration: 0.6 }, 7.3);
+      tl.to(["#n0", "#n1", "#n2", "#n3"], { filter: "blur(4px)", duration: 0.6, ease: "power2.inOut" }, 7.3);
       activate("#n4", 7.25, true);
       tl.to("#n4", { scale: 1.08, duration: 0.6, transformOrigin: "left center" }, 7.3);
       tl.fromTo("#approve-ring", { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5 }, 7.5)
@@ -317,10 +319,33 @@
 
       // ---- Settle / loop-prep (11.4–12.0) ----
       tl.to("#pulse", { opacity: 0, duration: 0.5 }, 11.3);
-      tl.to(["#n0", "#n1", "#n2", "#n3"], { opacity: 0.5, duration: 0.6 }, 11.4);
+      // REFOCUS the upstream nodes back to their resting DoF (blur 1.6px) so the
+      // loop seam matches the t=0 state (nodes rest out-of-focus).
+      tl.to(["#n0", "#n1", "#n2", "#n3"], { opacity: 0.5, filter: "blur(1.6px)", duration: 0.6, ease: "power2.inOut" }, 11.4);
 
-      // Camera: restrained push-in across the whole film
-      tl.fromTo("#camera", { scale: 1.0 }, { scale: 1.035, duration: 12, ease: "sine.inOut" }, 0);
+      // ===== CAMERA — loop-continuous (identity at t=0 AND t=12) =====
+      // Push into the approval peak (Act 3 ~7.3–10.0), hold, settle back; scale
+      // + drift are pure functions of t (integer sine cycles, 2:1 X:Y).
+      const camEl = document.getElementById("camera");
+      const DRIFT_AMP_X = 5, DRIFT_AMP_Y = 3;
+      const camEase = gsap.parseEase("power2.inOut");
+      const scaleAt = (t) => {
+        if (t <= 5.0) return 1.0;
+        if (t < 7.3) return 1.0 + 0.03 * camEase((t - 5.0) / 2.3);
+        if (t <= 10.0) return 1.03;
+        if (t < 11.5) return 1.03 - 0.03 * camEase((t - 10.0) / 1.5);
+        return 1.0;
+      };
+      const drift = { p: 0 };
+      tl.to(drift, {
+        p: 1, duration: 12, ease: "none",
+        onUpdate: () => {
+          const t = drift.p * 12;
+          const dx = Math.sin(drift.p * Math.PI * 2) * DRIFT_AMP_X;
+          const dy = Math.sin(drift.p * Math.PI * 4) * DRIFT_AMP_Y;
+          camEl.style.transform = `scale(${scaleAt(t)}) translate(${dx}px, ${dy}px)`;
+        },
+      }, 0);
 
       window.__timelines = window.__timelines || {};
       window.__timelines["main"] = tl;

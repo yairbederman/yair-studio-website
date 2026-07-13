@@ -53,3 +53,22 @@
 1. The sort beat (5.0–8.1s) is the longest act — right emphasis, or tighten?
 2. Three ticks land on two Automatic tiles + one AI-assisted tile — fine, or
    spread one to a different position?
+
+## Cinematic regrade (Phase C2 — DONE 2026-07-13)
+
+Choreography regraded to film-grade (content/copy/locales/honesty grammar
+unchanged): velocity-matched headline hand-offs (blur on entries/exits), a
+depth-of-field **rack focus** at the Human-approval peak (Act 4 — the 15 tiles +
+row labels blur `--dof 6px` + dim while the copper gate stays sharp; refocuses
+before the tail), and a **loop-continuous camera** (scale + integer-cycle drift
+as pure functions of `t`; identity at t=0 and t=14). Re-rendered EN+HE
+(`--video-bitrate 3.6M` → ffmpeg charcoal MP4 + poster). `npm run check`: 0 errors.
+Sizes: EN `.mp4` 0.72 MB · `.webm` 4.64 MB; HE `.mp4` 0.54 MB · `.webm` 3.69 MB
+(MP4s ≤ old; WebMs larger — the added motion raises the alpha bitrate). Site code
+unchanged (same asset filenames).
+
+**Code review (`/code-review`, C2):** caught that the tile rack-focus was driven
+by a `--dof` CSS var that a pre-existing inline `filter` (from the scatter/mapping
+tweens) shadowed — so the 15 tiles dimmed but never blurred at the peak. Fixed by
+tweening `filter` directly on the tiles; re-rendered EN+HE. meeting-workflow and
+scattered-to-mapped reviewed clean.

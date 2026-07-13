@@ -57,3 +57,13 @@ frame-by-frame snapshot review. Revisit if a fixed producer version ships.
 - **Social cut**: landscape only, per the other films.
 - **Re-render trigger**: if `home.ts` → `evidence` copy changes, this film's
   baked-in text drifts — re-render (noted in DESIGN.md).
+
+## Cinematic regrade (Phase C2 — DONE 2026-07-13)
+
+Choreography regraded (content unchanged): velocity-matched chip flights (accelerate
++ blur into the node), a **deepened rack focus** at the Human-approval peak (Act 4 —
+upstream nodes blur 1.2→4px + dim, copper approval node sharp; the settle refocuses
+to blur 0 for the loop seam), and a **loop-continuous camera** (pure functions of
+`t`; identity at t=0 and t=13). Re-rendered EN (`--video-bitrate 3.6M` → charcoal
+MP4 + poster). `npm run check`: 0 errors. Sizes: `.mp4` 1.30 MB · `.webm` 7.50 MB
+(down from the old 18 MB WebM). Site code unchanged.

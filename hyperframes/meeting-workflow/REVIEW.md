@@ -69,3 +69,14 @@ Intentional source to commit later: `index.html`, `assets/fonts/*`, `*.json`, th
 1. Vertical balance — leave as-is or rebalance the lower-right weight?
 2. Approval hold length (~2.5s) — right, or longer/shorter?
 3. Anything in the storyboard beats to change before I render?
+
+## Cinematic regrade (Phase C2 — DONE 2026-07-13)
+
+Choreography regraded (content unchanged): velocity-matched input-scatter exit
+(accelerate + blur), a **deepened rack focus** at the Human-approval peak (Act 3 —
+upstream nodes blur 1.6→4px + dim, copper approval node sharp; refocuses to the
+resting 1.6px DoF for the loop seam), and a **loop-continuous camera** (pure
+functions of `t`; identity at t=0 and t=12). Re-rendered EN (`--video-bitrate 3.6M`
+→ charcoal MP4 + poster). `npm run check`: 0 errors (35 WCAG contrast warnings are
+the known no-`#review-bg` false-flags). Sizes: `.mp4` 0.50 MB · `.webm` 4.31 MB.
+Site code unchanged.

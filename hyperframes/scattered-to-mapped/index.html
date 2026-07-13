@@ -67,7 +67,8 @@
         font-size: 16px; letter-spacing: 0.04em; color: var(--fg-2);
         padding: 8px 13px; border: 1px solid var(--rule-strong); border-radius: 4px;
         background: var(--bg-1); white-space: nowrap; opacity: 0;
-        will-change: transform, opacity;
+        filter: blur(0px); /* baseline so the flight can blur out (velocity-matched exit) */
+        will-change: transform, opacity, filter;
       }
       .tangle {
         position: absolute; height: 2px; background: var(--rule-strong);
@@ -200,7 +201,7 @@
       }
       /* chip flight: chaos rest → node dot (shrink + dissolve into it) */
       function fly(sel, dx, dy, at, dur) {
-        tl.to(sel, { x: dx, y: dy, rotation: 0, scale: 0.35, opacity: 0, duration: dur, ease: "power2.inOut" }, at);
+        tl.to(sel, { x: dx, y: dy, rotation: 0, scale: 0.35, opacity: 0, filter: "blur(8px)", duration: dur, ease: "power2.inOut" }, at); // velocity-matched exit (accelerate + blur into the node)
       }
       /* ledger line resolves: straightens, dims, strikes through */
       function resolve(sel, at) {
@@ -267,8 +268,10 @@
       // ---- ACT 4 — APPROVAL HOLD (peak, 8.2–10.6) ----
       // Approval receives no chip: it is what the system ADDS, not a
       // rearranged piece of the mess. `what is open?` keeps drifting — still open.
+      // RACK FOCUS — deepen the upstream defocus (1.2→4px) so the copper
+      // Human-approval node is the sole in-focus plane at the peak.
       tl.to(["#n0", "#n1", "#n2", "#n3"], { opacity: 0.45, duration: 0.6 }, 8.2);
-      tl.to(["#n0", "#n1", "#n2", "#n3"], { filter: "blur(1.2px)", duration: 0.6 }, 8.2);
+      tl.to(["#n0", "#n1", "#n2", "#n3"], { filter: "blur(4px)", duration: 0.6, ease: "power2.inOut" }, 8.2);
       tl.to("#spine-fill", { scaleY: fillTo(4), duration: 0.6, ease: "power1.inOut" }, 8.25);
       activate("#n4", 8.3, "#d96832");
       tl.to("#n4", { scale: 1.06, duration: 0.6, transformOrigin: "left center" }, 8.35);
@@ -288,8 +291,29 @@
       tl.to(["#n0", "#n1", "#n2", "#n3"], { opacity: 0.65, filter: "blur(0px)", duration: 0.6, ease: "sine.inOut" }, 12.1);
       tl.to("#spine-glow", { opacity: 0.7, duration: 0.7, ease: "sine.inOut" }, 12.3);
 
-      // Camera: restrained push-in across the whole film
-      tl.fromTo("#camera", { scale: 1.0 }, { scale: 1.03, duration: 13, ease: "sine.inOut" }, 0);
+      // ===== CAMERA — loop-continuous (identity at t=0 AND t=13) =====
+      // Push into the approval peak (Act 4 ~8.2–10.6), hold, settle back; scale
+      // + drift are pure functions of t (integer sine cycles, 2:1 X:Y).
+      const camEl = document.getElementById("camera");
+      const DRIFT_AMP_X = 5, DRIFT_AMP_Y = 3;
+      const camEase = gsap.parseEase("power2.inOut");
+      const scaleAt = (t) => {
+        if (t <= 6.0) return 1.0;
+        if (t < 8.2) return 1.0 + 0.03 * camEase((t - 6.0) / 2.2);
+        if (t <= 10.6) return 1.03;
+        if (t < 12.3) return 1.03 - 0.03 * camEase((t - 10.6) / 1.7);
+        return 1.0;
+      };
+      const drift = { p: 0 };
+      tl.to(drift, {
+        p: 1, duration: 13, ease: "none",
+        onUpdate: () => {
+          const t = drift.p * 13;
+          const dx = Math.sin(drift.p * Math.PI * 2) * DRIFT_AMP_X;
+          const dy = Math.sin(drift.p * Math.PI * 4) * DRIFT_AMP_Y;
+          camEl.style.transform = `scale(${scaleAt(t)}) translate(${dx}px, ${dy}px)`;
+        },
+      }, 0);
 
       window.__timelines = window.__timelines || {};
       window.__timelines["root"] = tl;
