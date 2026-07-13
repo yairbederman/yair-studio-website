@@ -1,4 +1,5 @@
 import Container from "@/components/Container";
+import SpineReveal from "@/components/SpineReveal";
 import OfferCards from "@/components/offers/OfferCards";
 import type { HomeContent } from "@/content/home";
 import type { Locale } from "@/content/types";
@@ -19,10 +20,10 @@ export default function OffersSection({
   return (
     <section className="section offers" aria-labelledby="offers-title">
       <Container>
-        <div className="section-head">
+        <SpineReveal className="section-head">
           <h2 id="offers-title">{content.title}</h2>
           <p className="section-intro">{content.intro}</p>
-        </div>
+        </SpineReveal>
         <OfferCards locale={locale} />
       </Container>
     </section>

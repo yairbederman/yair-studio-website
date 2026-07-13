@@ -8,11 +8,13 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
  * disconnects; globals.css hangs the entrance off `is-inview`. `className`
  * defaults to the workflow-map spine (draw-in + approval-pulse) but any panel can
  * reuse this — the safety band passes `panel-list safety-guards` for its copper
- * marker stagger.
+ * marker stagger, and every `.section-head` passes `section-head` for the Phase D
+ * settle (child rise + the copper human-control underline on .safety / #human).
  *
- * Isolated-client-child pattern: the caller (WorkflowMap, SafetySection) stays a
- * Server Component and passes its already-rendered content as `children`. Only
- * this thin wrapper is client, mirroring FilmPlayer.
+ * Isolated-client-child pattern: the caller (WorkflowMap, SafetySection, and the
+ * section-head of every home / offer section) stays a Server Component and passes
+ * its already-rendered content as `children`. Only this thin wrapper is client,
+ * mirroring FilmPlayer.
  *
  * Headless-safe: every entrance keyframe is transform/box-shadow only, so the
  * content is fully visible even if this never runs (no JS) — the class only *adds*

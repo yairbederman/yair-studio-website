@@ -1,4 +1,5 @@
 import Container from "@/components/Container";
+import SpineReveal from "@/components/SpineReveal";
 import ProcessFilm from "@/components/ProcessFilm";
 import WorkflowMap from "@/components/WorkflowMap";
 import { shellContent } from "@/content/shell";
@@ -26,10 +27,10 @@ export default function EvidenceSection({
   return (
     <section className="section evidence" aria-labelledby="evidence-title">
       <Container>
-        <div className="section-head">
+        <SpineReveal className="section-head">
           <h2 id="evidence-title">{content.title}</h2>
           <p className="section-intro">{content.intro}</p>
-        </div>
+        </SpineReveal>
         {content.film ? (
           <ProcessFilm
             webm={content.film.webm}

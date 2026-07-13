@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import Container from "@/components/Container";
+import SpineReveal from "@/components/SpineReveal";
 
 /**
  * A titled content band on an offer page: h2 (+ optional intro) then children.
@@ -27,11 +28,11 @@ export default function OfferSection({
   return (
     <section id={id} className="section" aria-labelledby={`${id}-title`}>
       <Container>
-        <div className="section-head">
+        <SpineReveal className="section-head">
           <h2 id={`${id}-title`}>{title}</h2>
           {badge ? <p className="case-badge">{badge}</p> : null}
           {intro ? <p className="section-intro">{intro}</p> : null}
-        </div>
+        </SpineReveal>
         {children}
       </Container>
     </section>

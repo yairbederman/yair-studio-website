@@ -1,4 +1,5 @@
 import Container from "@/components/Container";
+import SpineReveal from "@/components/SpineReveal";
 import FounderProfile from "@/components/FounderProfile";
 import type { ProofContent } from "@/content/proof";
 
@@ -15,10 +16,10 @@ export default function FounderSection({
   return (
     <section className="section founder" aria-labelledby="founder-title">
       <Container>
-        <div className="section-head">
+        <SpineReveal className="section-head">
           <h2 id="founder-title">{content.title}</h2>
           <p className="section-intro">{content.intro}</p>
-        </div>
+        </SpineReveal>
         <FounderProfile content={content} />
       </Container>
     </section>

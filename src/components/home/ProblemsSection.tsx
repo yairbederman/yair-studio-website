@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Container from "@/components/Container";
+import SpineReveal from "@/components/SpineReveal";
 import type { HomeContent } from "@/content/home";
 
 /**
@@ -15,10 +16,10 @@ export default function ProblemsSection({
   return (
     <section className="section problems" aria-labelledby="problems-title">
       <Container>
-        <div className="section-head">
+        <SpineReveal className="section-head">
           <h2 id="problems-title">{content.title}</h2>
           <p className="section-intro">{content.intro}</p>
-        </div>
+        </SpineReveal>
         <ul className="feature-grid problems-grid">
           {content.cards.map((card) => (
             <li key={card.title} className="feature-card problem-card">

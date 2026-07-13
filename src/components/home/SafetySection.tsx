@@ -17,9 +17,9 @@ export default function SafetySection({
   return (
     <section className="section safety" aria-labelledby="safety-title">
       <Container>
-        <div className="section-head">
+        <SpineReveal className="section-head">
           <h2 id="safety-title">{content.title}</h2>
-        </div>
+        </SpineReveal>
         <SpineReveal className="panel-list safety-guards">
           <ul>
             {content.items.map((item) => (

@@ -757,6 +757,72 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   100% { box-shadow: var(--dot-rest-shadow); }
 }
 
+/* ============================================================
+   Live text motion (Phase D)
+   ------------------------------------------------------------
+   The films move (hero backdrop, process films); Phase D gives the STATIC text
+   between them the same quiet rhythm, as pure CSS hung off the existing
+   SpineReveal + .is-inview + sch-rise grammar — no new JS, no assets.
+
+   (1) Section-head settle — every .section-head is wrapped in SpineReveal, so
+   .is-inview lands once as it scrolls into view; its direct children (h2, intro,
+   optional badge) rise 8px in sequence, reusing the spine's own @keyframes
+   sch-rise. This IS a deliberate uniform per-section reveal: the subliminal
+   8px/240ms settle reads as system rhythm, not "fade-up everything" (transform
+   only, never opacity). It supersedes the note on the safety stagger (below)
+   that the site had no uniform per-section reveal.
+
+   (2) Human-control underline — one copper hairline draws itself under the head
+   of the section where a human stays in control: the safety band (.safety, home)
+   and the "what stays human" section (#human — offer / workflows / contact
+   pages). The only underline that draws on a page, it extends the copper
+   approval signal (.is-human, the .safety dots) into the heading, restating the
+   brand thesis in motion exactly once.
+
+   Same headless-safe contract as the spine / safety reveals: nothing starts at
+   opacity:0 and the underline rests at its FINAL scaleX(1), so a no-JS, headless,
+   paused-tab, or reduced-motion render shows every head settled and the hairline
+   fully drawn — .is-inview only ADDS the entrance, it never gates visibility. */
+
+/* Copper hairline under the human-control heading. Rest state = final state
+   (scaleX(1), fully drawn); .is-inview redraws it scaleX(0→1). transform-origin
+   is the reading start, flipped for RTL. Empty content keeps it out of the
+   heading's accessible name. */
+.safety .section-head h2::after,
+#human .section-head h2::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 2px;
+  margin-top: var(--s-3);
+  background: var(--accent);
+  transform: scaleX(1);
+  transform-origin: left;
+}
+[dir="rtl"] .safety .section-head h2::after,
+[dir="rtl"] #human .section-head h2::after {
+  transform-origin: right;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* (1) Section-head children settle in sequence. */
+  .section-head.is-inview > * {
+    animation: sch-rise var(--dur-slow) var(--ease) both;
+  }
+  .section-head.is-inview > *:nth-child(2) { animation-delay: 60ms; }
+  .section-head.is-inview > *:nth-child(3) { animation-delay: 120ms; }
+
+  /* (2) The copper hairline draws itself once, in step with its heading. */
+  .safety .section-head.is-inview h2::after,
+  #human .section-head.is-inview h2::after {
+    animation: underline-draw var(--dur-slow) var(--ease) both;
+  }
+}
+@keyframes underline-draw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
 /* ---------- Problems ---------- */
 /* The shared .feature-grid / .feature-card pattern supplies the 2×2 desktop
    layout and stacked mobile layout. Only the richer homepage card hierarchy is
@@ -1209,8 +1275,10 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 /* Sibling stagger: each copper dot pops in as the panel scrolls into view
    (SpineReveal adds .is-inview). Fires once. Scale-only + `both`, so the dots are
    fully visible at rest — the class only adds an entrance; a paused tab, headless
-   render, or reduced-motion leaves every dot at its final copper state. This is a
-   single list's sibling stagger, not a uniform per-section reveal. */
+   render, or reduced-motion leaves every dot at its final copper state. This is
+   the copper dots' own sibling stagger — distinct from the section-head settle
+   added in Phase D (Live text motion), which is the site's uniform per-section
+   reveal. */
 @media (prefers-reduced-motion: no-preference) {
   .safety .safety-guards.is-inview li::before {
     animation: safety-fill var(--dur-slow) var(--ease) both;

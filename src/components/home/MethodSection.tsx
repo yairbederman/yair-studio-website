@@ -1,4 +1,5 @@
 import Container from "@/components/Container";
+import SpineReveal from "@/components/SpineReveal";
 import type { HomeContent } from "@/content/home";
 
 /**
@@ -19,12 +20,12 @@ export default function MethodSection({
       aria-labelledby="method-title"
     >
       <Container>
-        <div className="section-head">
+        <SpineReveal className="section-head">
           <h2 id="method-title">{content.title}</h2>
           {content.intro ? (
             <p className="section-intro">{content.intro}</p>
           ) : null}
-        </div>
+        </SpineReveal>
         <ol className="method-list">
           {content.steps.map((step, i) => (
             <li
