@@ -88,8 +88,24 @@ measurement (font-race-free) and reflects the GSAP flights uniformly.
 - **Render:** `--format mov` master → ffmpeg charcoal H.264 MP4 (matched ~800 kbps)
   + poster; VP9 alpha WebM via `--format webm`. **The MP4/poster MUST come from the
   MOV, not the VP9 WebM** — VP9 bands the `#spine-glow` gradient (see DESIGN.md gotcha).
-  Sizes: `-he.webm` 6.60 MB · `-he.mp4` 1.32 MB · `-he-poster.png` 0.15 MB (matches
-  the EN pair). Both scattered WebMs remain E3 re-encode targets.
+  Sizes: `-he.mp4` 1.32 MB · `-he-poster.png` 0.15 MB (matches the EN pair);
+  `-he.webm` re-encoded in E3 (see below).
 - **Site:** HE `film` block wired into `home.ts` → `he.evidence` (the "No film yet"
   comment removed); `EvidenceSection` renders it above the before/after compare.
   Verified on `/he`: film loads (readyState 4), `dir=rtl`, assets 200, no console errors.
+
+## WebM re-encode (Phase E3 — DONE 2026-07-13)
+
+Both scattered alpha WebMs were the two heaviest on the site, so they were re-encoded
+tighter (2-pass VP9, `-b:v 2.8M`, from the shipped WebM) with an **SSIM parity gate**
+(both composited over charcoal, where the `#spine-glow` is most sensitive):
+
+- EN `.webm` **7.16 → 4.45 MB** (−38%), SSIM 0.981.
+- HE `-he.webm` **7.27 → 4.37 MB** (−40%), SSIM 0.982.
+
+`alpha_mode=1` preserved on both. Parity is vs the **original WebM** (the fair
+comparison): VP9 already bands the smooth `#spine-glow` in both the old and new WebMs
+(a pre-existing limitation — the clean glow lives in the MP4/poster, derived from the
+MOV master), and the re-encode does not worsen it (frame-diff + SSIM confirm). WebM is
+the mp4-first **fallback**, so this trims a rarely-served payload with no visible
+regression. MP4s + posters untouched (already lean).

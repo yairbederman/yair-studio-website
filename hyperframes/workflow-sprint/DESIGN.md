@@ -60,6 +60,13 @@ render (alpha MOV master route, see office-assistant/REVIEW.md).
   approval gate.
 - Ends settled for a soft loop restart.
 
+> **Cinematic regrade (Phase C2, 2026-07-13).** The choreography above was regraded
+> to the settled film grammar: velocity-matched beat hand-offs (power2.in exits →
+> power2.out entries, matched at cuts), a depth-of-field rack focus onto the copper
+> Human/approval checkpoint at the peak, and a loop-continuous camera (identity at t=0
+> and t=13). Content/copy/locales unchanged. Full choreography record: REVIEW.md →
+> "Cinematic regrade".
+
 ## Hard "do not" (per PRODUCT.md)
 
 - ❌ No fake SaaS UI / metrics / numbers / names — tiles carry no text.

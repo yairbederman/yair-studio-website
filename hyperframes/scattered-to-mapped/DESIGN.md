@@ -68,6 +68,13 @@ established by Films 1–3). Local woff2.
   open — then resolves into **Tracked to done**.
 - Easing: `power1/2.inOut` (travel), `power3/expo.out` (reveals). No bounce.
 
+> **Cinematic regrade (Phase C2, 2026-07-13).** The choreography above was regraded
+> to the settled film grammar: velocity-matched chip flights (accelerate + blur into
+> the node), a deepened depth-of-field rack focus onto the copper Human-approval
+> checkpoint at the peak, and a loop-continuous camera (pure functions of `t`, identity
+> at t=0 and t=13). Content/copy unchanged. Full choreography record: REVIEW.md →
+> "Cinematic regrade".
+
 ## Locales — HE (added Phase E: one composition, layout mirrored)
 
 Bilingual via the `lang` `data-composition-variables` (EN default). Unlike the

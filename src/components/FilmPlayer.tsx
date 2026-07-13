@@ -17,11 +17,14 @@ import { useEffect, useRef, useState } from "react";
  *   - Sources are mp4-first: the pre-composited mp4 is 2–4× smaller than the
  *     alpha webm and both are rendered against the same --bg-0 charcoal.
  *
- * Optional play-once intro (`intro`): when set (the wordmark sting on the
- * flagship film), the video plays the intro first with loop OFF; on its
- * `ended` event the sources swap to the main film and it loops. The swap is
- * keyed to `ended` only, so an autoplay block simply leaves the intro paused
- * with a working Play control — nothing desyncs.
+ * Optional play-once intro (`intro`): when a caller passes it, the video plays
+ * the intro first with loop OFF; on its `ended` event the sources swap to the
+ * main film and it loops. The swap is keyed to `ended` only, so an autoplay
+ * block simply leaves the intro paused with a working Play control — nothing
+ * desyncs. NOTE: no film currently passes `intro`. The wordmark sting was
+ * unwired from the flagship (command-center) film in d9d05d6 to stop a poster
+ * flicker; the mechanism is kept fully intact for standalone / OG reuse — do
+ * not delete or rewire it.
  *
  * The pause/play label follows the <video>'s own play/pause events, so a
  * browser that blocks autoplay correctly shows "Play" instead of lying.

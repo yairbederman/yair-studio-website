@@ -42,6 +42,12 @@ Node y-centres: `168, 312, 456, 600, 744, 888` (gap 144). Stage 1920×1080.
 - Inactive nodes sit at `opacity .5` + `blur(1.6px)`; activating a node pulls it into
   focus. During the approval hold, everything else dims to `.3`.
 
+> **Cinematic regrade (Phase C2, 2026-07-13).** The choreography above was regraded
+> to the settled film grammar: velocity-matched beat hand-offs, a depth-of-field rack
+> focus onto the copper human-approval checkpoint at the peak, and a loop-continuous
+> camera (identity at t=0 and t=13). Content/copy unchanged. Full choreography record:
+> REVIEW.md → "Cinematic regrade".
+
 ## Hard "do not" (per brief)
 
 - ❌ No fake SaaS UI, no fabricated metrics/numbers, no client/company names.
