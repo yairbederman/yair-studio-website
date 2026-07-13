@@ -1452,3 +1452,63 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   .proof-grid { grid-template-columns: 1fr; }
   .proof-grid--full .proof-card { grid-template-columns: 1fr; }
 }
+
+/* ============================================================
+   Film-grain overlay (Phase E)
+   ------------------------------------------------------------
+   One fixed, non-interactive texture layer over the whole site,
+   bridging the organic hero film and the flat charcoal sections.
+   Zero JS, zero assets: the grain is an inline SVG feTurbulence
+   data-URI (no external request).
+
+   - Achromatic BY CONSTRUCTION: feColorMatrix saturate=0 strips
+     all hue, so there is no color token to reference — the layer
+     is pure luminance noise, not a --color role.
+   - Backdrop-uniform: mix-blend-mode:overlay modulates the grain
+     against whatever sits beneath, so it reads on flat charcoal,
+     bright copper accents, AND the busy hero film alike. A plain
+     opacity layer only shows over the dark areas — the reason the
+     grain looked absent on lighter/busier surfaces. Degrades to a
+     normal-blend grey haze if a browser lacks blend-mode support.
+   - Stacking ladder: content(auto) < nav(10) < skip-link(100)
+     < grain(200). Highest z-index on the site; pointer-events:none
+     keeps every control beneath it clickable and focusable.
+   - inset:-10% gives the animated layer bleed room so the ≤6%
+     jitter never exposes an edge (6% of a 120%-sized element =
+     7.2% of the viewport < the 10% margin).
+   - RTL-free: physical inset/translate + symmetric noise read the
+     same in both directions — no [dir="rtl"] rule needed.
+   - Reduced motion: the animation is declared ONLY inside
+     no-preference, so reduced-motion users get the full static
+     texture and zero movement. The global reset (L209) is the
+     belt to this suspenders; even a leak lands on translate(0,0).
+   - Tweak knobs: opacity = texture intensity (0.04 subtle, 0.08
+     heavy); duration + jitter amplitude = boil liveliness.
+     ~0.7s / 10 discrete steps = ~14 fps film boil.
+   ============================================================ */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -10%;
+  z-index: 200;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+}
+@media (prefers-reduced-motion: no-preference) {
+  body::after { animation: film-grain 0.7s steps(1, end) infinite; }
+}
+@keyframes film-grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, 4%); }
+  20% { transform: translate(4%, -5.5%); }
+  30% { transform: translate(-6%, -3%); }
+  40% { transform: translate(5.5%, 4.5%); }
+  50% { transform: translate(-3%, 6%); }
+  60% { transform: translate(6%, -2.5%); }
+  70% { transform: translate(-5.5%, -5.5%); }
+  80% { transform: translate(3.5%, 5.5%); }
+  90% { transform: translate(-4.5%, -4%); }
+}
