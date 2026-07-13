@@ -126,6 +126,44 @@ Renders transparent (`#review-bg` is REVIEW-ONLY, removed before render).
   element `class="clip"` + `data-start/duration/track-index`; **no**
   `Date.now()` / `Math.random()` / network; finite computed repeats only.
 
+### Cinematic regrade (Phase C — grammar layered on the above, content unchanged)
+
+The choreography was regraded from "clear diagram" to film-grade. No scene, copy,
+locale, or honesty-grammar change — only motion.
+
+- **Velocity-matched beat hand-offs** (`techniques` §10): exits **accelerate**
+  (`power2.in`) with a blur-out; entries **decelerate** from blur (`power2.out`).
+  Applied at the chip→interface hand-off (chips blur-fly out as tagline settles
+  in from soft focus), the row reveals (`blur 6 → 0`), and caption→closing.
+- **Rack focus onto the checkpoint** (`depth-of-field-blur` rule): at the peak
+  the four status panels defocus via a `--dof` blur (`0 → 8px`) **+ dim to 0.42**
+  while the APPROVAL column stays sharp — the DoF pull replaces the old flat
+  opacity dim. **Refocuses to `--dof:0` before the tail** (a hand-off/loop seam
+  must never land mid-defocus).
+- **Loop-continuous camera** (`multi-phase-camera` rule): `#camera` pushes in
+  toward the peak (`scale 1.0 → 1.035`), holds, then settles back to **identity**
+  by `t=14`; continuous micro-drift (`±5px` X / `±3px` Y) uses **integer sine
+  cycles on both axes** (1× X, 2× Y) so `dx,dy` return to 0 at the seam and the
+  2:1 ratio avoids a mechanical diagonal. Camera transform at `t=0` **and** `t=14`
+  is identity → no camera pop when the video restarts.
+- **Hero bloom beat** (`#bloom-gl`): genuine volumetric **copper light** on the
+  checkpoint at the peak — additive radial-gradient sprites (core + halo per
+  element) rendered straight to a WebGL canvas (Three.js), **inside `#camera`** so
+  the light tracks the push-in + drift. Driven by HyperFrames time via
+  `window.__bloomRender` (a GSAP proxy — one clock, seek-safe). **NOT**
+  `UnrealBloomPass`: EffectComposer writes an opaque background that black-boxes
+  the UI over the transparent alpha master (verified). Determinism hardening
+  (from the code review): Three.js loads **synchronously** (UMD `three@0.160.1`,
+  blocking `<head>` script) so `__bloomRender` is defined before the harness is
+  ready — no per-worker async-load race; glow positions come from
+  `window.__bloomCenters`, measured **once at rest + camera identity** in the
+  timeline script (the fromTo `immediateRender` "from" states would otherwise
+  offset them ~34px), and carry the `X()` mirror so EN/HE both align; the
+  per-frame `renderer.render` is wrapped so a context loss degrades gracefully.
+  Feature-detected at every failure point — no THREE / no WebGL context / a
+  render throw all leave the canvas transparent and the CSS copper glow on
+  `#p-appr` carries the peak.
+
 ## Source of truth (three-source rule — verified against live source 2026-07-12)
 
 The **site content files are the single source** for every on-frame string

@@ -63,7 +63,9 @@ is the accepted product-UI tradeoff (DESIGN.md → Mobile legibility).
    composited over `#121211`). HE via the **default-flip** route (not
    `--variables`); the `dir`-on-`<html>` blank-frame bug avoided (dir on
    rows/text only) — HE rendered real content, not blank.
-3. Outputs in `public/videos/` (alpha_mode=1 confirmed on both WebM):
+3. Outputs in `public/videos/` (alpha_mode=1 confirmed on both WebM). **⚠ Sizes
+   below are the ORIGINAL 2026-07-12 render — SUPERSEDED by the Phase C re-render
+   (see "Cinematic regrade" below for current sizes).**
    - `command-center.mp4` 0.98 MB · `.webm` 4.49 MB · poster 258 KB
    - `command-center-he.mp4` 0.66 MB · `-he.webm` 3.23 MB · `-he-poster.png` 179 KB
    - **HE re-rendered** after fixing panel-title RTL: `dir="rtl"` now on
@@ -72,6 +74,41 @@ is the accepted product-UI tradeoff (DESIGN.md → Mobile legibility).
    - MP4s within the ~1.5 MB/locale target; WebM alpha is heavier (dense full-UI
      frame + constant camera push-in defeats inter-frame compression) — optimize
      with `--video-bitrate` if the mobile-data budget needs it.
+
+## Cinematic regrade (Phase C — DONE 2026-07-13)
+
+Choreography regraded to film-grade; **no content/copy/locale/honesty-grammar
+change** (see DESIGN.md → "Cinematic regrade"). Velocity-matched beat hand-offs,
+rack-focus onto the copper checkpoint at the peak, loop-continuous camera
+(identity at `t=0` and `t=14`), and a hero **WebGL copper-glow bloom** on the
+checkpoint (additive Three.js sprites — NOT `UnrealBloomPass`, which opaque-boxes
+the alpha master; feature-detected, CSS glow fallback).
+
+- Gates: `npm run check` **exit 0** — 0 errors, 90 text elements WCAG AA, 0
+  layout issues across 9 samples. Lint: 2 benign warnings (`overlapping_gsap_tweens`
+  on `__unresolved__`; `composition_file_too_large`). Validate: 1 benign console
+  **warning** — three.js's UMD build self-warns UMD is deprecated (0.160.1 is the
+  last version shipping it; that's why it's pinned there). Cosmetic; does not fail
+  validate/render.
+- **Code review (`/code-review high`, 2 finders + verify): 4 real findings, all
+  fixed.** (1) Glow was mis-positioned ~34px low — sprites read `getBoundingClientRect`
+  in the fromTo `immediateRender` displaced state; now measured at rest+identity
+  (`window.__bloomCenters`). (2) Async CDN ES-module could load after the harness
+  is ready → per-worker glow divergence; now Three.js loads **synchronously** (UMD
+  blocking `<head>` script) so `__bloomRender` exists before ready. (3) `renderer.render`
+  unguarded → a context loss would throw into the GSAP tick; now wrapped. (4) Camera
+  drift read a sibling tween's `cam.scale` (1-frame stale, seek-order-dependent);
+  now scale+drift are pure functions of `t`. Residual (accepted, graceful): a worker
+  whose WebGL context construction fails renders CSS-glow-only — rare; the empirical
+  render showed a flicker-free peak across all workers.
+- Snapshots verified EN (all 6 beats + peak) and HE (mirroring + bloom auto-mirrored
+  via `__bloomCenters` + Assistant font); glow lands on the check/dot in both locales.
+- Re-rendered both locales (alpha WebM `--video-bitrate 3.6M` → ffmpeg charcoal MP4
+  + poster). Final sizes vs pre-regrade: EN `.mp4` 1.20 MB (1.17×) · `.webm` 5.63 MB
+  (1.20×); HE `.mp4` 0.86 MB (1.24×) · `.webm` 4.79 MB (1.42× — the one file
+  marginally over the ~1.3× guideline; aggregate footprint ~1.26×). Posters refreshed
+  (settled frame now at camera scale 1.0).
+- Site code unchanged — same asset filenames, swapped in place.
 
 ## Site integration (Phase 5 — DONE 2026-07-12)
 

@@ -12,6 +12,16 @@
       integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2"
       crossorigin="anonymous"
     ></script>
+    <!-- Three.js (UMD, global THREE) for the hero bloom beat. Loaded as a
+         BLOCKING classic script — not an async ES module — so window.__bloomRender
+         is defined before the render harness signals ready (no per-worker load
+         race). Integrity-pinned. If it fails to load, THREE is undefined and the
+         bloom degrades gracefully to the CSS copper glow (see the bloom script). -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"
+      integrity="sha384-qOkzR5Ke/XkQxuGVJ9hpFEpDlcoLtWwVYhnJf06cLIZa2vaIptSqaubivErzmD5O"
+      crossorigin="anonymous"
+    ></script>
     <style>
       /* ============================================================
          "The Command Center" — Film 5. HyperFrames composition.
@@ -49,10 +59,18 @@
       }
       #stage { position: relative; width: 1920px; height: 1080px; }
       #camera { position: absolute; inset: 0; transform-origin: 960px 540px; will-change: transform; }
+      /* hero bloom beat — genuine copper light (Three.js additive glow sprites)
+         at the approval checkpoint. Inside #camera so it inherits push-in + drift;
+         opacity is driven entirely by the WebGL module (0 outside the peak, and
+         0 if WebGL is unavailable → the CSS copper glow on #p-appr is the
+         feature-detect fallback). */
+      #bloom-gl { position: absolute; inset: 0; width: 1920px; height: 1080px; opacity: 0; pointer-events: none; }
       /* REVIEW/CHECK/SNAPSHOT ONLY — charcoal backdrop so contrast reads true.
          Remove before the transparent alpha render; the charcoal MP4 is
          post-composited from the alpha master (see DESIGN.md → Renders). */
-      #review-bg { position: absolute; inset: 0; background: var(--bg-0); }
+      /* inset:-40px so the camera drift + push-in never exposes a transparent
+         edge during review (review-only element; removed before alpha render) */
+      #review-bg { position: absolute; inset: -40px; background: var(--bg-0); }
       .mono { font-family: "Geist Mono", ui-monospace, monospace; } /* HE swaps to Assistant at init */
 
       /* ---------- Overnight chips (the pile: email · calendar · documents) ---------- */
@@ -89,7 +107,11 @@
       /* ---------- Panels ---------- */
       .panel {
         position: absolute; border: 1.5px solid #45433c; border-radius: 14px;
-        background: rgba(36, 36, 32, 0.5); opacity: 0; will-change: transform, opacity;
+        background: rgba(36, 36, 32, 0.5); opacity: 0;
+        /* --dof drives the rack-focus blur at the peak (tweened on the GSAP
+           clock, never a CSS transition — see hyperframes depth-of-field rule) */
+        --dof: 0px; filter: blur(var(--dof));
+        will-change: transform, opacity, filter;
         padding: 26px 28px;
       }
       .ptitle {
@@ -209,6 +231,9 @@
         <!-- text moments -->
         <div id="caption"></div>
         <div id="closing"></div>
+
+        <!-- hero bloom beat — WebGL copper light over the checkpoint (peak only) -->
+        <canvas id="bloom-gl" width="1920" height="1080"></canvas>
       </div>
     </div>
 
@@ -321,35 +346,44 @@
       placeCenter("bloom", 1440, 574, 120, 120);
 
       // ---- Timeline ----
+      // Cinematic regrade (Phase C): velocity-matched beat hand-offs (exits
+      // accelerate + blur, entries decelerate from blur — hyperframes
+      // techniques §10), a rack-focus onto the copper APPROVAL checkpoint at
+      // the peak (depth-of-field-blur rule), and a loop-continuous camera
+      // (multi-phase-camera rule). Loop safety is a hard constraint: the rack
+      // refocuses to --dof:0 before the tail and the camera returns to identity
+      // at t=14, so the seam never lands mid-defocus or mid-drift.
       const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out", overwrite: "auto" } });
 
       // ===== BEAT 0 — Overnight pile (0.0–2.0) =====
+      // chips settle in from soft focus (decelerate from blur)
       tl.to("#tangle", { opacity: 0.6, duration: 0.6 }, 0.15);
-      tl.fromTo("#ov1", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.55 }, 0.2);
-      tl.fromTo("#ov2", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.55 }, 0.38);
-      tl.fromTo("#ov3", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.55 }, 0.56);
+      tl.fromTo("#ov1", { opacity: 0, y: 26, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "power2.out" }, 0.2);
+      tl.fromTo("#ov2", { opacity: 0, y: 30, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "power2.out" }, 0.38);
+      tl.fromTo("#ov3", { opacity: 0, y: 26, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "power2.out" }, 0.56);
       // gentle finite drift on the inner (rotation), never overlapping the flight
       tl.to("#ov1 .ov-inner", { rotation: -4, duration: 0.7, ease: "sine.inOut", repeat: 1, yoyo: true }, 0.9);
       tl.to("#ov2 .ov-inner", { rotation: 9, duration: 0.7, ease: "sine.inOut", repeat: 1, yoyo: true }, 0.8);
       tl.to("#ov3 .ov-inner", { rotation: -1, duration: 0.7, ease: "sine.inOut", repeat: 1, yoyo: true }, 1.0);
 
       // ===== BEAT 1 — The interface draws itself (2.0–4.5) =====
-      // chips fly up into the frame and dissolve
+      // EXIT (velocity-matched): chips accelerate up into the frame + blur out
       tl.to("#tangle", { opacity: 0, duration: 0.5, ease: "power2.in" }, 2.05);
-      tl.to("#ov1", { x: X(940) - X(830), y: 180 - 452, scale: 0.7, opacity: 0, duration: 0.7, ease: "power2.inOut" }, 2.1);
-      tl.to("#ov2", { x: X(940) - X(1030), y: 180 - 512, scale: 0.7, opacity: 0, duration: 0.7, ease: "power2.inOut" }, 2.22);
-      tl.to("#ov3", { x: X(940) - X(892), y: 180 - 596, scale: 0.7, opacity: 0, duration: 0.7, ease: "power2.inOut" }, 2.34);
-      // frame strokes in, header + badge + divider
-      tl.to("#frame", { strokeDashoffset: 0, duration: 1.3, ease: "power1.inOut" }, 2.3);
-      tl.fromTo("#tagline", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6 }, 3.2);
+      tl.to("#ov1", { x: X(940) - X(830), y: 180 - 452, scale: 0.7, opacity: 0, filter: "blur(14px)", duration: 0.62, ease: "power2.in" }, 2.1);
+      tl.to("#ov2", { x: X(940) - X(1030), y: 180 - 512, scale: 0.7, opacity: 0, filter: "blur(14px)", duration: 0.62, ease: "power2.in" }, 2.22);
+      tl.to("#ov3", { x: X(940) - X(892), y: 180 - 596, scale: 0.7, opacity: 0, filter: "blur(14px)", duration: 0.62, ease: "power2.in" }, 2.34);
+      // ENTRY (decelerate from blur): frame strokes in, header + badge + divider settle
+      tl.to("#frame", { strokeDashoffset: 0, duration: 1.4, ease: "power1.inOut" }, 2.35);
+      tl.fromTo("#tagline", { opacity: 0, y: 18, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.7, ease: "power2.out" }, 3.15);
       tl.fromTo("#badge", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5 }, 3.55);
       tl.to("#divider", { opacity: 1, duration: 0.5 }, 3.5);
 
       // ===== BEAT 2 — Panels populate (4.5–7.5) =====
       const panelIn = (id, at) =>
-        tl.fromTo("#" + id, { opacity: 0, y: 20, scale: 0.98 }, { opacity: 1, y: 0, scale: 1, duration: 0.55 }, at);
+        tl.fromTo("#" + id, { opacity: 0, y: 20, scale: 0.98 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power2.out" }, at);
+      // rows materialize decelerating from blur (soft-focus → crisp)
       const rowIn = (sel, at) =>
-        tl.fromTo(sel, { opacity: 0, y: 12, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.5 }, at);
+        tl.fromTo(sel, { opacity: 0, y: 12, scale: 0.96, filter: "blur(6px)" }, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "power2.out" }, at);
       panelIn("p-meet", 4.55); panelIn("p-mail", 4.68); panelIn("p-wait", 4.81); panelIn("p-dead", 4.94);
       rowIn("#rw-meet-1", 5.15); rowIn("#rw-meet-2", 5.28);
       rowIn("#rw-mail-1", 5.4); rowIn("#rw-mail-2", 5.53);
@@ -363,41 +397,189 @@
       tl.fromTo("#ar-2", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5 }, 6.98);
 
       // ===== BEAT 3 — PEAK: the approval queue (7.5–10.0) =====
-      // everything dims except the approval column
-      tl.to(["#p-meet", "#p-mail", "#p-wait", "#p-dead", "#tagline", "#divider", "#frame"],
-        { opacity: 0.32, duration: 0.55 }, 7.6);
-      tl.to("#p-appr", { borderColor: "rgba(217,104,50,0.35)", boxShadow: "0 0 46px 0 rgba(217,104,50,0.12)", duration: 0.5 }, 7.6);
+      // RACK FOCUS — the four status panels defocus (blur + dim) while the
+      // APPROVAL column stays sharp; the camera pushes in on the same window.
+      // Motion as message: the eye is pulled to the human checkpoint.
+      tl.to(["#p-meet", "#p-mail", "#p-wait", "#p-dead"],
+        { "--dof": "8px", opacity: 0.42, duration: 0.75, ease: "power2.inOut" }, 7.55);
+      tl.to(["#tagline", "#divider", "#frame"], { opacity: 0.34, duration: 0.75, ease: "power2.inOut" }, 7.55);
+      tl.to("#p-appr", { borderColor: "rgba(217,104,50,0.5)", boxShadow: "0 0 60px 0 rgba(217,104,50,0.18)", duration: 0.6 }, 7.6);
       // one bounded copper ring bloom (immediateRender:false — else the
       // visible "from" state paints from t=0 before the tween starts)
       tl.fromTo("#bloom", { scale: 0.45, opacity: 0.9, transformOrigin: "center" },
-        { scale: 1.9, opacity: 0, duration: 1.1, ease: "power2.out", immediateRender: false }, 7.9);
+        { scale: 1.9, opacity: 0, duration: 1.1, ease: "power2.out", immediateRender: false }, 7.95);
       // item 1 approved by a person: dot → check draws in
       tl.to("#dot-1", { opacity: 0, duration: 0.25 }, 8.5);
       tl.to("#ast-1", { borderColor: "#d96832", duration: 0.3 }, 8.5);
       tl.to("#chk-1", { opacity: 1, duration: 0.2 }, 8.6);
       tl.to("#chk-1 path", { strokeDashoffset: 0, duration: 0.55, ease: "power2.inOut" }, 8.65);
-      // the safety line appears verbatim
-      tl.fromTo("#caption", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.55 }, 8.7);
+      // the safety line appears verbatim (decelerate from blur)
+      tl.fromTo("#caption", { opacity: 0, y: 12, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "power2.out" }, 8.7);
 
       // ===== BEAT 4 — Fails safely (10.0–12.0) =====
-      // the day settles back; item 1 done (copper), item 2 DELIBERATELY still waiting
-      tl.to(["#p-meet", "#p-mail", "#p-wait", "#p-dead", "#tagline", "#divider", "#frame"],
-        { opacity: 1, duration: 0.6 }, 10.1);
-      tl.to("#ar-1", { opacity: 1, duration: 0.4 }, 10.1);
-      tl.to("#al-1", { color: "#8a847a", duration: 0.4 }, 10.2); // approved item recedes
+      // REFOCUS — the rack releases; panels return to sharp so the closing/loop
+      // seam is crisp (a hand-off must never land mid-defocus).
+      tl.to(["#p-meet", "#p-mail", "#p-wait", "#p-dead"],
+        { "--dof": "0px", opacity: 1, duration: 0.8, ease: "power2.inOut" }, 10.1);
+      tl.to(["#tagline", "#divider", "#frame"], { opacity: 1, duration: 0.8, ease: "power2.inOut" }, 10.1);
+      tl.to("#al-1", { color: "#8a847a", duration: 0.5 }, 10.3); // approved item recedes
       // item 2 pending dot gives a slow finite copper pulse — still waiting for a person
       tl.to("#ar-2 .dot", { opacity: 0.35, duration: 0.7, ease: "sine.inOut", repeat: 1, yoyo: true }, 10.6);
 
       // ===== BEAT 5 — The day starts decided (12.0–14.0) =====
-      tl.to("#caption", { opacity: 0, y: -10, duration: 0.45, ease: "power2.in" }, 12.0);
-      tl.fromTo("#closing", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.7 }, 12.35);
-      tl.to("#p-appr", { boxShadow: "0 0 40px 0 rgba(217,104,50,0.10)", duration: 0.8, ease: "sine.inOut" }, 12.4);
+      // EXIT caption (accelerate up + blur) → ENTRY closing (decelerate from blur)
+      tl.to("#caption", { opacity: 0, y: -12, filter: "blur(10px)", duration: 0.5, ease: "power2.in" }, 12.0);
+      tl.fromTo("#closing", { opacity: 0, y: 16, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.75, ease: "power2.out" }, 12.35);
+      tl.to("#p-appr", { boxShadow: "0 0 40px 0 rgba(217,104,50,0.10)", duration: 0.9, ease: "sine.inOut" }, 12.5);
 
-      // Camera: restrained push-in across the film
-      tl.fromTo("#camera", { scale: 1.0 }, { scale: 1.03, duration: 14, ease: "sine.inOut" }, 0);
+      // ===== CAMERA — loop-continuous (identity at t=0 AND t=14) =====
+      // Push gently INTO the approval peak, hold, then settle back so the seam
+      // matches. Continuous micro-drift overlays: integer sine cycles on BOTH
+      // axes so dx,dy return to 0 at the seam; a 2:1 X:Y ratio avoids the
+      // mechanical perfect-diagonal. Amplitude is imperceptible per frame.
+      const camEl = document.getElementById("camera");
+      const DRIFT_AMP_X = 5; // px
+      const DRIFT_AMP_Y = 3; // px
+      // scale AND drift are BOTH pure functions of timeline time t — no reads of
+      // a sibling tween's proxy — so every seek (any direction) and every render
+      // worker computes the identical transform. Push 1.0→1.035 into the peak,
+      // hold, settle back to identity by t=13.5 (→ identity at the t=14 seam).
+      const camEase = gsap.parseEase("power2.inOut");
+      const scaleAt = (t) => {
+        if (t <= 6.4) return 1.0;
+        if (t < 8.7) return 1.0 + 0.035 * camEase((t - 6.4) / 2.3);
+        if (t <= 10.4) return 1.035;
+        if (t < 13.5) return 1.035 - 0.035 * camEase((t - 10.4) / 3.1);
+        return 1.0;
+      };
+      const drift = { p: 0 };
+      tl.to(drift, {
+        p: 1, duration: 14, ease: "none",
+        onUpdate: () => {
+          const t = drift.p * 14;
+          const dx = Math.sin(drift.p * Math.PI * 2) * DRIFT_AMP_X; // 1 full cycle → 0 at seam
+          const dy = Math.sin(drift.p * Math.PI * 4) * DRIFT_AMP_Y; // 2 full cycles → 0 at seam
+          camEl.style.transform = `scale(${scaleAt(t)}) translate(${dx}px, ${dy}px)`;
+        },
+      }, 0);
+
+      // ===== HERO BLOOM DRIVER (peak, ~7.6–10.0s) =====
+      // Drives the WebGL copper-glow (defined synchronously below) by HyperFrames
+      // time via a GSAP proxy (technique #13 pattern — one clock, seek-safe).
+      // Guarded: if __bloomRender is absent (no WebGL / Three.js failed to load),
+      // this no-ops and the CSS copper glow on #p-appr carries the peak.
+      const bloomProxy = { t: 7.5 };
+      tl.to(bloomProxy, {
+        t: 10.0, duration: 2.5, ease: "none",
+        onUpdate: () => { if (window.__bloomRender) window.__bloomRender(bloomProxy.t); },
+      }, 7.5);
+
+      // ===== BLOOM CHECKPOINT CENTERS (measured once, at rest + camera identity) =====
+      // The approval elements are DISPLACED at build time by their fromTo
+      // immediateRender "from" states (#p-appr +20y/×0.98, rows +14y). Force them
+      // to rest and measure with the camera at identity (no seek has run yet), so
+      // the glow lands exactly on the check/dot — and the rects carry the X()
+      // mirror, so EN and HE both align. Restore the "from" state after (those
+      // elements are opacity:0 until their reveal, so this is invisible anyway).
+      gsap.set("#p-appr", { y: 0, scale: 1 });
+      gsap.set(["#ar-1", "#ar-2"], { y: 0 });
+      const _stageRect = document.getElementById("stage").getBoundingClientRect();
+      const _center = (id) => {
+        const r = document.getElementById(id).getBoundingClientRect();
+        return { x: r.left - _stageRect.left + r.width / 2, y: r.top - _stageRect.top + r.height / 2 };
+      };
+      window.__bloomCenters = { col: _center("p-appr"), check: _center("ast-1"), dot: _center("ast-2") };
+      gsap.set("#p-appr", { y: 20, scale: 0.98 });
+      gsap.set(["#ar-1", "#ar-2"], { y: 14 });
 
       window.__timelines = window.__timelines || {};
       window.__timelines["root"] = tl;
+    </script>
+
+    <!-- Hero bloom beat — genuine volumetric copper light on the approval
+         checkpoint (Three.js additive glow sprites). Runs as a SYNCHRONOUS
+         classic script using the global THREE (loaded blocking in <head>) and
+         the checkpoint centers measured at rest+identity above — so
+         window.__bloomRender is defined before the harness is ready, positions
+         are timing-independent, and every render worker is identical. Rendered
+         inside #camera so the light tracks push-in + drift. Deterministic: a pure
+         function of HyperFrames time. Feature-detected at every failure point
+         (no THREE / no WebGL context / a per-frame render throw) → the canvas
+         stays transparent and the CSS copper glow on #p-appr carries the peak.
+         (UnrealBloom/EffectComposer are deliberately NOT used: they write an
+         opaque background that black-boxes the UI over the transparent alpha
+         master; additive sprites keep the canvas transparent where unlit.) -->
+    <script>
+      (function () {
+        const canvas = document.getElementById("bloom-gl");
+        const C = window.__bloomCenters;
+        if (!canvas || !C || typeof THREE === "undefined") return; // → CSS glow fallback
+
+        let renderer;
+        try {
+          renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, premultipliedAlpha: false });
+          renderer.setSize(1920, 1080, false);
+          renderer.setPixelRatio(1);
+          renderer.setClearColor(0x000000, 0);
+        } catch (err) { return; } // no WebGL context → CSS glow fallback
+
+        const scene = new THREE.Scene();
+        // 1:1 pixel-space ortho camera (y-up): worldY = 1080 − domY.
+        const camera = new THREE.OrthographicCamera(0, 1920, 1080, 0, -100, 100);
+        camera.position.z = 10;
+
+        // Soft copper radial sprite (drawn once — deterministic). Bright warm
+        // core → copper → transparent edge; additive blending accumulates it into light.
+        const glowTex = (() => {
+          const c = document.createElement("canvas"); c.width = c.height = 256;
+          const g = c.getContext("2d");
+          const rg = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+          rg.addColorStop(0.0, "rgba(255,196,150,1)");
+          rg.addColorStop(0.28, "rgba(217,104,50,0.85)");
+          rg.addColorStop(1.0, "rgba(217,104,50,0)");
+          g.fillStyle = rg; g.fillRect(0, 0, 256, 256);
+          const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+        })();
+        const glow = (px, py, size, opacity) => {
+          const s = new THREE.Sprite(new THREE.SpriteMaterial({
+            map: glowTex, transparent: true, blending: THREE.AdditiveBlending,
+            depthWrite: false, opacity,
+          }));
+          s.position.set(px, 1080 - py, 0); s.scale.set(size, size, 1); scene.add(s); return s;
+        };
+
+        // Positions from window.__bloomCenters (rest+identity, X()-mirror aware).
+        // Each light = a wide soft halo + a tight brighter core (bloom-like
+        // falloff), kept subtle so the copper UI stays readable through the glow.
+        glow(C.col.x, C.col.y, 430, 0.08);                       // whole-column aura ("lit" feel)
+        glow(C.dot.x, C.dot.y, 200, 0.09);                       // item 2 pending — halo
+        glow(C.dot.x, C.dot.y, 84, 0.18);                        //             …and core
+        const checkHalo = glow(C.check.x, C.check.y, 320, 0.0);  // item 1 — halo, ramps in
+        const checkCore = glow(C.check.x, C.check.y, 130, 0.0);  //        …core, ramps in
+
+        const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+        // fade envelope: in 7.6→8.0, hold, out 9.5→10.0 (matches the rack focus)
+        const env = (t) => {
+          if (t <= 7.6 || t >= 10.0) return 0;
+          if (t < 8.0) return (t - 7.6) / 0.4;
+          if (t > 9.5) return (10.0 - t) / 0.5;
+          return 1;
+        };
+        window.__bloomRender = (t) => {
+          const e = env(t);
+          if (e <= 0) { canvas.style.opacity = "0"; return; }
+          try {
+            const ck = clamp01((t - 8.55) / 0.5); // item 1 approval ramp (matches the check draw)
+            checkHalo.material.opacity = ck * 0.20;
+            checkCore.material.opacity = ck * 0.55;
+            renderer.render(scene, camera);
+            canvas.style.opacity = String(e);
+          } catch (err) {
+            canvas.style.opacity = "0"; // context loss mid-render → CSS glow fallback
+          }
+        };
+        window.__bloomRender(0);
+      })();
     </script>
   </body>
 </html>
