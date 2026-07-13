@@ -1464,12 +1464,12 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
    - Achromatic BY CONSTRUCTION: feColorMatrix saturate=0 strips
      all hue, so there is no color token to reference — the layer
      is pure luminance noise, not a --color role.
-   - Backdrop-uniform: mix-blend-mode:overlay modulates the grain
-     against whatever sits beneath, so it reads on flat charcoal,
-     bright copper accents, AND the busy hero film alike. A plain
-     opacity layer only shows over the dark areas — the reason the
-     grain looked absent on lighter/busier surfaces. Degrades to a
-     normal-blend grey haze if a browser lacks blend-mode support.
+   - Normal blend (no mix-blend-mode) is deliberate: on this near-
+     black palette (bg lum ~0.07) a plain opacity layer gives a
+     uniform grain delta on EVERY surface. Midtone blends
+     (overlay / soft-light) were tried and collapse the grain to
+     near-zero on the dark 95%, lighting up only the mid-toned
+     copper block — do NOT reintroduce them here.
    - Stacking ladder: content(auto) < nav(10) < skip-link(100)
      < grain(200). Highest z-index on the site; pointer-events:none
      keeps every control beneath it clickable and focusable.
@@ -1495,7 +1495,6 @@ body::after {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
   background-size: 180px 180px;
   opacity: 0.06;
-  mix-blend-mode: overlay;
 }
 @media (prefers-reduced-motion: no-preference) {
   body::after { animation: film-grain 0.7s steps(1, end) infinite; }

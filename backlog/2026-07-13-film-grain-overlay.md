@@ -54,8 +54,8 @@ body::after {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
   background-size: 180px 180px;
   opacity: 0.06; /* intensity dial — shipped 0.04, bumped to 0.06 on live review for more presence */
-  mix-blend-mode: overlay; /* modulate against backdrop so grain reads on dark charcoal,
-                              bright copper, AND the busy hero film — not just dark areas */
+  /* NB: no mix-blend-mode. Overlay was tried to reach bright surfaces but collapsed the
+     grain on the dark 95% (midtone blend, ~no midtones here) — normal blend is uniform. */
 }
 @media (prefers-reduced-motion: no-preference) {
   body::after { animation: film-grain 0.7s steps(1, end) infinite; }
