@@ -345,9 +345,16 @@ const he: HomeContent = {
     title: "איך נראה תהליך ממופה",
     intro:
       "הדגמה של הגישה, לא מקרה לקוח אמיתי. השיפור כאן מבני: עבודה מפוזרת וידנית הופכת לתהליך ממופה עם שלב אישור אנושי.",
-    // No `film` yet: the scattered-to-mapped video is English-only. Until a
-    // Hebrew film is composed, /he shows the fully localized before/after
-    // compare below on its own (the designed reduced-motion fallback).
+    // Hebrew scattered-to-mapped film (one composition, RTL-mirrored). Caption
+    // traces to he.evidence (intro "שלב אישור אנושי" + node "מנוהלת עד לסגירה").
+    film: {
+      webm: "/videos/scattered-to-mapped-he.webm",
+      mp4: "/videos/scattered-to-mapped-he.mp4",
+      poster: "/videos/scattered-to-mapped-he-poster.png",
+      caption:
+        "בקשות מפוזרות מתארגנות לתהליך ממופה, עם שלב אישור אנושי לפני שהעבודה מנוהלת עד לסגירה.",
+      filmName: "סרטון תהליך ממופה",
+    },
     before: {
       caption: "לפני",
       items: [

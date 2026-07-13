@@ -10,6 +10,10 @@ transformation, not two panels.
 > place in the flow; approval is the one thing the system adds; the last open
 > question is the last thing tracked to done.
 
+Bilingual: EN + a Hebrew RTL locale (`lang` variable). The Hebrew is a
+transcreation of the same message — the layout mirrors (see DESIGN.md → Locales);
+HE copy traces to `home.ts` → `he.evidence`.
+
 ## The cast (all copy traces to `home.ts` → `evidence`)
 
 | Element | Text | Source |

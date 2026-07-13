@@ -1,5 +1,9 @@
 <!doctype html>
-<html lang="en" data-resolution="landscape">
+<html
+  lang="en"
+  data-resolution="landscape"
+  data-composition-variables='[{"id":"lang","type":"string","label":"Locale (en | he)","default":"en"}]'
+>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1920, height=1080" />
@@ -16,6 +20,8 @@
       @font-face { font-family: "Inter"; font-weight: 400; font-display: block; src: url("assets/fonts/inter-400.woff2") format("woff2"); }
       @font-face { font-family: "Inter"; font-weight: 600; font-display: block; src: url("assets/fonts/inter-600.woff2") format("woff2"); }
       @font-face { font-family: "Geist Mono"; font-weight: 400; font-display: block; src: url("assets/fonts/geist-mono-400.woff2") format("woff2"); }
+      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 
       :root {
         --bg-0: #121211; --bg-1: #1a1a18; --bg-2: #242420;
@@ -121,23 +127,43 @@
         border-radius: 50%; border: 2px solid var(--accent);
         opacity: 0; /* initial scale set by GSAP fromTo */
       }
+
+      /* ---------- Locale: HE = one composition, layout mirrored (RTL transcreation) ----------
+         #mirror reflects every POSITION across the frame centre (scaleX(-1)); the inner
+         text spans (.t) and node labels/subs are un-flipped (scaleX(-1) again) so the
+         Hebrew reads correctly. Double-flip = mirrored layout with correctly-oriented
+         text — a transcreation, NOT a backwards flipped render. All GSAP transforms
+         (chip flights, ledger jitter) reflect through the parent mirror unchanged, so
+         the timeline is locale-agnostic. EN adds no `.he` class → identical to before. */
+      .t { display: inline-block; }
+      #mirror { position: absolute; inset: 0; width: 1920px; height: 1080px; transform-origin: 960px 540px; }
+      .he #mirror { transform: scaleX(-1); }
+      .he #mirror, .he #mirror * { font-family: "Assistant", system-ui, sans-serif; }
+      /* direction:rtl sets the bidi base so a trailing neutral (the chips'
+         "?") resolves to the END of the Hebrew run (visually left), not after
+         it. Pure-Hebrew runs are already RTL-laid regardless, so this is inert
+         for them and only corrects the trailing-"?" chips. */
+      .he .t, .he .node .label, .he .node .sub { transform: scaleX(-1); direction: rtl; }
+      .he #camera { transform-origin: 820px 540px; } /* mirror the push-in pivot X(1100) */
     </style>
   </head>
 
   <body>
     <div id="stage" data-composition-id="root" data-start="0" data-duration="13" data-width="1920" data-height="1080">
       <div id="camera" data-layout-allow-overflow>
+       <div id="mirror">
         <div id="spine-glow"></div>
 
-        <!-- Caps — the section's two panel captions, both alive in one frame -->
-        <div class="cap" id="cap-before">Before</div>
-        <div class="cap" id="cap-mapped">Mapped workflow</div>
+        <!-- Caps — the section's two panel captions, both alive in one frame.
+             Text lives in an inner .t span so HE can un-flip it under the mirror. -->
+        <div class="cap" id="cap-before"><span class="t"></span></div>
+        <div class="cap" id="cap-mapped"><span class="t"></span></div>
 
         <!-- Ledger — the four before-items, verbatim from home.ts evidence -->
-        <div class="led" id="led0" style="top: 250px">Requests arrive by email, chat, and calls<span class="strike"></span></div>
-        <div class="led" id="led1" style="top: 392px">Status lives in someone's head<span class="strike"></span></div>
-        <div class="led" id="led2" style="top: 534px">Follow-up depends on remembering<span class="strike"></span></div>
-        <div class="led" id="led3" style="top: 676px">No shared view of what is open<span class="strike"></span></div>
+        <div class="led" id="led0" style="top: 250px"><span class="t"></span><span class="strike"></span></div>
+        <div class="led" id="led1" style="top: 392px"><span class="t"></span><span class="strike"></span></div>
+        <div class="led" id="led2" style="top: 534px"><span class="t"></span><span class="strike"></span></div>
+        <div class="led" id="led3" style="top: 676px"><span class="t"></span><span class="strike"></span></div>
 
         <!-- Chaos field — request chips at odd angles + tangled hairlines.
              Overlap here is the point (it untangles). -->
@@ -153,12 +179,12 @@
           <div class="tangle" style="left: 830px; top: 470px; width: 210px; transform: rotate(-4deg)"></div>
           <div class="tangle" style="left: 960px; top: 760px; width: 230px; transform: rotate(24deg)"></div>
 
-          <div class="chipw" id="w-email" style="left: 700px; top: 260px"><span class="chip" id="c-email" style="transform: rotate(-5deg)">email</span></div>
-          <div class="chipw" id="w-chat" style="left: 1050px; top: 190px"><span class="chip" id="c-chat" style="transform: rotate(3deg)">chat</span></div>
-          <div class="chipw" id="w-call" style="left: 820px; top: 380px"><span class="chip" id="c-call" style="transform: rotate(-2deg)">call</span></div>
-          <div class="chipw" id="w-status" style="left: 660px; top: 560px"><span class="chip" id="c-status" style="transform: rotate(4deg)">status?</span></div>
-          <div class="chipw" id="w-follow" style="left: 1060px; top: 670px"><span class="chip" id="c-follow" style="transform: rotate(-3.5deg)">follow-up?</span></div>
-          <div class="chipw" id="w-open" style="left: 740px; top: 840px"><span class="chip" id="c-open" style="transform: rotate(2.5deg)">what is open?</span></div>
+          <div class="chipw" id="w-email" style="left: 700px; top: 260px"><span class="chip" id="c-email" style="transform: rotate(-5deg)"><span class="t"></span></span></div>
+          <div class="chipw" id="w-chat" style="left: 1050px; top: 190px"><span class="chip" id="c-chat" style="transform: rotate(3deg)"><span class="t"></span></span></div>
+          <div class="chipw" id="w-call" style="left: 820px; top: 380px"><span class="chip" id="c-call" style="transform: rotate(-2deg)"><span class="t"></span></span></div>
+          <div class="chipw" id="w-status" style="left: 660px; top: 560px"><span class="chip" id="c-status" style="transform: rotate(4deg)"><span class="t"></span></span></div>
+          <div class="chipw" id="w-follow" style="left: 1060px; top: 670px"><span class="chip" id="c-follow" style="transform: rotate(-3.5deg)"><span class="t"></span></span></div>
+          <div class="chipw" id="w-open" style="left: 740px; top: 840px"><span class="chip" id="c-open" style="transform: rotate(2.5deg)"><span class="t"></span></span></div>
         </div>
 
         <!-- Spine — the mapped workflow, verbatim from home.ts evidence -->
@@ -168,17 +194,18 @@
         <div class="node" id="n0" style="top: 168px">
           <span class="dot"></span>
           <span class="body">
-            <span class="label">Incoming request</span>
-            <span class="sub">email · chat · call</span>
+            <span class="label"></span>
+            <span class="sub"></span>
           </span>
         </div>
-        <div class="node" id="n1" style="top: 312px"><span class="dot"></span><span class="body"><span class="label">Captured + categorized</span></span></div>
-        <div class="node" id="n2" style="top: 456px"><span class="dot"></span><span class="body"><span class="label">Owner + due date assigned</span></span></div>
-        <div class="node" id="n3" style="top: 600px"><span class="dot"></span><span class="body"><span class="label">Draft response prepared</span></span></div>
-        <div class="node node--human" id="n4" style="top: 744px"><span class="dot"></span><span class="body"><span class="label">Human approval</span></span></div>
-        <div class="node node--out" id="n5" style="top: 888px"><span class="dot"></span><span class="body"><span class="label">Tracked to done</span></span></div>
+        <div class="node" id="n1" style="top: 312px"><span class="dot"></span><span class="body"><span class="label"></span></span></div>
+        <div class="node" id="n2" style="top: 456px"><span class="dot"></span><span class="body"><span class="label"></span></span></div>
+        <div class="node" id="n3" style="top: 600px"><span class="dot"></span><span class="body"><span class="label"></span></span></div>
+        <div class="node node--human" id="n4" style="top: 744px"><span class="dot"></span><span class="body"><span class="label"></span></span></div>
+        <div class="node node--out" id="n5" style="top: 888px"><span class="dot"></span><span class="body"><span class="label"></span></span></div>
 
         <div id="approve-ring"></div>
+       </div>
       </div>
     </div>
 
@@ -187,7 +214,69 @@
          Timeline — 13s, deterministic (no random / Date / async).
          scatter → mapping pass → untangle → APPROVAL HOLD → done → settle.
          Node y-centres: 168,312,456,600,744,888 · rail top 168, h 720.
+         The `lang` variable picks copy; HE mirrors LAYOUT via #mirror's
+         scaleX(-1) (text un-flipped in CSS) — the timeline is locale-agnostic.
+         Every on-frame string traces to src/content/home.ts → evidence.
          ============================================================ */
+      const vars = (window.__hyperframes && window.__hyperframes.getVariables)
+        ? window.__hyperframes.getVariables() : {};
+      const lang = vars.lang === "he" ? "he" : "en";
+      const isHE = lang === "he";
+      document.documentElement.lang = lang;
+      if (isHE) document.documentElement.classList.add("he"); // drives #mirror + un-flip + Assistant font
+
+      const COPY = {
+        en: {
+          capBefore: "Before",            // evidence.before.caption
+          capMapped: "Mapped workflow",   // evidence.mapped.caption
+          led: [                          // evidence.before.items (verbatim)
+            "Requests arrive by email, chat, and calls",
+            "Status lives in someone's head",
+            "Follow-up depends on remembering",
+            "No shared view of what is open",
+          ],
+          chips: ["email", "chat", "call", "status?", "follow-up?", "what is open?"], // contractions of before-items
+          nodes: [                        // evidence.mapped.nodes (verbatim)
+            { label: "Incoming request", sub: "email · chat · call" },
+            { label: "Captured + categorized" },
+            { label: "Owner + due date assigned" },
+            { label: "Draft response prepared" },
+            { label: "Human approval" },
+            { label: "Tracked to done" },
+          ],
+        },
+        he: {
+          capBefore: "לפני",              // he.evidence.before.caption
+          capMapped: "תהליך ממופה",       // he.evidence.mapped.caption
+          led: [                          // he.evidence.before.items (verbatim)
+            "בקשות מגיעות במייל, בצ'אט ובטלפון",
+            "הסטטוס נמצא בראש של מישהו",
+            "המעקב תלוי בזיכרון",
+            "אין תמונה משותפת של מה פתוח",
+          ],
+          chips: ["מייל", "צ'אט", "טלפון", "סטטוס?", "מעקב?", "מה פתוח?"], // contractions of he before-items / node sub
+          nodes: [                        // he.evidence.mapped.nodes (verbatim)
+            { label: "בקשה נכנסת", sub: "מייל · צ'אט · טלפון" },
+            { label: "נקלטת ומסווגת" },
+            { label: "משויכת לאחראי ולתאריך יעד" },
+            { label: "טיוטת תשובה מוכנה" },
+            { label: "אישור אנושי" },
+            { label: "מנוהלת עד לסגירה" },
+          ],
+        },
+      }[lang];
+
+      const CHIP_IDS = ["c-email", "c-chat", "c-call", "c-status", "c-follow", "c-open"];
+      const setTxt = (sel, t) => { const el = document.querySelector(sel); if (el) el.textContent = t; };
+      setTxt("#cap-before .t", COPY.capBefore);
+      setTxt("#cap-mapped .t", COPY.capMapped);
+      COPY.led.forEach((t, i) => setTxt("#led" + i + " .t", t));
+      CHIP_IDS.forEach((id, i) => setTxt("#" + id + " .t", COPY.chips[i]));
+      COPY.nodes.forEach((n, i) => {
+        setTxt("#n" + i + " .label", n.label);
+        if (n.sub) setTxt("#n" + i + " .sub", n.sub);
+      });
+
       const NODE_Y = [168, 312, 456, 600, 744, 888];
       const RAIL_TOP = 168, RAIL_H = 720;
       const fillTo = (i) => (NODE_Y[i] - RAIL_TOP) / RAIL_H;

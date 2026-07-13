@@ -67,3 +67,29 @@ to blur 0 for the loop seam), and a **loop-continuous camera** (pure functions o
 `t`; identity at t=0 and t=13). Re-rendered EN (`--video-bitrate 3.6M` → charcoal
 MP4 + poster). `npm run check`: 0 errors. Sizes: `.mp4` 1.30 MB · `.webm` 7.50 MB
 (down from the old 18 MB WebM). Site code unchanged.
+
+## Hebrew locale (Phase E — DONE 2026-07-13)
+
+Made bilingual (`lang` variable). Approach: **`scaleX(-1)` container mirror** +
+inner-`.t`-span un-flip (see DESIGN.md → Locales) rather than the `X()` retrofit —
+this film hard-codes left-origin px in markup/CSS/JS flight vectors with
+variable-width text, so a geometric mirror is more robust than per-coordinate
+measurement (font-race-free) and reflects the GSAP flights uniformly.
+
+- **EN parity gate: PSNR = ∞ (pixel-identical)** vs the committed EN at frames
+  1.4/5.0/8.5/12.7 — EN is **not** re-rendered; the committed `scattered-to-mapped.*`
+  assets stand.
+- `npm run check`: **0 errors, 0 layout issues.** 65 contrast warnings are cosmetic
+  — the checker now sees the inner `.t` spans on intentionally-dimmed/opacity-0 text
+  (resolved ledger → fg-3, flown-away chips) and does not resolve ancestor opacity;
+  EN-parity proves the render is unchanged.
+- HE snapshots verified (spine left, ledger right; Hebrew reads correctly incl. RTL
+  "?" on chips; copper approval peak). Assistant 600 font; camera pivot mirrored.
+- **Render:** `--format mov` master → ffmpeg charcoal H.264 MP4 (matched ~800 kbps)
+  + poster; VP9 alpha WebM via `--format webm`. **The MP4/poster MUST come from the
+  MOV, not the VP9 WebM** — VP9 bands the `#spine-glow` gradient (see DESIGN.md gotcha).
+  Sizes: `-he.webm` 6.60 MB · `-he.mp4` 1.32 MB · `-he-poster.png` 0.15 MB (matches
+  the EN pair). Both scattered WebMs remain E3 re-encode targets.
+- **Site:** HE `film` block wired into `home.ts` → `he.evidence` (the "No film yet"
+  comment removed); `EvidenceSection` renders it above the before/after compare.
+  Verified on `/he`: film loads (readyState 4), `dir=rtl`, assets 200, no console errors.

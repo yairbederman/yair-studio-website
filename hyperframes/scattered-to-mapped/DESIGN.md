@@ -68,6 +68,36 @@ established by Films 1–3). Local woff2.
   open — then resolves into **Tracked to done**.
 - Easing: `power1/2.inOut` (travel), `power3/expo.out` (reveals). No bounce.
 
+## Locales — HE (added Phase E: one composition, layout mirrored)
+
+Bilingual via the `lang` `data-composition-variables` (EN default). Unlike the
+`X()`-per-coordinate route (command-center), this film hard-codes left-origin
+pixels across markup + CSS + JS flight vectors with variable-width text — so HE
+uses a **`scaleX(-1)` container mirror** instead:
+
+- A `#mirror` wrapper (inside `#camera`) gets `transform: scaleX(-1)` for HE
+  (via a `.he` class on `<html>`), reflecting **every position** across the frame
+  centre — including the GSAP chip-flight vectors, so the timeline stays
+  locale-agnostic (no per-delta sign juggling).
+- Inner `.t` text spans (+ node labels/subs) are **un-flipped** (`scaleX(-1)`
+  again) so the Hebrew reads correctly: double-flip = mirrored layout with
+  correctly-oriented text. **NOT a backwards flipped render** — a transcreation.
+- HE swaps to Assistant 600 (`.he #mirror *`); the camera push-in pivot mirrors
+  to `X(1100)=820`. EN gets no `.he` class → **pixel-identical to before**
+  (verified: PSNR = ∞ vs the committed EN at 4 frames — EN is NOT re-rendered).
+- Every HE string traces to `src/content/home.ts` → `he.evidence` (before.items,
+  mapped.nodes verbatim; chips are HE contractions). Full COPY table in `index.html`.
+
+## Render gotcha — derive MP4 + poster from the MOV master, never the VP9 WebM
+
+The `#spine-glow` is a large smooth radial gradient. **VP9 (the alpha WebM) bands
+it** — both EN and HE WebMs show it (a webm frame is ~0.9 MB vs a clean ~0.15 MB).
+The clean MP4 + poster come from the **ProRes MOV master** (`render --format mov`)
+→ ffmpeg charcoal H.264 + poster, exactly the route this film's REVIEW documented.
+Deriving the MP4/poster from the pre-banded VP9 WebM bakes the banding in (a harsh
+copper disc at the settle). MP4 is the primary source (mp4-first in `FilmPlayer`);
+the banded WebM is the fallback and is masked in motion.
+
 ## Hard "do not" (per brief + PRODUCT.md)
 
 - ❌ No fake SaaS UI, metrics, numbers, client names.

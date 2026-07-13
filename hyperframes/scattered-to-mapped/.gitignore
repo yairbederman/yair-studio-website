@@ -1,6 +1,8 @@
 # HyperFrames scratch & deps — keep out of commits
 node_modules/
 snapshots/
+snapshots-en/
+snapshots-he/
 renders/
 *.mp4
 *.webm

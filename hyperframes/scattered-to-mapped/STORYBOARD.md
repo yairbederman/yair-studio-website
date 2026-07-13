@@ -1,6 +1,9 @@
 # STORYBOARD — 13s timeline
 
 30 fps · 13 s · deterministic GSAP timeline (`window.__timelines["root"]`).
+Bilingual (`lang` variable, EN default). Positions below are EN; **HE mirrors the
+whole layout** (ledger right, spine left) via `#mirror`'s `scaleX(-1)` with
+un-flipped text — see DESIGN.md → Locales. Same beats, same timings, both locales.
 
 ## Acts
 
