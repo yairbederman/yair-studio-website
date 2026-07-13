@@ -22,6 +22,18 @@ const en: OfferPageContent = {
     ctaHref: shellContent("en").workflowCta.href,
     secondaryCta: { label: "See the format", href: "#how" },
   },
+  film: {
+    // Story = example.map nodes 0→5 (verbatim); caption traces to the map +
+    // human ("review stays with your engineers"). Schematic film (no product
+    // UI) — no "Sample data" chip. See hyperframes/ai-enablement/DESIGN.md.
+    sectionTitle: "A workshop, as a flow",
+    webm: "/videos/ai-enablement.webm",
+    mp4: "/videos/ai-enablement.mp4",
+    poster: "/videos/ai-enablement-poster.png",
+    caption:
+      "A real backlog task is worked hands-on with agents into a playbook for your stack — and review stays with your engineers.",
+    filmName: "AI enablement film",
+  },
   who: {
     title: "This fits if you are saying one of these things",
     items: [
@@ -179,6 +191,16 @@ const he: OfferPageContent = {
     ctaLabel: "לקבוע שיחת היקף",
     ctaHref: shellContent("he").workflowCta.href,
     secondaryCta: { label: "לראות את הפורמט", href: "#how" },
+  },
+  film: {
+    // תרגום-יצירה RTL; הכיתוב נגזר מ-example.map ומ-human. סרטון סכמטי — ללא צ'יפ "נתוני דוגמה".
+    sectionTitle: "סדנה, כתהליך",
+    webm: "/videos/ai-enablement-he.webm",
+    mp4: "/videos/ai-enablement-he.mp4",
+    poster: "/videos/ai-enablement-he-poster.png",
+    caption:
+      "משימה אמיתית מהבקלוג עוברת עבודה מעשית עם סוכנים לכדי פלייבוק לסטאק שלכם — והבדיקה נשארת אצל המהנדסים שלכם.",
+    filmName: "סרטון הטמעת AI",
   },
   who: {
     title: "זה מתאים אם אתם אומרים אחד מהמשפטים האלה",

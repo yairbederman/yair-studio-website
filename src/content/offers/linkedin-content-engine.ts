@@ -26,6 +26,18 @@ const en: OfferPageContent = {
     secondaryCta: { label: "See how it runs", href: "#how" },
     proofLink: { label: "See the studio's LinkedIn", href: LINKEDIN_URL },
   },
+  film: {
+    // Story = example.map nodes 0→5 (verbatim); caption traces to hero.lead.
+    // Schematic film (no product UI) — no "Sample data" chip. See
+    // hyperframes/linkedin-content-engine/DESIGN.md.
+    sectionTitle: "From material to published",
+    webm: "/videos/linkedin-content-engine.webm",
+    mp4: "/videos/linkedin-content-engine.mp4",
+    poster: "/videos/linkedin-content-engine-poster.png",
+    caption:
+      "Your material becomes drafts in your voice, held in one review queue — nothing publishes without your approval.",
+    filmName: "LinkedIn content engine film",
+  },
   who: {
     title: "This fits if you are saying one of these things",
     items: [
@@ -173,6 +185,16 @@ const he: OfferPageContent = {
     ctaHref: shellContent("he").workflowCta.href,
     secondaryCta: { label: "לראות איך זה רץ", href: "#how" },
     proofLink: { label: "לראות את הלינקדאין של הסטודיו", href: LINKEDIN_URL },
+  },
+  film: {
+    // תרגום-יצירה RTL; הכיתוב נגזר מ-hero.lang. סרטון סכמטי — ללא צ'יפ "נתוני דוגמה".
+    sectionTitle: "מחומר לפרסום",
+    webm: "/videos/linkedin-content-engine-he.webm",
+    mp4: "/videos/linkedin-content-engine-he.mp4",
+    poster: "/videos/linkedin-content-engine-he-poster.png",
+    caption:
+      "החומר שלכם הופך לטיוטות בקול שלכם, מחכות בתור אישורים אחד — ושום דבר לא מתפרסם בלי אישור שלכם.",
+    filmName: "סרטון מנוע התוכן",
   },
   who: {
     title: "זה מתאים אם אתם אומרים אחד מהמשפטים האלה",

@@ -1,0 +1,434 @@
+<!doctype html>
+<html
+  lang="en"
+  data-resolution="landscape"
+  data-composition-variables='[{"id":"lang","type":"string","label":"Locale (en | he)","default":"en"}]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"
+      integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      /* ============================================================
+         "The Content Engine" — LinkedIn Content Engine offer film.
+         A managed pipeline runs: your material enters, angles are
+         proposed, drafts are written in your voice, everything waits in
+         one review queue, NOTHING publishes without your approval, and
+         approved posts go out on a steady rhythm. Horizontal conveyor;
+         the copper "Your approval" checkpoint is the rack-focus peak.
+         Schematic (no product UI, no "Sample data" chip). One composition,
+         two locales (`lang`; HE mirrors RTL). Palette + type mirror
+         src/app/globals.css. Renders transparent. See DESIGN.md.
+         Settled cinematic grammar: velocity-matched hand-offs, one
+         rack-focus onto the checkpoint, loop-continuous camera. NO WebGL
+         bloom (flagship-only signature).
+         ============================================================ */
+      @font-face { font-family: "Inter"; font-weight: 400; font-display: block; src: url("assets/fonts/inter-400.woff2") format("woff2"); }
+      @font-face { font-family: "Inter"; font-weight: 600; font-display: block; src: url("assets/fonts/inter-600.woff2") format("woff2"); }
+      @font-face { font-family: "Geist Mono"; font-weight: 400; font-display: block; src: url("assets/fonts/geist-mono-400.woff2") format("woff2"); }
+      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+      :root {
+        --bg-0: #121211; --bg-1: #1a1a18; --bg-2: #242420;
+        --fg-1: #f4f1ea; --fg-2: #b9b3aa; --fg-3: #8a847a;
+        --accent: #d96832;
+        --accent-soft: rgba(217, 104, 50, 0.12); --accent-rule: rgba(217, 104, 50, 0.35);
+        --rule: #2a2a26; --rule-strong: #3a3a34;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden; background: transparent;
+        font-family: "Inter", system-ui, sans-serif; /* HE swaps to Assistant at init */
+        color: var(--fg-1); -webkit-font-smoothing: antialiased;
+      }
+      #stage { position: relative; width: 1920px; height: 1080px; }
+      #camera { position: absolute; inset: 0; transform-origin: 960px 540px; will-change: transform; }
+      /* REVIEW/CHECK/SNAPSHOT ONLY — charcoal backdrop so contrast reads true.
+         Remove before the transparent alpha render (charcoal MP4 is
+         post-composited from the alpha master — see DESIGN.md → Render).
+         inset:-40px so camera drift never exposes a transparent edge. */
+      #review-bg { position: absolute; inset: -40px; background: var(--bg-0); }
+      .mono { font-family: "Geist Mono", ui-monospace, monospace; } /* HE swaps to Assistant at init */
+
+      /* ---------- Source fragments (the pile: calls · projects · wins) ---------- */
+      .frag { position: absolute; opacity: 0; will-change: transform, opacity; }
+      .frag-inner {
+        display: inline-block; padding: 14px 24px; border-radius: 10px;
+        background: var(--bg-2); border: 1.5px solid #45433c;
+        font-size: 32px; letter-spacing: 0.02em; color: var(--fg-2); white-space: nowrap;
+        will-change: transform;
+      }
+
+      /* ---------- Conveyor rail + nodes ---------- */
+      #rail-svg { position: absolute; inset: 0; width: 1920px; height: 1080px; will-change: filter; }
+      #rail { fill: none; stroke: var(--rule-strong); stroke-width: 3; }
+      .node {
+        position: absolute; width: 30px; height: 30px; border-radius: 50%;
+        border: 2.5px solid #55524a; background: var(--bg-1);
+        transform: translate(-50%, -50%); opacity: 0; will-change: transform, opacity, filter;
+      }
+      #n4 { border-color: var(--accent-rule); } /* approval — copper from birth */
+
+      /* the traveling token — centered via GSAP xPercent/yPercent (NOT a CSS
+         translate) because the timeline animates x along the rail, which would
+         otherwise overwrite a CSS transform and drop the centering offset. */
+      #token {
+        position: absolute; width: 42px; height: 42px; border-radius: 11px;
+        background: var(--accent); box-shadow: 0 0 26px 0 rgba(217,104,50,0.35);
+        opacity: 0; will-change: transform, opacity;
+      }
+
+      /* ---------- Review queue (abstract cards above node 3 — schematic, no text) ---------- */
+      .qcard {
+        position: absolute; width: 232px; height: 50px; border-radius: 10px;
+        background: rgba(36, 36, 32, 0.62); border: 1.5px solid #45433c;
+        transform: translate(-50%, 0); opacity: 0;
+        display: flex; align-items: center; gap: 14px; padding: 0 16px;
+        will-change: transform, opacity, filter;
+      }
+      .qdot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid #55524a; flex: 0 0 auto; }
+      .qbars { display: flex; flex-direction: column; gap: 7px; flex: 1 1 auto; }
+      .qbar { height: 6px; border-radius: 3px; background: #4a473f; }
+      .qbar.short { width: 55%; }
+
+      /* ---------- Approval checkpoint (node 4) ---------- */
+      #appr-ring {
+        position: absolute; width: 122px; height: 122px; border-radius: 50%;
+        border: 2.5px solid var(--accent); transform: translate(-50%, -50%); opacity: 0;
+        will-change: transform, opacity;
+      }
+      #appr-check { position: absolute; width: 46px; height: 46px; transform: translate(-50%, -50%); opacity: 0; }
+      #appr-check path {
+        fill: none; stroke: var(--accent); stroke-width: 5; stroke-linecap: round;
+        stroke-linejoin: round; stroke-dasharray: 48; stroke-dashoffset: 48;
+      }
+
+      /* ---------- Published rhythm (even copper beats, right of node 5) ---------- */
+      .beat {
+        position: absolute; width: 20px; height: 20px; border-radius: 50%;
+        background: var(--accent); transform: translate(-50%, -50%); opacity: 0;
+        will-change: transform, opacity;
+      }
+
+      /* ---------- Stage labels (one large label at a time, above the active node) ---------- */
+      .lbl {
+        position: absolute; top: 372px; width: 760px; text-align: center;
+        font-family: "Inter", sans-serif; font-weight: 600; font-size: 58px;
+        letter-spacing: -0.015em; color: var(--fg-1); opacity: 0;
+        white-space: nowrap; will-change: transform, opacity;
+      }
+      #sub0 {
+        position: absolute; top: 452px; width: 760px; text-align: center;
+        font-size: 30px; letter-spacing: 0.02em; color: var(--fg-3); opacity: 0; white-space: nowrap;
+      }
+
+      /* ---------- Caption / closing (single text moments, below the frame) ---------- */
+      #caption {
+        position: absolute; left: 0; top: 968px; width: 1920px; text-align: center;
+        font-family: "Inter", sans-serif; font-weight: 400; font-size: 38px;
+        letter-spacing: 0.005em; color: var(--fg-2); opacity: 0;
+      }
+      #closing {
+        position: absolute; left: 0; top: 952px; width: 1920px; text-align: center;
+        font-family: "Inter", sans-serif; font-weight: 600; font-size: 62px;
+        letter-spacing: -0.01em; color: var(--fg-1); opacity: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="stage" data-composition-id="root" data-start="0" data-duration="13" data-width="1920" data-height="1080">
+      <div id="camera" data-layout-allow-overflow>
+        <div id="review-bg"></div>
+
+        <!-- conveyor rail -->
+        <svg id="rail-svg" viewBox="0 0 1920 1080">
+          <line id="rail" x1="230" y1="620" x2="1520" y2="620" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+        </svg>
+
+        <!-- source fragments (the pile) -->
+        <div class="frag" id="frag1"><span class="frag-inner mono" id="fragt1"></span></div>
+        <div class="frag" id="frag2"><span class="frag-inner mono" id="fragt2"></span></div>
+        <div class="frag" id="frag3"><span class="frag-inner mono" id="fragt3"></span></div>
+
+        <!-- node dots -->
+        <div class="node" id="n0"></div>
+        <div class="node" id="n1"></div>
+        <div class="node" id="n2"></div>
+        <div class="node" id="n3"></div>
+        <div class="node" id="n4"></div>
+        <div class="node" id="n5"></div>
+
+        <!-- review queue (abstract cards above node 3) -->
+        <div class="qcard" id="qc0"><span class="qdot"></span><span class="qbars"><span class="qbar"></span><span class="qbar short"></span></span></div>
+        <div class="qcard" id="qc1"><span class="qdot"></span><span class="qbars"><span class="qbar"></span><span class="qbar short"></span></span></div>
+        <div class="qcard" id="qc2"><span class="qdot"></span><span class="qbars"><span class="qbar"></span><span class="qbar short"></span></span></div>
+
+        <!-- the traveling token -->
+        <div id="token"></div>
+
+        <!-- approval checkpoint (node 4) -->
+        <div id="appr-ring"></div>
+        <svg id="appr-check" viewBox="0 0 46 46"><path d="M11 24 l8 8 l16 -19" /></svg>
+
+        <!-- published rhythm (right of node 5) -->
+        <div class="beat" id="b0"></div>
+        <div class="beat" id="b1"></div>
+        <div class="beat" id="b2"></div>
+        <div class="beat" id="b3"></div>
+
+        <!-- stage labels (one at a time) -->
+        <div class="lbl" id="lbl0"></div>
+        <div class="lbl" id="lbl1"></div>
+        <div class="lbl" id="lbl2"></div>
+        <div class="lbl" id="lbl3"></div>
+        <div class="lbl" id="lbl4"></div>
+        <div class="lbl" id="lbl5"></div>
+        <div id="sub0" class="mono"></div>
+
+        <!-- text moments -->
+        <div id="caption"></div>
+        <div id="closing"></div>
+      </div>
+    </div>
+
+    <script>
+      /* ============================================================
+         Deterministic 13s timeline. No random / Date / setTimeout /
+         async / timeline callbacks (all text set once at init). The
+         `lang` variable picks copy + mirrors the horizontal axis for HE.
+         Every on-frame string traces to linkedin-content-engine.ts
+         (source comments below; full table in DESIGN.md).
+         ============================================================ */
+      const vars = (window.__hyperframes && window.__hyperframes.getVariables)
+        ? window.__hyperframes.getVariables() : {};
+      const lang = vars.lang === "he" ? "he" : "en";
+
+      const COPY = {
+        en: {
+          frag: ["calls", "projects", "wins"],   // example.map.nodes[0].sub "calls · projects · wins"
+          l0: "Your material",                    // example.map.nodes[0].label
+          sub0: "calls · projects · wins",        // example.map.nodes[0].sub
+          l1: "Angles proposed",                  // example.map.nodes[1].label
+          l2: "Drafts in your voice",             // example.map.nodes[2].label
+          l3: "Review queue",                     // example.map.nodes[3].label
+          l4: "Your approval",                    // example.map.nodes[4].label (human)
+          l5: "Published on rhythm",              // example.map.nodes[5].label (out)
+          caption: "The approval point is yours", // example.intro
+          closing: "A steady LinkedIn presence",  // hero.lead ("a steady LinkedIn presence")
+        },
+        he: {
+          frag: ["שיחות", "פרויקטים", "הצלחות"],  // he.example.map.nodes[0].sub
+          l0: "החומר שלכם",                        // he.example.map.nodes[0].label
+          sub0: "שיחות · פרויקטים · הצלחות",       // he.example.map.nodes[0].sub
+          l1: "זוויות מוצעות",                     // he.example.map.nodes[1].label
+          l2: "טיוטות בקול שלכם",                  // he.example.map.nodes[2].label
+          l3: "תור אישורים",                       // he.example.map.nodes[3].label
+          l4: "האישור שלכם",                       // he.example.map.nodes[4].label (human)
+          l5: "מתפרסם בקצב",                       // he.example.map.nodes[5].label (out)
+          caption: "נקודת האישור שלכם",             // he.example.intro
+          closing: "נוכחות קבועה בלינקדאין",        // he.hero.lead
+        },
+      }[lang];
+
+      document.documentElement.lang = lang;
+      // Do NOT set dir="rtl" on <html> — it blanks the hyperframes RENDER
+      // pipeline. Mirror positionally via X(); set dir only on text elements.
+      const isHE = lang === "he";
+      if (isHE) {
+        document.body.style.fontFamily = '"Assistant", system-ui, sans-serif';
+        document.querySelectorAll(".mono").forEach((el) => { el.style.fontFamily = '"Assistant", system-ui, sans-serif'; });
+        document.querySelectorAll(".lbl, #sub0, #caption, #closing")
+          .forEach((el) => { el.dir = "rtl"; });
+      }
+
+      const setText = (id, t) => { document.getElementById(id).textContent = t; };
+      setText("fragt1", COPY.frag[0]); setText("fragt2", COPY.frag[1]); setText("fragt3", COPY.frag[2]);
+      setText("lbl0", COPY.l0); setText("sub0", COPY.sub0);
+      setText("lbl1", COPY.l1); setText("lbl2", COPY.l2); setText("lbl3", COPY.l3);
+      setText("lbl4", COPY.l4); setText("lbl5", COPY.l5);
+      setText("caption", COPY.caption); setText("closing", COPY.closing);
+
+      // ---- Geometry (EN coordinates; HE mirrors x → 1920 − x) ----
+      const X = isHE ? (x) => 1920 - x : (x) => x;
+      const RAIL_Y = 620;
+      const NX = [280, 520, 760, 1000, 1240, 1460]; // node x, EN (gap 240)
+      const place = (id, cx, cy) => {
+        const el = document.getElementById(id);
+        el.style.left = X(cx) + "px";
+        el.style.top = cy + "px";
+      };
+      // labels: fixed-width centered box anchored on the active node's x (no x-tween → no transform clash)
+      const placeLabel = (id, cx, top) => {
+        const el = document.getElementById(id);
+        el.style.left = X(cx) - 380 + "px";
+        el.style.top = top + "px";
+      };
+
+      // rail endpoints mirror with the nodes (else HE nodes float past the fixed rail)
+      const railLine = document.getElementById("rail");
+      railLine.setAttribute("x1", X(230)); railLine.setAttribute("x2", X(1520));
+      // nodes on the rail
+      NX.forEach((x, i) => place("n" + i, x, RAIL_Y));
+      // labels above their node
+      ["lbl0","lbl1","lbl2","lbl3","lbl4","lbl5"].forEach((id, i) => placeLabel(id, NX[i], 372));
+      placeLabel("sub0", NX[0], 452);
+
+      // source fragments — clustered left of node 0, odd rotations
+      place("frag1", NX[0] - 120, RAIL_Y - 150); place("frag2", NX[0] - 40, RAIL_Y - 210); place("frag3", NX[0] - 150, RAIL_Y - 250);
+      gsap.set("#frag1 .frag-inner", { rotation: -7 });
+      gsap.set("#frag2 .frag-inner", { rotation: 5 });
+      gsap.set("#frag3 .frag-inner", { rotation: -3 });
+
+      // token starts at node 0 (centered via GSAP so x-travel composes cleanly)
+      place("token", NX[0], RAIL_Y);
+      gsap.set("#token", { xPercent: -50, yPercent: -50 });
+
+      // review queue — stacked above node 3
+      place("qc0", NX[3], 452); place("qc1", NX[3], 512); place("qc2", NX[3], 572);
+
+      // approval ring + check on node 4
+      place("appr-ring", NX[4], RAIL_Y); place("appr-check", NX[4], RAIL_Y);
+
+      // published rhythm — even beats to the right of node 5
+      const BX = [1552, 1626, 1700, 1774];
+      BX.forEach((x, i) => place("b" + i, x, RAIL_Y));
+
+      // token travel helper: move token to node i (transform x/y, HE-aware)
+      const tokenTo = (i) => X(NX[i]) - X(NX[0]);
+
+      // ---- Timeline ----
+      // Settled grammar: velocity-matched hand-offs (exits accelerate + blur,
+      // entries decelerate from blur), a rack focus onto the copper approval
+      // checkpoint at the peak, and a loop-continuous camera (identity at t=0
+      // and t=13). The rack refocuses before the tail so the seam is crisp.
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out", overwrite: "auto" } });
+
+      // label hand-off helper (velocity-matched): previous exits up+blur, next enters from blur
+      const showLabel = (id, at) =>
+        tl.fromTo("#" + id, { opacity: 0, y: 16, filter: "blur(10px)" },
+          { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.55, ease: "power2.out" }, at);
+      const hideLabel = (id, at) =>
+        tl.to("#" + id, { opacity: 0, y: -12, filter: "blur(10px)", duration: 0.45, ease: "power2.in" }, at);
+      // node activation (copper) as the token arrives
+      const activate = (i, at) =>
+        tl.to("#n" + i, { borderColor: "#d96832", backgroundColor: "rgba(217,104,50,0.14)", scale: 1.18, duration: 0.4, ease: "power2.out" }, at);
+
+      // ===== BEAT 0 — Material arrives (0.0–2.0) =====
+      tl.to("#rail", { strokeDashoffset: 0, duration: 1.6, ease: "power1.inOut" }, 0.1);
+      tl.fromTo("#frag1", { opacity: 0, y: 24, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.55, ease: "power2.out" }, 0.2);
+      tl.fromTo("#frag2", { opacity: 0, y: 28, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.55, ease: "power2.out" }, 0.36);
+      tl.fromTo("#frag3", { opacity: 0, y: 24, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.55, ease: "power2.out" }, 0.52);
+      tl.fromTo("#n0", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.5 }, 1.0);
+      // fragments accelerate into node 0 + blur out (velocity-matched exit) → token appears
+      tl.to("#frag1", { x: X(NX[0]) - X(NX[0] - 120), y: 150, scale: 0.6, opacity: 0, filter: "blur(12px)", duration: 0.5, ease: "power2.in" }, 1.15);
+      tl.to("#frag2", { x: X(NX[0]) - X(NX[0] - 40), y: 210, scale: 0.6, opacity: 0, filter: "blur(12px)", duration: 0.5, ease: "power2.in" }, 1.22);
+      tl.to("#frag3", { x: X(NX[0]) - X(NX[0] - 150), y: 250, scale: 0.6, opacity: 0, filter: "blur(12px)", duration: 0.5, ease: "power2.in" }, 1.29);
+      tl.fromTo("#token", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.45, ease: "power2.out" }, 1.5);
+      activate(0, 1.5);
+      showLabel("lbl0", 1.4);
+      tl.fromTo("#sub0", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5 }, 1.7);
+
+      // ===== BEAT 1 — Angles → drafts (2.0–4.2) =====
+      hideLabel("lbl0", 2.15); tl.to("#sub0", { opacity: 0, y: -10, duration: 0.4, ease: "power2.in" }, 2.25);
+      // token advances to node 1
+      tl.to("#token", { x: tokenTo(1), duration: 0.7, ease: "power2.inOut" }, 2.35);
+      tl.fromTo("#n1", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.5 }, 2.4);
+      activate(1, 2.9); showLabel("lbl1", 2.55);
+      // token advances to node 2
+      hideLabel("lbl1", 3.3);
+      tl.to("#token", { x: tokenTo(2), duration: 0.7, ease: "power2.inOut" }, 3.5);
+      tl.fromTo("#n2", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.5 }, 3.55);
+      activate(2, 4.05); showLabel("lbl2", 3.7);
+
+      // ===== BEAT 2 — Review queue (4.2–6.8) =====
+      hideLabel("lbl2", 4.55);
+      tl.to("#token", { x: tokenTo(3), duration: 0.7, ease: "power2.inOut" }, 4.75);
+      tl.fromTo("#n3", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.5 }, 4.8);
+      activate(3, 5.3); showLabel("lbl3", 4.95);
+      // the queue assembles (cards decelerate from blur)
+      const qIn = (id, at) =>
+        tl.fromTo("#" + id, { opacity: 0, y: 18, filter: "blur(6px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.5, ease: "power2.out" }, at);
+      qIn("qc2", 5.4); qIn("qc1", 5.56); qIn("qc0", 5.72);
+
+      // ===== BEAT 3 — PEAK: your approval (6.8–9.3) =====
+      hideLabel("lbl3", 6.75);
+      tl.to("#token", { x: tokenTo(4), duration: 0.7, ease: "power2.inOut" }, 6.9);
+      tl.fromTo("#n4", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.5 }, 6.95);
+      showLabel("lbl4", 7.15);
+      // RACK FOCUS — upstream (rail, nodes 0–3, queue, token trail) defocus + dim;
+      // the copper approval checkpoint stays sharp. Camera pushes in (below).
+      const UPSTREAM = ["#rail-svg", "#n0", "#n1", "#n2", "#n3", "#qc0", "#qc1", "#qc2"];
+      tl.to(UPSTREAM, { filter: "blur(7px)", opacity: 0.4, duration: 0.75, ease: "power2.inOut" }, 7.5);
+      tl.to("#n4", { boxShadow: "0 0 46px 0 rgba(217,104,50,0.4)", borderColor: "#d96832", backgroundColor: "rgba(217,104,50,0.2)", scale: 1.25, duration: 0.6 }, 7.55);
+      // one bounded copper ring bloom (immediateRender:false so the "from" state
+      // does not paint from t=0)
+      tl.fromTo("#appr-ring", { opacity: 0.9, scale: 0.5, transformOrigin: "center" },
+        { opacity: 0, scale: 1.9, duration: 1.1, ease: "power2.out", immediateRender: false }, 7.7);
+      // item approved by a person — the check draws in
+      tl.to("#appr-check", { opacity: 1, duration: 0.2 }, 8.4);
+      tl.to("#appr-check path", { strokeDashoffset: 0, duration: 0.55, ease: "power2.inOut" }, 8.45);
+      // safety line appears verbatim (decelerate from blur)
+      tl.fromTo("#caption", { opacity: 0, y: 12, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "power2.out" }, 8.5);
+
+      // ===== BEAT 4 — Published on rhythm (9.3–11.0) =====
+      // REFOCUS — the rack releases so the loop seam is crisp.
+      tl.to(UPSTREAM, { filter: "blur(0px)", opacity: 1, duration: 0.8, ease: "power2.inOut" }, 9.35);
+      tl.to("#n4", { boxShadow: "0 0 30px 0 rgba(217,104,50,0.18)", duration: 0.8, ease: "power2.inOut" }, 9.35);
+      hideLabel("lbl4", 9.4);
+      // approved token flies out to node 5
+      tl.to("#token", { x: tokenTo(5), duration: 0.7, ease: "power2.inOut" }, 9.55);
+      tl.fromTo("#n5", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.5 }, 9.6);
+      activate(5, 10.05); showLabel("lbl5", 9.75);
+      // published beats land at even intervals (rhythm) — even x, even time
+      const beatIn = (id, at) =>
+        tl.fromTo("#" + id, { opacity: 0, scale: 0.3 }, { opacity: 0.92, scale: 1, duration: 0.32, ease: "power2.out" }, at);
+      beatIn("b0", 10.1); beatIn("b1", 10.34); beatIn("b2", 10.58); beatIn("b3", 10.82);
+
+      // ===== BEAT 5 — A steady presence (11.0–13.0) =====
+      tl.to("#caption", { opacity: 0, y: -12, filter: "blur(10px)", duration: 0.5, ease: "power2.in" }, 11.0);
+      hideLabel("lbl5", 11.1);
+      tl.fromTo("#closing", { opacity: 0, y: 16, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.75, ease: "power2.out" }, 11.35);
+      // the rhythm holds softly (finite gentle pulse — never repeat:-1). Timed to
+      // COMPLETE before t=13: last beat starts 11.5 + 0.05·3 = 11.65 and its two
+      // 0.5s yoyo halves end at 12.65, so every beat settles back to rest (0.92)
+      // before the seam — nothing frozen mid-yoyo at the loop point.
+      tl.to(".beat", { opacity: 0.7, duration: 0.5, ease: "sine.inOut", repeat: 1, yoyo: true, stagger: 0.05 }, 11.5);
+
+      // ===== CAMERA — loop-continuous (identity at t=0 AND t=13) =====
+      // Push gently INTO the approval peak, hold, then settle back so the seam
+      // matches. Micro-drift overlays: integer sine cycles on both axes (1× X,
+      // 2× Y) so dx,dy return to 0 at the seam; the 2:1 ratio avoids a
+      // mechanical diagonal. scale AND drift are pure functions of timeline
+      // time — no reads of a sibling tween — so every seek/worker is identical.
+      const camEl = document.getElementById("camera");
+      const DRIFT_AMP_X = 5, DRIFT_AMP_Y = 3;
+      const camEase = gsap.parseEase("power2.inOut");
+      const scaleAt = (t) => {
+        if (t <= 5.8) return 1.0;
+        if (t < 8.0) return 1.0 + 0.03 * camEase((t - 5.8) / 2.2);
+        if (t <= 9.6) return 1.03;
+        if (t < 12.5) return 1.03 - 0.03 * camEase((t - 9.6) / 2.9);
+        return 1.0;
+      };
+      const drift = { p: 0 };
+      tl.to(drift, {
+        p: 1, duration: 13, ease: "none",
+        onUpdate: () => {
+          const t = drift.p * 13;
+          const dx = Math.sin(drift.p * Math.PI * 2) * DRIFT_AMP_X;
+          const dy = Math.sin(drift.p * Math.PI * 4) * DRIFT_AMP_Y;
+          camEl.style.transform = `scale(${scaleAt(t)}) translate(${dx}px, ${dy}px)`;
+        },
+      }, 0);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["root"] = tl;
+    </script>
+  </body>
+</html>
