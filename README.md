@@ -54,8 +54,8 @@ links in both directions. `/contact` offers email (primary) and WhatsApp.
 | `/studio` | `/he/studio` | What the studio makes — index of the five capabilities |
 | `/studio/agentic-systems` | `/he/studio/agentic-systems` | Capability page (film: `cap-agentic-systems`) |
 | `/studio/process-optimization` | `/he/studio/process-optimization` | Capability page — reuses the `scattered-to-mapped` film |
-| `/studio/websites` | `/he/studio/websites` | Capability page (film planned) |
-| `/studio/films` | `/he/studio/films` | Capability page (film planned) |
+| `/studio/websites` | `/he/studio/websites` | Capability page (film: `cap-websites`) |
+| `/studio/films` | `/he/studio/films` | Capability page (film: `cap-films`) |
 | `/studio/ai-enablement` | `/he/studio/ai-enablement` | Capability page — training a business team's staff on their own work; reuses the `ai-enablement` film |
 | `/offers` | `/he/offers` | Services — the 3-rung commitment ladder (free scoping call → AI Workflow Sprint → Managed AI Office) + who-it-fits |
 | `/offers/ai-office-assistant` | `/he/offers/ai-office-assistant` | Managed AI Office — the headline rung (setup + monthly retainer), pricing-model band; the content engine is an included section at `#content` |
@@ -143,11 +143,18 @@ WCAG 2.2.2 pause control; `mobile` serves a 4:5 phone cut under 768px, `autoplay
 film poster-first click-to-play). Rule: one **autoplaying** film per page. Inventory:
 `command-center` (flagship product face — the homepage proof band and the Managed AI Office page,
 "In build · sample data") · `workflow-sprint` (the sprint page) · `scattered-to-mapped`
-(`/studio/process-optimization`) · `ai-enablement` (`/studio/ai-enablement`) ·
+(`/studio/process-optimization`) · `ai-enablement` (`/studio/ai-enablement`) · `cap-agentic-systems`,
+`cap-websites`, `cap-films` (their capability pages) ·
 `linkedin-content-engine` (the retainer's included content section, click-to-play), plus two
 ambient/brand pieces — `hero-ambient` (a text-free WebGL FBM shader loop behind the homepage hero)
 and `wordmark-sting` (a ~2.5s `y[AI]r` lockup, kept as a standalone/OG asset; no film passes it as
 `intro`). Retired: `meeting-workflow` (`/workflows` folded into `/studio/process-optimization`; its
-`public/videos/meeting-follow-up-workflow.*` assets are scheduled for deletion in the film phase).
-Planned, not built: `cap-websites`, `cap-films` (compositions authored, renders pending), and a Command Center 4:5
-mobile cut.
+assets were deleted). Every page film (not the two brand pieces) follows film spec v2: sans-only type on frame (Instrument Sans /
+Assistant, Geist Mono for Latin chips; the type kit lives in `hyperframes/_fonts/`), elements filling
+~80% of the frame, headlines ≥120px and labels ≥80px on the 1920 canvas so they stay readable on
+phones. The Command Center phone cut is its own project, `command-center-mobile` (1080×1350: a
+HyperFrames canvas size is fixed at compile time, so it cannot be a composition variable), wired
+once through the flagship film block's `mobile` set and served under 768px. Render recipe, every film: transparent
+master (alpha WebM; a ProRes MOV for films with glows, which VP9 bands) → ffmpeg composite over
+`#121211` → H.264 MP4 ≤1.5 MB + poster PNG at the peak; WebM fallback ≤6 MB, 2-pass re-encoded from
+the master when the direct render is over. Each film's `REVIEW.md` records the exact commands.

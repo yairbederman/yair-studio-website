@@ -82,6 +82,7 @@ export default function FilmPlayer({
   const hasMobile = Boolean(mobile);
   useEffect(() => {
     const motion = window.matchMedia("(prefers-reduced-motion: no-preference)");
+    // Same breakpoint as the .film-frame.has-mobile rules in globals.css — change both together.
     const phone = window.matchMedia("(max-width: 767px)");
     const apply = () => {
       setShowVideo(motion.matches);

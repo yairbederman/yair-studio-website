@@ -7,8 +7,9 @@ import type { CapabilityPageContent } from "./types";
 /**
  * /studio/websites — designed, fast, bilingual sites for a business that
  * sells a service. This site is the proof (built by the studio, films
- * included). No film yet (cap-websites comes later and will bake
- * `example.map.nodes` verbatim — keep them final).
+ * included). The film (hyperframes/cap-websites) bakes `example.map.nodes`
+ * verbatim and the human step's title (`how.steps[3].title`) as its caption —
+ * re-render it if they change.
  */
 
 const en: CapabilityPageContent = {
@@ -17,6 +18,15 @@ const en: CapabilityPageContent = {
     lead: "A site that says what you do, what a client receives, and how to start, in Hebrew and English, with the studio's films as the motion. This site is the proof: built by the studio, films included.",
     ctaLabel: shellContent("en").workflowCta.label,
     ctaHref: shellContent("en").workflowCta.href,
+  },
+  film: {
+    sectionTitle: "Brief to live, in motion",
+    webm: "/videos/cap-websites.webm",
+    mp4: "/videos/cap-websites.mp4",
+    poster: "/videos/cap-websites-poster.png",
+    caption:
+      "How a site gets made: you review and approve every page, and it goes live in both languages.",
+    filmName: "websites film",
   },
   does: {
     title: "What I do",
@@ -155,6 +165,15 @@ const he: CapabilityPageContent = {
     lead: "אתר שאומר מה אתם עושים, מה הלקוח מקבל ואיך מתחילים, בעברית ובאנגלית, עם הסרטונים של הסטודיו כתנועה. האתר הזה הוא ההוכחה: נבנה בסטודיו, כולל הסרטונים.",
     ctaLabel: shellContent("he").workflowCta.label,
     ctaHref: shellContent("he").workflowCta.href,
+  },
+  film: {
+    sectionTitle: "מבריף לאוויר, בתנועה",
+    webm: "/videos/cap-websites-he.webm",
+    mp4: "/videos/cap-websites-he.mp4",
+    poster: "/videos/cap-websites-he-poster.png",
+    caption:
+      "איך אתר נבנה: אתם בודקים ומאשרים כל עמוד, והוא עולה לאוויר בשתי השפות.",
+    filmName: "סרטון האתרים",
   },
   does: {
     title: "מה אני עושה",

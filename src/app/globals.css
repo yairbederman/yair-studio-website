@@ -1393,6 +1393,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
     border-inline: 0;
   }
   /* The phone cut is 4:5 — opt-in, so 16:9 films keep their frame. */
+  /* Same breakpoint as FilmPlayer's matchMedia("(max-width: 767px)") — change both together. */
   .workflow-film .film-frame.has-mobile { aspect-ratio: 4 / 5; }
   .film-frame.has-mobile .film-poster--desktop { display: none; }
   .film-frame.has-mobile .film-poster--mobile { display: block; }

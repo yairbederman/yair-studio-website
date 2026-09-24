@@ -7,8 +7,9 @@ import type { CapabilityPageContent } from "./types";
 /**
  * /studio/films — short designed films rendered from code, no synthetic
  * faces or voices, for a site, LinkedIn, or a pitch. The films on this site
- * are the sample. No film yet (cap-films comes later and will bake
- * `example.map.nodes` verbatim — keep them final).
+ * are the sample. The film (hyperframes/cap-films) bakes `example.map.nodes`
+ * verbatim and the human step's title (`how.steps[2].title`) as its caption —
+ * re-render it if they change.
  */
 
 const en: CapabilityPageContent = {
@@ -17,6 +18,15 @@ const en: CapabilityPageContent = {
     lead: "Ten- to twenty-second looping films that show a product, a process, or an idea, for a site, LinkedIn, or a pitch. No synthetic faces, no synthetic voices; every word on frame traces to your real copy. The films on this site are the sample.",
     ctaLabel: shellContent("en").workflowCta.label,
     ctaHref: shellContent("en").workflowCta.href,
+  },
+  film: {
+    sectionTitle: "How a film gets made",
+    webm: "/videos/cap-films.webm",
+    mp4: "/videos/cap-films.mp4",
+    poster: "/videos/cap-films-poster.png",
+    caption:
+      "From brief to loop: your copy becomes six scenes, you approve the stills, and the loop is rendered.",
+    filmName: "films film",
   },
   does: {
     title: "What I do",
@@ -152,6 +162,15 @@ const he: CapabilityPageContent = {
     lead: "סרטוני לופ של עשר עד עשרים שניות שמראים מוצר, תהליך או רעיון, לאתר, ללינקדאין או לפיץ'. בלי פנים סינתטיות, בלי קולות סינתטיים; כל מילה על המסך נגזרת מהטקסט האמיתי שלכם. הסרטונים באתר הזה הם הדוגמה.",
     ctaLabel: shellContent("he").workflowCta.label,
     ctaHref: shellContent("he").workflowCta.href,
+  },
+  film: {
+    sectionTitle: "איך נוצר סרטון",
+    webm: "/videos/cap-films-he.webm",
+    mp4: "/videos/cap-films-he.mp4",
+    poster: "/videos/cap-films-he-poster.png",
+    caption:
+      "מבריף ללופ: הטקסט שלכם הופך לשש סצנות, אתם מאשרים את הפריימים, והלופ מוכן.",
+    filmName: "סרטון הסרטונים",
   },
   does: {
     title: "מה אני עושה",

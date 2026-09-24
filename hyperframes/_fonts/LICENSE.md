@@ -82,3 +82,11 @@ Assistant 700 (hebrew + latin subsets), same CSS-v2 method as above, request `fa
 @font-face { font-family: "Assistant"; font-weight: 700; font-display: block; src: url("assets/fonts/assistant-700-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
 @font-face { font-family: "Assistant"; font-weight: 700; font-display: block; src: url("assets/fonts/assistant-700-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 ```
+
+## Pruned 2026-09-24 (film spec v2)
+
+Film spec v2 made the films sans-only, so the serif cuts (`newsreader-500-latin.woff2`,
+`frank-ruhl-libre-500-{hebrew,latin}.woff2`) were removed from this kit and from every film's
+`assets/fonts/`. The site still loads Newsreader and Frank Ruhl Libre through `next/font`
+(`src/lib/fonts.ts`); the film kit no longer carries them. The `@font-face` blocks above are kept
+as history; do not paste the serif ones into a composition.

@@ -39,8 +39,13 @@ const en: OfferPageContent = {
     mp4: "/videos/command-center.mp4",
     poster: "/videos/command-center-poster.png",
     caption:
-      "The Command Center your office logs into: the day's work in one view — meetings, urgent email, waiting clients, deadlines — with what matters waiting for a person's approval. In build, shown with sample data.",
+      "The Command Center your office logs into: the day's work in one view — meetings, deadlines, incoming mail, stalled documents — with what matters waiting for a person's approval. In build, shown with sample data.",
     filmName: "command center film",
+    mobile: {
+      mp4: "/videos/command-center-mobile.mp4",
+      webm: "/videos/command-center-mobile.webm",
+      poster: "/videos/command-center-mobile-poster.png",
+    },
   },
   who: {
     title: "Built for offices that sound like this",
@@ -280,8 +285,13 @@ const he: OfferPageContent = {
     mp4: "/videos/command-center-he.mp4",
     poster: "/videos/command-center-he-poster.png",
     caption:
-      "מוקד הבקרה שהמשרד שלכם נכנס אליו: כל העבודה של היום בתצוגה אחת — פגישות, מיילים דחופים, לקוחות שמחכים, דדליין — כשמה שחשוב מחכה לאישור של אדם. בבנייה, מוצג עם נתוני דוגמה.",
+      "מוקד הבקרה שהמשרד שלכם נכנס אליו: כל העבודה של היום בתצוגה אחת — פגישות, מועדים, דואר נכנס, מסמכים תקועים — כשמה שחשוב מחכה לאישור של אדם. בבנייה, מוצג עם נתוני דוגמה.",
     filmName: "סרטון מוקד הבקרה",
+    mobile: {
+      mp4: "/videos/command-center-mobile-he.mp4",
+      webm: "/videos/command-center-mobile-he.webm",
+      poster: "/videos/command-center-mobile-he-poster.png",
+    },
   },
   who: {
     title: "נבנה למשרדים שנשמעים ככה",

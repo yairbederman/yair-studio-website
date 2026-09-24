@@ -1,0 +1,452 @@
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[{"id":"lang","type":"string","label":"Locale (en | he)","default":"en"}]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1350" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"
+      integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      /* ============================================================
+         "The Command Center" — Film 5, PHONE CUT (4:5, 1080×1350).
+         The same film as ../command-center (story, strings, 14s beat
+         timings, honesty grammar, rack focus, loop camera) re-laid out
+         for a phone: the header text slot (tagline → safety caption at
+         the peak → closing) over two stacked status panels (Email triage
+         · Document workflows — the two that feed the approval queue)
+         and the HUMAN APPROVAL block below them. One item approved by a
+         person, ONE deliberately left waiting. The WebGL bloom of the
+         16:9 cut is replaced here by a CSS copper glow (renderer cost).
+         One composition, two locales (`lang`; HE mirrors RTL). FILM SPEC
+         v2: sans only (Instrument Sans EN / Assistant HE / Geist Mono for
+         the Latin chips only). Palette mirrors src/app/globals.css.
+         Renders transparent. Design + audit: ../command-center/DESIGN.md
+         (→ Phone cut) and ../command-center/REVIEW.md.
+         ============================================================ */
+      @font-face { font-family: "Instrument Sans"; font-weight: 400 600; font-display: block; src: url("assets/fonts/instrument-sans-400-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: "Assistant"; font-weight: 700; font-display: block; src: url("assets/fonts/assistant-700-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+      @font-face { font-family: "Assistant"; font-weight: 700; font-display: block; src: url("assets/fonts/assistant-700-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: "Geist Mono"; font-weight: 400; font-display: block; src: url("assets/fonts/geist-mono-400.woff2") format("woff2"); }
+
+      :root {
+        --bg-0: #121211; --bg-1: #1a1a18; --bg-2: #242420;
+        --fg-1: #f4f1ea; --fg-2: #b9b3aa; --fg-3: #8a847a;
+        --accent: #d96832;
+        --accent-soft: rgba(217, 104, 50, 0.12); --accent-rule: rgba(217, 104, 50, 0.35);
+        --rule: #2a2a26; --rule-strong: #3a3a34;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1350px; overflow: hidden; background: transparent;
+        font-family: "Instrument Sans", system-ui, sans-serif;
+        color: var(--fg-1);
+        -webkit-font-smoothing: antialiased;
+      }
+      #stage { position: relative; width: 1080px; height: 1350px; }
+      #stage.he { font-family: "Assistant", system-ui, sans-serif; }
+      #camera { position: absolute; inset: 0; transform-origin: 540px 675px; will-change: transform; }
+      /* REVIEW/CHECK/SNAPSHOT ONLY — charcoal backdrop so contrast reads true.
+         Remove before the transparent alpha render; the charcoal MP4 is
+         post-composited from the alpha master (see ../command-center/DESIGN.md).
+         inset:-40px so the camera drift + push-in never exposes a transparent edge. */
+      #review-bg { position: absolute; inset: -40px; background: var(--bg-0); }
+
+      /* ---------- Type roles (spec v2 — sans only). Hebrew: never mono, never tracked. ---------- */
+      .mono { font-family: "Geist Mono", ui-monospace, monospace; }
+      .he .mono { font-family: "Assistant", system-ui, sans-serif; font-weight: 600; letter-spacing: 0; text-transform: none; }
+
+      /* ---------- Overnight chips (the pile: email · calendar · documents) ---------- */
+      .ov { position: absolute; opacity: 0; will-change: transform, opacity; }
+      .ov-inner {
+        display: inline-block; padding: 26px 48px; border-radius: 20px;
+        background: var(--bg-2); border: 2.5px solid #45433c;
+        font-size: 72px; line-height: 1.2; letter-spacing: 0.02em; color: var(--fg-2); white-space: nowrap;
+        will-change: transform;
+      }
+      .he .ov-inner { font-size: 80px; }
+      #tangle { position: absolute; inset: 0; width: 1080px; height: 1350px; opacity: 0; }
+      #tangle path { fill: none; stroke: var(--rule-strong); stroke-width: 3; }
+
+      /* ---------- The interface window ---------- */
+      #ui { position: absolute; inset: 0; width: 1080px; height: 1350px; }
+      #frame-svg { position: absolute; inset: 0; width: 1080px; height: 1350px; }
+      #frame { fill: none; stroke: var(--rule-strong); stroke-width: 3; }
+      #divider { stroke: var(--rule); stroke-width: 2; opacity: 0; }
+
+      /* header — ONE large text slot (tagline → caption at the peak → closing),
+         y 112–324. Lines are authored per locale (COPY arrays, each a verbatim
+         split of the source string) and never wrap on their own. */
+      .hslot {
+        position: absolute; left: 76px; top: 112px; width: 928px; height: 212px;
+        display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+        opacity: 0; will-change: transform, opacity, filter;
+      }
+      .hslot .ln { display: block; white-space: nowrap; }
+      #tagline { font-weight: 600; font-size: 104px; line-height: 1; letter-spacing: -0.015em; color: var(--fg-1); }
+      #caption { font-weight: 400; font-size: 72px; line-height: 1.12; color: var(--fg-2); }
+      #closing { font-weight: 600; font-size: 108px; line-height: 0.98; letter-spacing: -0.01em; color: var(--fg-1); }
+      .he #tagline { font-weight: 700; font-size: 108px; line-height: 0.98; }
+      .he #caption { font-weight: 600; font-size: 80px; }
+      .he #closing { font-weight: 700; font-size: 120px; }
+
+      /* honesty chip — straddles the window's top edge (opaque fill hides the frame line) */
+      #badge {
+        position: absolute; top: 44px; height: 64px; padding: 10px 22px; border-radius: 10px;
+        border: 2px solid var(--accent-rule); background: #2a1c15; /* = accent-soft over bg-0, opaque */
+        font-size: 40px; line-height: 40px; letter-spacing: 0.08em; text-transform: uppercase;
+        color: var(--accent); opacity: 0; white-space: nowrap;
+      }
+      .he #badge { font-size: 48px; line-height: 40px; } /* Hebrew runs optically smaller than tracked uppercase mono */
+
+      /* ---------- Panels ---------- */
+      .panel {
+        position: absolute; border: 2.5px solid #45433c; border-radius: 22px;
+        background: rgba(36, 36, 32, 0.5); opacity: 0;
+        --dof: 0px; filter: blur(var(--dof)); /* rack focus, tweened on the GSAP clock */
+        will-change: transform, opacity, filter;
+        padding: 26px 36px;
+      }
+      .ptitle {
+        font-weight: 600; font-size: 80px; line-height: 1; letter-spacing: -0.01em;
+        color: var(--fg-1); margin-bottom: 14px; white-space: nowrap;
+      }
+      .he .ptitle { font-weight: 700; font-size: 88px; line-height: 0.92; letter-spacing: 0; } /* titles inherit dir from the panel, so the [dir=rtl] reset below doesn't reach them */
+      .prows { display: flex; flex-direction: column; gap: 8px; }
+      .prow {
+        display: flex; align-items: center; gap: 22px; height: 64px;
+        opacity: 0; will-change: transform, opacity;
+      }
+      .prow .st { width: 40px; height: 40px; border-radius: 8px; border: 2.5px solid #55524a; flex: 0 0 auto; background: transparent; }
+      .prow .rl { font-weight: 400; font-size: 56px; line-height: 1; color: var(--fg-2); white-space: nowrap; }
+      .he .prow .rl { font-weight: 600; font-size: 62px; }
+
+      /* the approval block — the emphasis */
+      #p-appr { background: rgba(36, 36, 32, 0.62); display: flex; flex-direction: column; }
+      #p-appr .ptitle { color: var(--accent); margin-bottom: 0; }
+      .aitems { display: flex; flex-direction: column; gap: 8px; margin: auto 0; }
+      .arow {
+        display: flex; align-items: center; gap: 26px; height: 80px;
+        opacity: 0; will-change: transform, opacity;
+      }
+      .ast {
+        position: relative; width: 54px; height: 54px; border-radius: 12px;
+        border: 3px solid var(--accent-rule); flex: 0 0 auto;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .ast .dot { width: 16px; height: 16px; border-radius: 50%; background: var(--accent); opacity: 0.85; }
+      .ast .chk { position: absolute; width: 46px; height: 46px; opacity: 0; }
+      .ast .chk path { fill: none; stroke: var(--accent); stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 40; stroke-dashoffset: 40; }
+      .arow .al { font-weight: 400; font-size: 68px; line-height: 1; color: var(--fg-1); white-space: nowrap; }
+      .he .arow .al { font-weight: 600; font-size: 74px; }
+
+      /* peak ring bloom over the approval block */
+      #bloom {
+        position: absolute; width: 170px; height: 170px; border-radius: 50%;
+        border: 3px solid var(--accent); opacity: 0; will-change: transform, opacity;
+      }
+      /* CSS copper glow (replaces the 16:9 cut's WebGL bloom): soft radial
+         light on the approval block, the approved check and the waiting dot,
+         driven by opacity on the GSAP clock with the same envelope as the
+         WebGL beat (in 7.6→8.0 · check 8.55→9.05 · out 9.5→10.0). */
+      .glow { position: absolute; border-radius: 50%; opacity: 0; pointer-events: none; will-change: opacity; }
+      #glow-col { width: 760px; height: 760px; background: radial-gradient(closest-side, rgba(217,104,50,0.13), rgba(217,104,50,0)); }
+      #glow-dot { width: 170px; height: 170px; background: radial-gradient(closest-side, rgba(217,104,50,0.32), rgba(217,104,50,0)); }
+      #glow-chk { width: 300px; height: 300px; background: radial-gradient(closest-side, rgba(255,196,150,0.42) 0%, rgba(217,104,50,0.24) 38%, rgba(217,104,50,0) 100%); }
+
+      /* Hebrew is never letter-spaced (outranks every tracked id rule above) */
+      #stage [dir="rtl"] { letter-spacing: 0; }
+    </style>
+  </head>
+
+  <body>
+    <div id="stage" data-composition-id="root" data-start="0" data-duration="14" data-width="1080" data-height="1350">
+      <div id="camera" data-layout-allow-overflow>
+        <div id="review-bg"></div>
+
+        <!-- overnight hairlines + chips (the pile) -->
+        <svg id="tangle" viewBox="0 0 1080 1350">
+          <path d="M230 600 C 430 470, 640 840, 870 640" />
+          <path d="M280 790 C 480 910, 700 560, 890 760" />
+          <path d="M260 520 C 400 720, 640 740, 830 910" />
+        </svg>
+        <div class="ov" id="ov1"><span class="ov-inner mono" id="ovt1"></span></div>
+        <div class="ov" id="ov2"><span class="ov-inner mono" id="ovt2"></span></div>
+        <div class="ov" id="ov3"><span class="ov-inner mono" id="ovt3"></span></div>
+
+        <!-- the interface -->
+        <div id="ui">
+          <svg id="frame-svg" viewBox="0 0 1080 1350">
+            <rect id="frame" x="36" y="76" width="1008" height="1238" rx="26" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+            <line id="divider" x1="76" y1="344" x2="1004" y2="344" />
+          </svg>
+
+          <div id="badge" class="mono"></div>
+
+          <!-- two status panels (the two that feed the approval queue) -->
+          <div class="panel" id="p-mail">
+            <div class="ptitle" id="t-mail"></div>
+            <div class="prows">
+              <div class="prow" id="rw-mail-1"><span class="st" id="st-mail-1"></span><span class="rl" id="rl-mail-1"></span></div>
+              <div class="prow" id="rw-mail-2"><span class="st"></span><span class="rl" id="rl-mail-2"></span></div>
+            </div>
+          </div>
+          <div class="panel" id="p-docs">
+            <div class="ptitle" id="t-docs"></div>
+            <div class="prows">
+              <div class="prow" id="rw-docs-1"><span class="st"></span><span class="rl" id="rl-docs-1"></span></div>
+              <div class="prow" id="rw-docs-2"><span class="st"></span><span class="rl" id="rl-docs-2"></span></div>
+            </div>
+          </div>
+
+          <!-- approval block (emphasis) -->
+          <div class="panel" id="p-appr">
+            <div class="ptitle" id="t-appr"></div>
+            <div class="aitems">
+              <div class="arow" id="ar-1">
+                <span class="ast" id="ast-1">
+                  <span class="dot" id="dot-1"></span>
+                  <svg class="chk" id="chk-1" viewBox="0 0 34 34"><path d="M8 18 l6 6 l12 -14" /></svg>
+                </span>
+                <span class="al" id="al-1"></span>
+              </div>
+              <div class="arow" id="ar-2">
+                <span class="ast" id="ast-2"><span class="dot"></span></span>
+                <span class="al" id="al-2"></span>
+              </div>
+            </div>
+          </div>
+
+          <div id="bloom"></div>
+          <div class="glow" id="glow-col" data-layout-ignore></div>
+          <div class="glow" id="glow-dot" data-layout-ignore></div>
+          <div class="glow" id="glow-chk" data-layout-ignore></div>
+        </div>
+
+        <!-- header text slot: tagline → caption (peak) → closing -->
+        <div class="hslot" id="tagline"></div>
+        <div class="hslot" id="caption"></div>
+        <div class="hslot" id="closing"></div>
+      </div>
+    </div>
+
+    <script>
+      /* ============================================================
+         Deterministic 14s timeline — the SAME beat timings as the 16:9
+         cut (../command-center/index.html), so the two read as one film.
+         No random / Date / setTimeout / async / timeline callbacks.
+         Header strings are split into authored lines; each array joined
+         with a single space is the verbatim source string.
+         ============================================================ */
+      const vars = (window.__hyperframes && window.__hyperframes.getVariables)
+        ? window.__hyperframes.getVariables() : {};
+      const lang = vars.lang === "he" ? "he" : "en";
+
+      const COPY = {
+        en: {
+          ov: ["email", "calendar", "documents"],    // offers/ai-office-assistant.ts:121 map node sub "email · calendar · documents"
+          tagline: ["What your office", "logs into"], // offers/ai-office-assistant.ts:37 film.sectionTitle
+          badge: "Sample data",                       // proof.ts:189 sampleBadge (uppercase = CSS)
+          mail: "Email triage",                       // offers/ai-office-assistant.ts:101 build.items[1].title
+          rMail: ["Incoming mail", "Draft replies"],  //   …:102 desc
+          docs: "Document workflows",                 // offers/ai-office-assistant.ts:105 build.items[2].title
+          rDocs: ["Signatures", "Stalled documents"], //   …:106 desc
+          appr: "Human approval",                     // offers/ai-office-assistant.ts:125 map node (human: true)
+          a1: "Draft reply", a2: "Signature",         // singular of the rows above
+          caption: ["No external messages", "are sent without approval"], // home.ts:135 boundaries.items[1]
+          closing: ["The day starts", "decided"],     // offers/ai-office-assistant.ts:126 map out-node
+        },
+        he: {
+          ov: ["מייל", "יומן", "מסמכים"],             // offers/ai-office-assistant.ts:367
+          tagline: ["מה שהמשרד שלכם", "נכנס אליו"],    // offers/ai-office-assistant.ts:283 film.sectionTitle
+          badge: "נתוני דוגמה",                        // proof.ts:326 sampleBadge
+          mail: "מיון מיילים",                         // offers/ai-office-assistant.ts:347
+          rMail: ["דואר נכנס", "טיוטות תשובה"],        //   …:348
+          docs: "תהליכי מסמכים",                       // offers/ai-office-assistant.ts:351
+          rDocs: ["חתימות", "מסמכים תקועים"],          //   …:352
+          appr: "אישור אנושי",                         // offers/ai-office-assistant.ts:371
+          a1: "טיוטת תשובה", a2: "חתימה",              // singular of the rows above
+          caption: ["לא שולחים הודעות בלי אישור"],      // home.ts:207 boundaries.items[1]
+          closing: ["היום מתחיל מוכרע"],               // offers/ai-office-assistant.ts:372
+        },
+      }[lang];
+
+      document.documentElement.lang = lang;
+      // Do NOT set dir="rtl" on <html> — it blanks the hyperframes RENDER
+      // pipeline. Mirror positionally via X(); dir only on panels/rows/text.
+      const isHE = lang === "he";
+      if (isHE) {
+        document.getElementById("stage").classList.add("he");
+        document.querySelectorAll("#stage .panel, #stage .prows, #stage .prow, #stage .arow, #stage .ov-inner, #tagline, #badge, #caption, #closing")
+          .forEach((el) => { el.dir = "rtl"; });
+      }
+
+      const setText = (id, t) => { document.getElementById(id).textContent = t; };
+      const setLines = (id, lines) => {
+        const el = document.getElementById(id);
+        lines.forEach((t) => { const s = document.createElement("span"); s.className = "ln"; s.textContent = t; el.appendChild(s); });
+      };
+      setText("ovt1", COPY.ov[0]); setText("ovt2", COPY.ov[1]); setText("ovt3", COPY.ov[2]);
+      setLines("tagline", COPY.tagline); setText("badge", COPY.badge);
+      setText("t-mail", COPY.mail); setText("t-docs", COPY.docs); setText("t-appr", COPY.appr);
+      setText("rl-mail-1", COPY.rMail[0]); setText("rl-mail-2", COPY.rMail[1]);
+      setText("rl-docs-1", COPY.rDocs[0]); setText("rl-docs-2", COPY.rDocs[1]);
+      setText("al-1", COPY.a1); setText("al-2", COPY.a2);
+      setLines("caption", COPY.caption); setLines("closing", COPY.closing);
+
+      // ---- Geometry (EN coordinates; HE mirrors x → 1080 − x) ----
+      const X = isHE ? (x) => 1080 - x : (x) => x;
+      const placeCenter = (id, cx, cy, w, h) => {
+        const el = document.getElementById(id);
+        el.style.left = X(cx) - w / 2 + "px";
+        el.style.top = cy - h / 2 + "px";
+      };
+      const placeBox = (id, enLeft, top, w, h) => {
+        const el = document.getElementById(id);
+        el.style.left = (isHE ? 1080 - enLeft - w : enLeft) + "px";
+        el.style.top = top + "px";
+        el.style.width = w + "px";
+        el.style.height = h + "px";
+      };
+
+      // overnight chips — clustered mid-frame at odd rotations (box sizes est. for centering)
+      placeCenter("ov1", 390, 520, isHE ? 223 : 312, 146);
+      placeCenter("ov2", 690, 690, isHE ? 203 : 442, 146);
+      placeCenter("ov3", 440, 870, isHE ? 346 : 485, 146);
+      gsap.set("#ov1 .ov-inner", { rotation: -8 });
+      gsap.set("#ov2 .ov-inner", { rotation: 6 });
+      gsap.set("#ov3 .ov-inner", { rotation: -4 });
+
+      // the honesty chip straddles the frame's top edge at the far end
+      const badge = document.getElementById("badge");
+      if (isHE) badge.style.left = "76px"; else badge.style.right = "76px";
+
+      // two stacked status panels + the approval block below; window y 76–1314
+      placeBox("p-mail", 76, 366, 928, 282);
+      placeBox("p-docs", 76, 668, 928, 282);
+      placeBox("p-appr", 76, 970, 928, 322);
+
+      // ring bloom centered on the approval block
+      placeCenter("bloom", 540, 1131, 170, 170);
+
+      // ---- Timeline (beat timings identical to the 16:9 cut) ----
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out", overwrite: "auto" } });
+
+      // ===== BEAT 0 — Overnight pile (0.0–2.0) =====
+      tl.to("#tangle", { opacity: 0.6, duration: 0.6 }, 0.15);
+      tl.fromTo("#ov1", { opacity: 0, y: 26, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "power2.out" }, 0.2);
+      tl.fromTo("#ov2", { opacity: 0, y: 30, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "power2.out" }, 0.38);
+      tl.fromTo("#ov3", { opacity: 0, y: 26, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "power2.out" }, 0.56);
+      tl.to("#ov1 .ov-inner", { rotation: -4, duration: 0.7, ease: "sine.inOut", repeat: 1, yoyo: true }, 0.9);
+      tl.to("#ov2 .ov-inner", { rotation: 9, duration: 0.7, ease: "sine.inOut", repeat: 1, yoyo: true }, 0.8);
+      tl.to("#ov3 .ov-inner", { rotation: -1, duration: 0.7, ease: "sine.inOut", repeat: 1, yoyo: true }, 1.0);
+
+      // ===== BEAT 1 — The interface draws itself (2.0–4.5) =====
+      tl.to("#tangle", { opacity: 0, duration: 0.5, ease: "power2.in" }, 2.05);
+      tl.to("#ov1", { x: X(400) - X(390), y: 218 - 520, scale: 0.7, opacity: 0, filter: "blur(14px)", duration: 0.62, ease: "power2.in" }, 2.1);
+      tl.to("#ov2", { x: X(400) - X(690), y: 218 - 690, scale: 0.7, opacity: 0, filter: "blur(14px)", duration: 0.62, ease: "power2.in" }, 2.22);
+      tl.to("#ov3", { x: X(400) - X(440), y: 218 - 870, scale: 0.7, opacity: 0, filter: "blur(14px)", duration: 0.62, ease: "power2.in" }, 2.34);
+      // autoRound:false — pathLength=1 makes the dashoffset a 1→0 fraction (see the 16:9 cut)
+      tl.to("#frame", { strokeDashoffset: 0, duration: 1.4, ease: "power1.inOut", autoRound: false }, 2.35);
+      tl.fromTo("#tagline", { opacity: 0, y: 18, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.7, ease: "power2.out" }, 3.15);
+      tl.fromTo("#badge", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5 }, 3.55);
+      tl.to("#divider", { opacity: 1, duration: 0.5 }, 3.5);
+
+      // ===== BEAT 2 — Panels populate (4.5–7.5) =====
+      const panelIn = (id, at) =>
+        tl.fromTo("#" + id, { opacity: 0, y: 20, scale: 0.98 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power2.out" }, at);
+      const rowIn = (sel, at) =>
+        tl.fromTo(sel, { opacity: 0, y: 12, scale: 0.96, filter: "blur(6px)" }, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "power2.out" }, at);
+      panelIn("p-mail", 4.68); panelIn("p-docs", 4.81);
+      rowIn("#rw-mail-1", 5.4); rowIn("#rw-mail-2", 5.53);
+      rowIn("#rw-docs-1", 5.66); rowIn("#rw-docs-2", 5.79);
+      tl.to("#st-mail-1", { borderColor: "#d96832", backgroundColor: "rgba(217,104,50,0.12)", duration: 0.4 }, 6.3);
+      panelIn("p-appr", 6.5);
+      tl.fromTo("#ar-1", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5 }, 6.8);
+      tl.fromTo("#ar-2", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5 }, 6.98);
+
+      // ===== BEAT 3 — PEAK: the approval queue (7.5–10.0) =====
+      tl.to(["#p-mail", "#p-docs"],
+        { "--dof": "8px", opacity: 0.42, duration: 0.75, ease: "power2.inOut" }, 7.55);
+      tl.to(["#tagline", "#divider", "#frame"], { opacity: 0.34, duration: 0.75, ease: "power2.inOut" }, 7.55);
+      tl.to("#p-appr", { borderColor: "rgba(217,104,50,0.5)", boxShadow: "0 0 80px 0 rgba(217,104,50,0.18)", duration: 0.6 }, 7.6);
+      // CSS copper glow — same envelope as the 16:9 WebGL bloom
+      tl.fromTo(["#glow-col", "#glow-dot"], { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "none" }, 7.6);
+      tl.fromTo("#glow-chk", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, 8.55);
+      tl.to(["#glow-col", "#glow-dot", "#glow-chk"], { opacity: 0, duration: 0.5, ease: "none" }, 9.5);
+      tl.fromTo("#bloom", { scale: 0.45, opacity: 0.9, transformOrigin: "center" },
+        { scale: 1.9, opacity: 0, duration: 1.1, ease: "power2.out", immediateRender: false }, 7.95);
+      tl.to("#dot-1", { opacity: 0, duration: 0.25 }, 8.5);
+      tl.to("#ast-1", { borderColor: "#d96832", duration: 0.3 }, 8.5);
+      tl.to("#chk-1", { opacity: 1, duration: 0.2 }, 8.6);
+      tl.to("#chk-1 path", { strokeDashoffset: 0, duration: 0.55, ease: "power2.inOut" }, 8.65);
+      // HEADER HAND-OFF — tagline out, safety line in (same slot)
+      tl.to("#tagline", { opacity: 0, y: -14, filter: "blur(10px)", duration: 0.4, ease: "power2.in" }, 8.4);
+      tl.fromTo("#caption", { opacity: 0, y: 12, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "power2.out" }, 8.7);
+
+      // ===== BEAT 4 — Fails safely (10.0–12.0) =====
+      tl.to(["#p-mail", "#p-docs"],
+        { "--dof": "0px", opacity: 1, duration: 0.8, ease: "power2.inOut" }, 10.1);
+      tl.to(["#divider", "#frame"], { opacity: 1, duration: 0.8, ease: "power2.inOut" }, 10.1);
+      tl.to("#al-1", { color: "#8a847a", duration: 0.5 }, 10.3);
+      tl.to("#ar-2 .dot", { opacity: 0.35, duration: 0.7, ease: "sine.inOut", repeat: 1, yoyo: true }, 10.6);
+
+      // ===== BEAT 5 — The day starts decided (12.0–14.0) =====
+      tl.to("#caption", { opacity: 0, y: -12, filter: "blur(10px)", duration: 0.5, ease: "power2.in" }, 12.0);
+      tl.fromTo("#closing", { opacity: 0, y: 16, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.75, ease: "power2.out" }, 12.35);
+      tl.to("#p-appr", { boxShadow: "0 0 50px 0 rgba(217,104,50,0.10)", duration: 0.9, ease: "sine.inOut" }, 12.5);
+
+      // ===== CAMERA — loop-continuous (identity at t=0 AND t=14), same curve as the 16:9 cut =====
+      const camEl = document.getElementById("camera");
+      const DRIFT_AMP_X = 5; // px
+      const DRIFT_AMP_Y = 3; // px
+      const camEase = gsap.parseEase("power2.inOut");
+      const scaleAt = (t) => {
+        if (t <= 6.4) return 1.0;
+        if (t < 8.7) return 1.0 + 0.035 * camEase((t - 6.4) / 2.3);
+        if (t <= 10.4) return 1.035;
+        if (t < 13.5) return 1.035 - 0.035 * camEase((t - 10.4) / 3.1);
+        return 1.0;
+      };
+      const drift = { p: 0 };
+      tl.to(drift, {
+        p: 1, duration: 14, ease: "none",
+        onUpdate: () => {
+          const t = drift.p * 14;
+          const dx = Math.sin(drift.p * Math.PI * 2) * DRIFT_AMP_X;
+          const dy = Math.sin(drift.p * Math.PI * 4) * DRIFT_AMP_Y;
+          camEl.style.transform = `scale(${scaleAt(t)}) translate(${dx}px, ${dy}px)`;
+        },
+      }, 0);
+
+      // ===== GLOW CENTERS (measured once, at rest + camera identity) =====
+      // Same technique as the 16:9 bloom: force the approval elements out of
+      // their fromTo "from" states, measure, restore — the rects carry the X()
+      // mirror, so the glows land on the check/dot in EN and HE alike.
+      gsap.set("#p-appr", { y: 0, scale: 1 });
+      gsap.set(["#ar-1", "#ar-2"], { y: 0 });
+      const _stageRect = document.getElementById("stage").getBoundingClientRect();
+      const _center = (id) => {
+        const r = document.getElementById(id).getBoundingClientRect();
+        return { x: r.left - _stageRect.left + r.width / 2, y: r.top - _stageRect.top + r.height / 2 };
+      };
+      const glowAt = (glowId, targetId) => {
+        const c = _center(targetId), g = document.getElementById(glowId);
+        g.style.left = c.x - g.offsetWidth / 2 + "px";
+        g.style.top = c.y - g.offsetHeight / 2 + "px";
+      };
+      glowAt("glow-col", "p-appr"); glowAt("glow-chk", "ast-1"); glowAt("glow-dot", "ast-2");
+      gsap.set("#p-appr", { y: 20, scale: 0.98 });
+      gsap.set(["#ar-1", "#ar-2"], { y: 14 });
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["root"] = tl;
+    </script>
+  </body>
+</html>

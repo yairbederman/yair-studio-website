@@ -16,7 +16,7 @@
  * src/content/ladder.ts, the capability cards from src/content/capability-cards.ts,
  * and the proof film is the flagship page's own film block
  * (src/content/offers/ai-office-assistant.ts), so the Command Center paths
- * (and, later, its mobile cut) are wired in exactly one place.
+ * (including its 4:5 phone cut, `film.mobile`) are wired in exactly one place.
  */
 
 import { localeAccessor } from "@/content/types";
@@ -115,7 +115,7 @@ const en: HomeContent = {
   proof: {
     title: "What the managed office looks like",
     intro:
-      "Command Center is the view the managed office runs on: the day's meetings, urgent email, waiting clients, and deadlines in one place, with what matters held for a person's approval.",
+      "Command Center is the view the managed office runs on: the day's meetings, deadlines, incoming mail, and stalled documents in one place, with what matters held for a person's approval.",
     status: "In build · shown with sample data",
     film: flagshipFilm("en"),
     link: {
@@ -182,7 +182,7 @@ const he: HomeContent = {
   proof: {
     title: "איך נראה המשרד המנוהל",
     intro:
-      "Command Center הוא המסך שהמשרד המנוהל רץ עליו: הפגישות של היום, מיילים דחופים, לקוחות שמחכים ודדליינים במקום אחד, כשמה שחשוב מחכה לאישור של אדם.",
+      "Command Center הוא המסך שהמשרד המנוהל רץ עליו: הפגישות והמועדים של היום, הדואר הנכנס והמסמכים התקועים במקום אחד, כשמה שחשוב מחכה לאישור של אדם.",
     status: "בבנייה · מוצג עם נתוני דוגמה",
     film: flagshipFilm("he"),
     link: {

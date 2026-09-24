@@ -1,44 +1,49 @@
 # SCRIPT — what the film says
 
-Subject: the **Command Center** — the product face of the Managed AI Office
-Assistant. Not a process, a place: the one view the office logs into, where the
-day is assembled and the things that need a person wait for one.
+Subject: the **Command Center** — the product face of the Managed AI Office. Not a process, a
+place: the one view the office logs into, where the day is assembled and the things that need
+a person wait for one. Both cuts (16:9 and the 4:5 phone cut) say exactly this, with the same
+strings.
 
 ## The message arc
 
-> Overnight, the inputs pile up. The command center assembles them into one
-> view. Nothing acts alone — what matters waits in the copper approval queue for
-> a person. Then the day starts decided.
+> Overnight, the inputs pile up. The command center assembles them into one view. Nothing acts
+> alone — what matters waits in the copper approval queue for a person. Then the day starts
+> decided.
 
-## The cast (all copy traces to the site content files — see DESIGN.md table)
+## The cast (all copy traces to the site content files — see DESIGN.md tables for line refs)
 
-| Element | Text | Source |
-|---|---|---|
-| Opening chips | `email · calendar · documents` | flagship map node `sub` |
-| Header tagline | `See what needs attention` | home command-center card `kicker` |
-| Panels | subset of `meetings · urgent emails · open tasks · waiting clients · deadlines · approval points` | home command-center card `body` |
-| Approval caption | `No external messages are sent without approval` | home safety `items` |
-| Closing | `The day starts decided` | flagship map out-node |
-| Honesty chip | `Sample data` (uppercase treatment) | proof `sampleBadge` |
-| Panel rows | contracted echoes of the flagship `build` items | contractions only |
+| Element | Text (EN) | Text (HE) | Source |
+|---|---|---|---|
+| Overnight chips | `email · calendar · documents` | `מייל · יומן · מסמכים` | flagship `example.map` node 0 `sub` |
+| Header tagline | `What your office logs into` | `מה שהמשרד שלכם נכנס אליו` | flagship `film.sectionTitle` |
+| Panels | `Morning briefing` · `Email triage` · `Document workflows` (phone: the last two) | `תדריך בוקר` · `מיון מיילים` · `תהליכי מסמכים` | flagship `build.items[].title` |
+| Panel rows | `Meetings` · `Deadlines` · `Incoming mail` · `Draft replies` · `Signatures` · `Stalled documents` | `פגישות` · `מועדים` · `דואר נכנס` · `טיוטות תשובה` · `חתימות` · `מסמכים תקועים` | nouns from the same items' `desc` |
+| Approval column | `Human approval` — `Draft reply` · `Signature` | `אישור אנושי` — `טיוטת תשובה` · `חתימה` | flagship `example.map` human node; items = singular of two rows |
+| Safety caption | `No external messages are sent without approval` | `לא שולחים הודעות בלי אישור` | home `boundaries.items[1]` |
+| Closing | `The day starts decided` | `היום מתחיל מוכרע` | flagship `example.map` out node |
+| Honesty chip | `Sample data` (uppercase treatment) | `נתוני דוגמה` | proof `sampleBadge` |
+
+On the phone cut the header lines are authored splits (`What your office` / `logs into`,
+`No external messages` / `are sent without approval`, `The day starts` / `decided`; HE tagline
+`מה שהמשרד שלכם` / `נכנס אליו`) — each pair joins with one space to the verbatim string.
 
 ## The peak — the approval queue
 
-The signature beat. Everything dims except the copper APPROVAL column. Item 1
-gets the human check (`✓` draws in). The safety line appears verbatim. Then
-**item 2 is deliberately left waiting** — approval is never automatic. This is
-the "show a workflow failing safely" move from the site critique, shown in the
-product's own UI: the human is visibly in charge, not described as in charge.
+The signature beat. Everything defocuses except the copper HUMAN APPROVAL column. Item 1 gets
+the human check (`✓` draws in). The header's tagline gives way to the safety line, verbatim.
+Then **item 2 is deliberately left waiting** — approval is never automatic. The human is
+visibly in charge, not described as in charge.
 
 ## The payoff
 
-Settled hero frame: the assembled day in one view — one item done, **one still
-waiting** — and the closing line, `The day starts decided`. Holds to poster.
+Settled hero frame: the assembled day in one view — one item done, **one still waiting** — and
+the closing line, `The day starts decided`, in the header. Holds to poster.
 
 ## Honesty rules (non-negotiable)
 
 - No client names, matter numbers, identifier-dates, or performance metrics.
-- Persistent `Sample data` chip the entire film.
-- Nothing on frame that does not trace to the DESIGN.md source table.
-- The interface depicts the *category* of product using site tokens — it is a
-  "taking shape" artifact, re-rendered from real screenshots when they exist.
+- Persistent `Sample data` chip from the moment the interface appears to the end.
+- Nothing on frame that does not trace to the DESIGN.md source tables.
+- The interface depicts the *category* of product using site tokens — an "in build" artifact,
+  re-rendered from real screenshots when they exist.

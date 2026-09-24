@@ -1,0 +1,549 @@
+<!doctype html>
+<html
+  lang="en"
+  data-resolution="landscape"
+  data-composition-variables='[{"id":"lang","type":"string","label":"Locale (en | he)","default":"en"}]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"
+      integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      /* ============================================================
+         "How a site gets made" — /studio/websites film.
+         A brief arrives; the site's structure appears as abstract page
+         frames on a hairline sitemap; the pages are designed in one
+         language and MIRROR into the other (the twins unfold from the
+         centre axis); a small film frame drops into the home page; the
+         owner reviews at the copper checkpoint — one page approved, one
+         deliberately left waiting — and the approved page goes live in
+         both languages. Horizontal conveyor below the page band; the
+         copper "Your approval" checkpoint is the rack-focus peak.
+         Schematic (no product UI, no browser chrome, no text inside the
+         page frames, no "Sample data" chip). One composition, two
+         locales (`lang`; HE mirrors RTL). Palette mirrors
+         src/app/globals.css. FILM SPEC v2: sans only on frame
+         (Instrument Sans EN / Assistant HE / Geist Mono for the Latin
+         chips only); the composition fills ~80% of the frame. Renders
+         transparent. Settled cinematic grammar: velocity-matched
+         hand-offs, one rack-focus onto the checkpoint, loop-continuous
+         camera (drift <= 1.5%). NO WebGL bloom (flagship-only). See DESIGN.md.
+         ============================================================ */
+      @font-face { font-family: "Instrument Sans"; font-weight: 400 600; font-display: block; src: url("assets/fonts/instrument-sans-400-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: "Assistant"; font-weight: 700; font-display: block; src: url("assets/fonts/assistant-700-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+      @font-face { font-family: "Assistant"; font-weight: 700; font-display: block; src: url("assets/fonts/assistant-700-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: "Geist Mono"; font-weight: 400; font-display: block; src: url("assets/fonts/geist-mono-400.woff2") format("woff2"); }
+
+      :root {
+        --bg-0: #121211; --bg-1: #1a1a18; --bg-2: #242420;
+        --fg-1: #f4f1ea; --fg-2: #b9b3aa; --fg-3: #8a847a;
+        --accent: #d96832;
+        --accent-soft: rgba(217, 104, 50, 0.12); --accent-rule: rgba(217, 104, 50, 0.35);
+        --rule: #2a2a26; --rule-strong: #3a3a34;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden; background: transparent;
+        font-family: "Instrument Sans", system-ui, sans-serif;
+        color: var(--fg-1); -webkit-font-smoothing: antialiased;
+      }
+      #stage { position: relative; width: 1920px; height: 1080px; }
+      #stage.he { font-family: "Assistant", system-ui, sans-serif; }
+      #camera { position: absolute; inset: 0; transform-origin: 960px 540px; will-change: transform; }
+      /* REVIEW/CHECK/SNAPSHOT ONLY — charcoal backdrop so contrast reads true.
+         Hidden (data-hidden) before the transparent alpha render; the charcoal
+         MP4 is post-composited from the alpha master — see DESIGN.md → Render.
+         inset:-40px so camera drift never exposes a transparent edge. */
+      #review-bg { position: absolute; inset: -40px; background: var(--bg-0); }
+
+      /* ---------- Type roles (spec v2 — sans only). Hebrew: never mono, never tracked. ---------- */
+      .mono { font-family: "Geist Mono", ui-monospace, monospace; letter-spacing: 0.02em; }
+      .he .mono { font-family: "Assistant", system-ui, sans-serif; font-weight: 600; letter-spacing: 0; }
+      [dir="rtl"] { letter-spacing: 0; }
+
+      /* ---------- Source chips (the brief: services · audience · languages) ---------- */
+      .chip { position: absolute; opacity: 0; will-change: transform, opacity, filter; }
+      .chip-inner {
+        display: inline-block; padding: 30px 56px; border-radius: 22px;
+        background: var(--bg-2); border: 2.5px solid #45433c;
+        font-size: 80px; line-height: 1.15; color: var(--fg-2); white-space: nowrap;
+        will-change: transform;
+      }
+      .he .chip-inner { font-size: 88px; }
+
+      /* ---------- Conveyor rail + nodes ---------- */
+      #rail-svg, #site-svg { position: absolute; inset: 0; width: 1920px; height: 1080px; will-change: filter; }
+      #rail { fill: none; stroke: var(--rule-strong); stroke-width: 4; }
+      .node, #root {
+        position: absolute; width: 40px; height: 40px; border-radius: 50%;
+        border: 3.5px solid #55524a; background: var(--bg-1);
+        transform: translate(-50%, -50%); opacity: 0; will-change: transform, opacity, filter;
+      }
+      #n4 { border-color: var(--accent-rule); } /* your approval — copper from birth */
+
+      /* the traveling project token — centred via GSAP xPercent/yPercent (NOT a
+         CSS translate) because the timeline animates x along the rail. */
+      #token {
+        position: absolute; width: 48px; height: 48px; border-radius: 13px;
+        background: var(--accent); box-shadow: 0 0 34px 0 rgba(217,104,50,0.35);
+        opacity: 0; will-change: transform, opacity;
+      }
+
+      /* ---------- Hairline sitemap (root on the mirror axis, a bracket, drops into each page) ---------- */
+      #root { width: 26px; height: 26px; border-width: 3px; }
+      .site { fill: none; stroke: #4a473f; stroke-width: 3; }
+      .live { fill: none; stroke: var(--accent); stroke-width: 4.5; }
+      .pip {
+        position: absolute; width: 16px; height: 16px; border-radius: 3px; background: var(--fg-3);
+        opacity: 0; will-change: transform, opacity, filter;
+      }
+
+      /* ---------- The mirror axis (x = 960) — shown only while the twins unfold ---------- */
+      #axis {
+        position: absolute; left: 958.5px; top: 460px; width: 3px; height: 290px;
+        border-left: 3px dashed #6a665c; opacity: 0; will-change: transform, opacity;
+      }
+
+      /* ---------- Approval checkpoint ring (node 4) — painted beneath the pages ---------- */
+      #appr-ring {
+        position: absolute; width: 164px; height: 164px; border-radius: 50%;
+        border: 3.5px solid var(--accent); transform: translate(-50%, -50%); opacity: 0;
+        will-change: transform, opacity;
+      }
+
+      /* ---------- Page frames (abstract — media slot, heading bar, two copy bars; no text) ----------
+         Default = wireframe (outline only, dashed media slot). `.designed` = the built
+         surface. `.ltr` / `.rtl` = the page's reading direction (the mirror flips it). */
+      .page {
+        position: absolute; width: 360px; height: 260px; border-radius: 22px;
+        border: 2.5px solid #55524a; background: rgba(36, 36, 32, 0);
+        opacity: 0; will-change: transform, opacity, filter;
+      }
+      .page.designed { border-color: #45433c; background: rgba(36, 36, 32, 0.62); }
+      #twins { position: absolute; inset: 0; opacity: 0; will-change: transform, opacity; }
+      #twins .page { opacity: 1; }
+      .pslot, .pfill, .film { position: absolute; top: 26px; width: 192px; height: 108px; border-radius: 12px; }
+      .pslot { border: 2.5px dashed #55524a; }
+      .pfill { background: #34332d; opacity: 0; }
+      .page.designed .pfill { opacity: 1; }
+      .pbar { position: absolute; height: 12px; border-radius: 6px; background: #4a473f; will-change: transform; }
+      .pbar.h { top: 158px; width: 200px; height: 20px; border-radius: 10px; background: #55524a; }
+      .page.designed .pbar.h { background: var(--fg-3); }
+      .pbar.c1 { top: 198px; width: 304px; }
+      .pbar.c2 { top: 224px; width: 220px; }
+      .pstat, .pcheck { position: absolute; top: 26px; width: 44px; height: 44px; }
+      .pstat { border-radius: 50%; border: 4px solid #55524a; opacity: 0; will-change: transform, opacity; }
+      .pcheck { opacity: 0; }
+      .pcheck path {
+        fill: none; stroke: var(--bg-0); stroke-width: 4.5; stroke-linecap: round;
+        stroke-linejoin: round; stroke-dasharray: 28; stroke-dashoffset: 28;
+      }
+      .ltr .pslot, .ltr .pfill, .ltr .film, .ltr .pbar { left: 26px; }
+      .ltr .pbar { transform-origin: 0% 50%; }
+      .ltr .pstat, .ltr .pcheck { right: 26px; }
+      .rtl .pslot, .rtl .pfill, .rtl .film, .rtl .pbar { right: 26px; }
+      .rtl .pbar { transform-origin: 100% 50%; }
+      .rtl .pstat, .rtl .pcheck { left: 26px; }
+
+      /* the film frame that drops into the home page (the studio's own films as motion):
+         a tiny rail with a copper mark travelling it — a film of a film */
+      .film {
+        background: #0f0f0e; border: 2.5px solid var(--fg-3); overflow: hidden;
+        opacity: 0; will-change: transform, opacity, filter;
+      }
+      .fl { position: absolute; left: 24px; top: 50px; width: 139px; height: 3px; background: #55524a; }
+      .fd { position: absolute; top: 45.5px; width: 12px; height: 12px; border-radius: 50%; background: #55524a; }
+      .ft { position: absolute; top: 42.5px; width: 18px; height: 18px; border-radius: 5px; background: var(--accent); will-change: transform; }
+
+      /* ---------- Stage labels (one large headline at a time, top band) ---------- */
+      .lbl {
+        position: absolute; left: 0; top: 210px; width: 1920px; text-align: center;
+        font-family: "Instrument Sans", system-ui, sans-serif; font-weight: 600;
+        font-size: 128px; line-height: 1.1; letter-spacing: -0.01em; color: var(--fg-1);
+        opacity: 0; white-space: nowrap; will-change: transform, opacity, filter;
+      }
+      .he .lbl { font-family: "Assistant", system-ui, sans-serif; font-weight: 700; font-size: 140px; letter-spacing: 0; }
+
+      /* ---------- Caption (the one secondary line, at the peak) ---------- */
+      #caption {
+        position: absolute; left: 0; top: 915px; width: 1920px; text-align: center;
+        font-family: "Instrument Sans", system-ui, sans-serif; font-weight: 400;
+        font-size: 72px; line-height: 1.2; letter-spacing: 0; color: var(--fg-2); opacity: 0;
+        will-change: transform, opacity, filter;
+      }
+      .he #caption { font-family: "Assistant", system-ui, sans-serif; font-weight: 600; font-size: 80px; letter-spacing: 0; }
+    </style>
+  </head>
+
+  <body>
+    <div id="stage" data-composition-id="root" data-start="0" data-duration="12" data-width="1920" data-height="1080">
+      <div id="camera" data-layout-allow-overflow>
+        <div id="review-bg"></div>
+
+        <!-- conveyor rail -->
+        <svg id="rail-svg" viewBox="0 0 1920 1080">
+          <line id="rail" x1="170" y1="820" x2="1750" y2="820" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+        </svg>
+
+        <!-- hairline sitemap: primary half (built first), twin half (mirrored), live overlay (closing) -->
+        <svg id="site-svg" viewBox="0 0 1920 1080">
+          <path class="site" id="siteP" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+          <path class="site" id="siteP-drop" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+          <path class="site" id="siteT" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+          <path class="site" id="siteT-drop" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+          <path class="live" id="liveP" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+          <path class="live" id="liveT" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+        </svg>
+        <div id="root"></div>
+
+        <!-- source chips (the brief) -->
+        <div class="chip" id="chip0"><span class="chip-inner mono" id="chipt0"></span></div>
+        <div class="chip" id="chip1"><span class="chip-inner mono" id="chipt1"></span></div>
+        <div class="chip" id="chip2"><span class="chip-inner mono" id="chipt2"></span></div>
+
+        <!-- node dots -->
+        <div class="node" id="n0"></div>
+        <div class="node" id="n1"></div>
+        <div class="node" id="n2"></div>
+        <div class="node" id="n3"></div>
+        <div class="node" id="n4"></div>
+        <div class="node" id="n5"></div>
+
+        <!-- approval ring (node 4) — beneath the pages -->
+        <div id="appr-ring"></div>
+
+        <!-- metadata pips on the sitemap drops -->
+        <div class="pip" id="pip-pA"></div>
+        <div class="pip" id="pip-pB"></div>
+        <div class="pip" id="pip-tB"></div>
+        <div class="pip" id="pip-tA"></div>
+
+        <!-- primary-language pages: A = the home page (gets the film; approved), B = an inner page (left waiting) -->
+        <div class="page" id="pA">
+          <div class="pslot"></div><div class="pfill"></div>
+          <div class="film" id="filmpA"><div class="fl"></div><div class="fd"></div><div class="fd"></div><div class="fd"></div><div class="ft"></div></div>
+          <div class="pbar h"></div><div class="pbar c1"></div><div class="pbar c2"></div>
+          <div class="pstat"></div>
+          <svg class="pcheck" viewBox="0 0 44 44"><path d="M13 23 l6 6 l12 -13" /></svg>
+        </div>
+        <div class="page" id="pB">
+          <div class="pslot"></div><div class="pfill"></div>
+          <div class="pbar h"></div><div class="pbar c1"></div><div class="pbar c2"></div>
+          <div class="pstat"></div>
+        </div>
+
+        <!-- the other language: the same two pages, mirrored; they unfold from the axis as one group -->
+        <div id="twins">
+          <div class="page designed" id="tB">
+            <div class="pslot"></div><div class="pfill"></div>
+            <div class="pbar h"></div><div class="pbar c1"></div><div class="pbar c2"></div>
+            <div class="pstat"></div>
+          </div>
+          <div class="page designed" id="tA">
+            <div class="pslot"></div><div class="pfill"></div>
+            <div class="film" id="filmtA"><div class="fl"></div><div class="fd"></div><div class="fd"></div><div class="fd"></div><div class="ft"></div></div>
+            <div class="pbar h"></div><div class="pbar c1"></div><div class="pbar c2"></div>
+            <div class="pstat"></div>
+            <svg class="pcheck" viewBox="0 0 44 44"><path d="M13 23 l6 6 l12 -13" /></svg>
+          </div>
+        </div>
+
+        <div id="axis"></div>
+
+        <!-- the traveling token -->
+        <div id="token"></div>
+
+        <!-- stage labels (one at a time; lbl5 = the out node, held as the closing) -->
+        <div class="lbl" id="lbl0"></div>
+        <div class="lbl" id="lbl1"></div>
+        <div class="lbl" id="lbl2"></div>
+        <div class="lbl" id="lbl3"></div>
+        <div class="lbl" id="lbl4"></div>
+        <div class="lbl" id="lbl5"></div>
+
+        <!-- the one secondary line -->
+        <div id="caption"></div>
+      </div>
+    </div>
+
+    <script>
+      /* ============================================================
+         Deterministic 12s timeline. No random / Date / setTimeout /
+         async / timeline callbacks (all text set once at init). The
+         `lang` variable picks copy + mirrors the horizontal axis for HE.
+         Every on-frame string traces to src/content/studio/websites.ts
+         (line refs below; full table in DESIGN.md).
+         ============================================================ */
+      const vars = (window.__hyperframes && window.__hyperframes.getVariables)
+        ? window.__hyperframes.getVariables() : {};
+      const lang = vars.lang === "he" ? "he" : "en";
+
+      const COPY = {
+        en: {
+          chips: ["services", "audience", "languages"], // example.map.nodes[0].sub "services · audience · languages" (:112)
+          l0: "Your brief",                   // example.map.nodes[0].label (:112)
+          l1: "Structure and copy",           // example.map.nodes[1].label (:113)
+          l2: "Design and build",             // example.map.nodes[2].label (:114)
+          l3: "Films and metadata",           // example.map.nodes[3].label (:115)
+          l4: "Your approval",                // example.map.nodes[4].label (human) (:116)
+          l5: "Live in both languages",       // example.map.nodes[5].label (out) (:117) — held as the closing
+          caption: "Review and approve",      // how.steps[3].title (human step) (:95)
+        },
+        he: {
+          chips: ["שירותים", "קהל", "שפות"],   // he.example.map.nodes[0].sub "שירותים · קהל · שפות" (:259)
+          l0: "הבריף שלכם",                    // he.example.map.nodes[0].label (:259)
+          l1: "מבנה וטקסט",                    // he.example.map.nodes[1].label (:260)
+          l2: "עיצוב ובנייה",                  // he.example.map.nodes[2].label (:261)
+          l3: "סרטונים ו-SEO",                 // he.example.map.nodes[3].label (:262)
+          l4: "האישור שלכם",                   // he.example.map.nodes[4].label (human) (:263)
+          l5: "באוויר בשתי השפות",             // he.example.map.nodes[5].label (out) (:264) — held as the closing
+          caption: "בודקים ומאשרים",           // he.how.steps[3].title (human step) (:242)
+        },
+      }[lang];
+
+      document.documentElement.lang = lang;
+      // Do NOT set dir="rtl" on <html> — it blanks the hyperframes RENDER
+      // pipeline. Mirror positionally via X(); set dir only on text elements.
+      const isHE = lang === "he";
+      if (isHE) {
+        document.getElementById("stage").classList.add("he");
+        document.querySelectorAll(".lbl, .chip-inner, #caption").forEach((el) => { el.dir = "rtl"; });
+      }
+
+      const setText = (id, t) => { document.getElementById(id).textContent = t; };
+      COPY.chips.forEach((t, i) => setText("chipt" + i, t));
+      ["l0", "l1", "l2", "l3", "l4", "l5"].forEach((k, i) => setText("lbl" + i, COPY[k]));
+      setText("caption", COPY.caption);
+
+      // ---- Geometry (EN coordinates; HE mirrors x → 1920 − x) — spec v2 ----
+      // Headline band top 210 · sitemap root 410 / bracket 440 · pages 470–730 ·
+      // rail y 820 (x 170 → 1750) · caption top 915. Primary-language pages on the
+      // reading-start half, their mirrored twins on the other half (axis x = 960).
+      const X = isHE ? (x) => 1920 - x : (x) => x;
+      const SGN = isHE ? -1 : 1;
+      const RAIL_Y = 820, RAIL_X0 = 170, RAIL_X1 = 1750, AXIS_X = 960;
+      const NX = [230, 522, 814, 1106, 1398, 1690]; // node x, EN (pitch 292)
+      const ROOT_Y = 410, BRACKET_Y = 440, PAGE_TOP = 470, PAGE_W = 360, PIP_Y = 455;
+      const PX = { pA: 350, pB: 750, tB: 1170, tA: 1570 }; // page centres, EN
+      const place = (id, cx, cy) => {
+        const el = document.getElementById(id);
+        el.style.left = X(cx) + "px";
+        el.style.top = cy + "px";
+      };
+
+      // rail endpoints mirror with the nodes
+      const railLine = document.getElementById("rail");
+      railLine.setAttribute("x1", X(RAIL_X0)); railLine.setAttribute("x2", X(RAIL_X1));
+      NX.forEach((x, i) => place("n" + i, x, RAIL_Y));
+
+      // pages: primary language = reading direction of the locale; twins = the mirror
+      const PRIM = isHE ? "rtl" : "ltr", TWIN = isHE ? "ltr" : "rtl";
+      Object.entries(PX).forEach(([id, cx]) => {
+        const el = document.getElementById(id);
+        el.classList.add(id[0] === "p" ? PRIM : TWIN);
+        el.style.left = X(cx) - PAGE_W / 2 + "px";
+        el.style.top = PAGE_TOP + "px";
+        place("pip-" + id, cx, PIP_Y);
+      });
+      gsap.set(".pip", { xPercent: -50, yPercent: -50, rotation: 45 });
+      // the film's mini mark travels in the page's reading direction
+      const FT_START = { ltr: 15, rtl: 154 }, FT_RUN = 139;
+      [["filmpA", PRIM], ["filmtA", TWIN]].forEach(([id, dir]) => {
+        const f = document.getElementById(id);
+        [18, 87.5, 157].forEach((l, i) => { f.querySelectorAll(".fd")[i].style.left = l + "px"; });
+        f.querySelector(".ft").style.left = FT_START[dir] + "px";
+      });
+      const ftDir = (dir) => (dir === "ltr" ? FT_RUN : -FT_RUN);
+
+      // sitemap: root on the axis; primary half drawn first (stem → bracket → page A's
+      // drop, page B's drop as the bracket passes it), the twin half as the mirror unfolds.
+      place("root", AXIS_X, ROOT_Y);
+      const setD = (id, d) => document.getElementById(id).setAttribute("d", d);
+      const trunk = `M${AXIS_X} ${ROOT_Y + 13} V${BRACKET_Y}`;
+      setD("siteP", `${trunk} H${X(PX.pA)} V${PAGE_TOP}`);
+      setD("siteP-drop", `M${X(PX.pB)} ${BRACKET_Y} V${PAGE_TOP}`);
+      setD("siteT", `M${AXIS_X} ${BRACKET_Y} H${X(PX.tA)} V${PAGE_TOP}`);
+      setD("siteT-drop", `M${X(PX.tB)} ${BRACKET_Y} V${PAGE_TOP}`);
+      setD("liveP", `${trunk} H${X(PX.pA)} V${PAGE_TOP}`);
+      setD("liveT", `M${AXIS_X} ${BRACKET_Y} H${X(PX.tA)} V${PAGE_TOP}`);
+
+      // source chips — a loose pile over the empty page band; centred via GSAP so the merge flight composes
+      const CHIPS = [[480, 450], [1080, 510], [590, 690]];
+      CHIPS.forEach(([cx, cy], i) => place("chip" + i, cx, cy));
+      gsap.set(".chip", { xPercent: -50, yPercent: -50 });
+      gsap.set("#chip0 .chip-inner", { rotation: -6 });
+      gsap.set("#chip1 .chip-inner", { rotation: 4 });
+      gsap.set("#chip2 .chip-inner", { rotation: -3 });
+
+      // token starts at node 0
+      place("token", NX[0], RAIL_Y);
+      gsap.set("#token", { xPercent: -50, yPercent: -50 });
+
+      // approval ring on node 4
+      place("appr-ring", NX[4], RAIL_Y);
+
+      // travel helper: token x-delta from node a to node b (HE-aware)
+      const dx = (a, b) => X(NX[b]) - X(NX[a]);
+
+      // ---- Timeline ----
+      // Settled grammar: velocity-matched hand-offs (exits accelerate + blur,
+      // entries decelerate from blur), one rack focus onto the copper approval
+      // checkpoint at the peak, and a loop-continuous camera (identity at t=0
+      // and t=12). The rack refocuses before the tail so the seam is crisp.
+      // No two tweens touch the same property of the same element at once.
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out", overwrite: "auto" } });
+
+      const showLabel = (id, at) =>
+        tl.fromTo("#" + id, { opacity: 0, y: 24, filter: "blur(14px)" },
+          { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.55, ease: "power2.out" }, at);
+      const hideLabel = (id, at) =>
+        tl.to("#" + id, { opacity: 0, y: -18, filter: "blur(14px)", duration: 0.45, ease: "power2.in" }, at);
+      const nodeIn = (i, at) =>
+        tl.fromTo("#n" + i, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.5 }, at);
+      const activate = (i, at) =>
+        tl.to("#n" + i, { borderColor: "#d96832", backgroundColor: "rgba(217,104,50,0.14)", scale: 1.18, duration: 0.4, ease: "power2.out" }, at);
+      const tokenTo = (i, at) =>
+        tl.to("#token", { x: dx(0, i), duration: 0.6, ease: "power2.inOut" }, at);
+      // autoRound:false — pathLength=1 makes the offset a 1→0 fraction; CSSPlugin's
+      // default px rounding would snap it (the line would pop on, not draw).
+      const draw = (sel, at, dur, ease) =>
+        tl.to(sel, { strokeDashoffset: 0, duration: dur, ease: ease || "power1.inOut", autoRound: false }, at);
+      const pageIn = (id, at) =>
+        tl.fromTo("#" + id, { opacity: 0, y: 30, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.5, ease: "power2.out" }, at);
+
+      // ===== BEAT 0 — Your brief (0.0–2.1): the pile merges into one token =====
+      draw("#rail", 0.1, 1.6);
+      CHIPS.forEach((_, i) =>
+        tl.fromTo("#chip" + i, { opacity: 0, y: 36, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.55, ease: "power2.out" }, 0.15 + i * 0.14));
+      nodeIn(0, 0.75);
+      // chips accelerate into node 0 + blur out (velocity-matched exit) → token appears
+      CHIPS.forEach(([cx, cy], i) =>
+        tl.to("#chip" + i, { x: X(NX[0]) - X(cx), y: RAIL_Y - cy, scale: 0.4, opacity: 0, filter: "blur(16px)", duration: 0.5, ease: "power2.in" }, 0.95 + i * 0.07));
+      tl.fromTo("#token", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.45, ease: "power2.out" }, 1.3);
+      activate(0, 1.3);
+      showLabel("lbl0", 1.35);
+
+      // ===== BEAT 1 — Structure and copy (2.1–3.6): the sitemap + wireframe pages + copy bars =====
+      hideLabel("lbl0", 2.2);
+      tokenTo(1, 2.35); nodeIn(1, 2.4);
+      tl.fromTo("#root", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" }, 2.45);
+      showLabel("lbl1", 2.55);
+      draw("#siteP", 2.55, 0.65);
+      draw("#siteP-drop", 2.8, 0.12, "none");
+      pageIn("pB", 2.75); pageIn("pA", 2.95);
+      activate(1, 2.9);
+      [["pB", 3.05], ["pA", 3.2]].forEach(([id, t0]) =>
+        tl.fromTo(`#${id} .pbar`, { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power2.out", stagger: 0.08 }, t0));
+
+      // ===== BEAT 2 — Design and build (3.6–5.3): designed in one language, mirrored into the other =====
+      hideLabel("lbl1", 3.6);
+      tokenTo(2, 3.75); nodeIn(2, 3.8);
+      showLabel("lbl2", 3.95);
+      [["pB", 4.1], ["pA", 4.2]].forEach(([id, t0]) => {
+        tl.to("#" + id, { borderColor: "#45433c", backgroundColor: "rgba(36,36,32,0.62)", duration: 0.45, ease: "power2.out" }, t0);
+        tl.to(`#${id} .pfill`, { opacity: 1, duration: 0.45, ease: "power2.out" }, t0);
+        tl.to(`#${id} .pbar.h`, { backgroundColor: "#8a847a", duration: 0.45, ease: "power2.out" }, t0);
+      });
+      activate(2, 4.3);
+      // THE MIRROR — the axis appears, the twins unfold from it (one rotation about x = 960)
+      tl.fromTo("#axis", { opacity: 0, scaleY: 0 }, { opacity: 0.8, scaleY: 1, duration: 0.35, ease: "power2.out" }, 4.45);
+      tl.fromTo("#twins", { rotationY: 90 * SGN, transformPerspective: 2400, transformOrigin: `${AXIS_X}px 600px` },
+        { rotationY: 0, duration: 0.7, ease: "power3.out" }, 4.55);
+      tl.fromTo("#twins", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power1.out" }, 4.55);
+      draw("#siteT", 4.65, 0.55);
+      draw("#siteT-drop", 4.85, 0.12, "none");
+      tl.to("#axis", { opacity: 0, duration: 0.35, ease: "power2.in" }, 5.35);
+
+      // ===== BEAT 3 — Films and metadata (5.3–6.5): a film frame drops into the home page; the sitemap is indexed =====
+      hideLabel("lbl2", 5.15);
+      tokenTo(3, 5.3); nodeIn(3, 5.35);
+      showLabel("lbl3", 5.5);
+      ["#filmpA", "#filmtA"].forEach((id, i) =>
+        tl.fromTo(id, { opacity: 0, y: -70, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.5, ease: "power3.out" }, 5.65 + i * 0.08));
+      activate(3, 5.85);
+      tl.to(".site", { stroke: "#6a665c", duration: 0.4, ease: "power2.out" }, 5.9);
+      ["#pip-pA", "#pip-pB", "#pip-tB", "#pip-tA"].forEach((id, i) =>
+        tl.fromTo(id, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, 5.95 + i * 0.06));
+      // the film plays — its mark travels the tiny rail (finite yoyo; 5 legs end at 11.5)
+      [["#filmpA", PRIM], ["#filmtA", TWIN]].forEach(([id, dir]) =>
+        tl.to(id + " .ft", { x: ftDir(dir), duration: 1.1, ease: "sine.inOut", repeat: 4, yoyo: true }, 6.0));
+
+      // ===== BEAT 4 — PEAK: Your approval (6.5–9.0) =====
+      hideLabel("lbl3", 6.5);
+      tokenTo(4, 6.6); nodeIn(4, 6.65);
+      showLabel("lbl4", 6.85);
+      // review opens — every page gets an open status mark
+      ["#pA", "#pB", "#tB", "#tA"].forEach((id, i) =>
+        tl.fromTo(id + " .pstat", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" }, 6.9 + i * 0.05));
+      // RACK FOCUS — rail, upstream nodes and the sitemap defocus + dim; the copper
+      // checkpoint, the four pages under review and the token stay sharp.
+      const UPSTREAM = ["#rail-svg", "#n0", "#n1", "#n2", "#n3", "#site-svg", "#root", ".pip"];
+      tl.to(UPSTREAM, { filter: "blur(9px)", opacity: 0.4, duration: 0.75, ease: "power2.inOut" }, 7.0);
+      tl.to("#n4", { boxShadow: "0 0 60px 0 rgba(217,104,50,0.4)", borderColor: "#d96832", backgroundColor: "rgba(217,104,50,0.2)", scale: 1.25, duration: 0.6 }, 7.15);
+      // one bounded copper ring bloom (immediateRender:false so the "from" state does not paint from t=0)
+      tl.fromTo("#appr-ring", { opacity: 0.9, scale: 0.5, transformOrigin: "center" },
+        { opacity: 0, scale: 1.9, duration: 1.1, ease: "power2.out", immediateRender: false }, 7.2);
+      // page A approved (both languages) — the frame warms to copper, its mark fills, the check draws
+      tl.to(["#pA", "#tA"], { borderColor: "#d96832", backgroundColor: "rgba(217,104,50,0.1)", duration: 0.4 }, 7.6);
+      tl.to(["#pA .pstat", "#tA .pstat"], { borderColor: "#d96832", backgroundColor: "#d96832", duration: 0.4 }, 7.6);
+      tl.to(["#pA .pcheck", "#tA .pcheck"], { opacity: 1, duration: 0.15 }, 7.7);
+      tl.to(["#pA .pcheck path", "#tA .pcheck path"], { strokeDashoffset: 0, duration: 0.5, ease: "power2.inOut" }, 7.72);
+      // the one secondary line, verbatim (decelerate from blur)
+      tl.fromTo("#caption", { opacity: 0, y: 18, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "power2.out" }, 7.8);
+      // page B is deliberately left waiting — one finite breath on its open mark, then it stays open
+      tl.to(["#pB .pstat", "#tB .pstat"], { borderColor: "rgba(217,104,50,0.6)", duration: 0.45, ease: "sine.inOut", repeat: 1, yoyo: true }, 8.15);
+
+      // ===== BEAT 5 — Live in both languages (9.0–10.8) =====
+      // REFOCUS — the rack releases so the loop seam is crisp.
+      tl.to(UPSTREAM, { filter: "blur(0px)", opacity: 1, duration: 0.8, ease: "power2.inOut" }, 8.95);
+      tl.to("#n4", { boxShadow: "0 0 40px 0 rgba(217,104,50,0.18)", duration: 0.8, ease: "power2.inOut" }, 8.95);
+      hideLabel("lbl4", 9.0);
+      tl.to("#caption", { opacity: 0, y: -18, filter: "blur(12px)", duration: 0.5, ease: "power2.in" }, 9.05);
+      tokenTo(5, 9.2); nodeIn(5, 9.25);
+      showLabel("lbl5", 9.4); // the out node — held through the tail as the closing
+      activate(5, 9.75);
+      // the approved page goes live in both languages: the root lights, copper runs to both A pages
+      tl.to("#root", { borderColor: "#d96832", backgroundColor: "#d96832", duration: 0.4, ease: "power2.out" }, 9.75);
+      draw("#liveP", 9.8, 0.7); draw("#liveT", 9.8, 0.7);
+
+      // ===== BEAT 6 — Settle (10.8–12.0) =====
+      // the live root breathes once (finite; ends 11.8 so nothing is mid-yoyo at the seam)
+      tl.to("#root", { opacity: 0.7, duration: 0.5, ease: "sine.inOut", repeat: 1, yoyo: true }, 10.8);
+
+      // ===== CAMERA — loop-continuous (identity at t=0 AND t=12), drift ≤ 1.5% =====
+      // Push gently INTO the approval peak (scale 1.0 → 1.015), hold, then settle
+      // back so the seam matches. Micro-drift overlays: integer sine cycles on both
+      // axes (1× X, 2× Y) so dx,dy return to 0 at the seam. scale AND drift are pure
+      // functions of timeline time — no reads of a sibling tween.
+      const camEl = document.getElementById("camera");
+      const DUR = 12, PUSH = 0.015, DRIFT_AMP_X = 5, DRIFT_AMP_Y = 3;
+      const camEase = gsap.parseEase("power2.inOut");
+      const scaleAt = (t) => {
+        if (t <= 5.9) return 1.0;
+        if (t < 7.5) return 1.0 + PUSH * camEase((t - 5.9) / 1.6);
+        if (t <= 9.0) return 1.0 + PUSH;
+        if (t < 11.5) return 1.0 + PUSH - PUSH * camEase((t - 9.0) / 2.5);
+        return 1.0;
+      };
+      const drift = { p: 0 };
+      tl.to(drift, {
+        p: 1, duration: DUR, ease: "none",
+        onUpdate: () => {
+          const t = drift.p * DUR;
+          const ddx = Math.sin(drift.p * Math.PI * 2) * DRIFT_AMP_X;
+          const ddy = Math.sin(drift.p * Math.PI * 4) * DRIFT_AMP_Y;
+          camEl.style.transform = `scale(${scaleAt(t)}) translate(${ddx}px, ${ddy}px)`;
+        },
+      }, 0);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["root"] = tl;
+    </script>
+  </body>
+</html>

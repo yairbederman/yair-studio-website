@@ -66,6 +66,12 @@ text was the site's single biggest "generic" tell.
 | D4 | Capability films | **3 new + 2 reused**: new for agentic systems, websites, films; `scattered-to-mapped` reused for process optimization; `ai-enablement` reused for enablement |
 | D5 | Public dates | **Full dates**: Viber 2016–2023 · Lognet R&D Manager 2023–2026 · independent AI systems architect since Aug 2024 |
 
+> **D3 as built (2026-09-24):** a HyperFrames canvas size is fixed when the composition is compiled, so a `layout`
+> variable cannot switch 16:9 ↔ 4:5. The phone cut is its own project, `hyperframes/command-center-mobile/`
+> (1080×1350, CSS glow instead of WebGL bloom, docs in `hyperframes/command-center/`), and its assets are named
+> `command-center-mobile{,-he}.{mp4,webm}` + `command-center-mobile{,-he}-poster.png` (not `command-center{,-he}-mobile.*`
+> as the D3 and WS-E rows say). Served through the flagship film block's `mobile` set; the homepage proof band inherits it.
+
 ## 2. What Will Change
 
 | Area | Change |
@@ -216,8 +222,10 @@ Estimated agent time: Phase 1 ≈ 1 working day; Phase 2 ≈ 2–3 days includin
 - **Success criteria:** all automated checks green; every page readable on a 375px phone in both locales; every
   service page states what is done and what is received in concrete nouns; no fabricated numbers, clients, or
   testimonials anywhere; anti-slop word grep returns zero hits in `src/content`.
-- **Gates:** Ripple scan (`/ripple-scan`): PENDING · Impact analysis (`quality/impact-analysis`): PENDING · Design
-  critique (`/impeccable critique`, lens only): PENDING · Code review (`/code-review high`): PENDING · Skills:
+- **Gates (status 2026-09-24):** Ripple scan (`/ripple-scan`): run after Phase 1 and after each films batch, 0 open
+  issues · Impact analysis (`quality/impact-analysis`): run at Phase 1 · Design critique (`/impeccable critique`, lens
+  only): run on the studio index + a capability page, 27/40, findings folded into Phase 1 · Code review
+  (`/code-review high`): run on Phase 1 (4 findings applied); films batches re-reviewed before commit 4 · Skills:
   `engineering/karpathy-guidelines` ✔ (all code workstreams), `marketing/copywriting` + `copy-editing` (WS-B),
   `design/frontend-design` (WS-A/WS-C), `hyperframes` + `hyperframes-core` + `hyperframes-animation` +
   `hyperframes-creative` + `hyperframes-cli` + `motion-graphics` (WS-D/WS-E).

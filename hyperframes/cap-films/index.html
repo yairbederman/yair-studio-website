@@ -1,0 +1,493 @@
+<!doctype html>
+<html
+  lang="en"
+  data-resolution="landscape"
+  data-composition-variables='[{"id":"lang","type":"string","label":"Locale (en | he)","default":"en"}]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"
+      integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      /* ============================================================
+         "From brief to loop" — /studio/films film. A film about how these
+         films are made: the copy (site · deck · post) becomes one script
+         line, the line is cut into six scenes on an abstract editing
+         timeline, a playhead lights each beat as a still in both languages
+         (a mirrored twin lane), the owner approves one still at the copper
+         checkpoint while its twin is left waiting (the rack-focus peak),
+         then the timeline renders into a 16:9 frame that fills with a
+         settled schematic and fans out into a square and a tall portrait
+         (web / LinkedIn / Reels), each with its other-language twin.
+         Schematic only — no footage, faces, voices, logos, metrics, and no
+         text inside the frames. One composition, two locales (`lang`; HE
+         mirrors RTL). Palette mirrors src/app/globals.css. FILM SPEC v2:
+         sans only on frame, elements fill ~80% of the frame. Renders
+         transparent. Settled cinematic grammar: velocity-matched hand-offs,
+         one rack-focus onto the checkpoint, loop-continuous camera (drift
+         <= 1.5%). NO WebGL bloom (flagship-only signature). See DESIGN.md.
+         ============================================================ */
+      @font-face { font-family: "Instrument Sans"; font-weight: 400 600; font-display: block; src: url("assets/fonts/instrument-sans-400-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: "Assistant"; font-weight: 700; font-display: block; src: url("assets/fonts/assistant-700-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+      @font-face { font-family: "Assistant"; font-weight: 700; font-display: block; src: url("assets/fonts/assistant-700-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: "Geist Mono"; font-weight: 400; font-display: block; src: url("assets/fonts/geist-mono-400.woff2") format("woff2"); }
+
+      :root {
+        --bg-0: #121211; --bg-1: #1a1a18; --bg-2: #242420;
+        --fg-1: #f4f1ea; --fg-2: #b9b3aa; --fg-3: #8a847a;
+        --accent: #d96832;
+        --accent-soft: rgba(217, 104, 50, 0.12); --accent-rule: rgba(217, 104, 50, 0.35);
+        --rule: #2a2a26; --rule-strong: #3a3a34;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden; background: transparent;
+        font-family: "Instrument Sans", system-ui, sans-serif;
+        color: var(--fg-1); -webkit-font-smoothing: antialiased;
+      }
+      #stage { position: relative; width: 1920px; height: 1080px; }
+      #stage.he { font-family: "Assistant", system-ui, sans-serif; }
+      #camera { position: absolute; inset: 0; transform-origin: 960px 540px; will-change: transform; }
+      /* REVIEW/CHECK/SNAPSHOT ONLY — charcoal backdrop so contrast reads true.
+         Hidden (data-hidden) before the transparent alpha render; the charcoal
+         MP4 is post-composited from the alpha master — see DESIGN.md → Render.
+         inset:-40px so camera drift never exposes a transparent edge. */
+      #review-bg { position: absolute; inset: -40px; background: var(--bg-0); }
+
+      /* ---------- Type roles (spec v2 — sans only). Hebrew: never mono, never tracked. ---------- */
+      .mono { font-family: "Geist Mono", ui-monospace, monospace; letter-spacing: 0.02em; }
+      .he .mono { font-family: "Assistant", system-ui, sans-serif; font-weight: 600; letter-spacing: 0; }
+      [dir="rtl"] { letter-spacing: 0; }
+
+      /* ---------- Source chips (the copy: site · deck · post) ---------- */
+      .chip { position: absolute; opacity: 0; will-change: transform, opacity, filter; }
+      .chip-inner {
+        display: inline-block; padding: 30px 56px; border-radius: 22px;
+        background: var(--bg-2); border: 2.5px solid #45433c;
+        font-size: 80px; line-height: 1.15; color: var(--fg-2); white-space: nowrap;
+        will-change: transform;
+      }
+      .he .chip-inner { font-size: 88px; }
+
+      /* ---------- The timeline group (rail + scene nodes + clips + playhead + checkpoint) ---------- */
+      #tl { position: absolute; inset: 0; will-change: transform, opacity, filter; }
+      #rail-svg { position: absolute; inset: 0; width: 1920px; height: 1080px; will-change: filter; }
+      #rail { fill: none; stroke: var(--rule-strong); stroke-width: 4; }
+      .node {
+        position: absolute; width: 40px; height: 40px; border-radius: 50%;
+        border: 3.5px solid #55524a; background: var(--bg-1);
+        transform: translate(-50%, -50%); opacity: 0; will-change: transform, opacity, filter;
+      }
+      #gate { border-color: var(--accent-rule); } /* the approval checkpoint — copper from birth */
+      #gate-ring {
+        position: absolute; width: 164px; height: 164px; border-radius: 50%;
+        border: 3.5px solid var(--accent); transform: translate(-50%, -50%); opacity: 0;
+        will-change: transform, opacity;
+      }
+
+      /* clips — lane 1 = the stills in the render's own language, lane 2 = the
+         mirrored twin in the other language. `.rtl` mirrors a clip's content. */
+      .clip {
+        position: absolute; width: 220px; height: 90px; border-radius: 16px;
+        background: rgba(36, 36, 32, 0.62); border: 2.5px solid #45433c;
+        display: flex; align-items: center; gap: 14px; padding: 0 22px;
+        opacity: 0; will-change: transform, opacity, filter;
+      }
+      .clip.rtl { flex-direction: row-reverse; }
+      .clip.twin { border-color: #6a665c; }
+      #k2, #t2 { z-index: 2; } /* the two stills lifted to the checkpoint travel above their lanes */
+      .still { display: flex; align-items: center; gap: 18px; flex: 1 1 auto; opacity: 0; }
+      .twin .still { opacity: 1; }
+      .rtl .still { flex-direction: row-reverse; }
+      .sdot { width: 26px; height: 26px; border-radius: 50%; border: 3.5px solid #6a665c; flex: 0 0 auto; }
+      .sbars { display: flex; flex-direction: column; gap: 12px; flex: 1 1 auto; }
+      .rtl .sbars { align-items: flex-end; }
+      .sbar { width: 100%; height: 10px; border-radius: 5px; background: #55524a; } /* explicit width: flex-end would collapse an auto-width bar */
+      .sbar.short { width: 58%; }
+      .clip-check { width: 40px; height: 40px; flex: 0 0 auto; opacity: 0; }
+      .clip-check path {
+        fill: none; stroke: var(--accent); stroke-width: 5; stroke-linecap: round;
+        stroke-linejoin: round; stroke-dasharray: 48; stroke-dashoffset: 48;
+      }
+
+      /* the playhead — a copper head on the rail + a line through both lanes */
+      #playhead { position: absolute; width: 48px; height: 264px; opacity: 0; will-change: transform, opacity, filter; }
+      #token {
+        position: absolute; left: 0; top: 0; width: 48px; height: 48px; border-radius: 13px;
+        background: var(--accent); box-shadow: 0 0 34px 0 rgba(217,104,50,0.35);
+      }
+      #ph-line { position: absolute; left: 22px; top: 48px; width: 4px; height: 216px; border-radius: 2px; background: var(--accent); opacity: 0.5; }
+
+      /* ---------- Render: morph outline → the 16:9 frame → variants ---------- */
+      #morph-svg { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+      #morph { fill: none; stroke: #6a665c; stroke-width: 3; opacity: 0; }
+      .frame {
+        position: absolute; border-radius: 18px; background: var(--bg-1);
+        border: 3px solid #6a665c; opacity: 0; overflow: hidden;
+        will-change: transform, opacity, filter;
+      }
+      .frame.twin { border-color: #45433c; }
+      .frame svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+      /* ---------- Stage labels (one large headline at a time, top band) ---------- */
+      .lbl {
+        position: absolute; left: 0; top: 200px; width: 1920px; text-align: center;
+        font-family: "Instrument Sans", system-ui, sans-serif; font-weight: 600;
+        font-size: 128px; line-height: 1.1; letter-spacing: -0.01em; color: var(--fg-1);
+        opacity: 0; white-space: nowrap; will-change: transform, opacity, filter;
+      }
+      .he .lbl { font-family: "Assistant", system-ui, sans-serif; font-weight: 700; font-size: 140px; letter-spacing: 0; }
+
+      /* ---------- Caption (the one secondary line, at the peak) ---------- */
+      #caption {
+        position: absolute; left: 0; top: 920px; width: 1920px; text-align: center;
+        font-family: "Instrument Sans", system-ui, sans-serif; font-weight: 400;
+        font-size: 72px; line-height: 1.2; letter-spacing: 0; color: var(--fg-2); opacity: 0;
+        will-change: transform, opacity, filter;
+      }
+      .he #caption { font-family: "Assistant", system-ui, sans-serif; font-weight: 600; font-size: 80px; letter-spacing: 0; }
+    </style>
+  </head>
+
+  <body>
+    <div id="stage" data-composition-id="root" data-start="0" data-duration="12" data-width="1920" data-height="1080">
+      <div id="camera" data-layout-allow-overflow>
+        <div id="review-bg"></div>
+
+        <!-- source chips (the copy) -->
+        <div class="chip" id="chip0"><span class="chip-inner mono" id="chipt0"></span></div>
+        <div class="chip" id="chip1"><span class="chip-inner mono" id="chipt1"></span></div>
+        <div class="chip" id="chip2"><span class="chip-inner mono" id="chipt2"></span></div>
+
+        <!-- the timeline: rail, scene nodes, checkpoint, clips (built at init), playhead -->
+        <div id="tl">
+          <svg id="rail-svg" viewBox="0 0 1920 1080">
+            <line id="rail" x1="185" y1="470" x2="1735" y2="470" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+          </svg>
+          <div class="node" id="n0"></div>
+          <div class="node" id="n1"></div>
+          <div class="node" id="n2"></div>
+          <div class="node" id="n3"></div>
+          <div class="node" id="n4"></div>
+          <div class="node" id="n5"></div>
+          <!-- approval checkpoint (ring beneath the lifted stills) -->
+          <div id="gate-ring"></div>
+          <div class="node" id="gate"></div>
+          <div id="clips"></div>
+          <div id="playhead"><div id="token"></div><div id="ph-line"></div></div>
+        </div>
+
+        <!-- the render: morph outline, then the frames (twins behind) -->
+        <svg id="morph-svg" viewBox="0 0 1920 1080">
+          <rect id="morph" x="185" y="436" width="1550" height="452" rx="28" />
+        </svg>
+        <div class="frame twin" id="f169b"></div>
+        <div class="frame twin" id="f11b"></div>
+        <div class="frame twin" id="f916b"></div>
+        <!-- the 16:9 paints on top so its duplicates slide out from behind it -->
+        <div class="frame" id="f916"></div>
+        <div class="frame" id="f11"></div>
+        <div class="frame" id="f169"></div>
+
+        <!-- stage labels (one at a time; lbl4 = the out node, held as the closing) -->
+        <div class="lbl" id="lbl0"></div>
+        <div class="lbl" id="lbl1"></div>
+        <div class="lbl" id="lbl2"></div>
+        <div class="lbl" id="lbl3"></div>
+        <div class="lbl" id="lbl4"></div>
+
+        <!-- the one secondary line -->
+        <div id="caption"></div>
+      </div>
+    </div>
+
+    <script>
+      /* ============================================================
+         Deterministic 12s timeline. No random / Date / setTimeout /
+         async / timeline callbacks (all text + markup set once at init).
+         The `lang` variable picks copy + mirrors the horizontal axis for
+         HE. Every on-frame string traces to src/content/studio/films.ts
+         (line refs below; full table in DESIGN.md).
+         ============================================================ */
+      const vars = (window.__hyperframes && window.__hyperframes.getVariables)
+        ? window.__hyperframes.getVariables() : {};
+      const lang = vars.lang === "he" ? "he" : "en";
+
+      const COPY = {
+        en: {
+          chips: ["site", "deck", "post"],     // example.map.nodes[0].sub "site · deck · post" (:110)
+          l0: "Your copy",                     // example.map.nodes[0].label (:110)
+          l1: "Six scenes",                    // example.map.nodes[1].label (:111)
+          l2: "Stills in both languages",      // example.map.nodes[2].label (:112)
+          l3: "Your approval",                 // example.map.nodes[3].label (human) (:113)
+          l4: "Rendered loop",                 // example.map.nodes[4].label (out) (:114) — held as the closing
+          caption: "Approve the stills",       // how.steps[2].title (human step) (:89)
+        },
+        he: {
+          chips: ["אתר", "מצגת", "פוסט"],      // he.example.map.nodes[0].sub "אתר · מצגת · פוסט" (:254)
+          l0: "הטקסט שלכם",                    // he.example.map.nodes[0].label (:254)
+          l1: "שש סצנות",                      // he.example.map.nodes[1].label (:255)
+          l2: "פריימים בשתי השפות",            // he.example.map.nodes[2].label (:256)
+          l3: "האישור שלכם",                   // he.example.map.nodes[3].label (human) (:257)
+          l4: "הלופ מוכן",                     // he.example.map.nodes[4].label (out) (:258) — held as the closing
+          caption: "מאשרים את הפריימים",       // he.how.steps[2].title (human step) (:233)
+        },
+      }[lang];
+
+      document.documentElement.lang = lang;
+      // Do NOT set dir="rtl" on <html> — it blanks the hyperframes RENDER
+      // pipeline. Mirror positionally via X(); set dir only on text elements.
+      const isHE = lang === "he";
+      if (isHE) {
+        document.getElementById("stage").classList.add("he");
+        document.querySelectorAll(".lbl, .chip-inner, #caption").forEach((el) => { el.dir = "rtl"; });
+      }
+
+      const setText = (id, t) => { document.getElementById(id).textContent = t; };
+      COPY.chips.forEach((t, i) => setText("chipt" + i, t));
+      ["l0", "l1", "l2", "l3", "l4"].forEach((k, i) => setText("lbl" + i, COPY[k]));
+      setText("caption", COPY.caption);
+
+      // ---- Geometry (EN coordinates; HE mirrors x → 1920 − x) — spec v2 ----
+      // Rail x 185 → 1735 (1550px) at y 470; six 220×90 clips on a 266 pitch
+      // fill it exactly; lane 1 top 510, lane 2 top 620; checkpoint tray y 815.
+      const X = isHE ? (x) => 1920 - x : (x) => x;
+      const RAIL_Y = 470, RAIL_X0 = 185, RAIL_X1 = 1735;
+      const CLIP_W = 220, CLIP_H = 90, PITCH = 266;
+      const CX = [0, 1, 2, 3, 4, 5].map((i) => RAIL_X0 + CLIP_W / 2 + i * PITCH); // 295 … 1625
+      const LANE_TOP = [510, 620];
+      const PICK = 2; // scene 3: its still (A) and its twin (B) are lifted to the checkpoint
+      const LANE_CY = LANE_TOP.map((t) => t + CLIP_H / 2); // 555, 665
+      const place = (id, cx, cy) => {
+        const el = document.getElementById(id);
+        el.style.left = X(cx) + "px";
+        el.style.top = cy + "px";
+      };
+
+      const railLine = document.getElementById("rail");
+      railLine.setAttribute("x1", X(RAIL_X0)); railLine.setAttribute("x2", X(RAIL_X1));
+      CX.forEach((x, i) => place("n" + i, x, RAIL_Y));
+
+      // clips: k0–k5 (lane 1, the render's language) + t0–t5 (lane 2, the mirrored
+      // twin). Built once at init — pure markup, no randomness.
+      const clipHTML = (id, lane, i) => {
+        const rtl = (lane === 0) === isHE; // lane 1 mirrors in HE, lane 2 mirrors in EN
+        const check = i === PICK
+          ? `<svg class="clip-check" id="${id}-check" viewBox="0 0 46 46"><path d="M11 24 l8 8 l16 -19" /></svg>` : "";
+        return `<div class="clip${lane ? " twin" : ""}${rtl ? " rtl" : ""}" id="${id}" style="left:${X(CX[i]) - CLIP_W / 2}px;top:${LANE_TOP[lane]}px">` +
+          '<span class="still"><span class="sdot"></span><span class="sbars"><span class="sbar"></span><span class="sbar short"></span></span></span>' +
+          check + "</div>";
+      };
+      document.getElementById("clips").innerHTML =
+        CX.map((_, i) => clipHTML("k" + i, 0, i)).join("") + CX.map((_, i) => clipHTML("t" + i, 1, i)).join("");
+
+      // playhead head sits on node 0; its line runs down through both lanes
+      const ph = document.getElementById("playhead");
+      ph.style.left = X(CX[0]) - 24 + "px"; ph.style.top = RAIL_Y - 24 + "px";
+
+      // approval checkpoint — centred below the timeline; A (the lane-1 still of
+      // scene 3) lands before it in reading order, B (its twin) after it
+      const GATE = [960, 815], TRAY_X = [690, 1230], LIFT = 1.75;
+      place("gate", GATE[0], GATE[1]); place("gate-ring", GATE[0], GATE[1]);
+
+      // source chips — a loose pile across the top; centred via GSAP so the flight composes
+      const CHIPS = [[520, 395], [1000, 345], [1420, 415]];
+      const CHIP_TO = [428, 960, 1492]; // where each chip lands on the script line
+      CHIPS.forEach(([cx, cy], i) => place("chip" + i, cx, cy));
+      gsap.set(".chip", { xPercent: -50, yPercent: -50 });
+      gsap.set("#chip0 .chip-inner", { rotation: -6 });
+      gsap.set("#chip1 .chip-inner", { rotation: 4 });
+      gsap.set("#chip2 .chip-inner", { rotation: -3 });
+
+      // frames — final layout (centres, EN): 16:9 720×405, 1:1 405×405, 9:16 270×480
+      // across the rail's 1550px, centred on y 700. The 16:9 is born at (960, 675).
+      const FR = {
+        f169: { w: 720, h: 405, c: [545, 700], bar: [110, 72, 300, 26], sub: [110, 118, 180, 14], rail: [[110, 262], [610, 262]] },
+        f11:  { w: 405, h: 405, c: [1185, 700], bar: [70, 72, 210, 24], sub: [70, 114, 130, 13], rail: [[70, 262], [335, 262]] },
+        f916: { w: 270, h: 480, c: [1600, 700], bar: [40, 60, 150, 22], sub: [40, 98, 95, 12], rail: [[135, 180], [135, 420]] },
+      };
+      const BIRTH = [960, 675], TWIN_OFF = 26;
+      // settled schematic — headline bar + sub bar (start-aligned, so the twin reads
+      // mirrored), a rail with five nodes, the fourth copper (approval), the token at
+      // the out node. No text inside the frames.
+      const schematic = (s, mirror) => {
+        const [[x0, y0], [x1, y1]] = s.rail;
+        const pts = [0, 1, 2, 3, 4].map((i) => [x0 + (x1 - x0) * i / 4, y0 + (y1 - y0) * i / 4]);
+        const rect = (cls, [x, y, w, h], fill, op) =>
+          `<rect class="${cls}" x="${x}" y="${y}" width="${w}" height="${h}" rx="${h / 2}" fill="${fill}" opacity="${op}" />`;
+        const nodes = pts.map(([x, y], i) =>
+          `<circle class="fs-node" cx="${x}" cy="${y}" r="14" stroke-width="4" ${i === 3 ? 'fill="rgba(217,104,50,0.22)" stroke="#d96832"' : 'fill="#1a1a18" stroke="#6a665c"'} />`).join("");
+        const [tx, ty] = pts[4];
+        return `<svg viewBox="0 0 ${s.w} ${s.h}"><g${mirror ? ` transform="translate(${s.w} 0) scale(-1 1)"` : ""}>` +
+          rect("fs-bar", s.bar, "#f4f1ea", 0.55) + rect("fs-bar", s.sub, "#b9b3aa", 0.3) +
+          `<line class="fs-rail" x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="#55524a" stroke-width="4" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0" />` +
+          nodes + `<rect class="fs-tok" x="${tx - 15}" y="${ty - 15}" width="30" height="30" rx="8" fill="#d96832" />` + "</g></svg>";
+      };
+      Object.entries(FR).forEach(([id, s]) => {
+        [[id, isHE], [id + "b", !isHE]].forEach(([fid, mirror]) => {
+          const el = document.getElementById(fid);
+          el.style.width = s.w + "px"; el.style.height = s.h + "px";
+          el.style.left = X(s.c[0]) - s.w / 2 + "px"; el.style.top = s.c[1] - s.h / 2 + "px";
+          el.innerHTML = schematic(s, mirror);
+        });
+      });
+      const fromBirth = (id) => ({ x: X(BIRTH[0]) - X(FR[id].c[0]), y: BIRTH[1] - FR[id].c[1] });
+
+      // travel helper: playhead x-delta from node a to node b (HE-aware)
+      const dx = (a, b) => X(CX[b]) - X(CX[a]);
+
+      // ---- Timeline ----
+      // Settled grammar: velocity-matched hand-offs (exits accelerate + blur,
+      // entries decelerate from blur), one rack focus onto the copper approval
+      // checkpoint at the peak, and a loop-continuous camera (identity at t=0
+      // and t=12).
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out", overwrite: "auto" } });
+
+      const showLabel = (id, at) =>
+        tl.fromTo("#" + id, { opacity: 0, y: 24, filter: "blur(14px)" },
+          { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.55, ease: "power2.out" }, at);
+      const hideLabel = (id, at) =>
+        tl.to("#" + id, { opacity: 0, y: -18, filter: "blur(14px)", duration: 0.45, ease: "power2.in" }, at);
+      const activate = (id, at) =>
+        tl.to("#" + id, { borderColor: "#d96832", backgroundColor: "rgba(217,104,50,0.14)", scale: 1.18, duration: 0.4, ease: "power2.out" }, at);
+
+      // ===== BEAT 0 — Your copy (0.0–2.0): the pile becomes one script line =====
+      CHIPS.forEach((_, i) =>
+        tl.fromTo("#chip" + i, { opacity: 0, y: 36, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.55, ease: "power2.out" }, 0.15 + i * 0.14));
+      // chips accelerate down into the line + blur out (velocity-matched exit)
+      CHIPS.forEach(([cx, cy], i) =>
+        tl.to("#chip" + i, { x: X(CHIP_TO[i]) - X(cx), y: LANE_CY[0] - cy, scale: 0.4, opacity: 0, filter: "blur(16px)", duration: 0.5, ease: "power2.in" }, 0.95 + i * 0.07));
+      // the script line writes in, in reading order: six lane-1 clips squashed to a
+      // 22px bar and widened to the pitch so they touch (one continuous line of copy)
+      const LINE = { scaleX: PITCH / CLIP_W, scaleY: 22 / CLIP_H, backgroundColor: "#6a665c", borderColor: "rgba(69,67,60,0)" };
+      CX.forEach((_, i) =>
+        tl.fromTo("#k" + i, { ...LINE, opacity: 0, scaleX: 0 }, { ...LINE, opacity: 1, duration: 0.4, ease: "power2.out" }, 1.05 + i * 0.08));
+      showLabel("lbl0", 1.35);
+
+      // ===== BEAT 1 — Six scenes (2.0–3.6): the line is cut into six clips on a timeline =====
+      hideLabel("lbl0", 2.2);
+      // autoRound:false — pathLength=1 makes the offset a 1→0 fraction; CSSPlugin's
+      // default px rounding would snap it (the rail would pop on, not draw).
+      tl.to("#rail", { strokeDashoffset: 0, duration: 0.9, ease: "power1.inOut", autoRound: false }, 2.3);
+      CX.forEach((_, i) =>
+        tl.to("#k" + i, { scaleX: 1, scaleY: 1, backgroundColor: "rgba(36,36,32,0.62)", borderColor: "#45433c", duration: 0.55, ease: "power3.out" }, 2.35 + i * 0.07));
+      CX.forEach((_, i) =>
+        tl.fromTo("#n" + i, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.45 }, 2.5 + i * 0.08));
+      showLabel("lbl1", 2.6);
+
+      // ===== BEAT 2 — Stills in both languages (3.6–6.0): the playhead lights each beat =====
+      hideLabel("lbl1", 3.55);
+      tl.fromTo("#playhead", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" }, 3.6);
+      showLabel("lbl2", 3.95);
+      // one sine-eased sweep node 0 → node 5; each node's reach time is the inverse
+      // of that ease (pure arithmetic), so node/still/twin reveals land on the head
+      const SWEEP_AT = 3.85, SWEEP_DUR = 1.5;
+      tl.to("#playhead", { x: dx(0, 5), duration: SWEEP_DUR, ease: "sine.inOut" }, SWEEP_AT);
+      CX.forEach((_, i) => {
+        const at = SWEEP_AT + SWEEP_DUR * Math.acos(1 - 2 * (i / 5)) / Math.PI;
+        activate("n" + i, at);
+        tl.to("#k" + i + " .still", { opacity: 1, duration: 0.35, ease: "power2.out" }, at);
+        tl.to("#k" + i, { borderColor: "#6a665c", duration: 0.35, ease: "power2.out" }, at);
+        // the twin peels off downward into lane 2 — the same still, mirrored
+        tl.fromTo("#t" + i, { opacity: 0, y: -60, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.42, ease: "power2.out" }, at + 0.06);
+      });
+
+      // ===== BEAT 3 — PEAK: Your approval (6.0–8.8) =====
+      hideLabel("lbl2", 5.95);
+      tl.fromTo("#gate", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.5 }, 6.05);
+      // scene 3's still (A) and its twin (B) lift to the checkpoint and flank it
+      tl.to("#t" + PICK, { x: X(TRAY_X[1]) - X(CX[PICK]), y: GATE[1] - LANE_CY[1], scale: LIFT, duration: 0.75, ease: "power2.inOut" }, 6.12);
+      tl.to("#k" + PICK, { x: X(TRAY_X[0]) - X(CX[PICK]), y: GATE[1] - LANE_CY[0], scale: LIFT, duration: 0.75, ease: "power2.inOut" }, 6.24);
+      showLabel("lbl3", 6.5);
+      // RACK FOCUS — the timeline (rail, nodes, other clips, playhead) defocuses +
+      // dims; the copper checkpoint and both lifted stills stay sharp. Camera pushes in.
+      const UPSTREAM = ["#rail-svg", "#playhead"]
+        .concat(CX.map((_, i) => "#n" + i))
+        .concat(CX.flatMap((_, i) => (i === PICK ? [] : ["#k" + i, "#t" + i])));
+      tl.to(UPSTREAM, { filter: "blur(9px)", opacity: 0.4, duration: 0.75, ease: "power2.inOut" }, 6.85);
+      tl.to("#gate", { boxShadow: "0 0 60px 0 rgba(217,104,50,0.4)", borderColor: "#d96832", backgroundColor: "rgba(217,104,50,0.2)", scale: 1.25, duration: 0.6 }, 6.9);
+      // one bounded copper ring bloom (immediateRender:false so the "from" state
+      // does not paint from t=0)
+      tl.fromTo("#gate-ring", { opacity: 0.9, scale: 0.5, transformOrigin: "center" },
+        { opacity: 0, scale: 1.9, duration: 1.1, ease: "power2.out", immediateRender: false }, 7.05);
+      // A approved by the owner — the clip warms to copper and the check draws
+      tl.to("#k" + PICK, { borderColor: "#d96832", backgroundColor: "rgba(217,104,50,0.12)", duration: 0.4 }, 7.5);
+      tl.to("#k" + PICK + " .sdot", { borderColor: "#d96832", backgroundColor: "#d96832", duration: 0.4 }, 7.5);
+      tl.to("#k" + PICK + "-check", { opacity: 1, duration: 0.2 }, 7.6);
+      tl.to("#k" + PICK + "-check path", { strokeDashoffset: 0, duration: 0.55, ease: "power2.inOut" }, 7.65);
+      // the one secondary line, verbatim (decelerate from blur)
+      tl.fromTo("#caption", { opacity: 0, y: 18, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "power2.out" }, 7.7);
+      // B is still waiting — one finite breath on its open dot (ends as its approval begins)
+      tl.to("#t" + PICK + " .sdot", { borderColor: "rgba(217,104,50,0.6)", duration: 0.25, ease: "sine.inOut", repeat: 1, yoyo: true }, 7.85);
+      // …then B gets its own check just before the render beat — nothing renders before approval
+      tl.to("#t" + PICK, { borderColor: "#d96832", backgroundColor: "rgba(217,104,50,0.12)", duration: 0.25 }, 8.35);
+      tl.to("#t" + PICK + " .sdot", { borderColor: "#d96832", backgroundColor: "#d96832", duration: 0.25 }, 8.35);
+      tl.to("#t" + PICK + "-check", { opacity: 1, duration: 0.12 }, 8.38);
+      tl.to("#t" + PICK + "-check path", { strokeDashoffset: 0, duration: 0.24, ease: "power2.inOut" }, 8.38);
+
+      // ===== BEAT 4 — Rendered loop (8.8–10.4): the timeline renders into a 16:9 frame =====
+      hideLabel("lbl3", 8.8);
+      tl.to("#caption", { opacity: 0, y: -18, filter: "blur(12px)", duration: 0.5, ease: "power2.in" }, 8.85);
+      // the whole timeline accelerates into the frame and blurs out (exit) while an
+      // outline morphs from the timeline's bounds to the 16:9 frame (card-morph anchor)
+      gsap.set("#tl", { transformOrigin: "960px 664px" });
+      tl.to("#tl", { scale: 0.465, y: 11, opacity: 0, filter: "blur(12px)", duration: 0.6, ease: "power2.in" }, 8.85);
+      tl.to("#morph", { opacity: 1, duration: 0.15, ease: "none" }, 8.85);
+      tl.to("#morph", { attr: { x: 600, y: 472.5, width: 720, height: 405, rx: 18 }, duration: 0.65, ease: "power3.inOut" }, 8.9);
+      showLabel("lbl4", 9.4); // the out node — held through the tail as the closing
+      // the real frame decelerates in over the outline; the outline hands off
+      tl.fromTo("#f169", { ...fromBirth("f169"), opacity: 0, filter: "blur(8px)" }, { ...fromBirth("f169"), opacity: 1, filter: "blur(0px)", duration: 0.35, ease: "power2.out" }, 9.45);
+      tl.to("#morph", { opacity: 0, duration: 0.25, ease: "power1.out" }, 9.6);
+      // it fills with the settled schematic
+      tl.fromTo("#f169 .fs-bar", { opacity: 0 }, { opacity: (i) => (i === 0 ? 0.55 : 0.3), duration: 0.4, stagger: 0.08, ease: "power2.out" }, 9.62);
+      tl.fromTo("#f169 .fs-rail", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.5, ease: "power1.inOut", autoRound: false }, 9.68);
+      tl.fromTo("#f169 .fs-node", { opacity: 0, scale: 0.4, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, stagger: 0.07, ease: "power2.out" }, 9.75);
+      tl.fromTo("#f169 .fs-tok", { opacity: 0, scale: 0.4, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "power2.out" }, 10.1);
+
+      // ===== BEAT 5 — Variants (10.4–12.0): the frame duplicates into a square and a portrait =====
+      tl.to("#f169", { x: 0, y: 0, duration: 0.85, ease: "power3.inOut" }, 10.45);
+      ["f11", "f916"].forEach((id, i) =>
+        tl.fromTo("#" + id, { ...fromBirth(id), scale: 0.55, opacity: 0, filter: "blur(8px)" },
+          { x: 0, y: 0, scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.8, ease: "power3.out" }, 10.55 + i * 0.1));
+      // each format's other-language twin slides out from behind it (EN + HE)
+      ["f169b", "f11b", "f916b"].forEach((id, i) =>
+        tl.fromTo("#" + id, { x: 0, y: 0, opacity: 0 }, { x: isHE ? -TWIN_OFF : TWIN_OFF, y: -TWIN_OFF, opacity: 0.5, duration: 0.5, ease: "power2.out" }, 10.95 + i * 0.07));
+
+      // ===== CAMERA — loop-continuous (identity at t=0 AND t=12), drift ≤ 1.5% =====
+      // Push gently INTO the approval peak (scale 1.0 → 1.015), hold, then settle
+      // back so the seam matches. Micro-drift overlays: integer sine cycles on both
+      // axes (1× X, 2× Y) so dx,dy return to 0 at the seam. scale AND drift are pure
+      // functions of timeline time — no reads of a sibling tween — so every
+      // seek/worker is identical.
+      const camEl = document.getElementById("camera");
+      const DUR = 12, PUSH = 0.015, DRIFT_AMP_X = 5, DRIFT_AMP_Y = 3;
+      const camEase = gsap.parseEase("power2.inOut");
+      const scaleAt = (t) => {
+        if (t <= 5.4) return 1.0;
+        if (t < 7.2) return 1.0 + PUSH * camEase((t - 5.4) / 1.8);
+        if (t <= 8.9) return 1.0 + PUSH;
+        if (t < 11.5) return 1.0 + PUSH - PUSH * camEase((t - 8.9) / 2.6);
+        return 1.0;
+      };
+      const drift = { p: 0 };
+      tl.to(drift, {
+        p: 1, duration: DUR, ease: "none",
+        onUpdate: () => {
+          const t = drift.p * DUR;
+          const ddx = Math.sin(drift.p * Math.PI * 2) * DRIFT_AMP_X;
+          const ddy = Math.sin(drift.p * Math.PI * 4) * DRIFT_AMP_Y;
+          camEl.style.transform = `scale(${scaleAt(t)}) translate(${ddx}px, ${ddy}px)`;
+        },
+      }, 0);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["root"] = tl;
+    </script>
+  </body>
+</html>
