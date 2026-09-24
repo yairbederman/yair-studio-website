@@ -85,7 +85,7 @@ export function GET() {
               letterSpacing: -0.5,
             }}
           >
-            AI systems for real business workflows
+            The AI department your office hires
           </div>
         </div>
 

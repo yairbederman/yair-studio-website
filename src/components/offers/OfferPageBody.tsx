@@ -17,8 +17,10 @@ import type { Locale } from "@/content/types";
  * example map → how → human → closing CTA — so the sequence lives once here
  * and each page file is a thin wrapper passing its locale-resolved content.
  *
- * Section ids are fixed (film/who/problems/build/example/how/human): they are
- * stable in-page anchors and unique per page.
+ * Section ids are fixed (film/who/problems/build/example/case-study/how/data/
+ * pricing/content/human): they are stable in-page anchors and unique per
+ * page. `content` is a redirect target (the retired content-engine routes
+ * land on it) — never rename it.
  */
 export default function OfferPageBody({
   content,
@@ -51,6 +53,7 @@ export default function OfferPageBody({
             filmName={c.film.filmName}
             controls={shellContent(locale).filmControls}
             intro={c.film.intro}
+            mobile={c.film.mobile}
           />
         </OfferSection>
       ) : null}
@@ -107,6 +110,40 @@ export default function OfferPageBody({
         <OfferSection id="pricing" title={c.pricing.title} intro={c.pricing.intro}>
           <OfferCardGrid items={c.pricing.items} />
           {c.pricing.note ? <p className="pricing-note">{c.pricing.note}</p> : null}
+        </OfferSection>
+      ) : null}
+
+      {c.included ? (
+        <OfferSection
+          id="content"
+          title={c.included.title}
+          intro={c.included.intro}
+        >
+          <OfferCardGrid items={c.included.items} />
+          {c.included.film ? (
+            /* Poster-first, click-to-play: one autoplaying film per page. */
+            <ProcessFilm
+              webm={c.included.film.webm}
+              mp4={c.included.film.mp4}
+              poster={c.included.film.poster}
+              caption={c.included.film.caption}
+              filmName={c.included.film.filmName}
+              controls={shellContent(locale).filmControls}
+              mobile={c.included.film.mobile}
+              autoplay={false}
+            />
+          ) : null}
+          {c.included.proofLink ? (
+            <p className="included-proof">
+              <a
+                href={c.included.proofLink.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {c.included.proofLink.label}
+              </a>
+            </p>
+          ) : null}
         </OfferSection>
       ) : null}
 

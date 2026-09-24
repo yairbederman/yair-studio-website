@@ -9,9 +9,10 @@ import type { CopyEmailLabels } from "@/components/CopyEmail";
  * components (SiteHeader / SiteFooter) with locale-appropriate strings
  * and locale-prefixed routes.
  *
- * Also the single source for the site-wide workflow CTA and WhatsApp CTA:
- * homepage, offer, and contact surfaces consume the same locale-resolved
- * labels and destinations instead of restating them.
+ * Also the single source for the site-wide scoping-call CTA (`workflowCta`,
+ * the first rung of the ladder) and the WhatsApp CTA: homepage, offer,
+ * capability, and contact surfaces consume the same locale-resolved labels
+ * and destinations instead of restating them.
  */
 
 export type ShellContent = {
@@ -41,17 +42,18 @@ const en: ShellContent = {
   nav: {
     ariaLabel: "Primary",
     links: [
-      { label: "Workflows", href: "/workflows" },
-      { label: "Offers", href: "/offers" },
+      { label: "Studio", href: "/studio" },
+      { label: "Services", href: "/offers" },
       { label: "About", href: "/about" },
       { label: "Contact", href: "/contact" },
     ],
   },
   footer: {
-    tag: "AI systems for real business workflows",
+    tag: "The AI department your office hires",
     ariaLabel: "Footer",
     links: [
-      { label: "Offers", href: "/offers" },
+      { label: "Studio", href: "/studio" },
+      { label: "Services", href: "/offers" },
       { label: "About", href: "/about" },
       { label: "Contact", href: "/contact" },
     ],
@@ -64,10 +66,12 @@ const en: ShellContent = {
     announced: "Email address copied",
   },
   filmControls: { pause: "Pause", play: "Play" },
-  workflowCta: { label: "Send one stuck workflow", href: "/contact" },
+  workflowCta: { label: "Book a scoping call", href: "/contact" },
   whatsappCta: {
     label: "Message on WhatsApp",
-    href: waLink("Hi Yair, I'd like to map one workflow."),
+    href: waLink(
+      "Hi Yair, I'd like to book a scoping call about one workflow in my office.",
+    ),
   },
 };
 
@@ -77,16 +81,17 @@ const he: ShellContent = {
   nav: {
     ariaLabel: "ניווט ראשי",
     links: [
-      { label: "תהליכי עבודה", href: "/he/workflows" },
+      { label: "סטודיו", href: "/he/studio" },
       { label: "שירותים", href: "/he/offers" },
       { label: "אודות", href: "/he/about" },
       { label: "צור קשר", href: "/he/contact" },
     ],
   },
   footer: {
-    tag: "מערכות AI לתהליכי עבודה אמיתיים",
+    tag: "מחלקת ה-AI שהמשרד שלכם שוכר",
     ariaLabel: "קישורים בתחתית",
     links: [
+      { label: "סטודיו", href: "/he/studio" },
       { label: "שירותים", href: "/he/offers" },
       { label: "אודות", href: "/he/about" },
       { label: "צור קשר", href: "/he/contact" },
@@ -100,10 +105,10 @@ const he: ShellContent = {
     announced: "כתובת המייל הועתקה",
   },
   filmControls: { pause: "השהיה", play: "הפעלה" },
-  workflowCta: { label: "שלחו תהליך אחד שנתקע", href: "/he/contact" },
+  workflowCta: { label: "לקבוע שיחת אפיון", href: "/he/contact" },
   whatsappCta: {
     label: "שלחו בוואטסאפ",
-    href: waLink("היי יאיר, יש לי תהליך אחד שמעצבן את העסק. אשמח למפות אותו."),
+    href: waLink("היי יאיר, אשמח לקבוע שיחת אפיון על תהליך אחד במשרד."),
   },
 };
 

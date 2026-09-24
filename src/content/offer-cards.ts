@@ -21,28 +21,16 @@ type CardStrings = { title: string; cta: string; summary: string };
 /** Hebrew card strings per offer key. */
 const HE_CARDS: Record<string, CardStrings> = {
   "ai-office-assistant": {
-    title: "עוזר AI מנוהל למשרד",
-    cta: "לראות את העוזר",
+    title: "משרד AI מנוהל",
+    cta: "לראות את המשרד המנוהל",
     summary:
-      "תדריך בוקר, מיון מיילים, תהליכי מסמכים ומעקב, כשירות מנוהל בסביבה פרטית של המשרד שלכם.",
+      "הסטודיו מריץ את העבודה החוזרת של המשרד, תדריך בוקר, מיון מיילים, תהליכי מסמכים ומעקב, בסביבה פרטית של המשרד, כשהאנשים שלכם מאשרים את מה שחשוב. הקמה חד־פעמית ועלות חודשית.",
   },
   "ai-workflow-sprint": {
     title: "ספרינט תהליך AI",
     cta: "לראות את הספרינט",
     summary:
       "תהליך תקוע אחד ממופה מקצה לקצה, ואז שלוש אוטומציות ממוקדות במחיר קבוע. הדרך המהירה להתחיל.",
-  },
-  "linkedin-content-engine": {
-    title: "מנוע תוכן ללינקדאין",
-    cta: "לראות את המנוע",
-    summary:
-      "מערך מנוהל שהופך חומר אמיתי שלכם לנוכחות קבועה בלינקדאין, ומפרסם רק אחרי אישור שלכם.",
-  },
-  "ai-enablement": {
-    title: "סדנאות הטמעת AI",
-    cta: "לראות את הסדנאות",
-    summary:
-      "סדנאות מעשיות שמקנות לצוותי פיתוח ומו״פ שליטה בקידוד בעזרת AI וב-agent workflows, על הקוד שלהם.",
   },
 };
 
@@ -76,7 +64,7 @@ export function offerCards(locale: Locale): readonly OfferCard[] {
 /**
  * Resolve one LIVE offer's localized card by key — the single source for any
  * surface that links an offer outside the card grid (homepage hero, the
- * /offers decision router). Throws at module init on a missing or href-less
+ * commitment ladder). Throws at module init on a missing or href-less
  * key, so a renamed offer fails the build instead of shipping a dead link.
  */
 export function offerCard(

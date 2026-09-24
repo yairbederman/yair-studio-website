@@ -4,17 +4,17 @@ import type { Locale } from "@/content/types";
 import type { OfferPageContent } from "./types";
 
 /**
- * AI Workflow Sprint — fixed-price entry offer. Merges the former
- * AI Workflow Audit and AI Operations Pilot into one engagement:
+ * AI Workflow Sprint — the fixed-price rung 02 of the ladder. Merges the
+ * former AI Workflow Audit and AI Operations Pilot into one engagement:
  * map one workflow, then build three working automations for it.
- * The natural on-ramp to the Managed AI Office Assistant.
+ * The natural on-ramp to the Managed AI Office.
  */
 
 const en: OfferPageContent = {
   hero: {
     eyebrow: "Fixed scope, fixed price",
     title: "One workflow mapped, three automations built",
-    lead: "A sprint for a small team with one stuck process: we map how the workflow really runs, sort what should be automatic, AI-assisted, and human, then build three focused automations that remove its worst friction. No new platform, no retainer, no infrastructure to adopt.",
+    lead: "A sprint for a small office or team with one stuck process: we map how the workflow really runs, sort what should be automatic, AI-assisted, and human, then build three focused automations that remove its worst friction. No new platform, no retainer, no infrastructure to adopt.",
     ctaLabel: shellContent("en").workflowCta.label,
     ctaHref: shellContent("en").workflowCta.href,
     secondaryCta: { label: "See what you get", href: "#build" },
@@ -174,7 +174,7 @@ const en: OfferPageContent = {
   },
   cta: {
     heading: "Start with the workflow that annoys you most.",
-    body: "Describe where it starts, which tools it crosses, and where it waits or falls through. We map it first, then agree the fixed scope before anything is built.",
+    body: "Bring it to the scoping call: where it starts, which tools it crosses, and where it waits or falls through. We map it first, then agree the fixed scope before anything is built.",
     ctaLabel: shellContent("en").workflowCta.label,
     ctaHref: shellContent("en").workflowCta.href,
   },
@@ -185,7 +185,7 @@ const he: OfferPageContent = {
   hero: {
     eyebrow: "היקף קבוע, מחיר קבוע",
     title: "תהליך אחד ממופה, שלוש אוטומציות בנויות",
-    lead: "ספרינט לצוות קטן עם תהליך אחד שנתקע: ממפים איך התהליך באמת רץ, ממיינים מה צריך להיות אוטומטי, מה בעזרת AI ומה אנושי, ואז בונים שלוש אוטומציות ממוקדות שמורידות את החיכוך הכי כואב. בלי פלטפורמה חדשה, בלי ריטיינר, בלי תשתית לאמץ.",
+    lead: "ספרינט למשרד או לצוות קטן עם תהליך אחד שנתקע: ממפים איך התהליך באמת רץ, ממיינים מה צריך להיות אוטומטי, מה בעזרת AI ומה אנושי, ואז בונים שלוש אוטומציות ממוקדות שמורידות את החיכוך הכי כואב. בלי פלטפורמה חדשה, בלי ריטיינר, בלי תשתית לאמץ.",
     ctaLabel: shellContent("he").workflowCta.label,
     ctaHref: shellContent("he").workflowCta.href,
     secondaryCta: { label: "לראות מה מקבלים", href: "#build" },
@@ -345,7 +345,7 @@ const he: OfferPageContent = {
   },
   cta: {
     heading: "מתחילים מהתהליך שהכי מעצבן אתכם.",
-    body: "ספרו איפה הוא מתחיל, בין אילו כלים הוא עובר ואיפה הוא מחכה או נופל. קודם ממפים, ואז סוגרים היקף קבוע לפני שבונים.",
+    body: "מביאים אותו לשיחת האפיון: איפה הוא מתחיל, בין אילו כלים הוא עובר ואיפה הוא מחכה או נופל. קודם ממפים, ואז סוגרים היקף קבוע לפני שבונים.",
     ctaLabel: shellContent("he").workflowCta.label,
     ctaHref: shellContent("he").workflowCta.href,
   },

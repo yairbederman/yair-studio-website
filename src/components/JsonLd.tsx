@@ -59,7 +59,7 @@ export default function JsonLd() {
         founder: { "@id": `${SITE_URL}/#founder` },
         hasOfferCatalog: {
           "@type": "OfferCatalog",
-          name: "AI workflow systems",
+          name: "Services",
           itemListElement: SERVICES.map((name) => ({
             "@type": "Offer",
             itemOffered: { "@type": "Service", name },

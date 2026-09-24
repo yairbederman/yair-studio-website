@@ -12,7 +12,7 @@ import type { ProofContent } from "@/content/proof";
  * every ProofCards render is disclosure-paired at compile time — the honesty
  * guard is structural, not caller discipline.
  *
- * The homepage uses the compact variant inside ProofSection.
+ * /about renders the full variant; the compact variant is kept for reuse.
  */
 export default function ProofCards({
   cases,

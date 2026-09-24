@@ -1,5 +1,10 @@
 # DESIGN — Meeting Follow-up process film
 
+> **Retired (2026-09-24).** The `/workflows` page this film served was folded into
+> `/studio/process-optimization`, which reuses `scattered-to-mapped`. The assets
+> `public/videos/meeting-follow-up-workflow.*` are scheduled for deletion in the film phase; the
+> composition is kept for history.
+
 A ~12s looping film that shows one real workflow running end to end. It demonstrates
 the method; it does not decorate. Built as a HyperFrames composition (GSAP timeline),
 rendered to transparent video for the `/workflows` page.

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { OFFERS } from "@/lib/offers";
+import { CAPABILITIES } from "@/lib/capabilities";
 
 /**
  * Central site constants + canonical page list + metadata helper.
@@ -41,7 +42,7 @@ export const SITE_URL = resolveSiteUrl();
 export const SITE_NAME = "y[AI]r studio";
 export const SITE_ALT_NAME = "Yair Studio";
 export const SITE_DESCRIPTION =
-  "A managed AI office assistant for small professional offices, plus fixed-price AI workflow sprints, a LinkedIn content engine, and AI enablement workshops, with human approval at the decision points.";
+  "A managed AI office for small professional offices, a fixed-price AI workflow sprint, and a free scoping call to start, with a person approving what matters.";
 
 /**
  * Public contact channel (personal Gmail, confirmed for public use). Single
@@ -88,14 +89,18 @@ export const LINKEDIN_URL = "https://www.linkedin.com/in/yair-bederman/";
  */
 export const OG_IMAGE_PATH = "/opengraph-image";
 export const OG_IMAGE_ALT =
-  "y[AI]r studio · AI systems for real business workflows";
+  "y[AI]r studio · The AI department your office hires";
 
 /**
- * Canonical offer taxonomy (schema.org Service names). Derived from the single
- * OFFERS list (src/lib/offers.ts) so the offer names live in exactly one place.
- * Consumed by JsonLd.tsx and llms.txt/route.ts.
+ * Canonical service taxonomy (schema.org Service names): the two paid rungs
+ * (src/lib/offers.ts) followed by the five capabilities
+ * (src/lib/capabilities.ts), so every service name lives in exactly one
+ * place. Consumed by JsonLd.tsx and llms.txt/route.ts.
  */
-export const SERVICES: readonly string[] = OFFERS.map((o) => o.serviceName);
+export const SERVICES: readonly string[] = [
+  ...OFFERS.map((o) => o.serviceName),
+  ...CAPABILITIES.map((c) => c.serviceName),
+];
 
 type Locale = "en_US" | "he_IL";
 
@@ -124,44 +129,62 @@ export { localePaths } from "@/lib/locale-paths";
 const EN_PAGES: PageDef[] = [
   {
     path: "/",
-    absoluteTitle: "y[AI]r studio · AI systems for real business workflows",
+    absoluteTitle: "y[AI]r studio · The AI department your office hires",
     description: SITE_DESCRIPTION,
   },
   {
-    path: "/workflows",
-    title: "Workflows",
+    path: "/studio",
+    title: "Studio",
     description:
-      "y[AI]r studio's approach to business workflows: mapping where work gets stuck and turning scattered inputs into clear, AI-assisted next actions.",
+      "What y[AI]r studio makes for small professional offices and business teams: agentic systems, process optimization, websites, films, and AI enablement.",
+  },
+  {
+    path: "/studio/agentic-systems",
+    title: "Agentic systems",
+    description:
+      "Agentic systems from y[AI]r studio: AI agents that run recurring office work, intake, triage, drafts, and follow-up, inside the office's own tools, with a person approving what matters.",
+  },
+  {
+    path: "/studio/process-optimization",
+    title: "Process optimization",
+    description:
+      "Process optimization from y[AI]r studio: one business process mapped end to end, sorted into automatic, AI-assisted, and human work, and its worst friction removed.",
+  },
+  {
+    path: "/studio/websites",
+    title: "Websites",
+    description:
+      "Websites from y[AI]r studio: designed, fast, bilingual (Hebrew and English) sites for a business that sells a service, with the studio's own films as the motion.",
+  },
+  {
+    path: "/studio/films",
+    title: "Films",
+    description:
+      "Films from y[AI]r studio: short designed films rendered from code, with no synthetic faces or voices, for a site, LinkedIn, or a pitch.",
+  },
+  {
+    path: "/studio/ai-enablement",
+    title: "AI enablement",
+    description:
+      "AI enablement from y[AI]r studio: hands-on sessions where a business team learns to run AI on its own recurring work, with the approval habits that keep it safe.",
   },
   {
     path: "/offers",
-    title: "Offers",
+    title: "Services",
     description:
-      "Four services from y[AI]r studio: a managed AI office assistant, a fixed-price AI workflow sprint, a LinkedIn content engine, and AI enablement workshops for engineering teams, all with human approval on the decisions that matter.",
+      "Three ways to start with y[AI]r studio, by commitment: a free scoping call, a fixed-price AI workflow sprint, and a managed AI office, all with a person approving what matters.",
   },
   {
     path: "/offers/ai-office-assistant",
-    title: "Managed AI Office Assistant",
+    title: "Managed AI Office",
     description:
-      "A managed AI office assistant from y[AI]r studio: morning briefings, email triage, document workflows, and follow-up tracking, running in the office's own private environment with human approval on everything that matters. Setup plus monthly retainer.",
+      "A managed AI office from y[AI]r studio: morning briefings, email triage, document workflows, and follow-up tracking, running in the office's own private environment with a person approving everything that matters. One-time setup plus a monthly retainer.",
   },
   {
     path: "/offers/ai-workflow-sprint",
     title: "AI Workflow Sprint",
     description:
       "An AI workflow sprint from y[AI]r studio: one business process mapped end to end, sorted into automatic, AI-assisted, and human work, and three focused automations built at a fixed price.",
-  },
-  {
-    path: "/offers/linkedin-content-engine",
-    title: "LinkedIn Content Engine",
-    description:
-      "A managed LinkedIn content engine from y[AI]r studio: drafts written in the client's voice from their real material, held in one review queue, and published only after human approval.",
-  },
-  {
-    path: "/offers/ai-enablement",
-    title: "AI Enablement Workshops",
-    description:
-      "AI enablement workshops from y[AI]r studio: hands-on sessions that teach R&D and engineering teams AI-assisted coding and agent workflows on their own codebase, with a playbook that stays.",
   },
   {
     path: "/about",
@@ -173,7 +196,7 @@ const EN_PAGES: PageDef[] = [
     path: "/contact",
     title: "Contact",
     description:
-      "Send y[AI]r studio one stuck workflow from your office or team, then pick the starting point that fits: a fixed-price sprint or the managed office assistant.",
+      "Book a free scoping call with y[AI]r studio: send one workflow from your office, then pick the rung that fits, a fixed-price sprint or the managed AI office.",
   },
 ];
 
@@ -187,39 +210,54 @@ const EN_PAGES: PageDef[] = [
 const HE_PAGE_STRINGS: Record<string, { title: string; description: string }> =
   {
     "/": {
-      title: "עוזר AI מנוהל לעבודה האמיתית של המשרד",
+      title: "מחלקת ה-AI שהמשרד שלכם שוכר",
       description:
-        "y[AI]r studio בעברית: עוזר AI מנוהל למשרדים מקצועיים קטנים, ספרינט תהליך במחיר קבוע, מנוע תוכן ללינקדאין וסדנאות הטמעת AI, עם אישור אנושי בנקודות ההחלטה.",
+        "y[AI]r studio בעברית: משרד AI מנוהל למשרדים מקצועיים קטנים, ספרינט תהליך AI במחיר קבוע, ושיחת אפיון חינם להתחלה, כשאדם מאשר את מה שחשוב.",
     },
-    "/workflows": {
-      title: "תהליכי עבודה",
+    "/studio": {
+      title: "סטודיו",
       description:
-        "הגישה של y[AI]r studio לתהליכי עבודה: ממפים איפה העבודה נתקעת והופכים קלט מפוזר לצעדים ברורים בעזרת AI.",
+        "מה y[AI]r studio בונה למשרדים מקצועיים קטנים ולצוותים בעסקים: מערכות סוכני AI, ייעול תהליכים, אתרים, סרטונים והטמעת AI לצוות.",
+    },
+    "/studio/agentic-systems": {
+      title: "מערכות סוכני AI",
+      description:
+        "מערכות סוכני AI מבית y[AI]r studio: סוכנים שמריצים את העבודה החוזרת של המשרד, קליטת פניות, מיון, טיוטות ומעקב, בתוך הכלים של המשרד עצמו, כשאדם מאשר את מה שחשוב.",
+    },
+    "/studio/process-optimization": {
+      title: "ייעול תהליכים",
+      description:
+        "ייעול תהליכים מבית y[AI]r studio: תהליך עסקי אחד ממופה מקצה לקצה, ממוין לאוטומטי, בעזרת AI ואנושי, והחיכוך הכי גדול בו מוסר.",
+    },
+    "/studio/websites": {
+      title: "אתרים",
+      description:
+        "אתרים מבית y[AI]r studio: אתרים מעוצבים, מהירים ודו־לשוניים (עברית ואנגלית) לעסק שמוכר שירות, עם הסרטונים של הסטודיו כתנועה.",
+    },
+    "/studio/films": {
+      title: "סרטונים",
+      description:
+        "סרטונים מבית y[AI]r studio: סרטונים קצרים ומעוצבים שנבנים מקוד, בלי פנים או קולות סינתטיים, לאתר, ללינקדאין או לפיץ'.",
+    },
+    "/studio/ai-enablement": {
+      title: "הטמעת AI לצוות",
+      description:
+        "הטמעת AI לצוות מבית y[AI]r studio: מפגשים מעשיים שבהם צוות העסק לומד להריץ AI על העבודה החוזרת שלו, עם הרגלי האישור ששומרים על זה בטוח.",
     },
     "/offers": {
       title: "שירותים",
       description:
-        "ארבעה שירותים מבית y[AI]r studio: עוזר AI מנוהל למשרד, ספרינט תהליך במחיר קבוע, מנוע תוכן ללינקדאין וסדנאות הטמעת AI לצוותי פיתוח, עם אישור אנושי על ההחלטות שחשובות.",
+        "שלוש דרכים להתחיל עם y[AI]r studio, לפי רמת ההתחייבות: שיחת אפיון חינם, ספרינט תהליך AI במחיר קבוע ומשרד AI מנוהל, כשבכולן אדם מאשר את מה שחשוב.",
     },
     "/offers/ai-office-assistant": {
-      title: "עוזר AI מנוהל למשרד",
+      title: "משרד AI מנוהל",
       description:
-        "עוזר AI מנוהל למשרד מבית y[AI]r studio: תדריך בוקר, מיון מיילים, תהליכי מסמכים ומעקב, בסביבה פרטית של המשרד ועם אישור אנושי על כל מה שחשוב. הקמה ועלות חודשית.",
+        "משרד AI מנוהל מבית y[AI]r studio: תדריך בוקר, מיון מיילים, תהליכי מסמכים ומעקב, בסביבה פרטית של המשרד ועם אישור אנושי על כל מה שחשוב. הקמה חד־פעמית ועלות חודשית.",
     },
     "/offers/ai-workflow-sprint": {
       title: "ספרינט תהליך AI",
       description:
         "ספרינט תהליך AI של y[AI]r studio: תהליך עסקי אחד ממופה מקצה לקצה, ממוין לאוטומטי, בעזרת AI ואנושי, ושלוש אוטומציות ממוקדות נבנות במחיר קבוע.",
-    },
-    "/offers/linkedin-content-engine": {
-      title: "מנוע תוכן ללינקדאין",
-      description:
-        "מנוע תוכן מנוהל ללינקדאין מבית y[AI]r studio: טיוטות בקול של הלקוח מתוך חומר אמיתי שלו, בתור אישורים אחד, ומתפרסמות רק אחרי אישור אנושי.",
-    },
-    "/offers/ai-enablement": {
-      title: "סדנאות הטמעת AI",
-      description:
-        "סדנאות הטמעת AI של y[AI]r studio: מפגשים מעשיים שמלמדים צוותי פיתוח ומו״פ קידוד בעזרת AI ו-agent workflows על הקוד שלהם, עם פלייבוק שנשאר אצל הצוות.",
     },
     "/about": {
       title: "אודות",
@@ -229,7 +267,7 @@ const HE_PAGE_STRINGS: Record<string, { title: string; description: string }> =
     "/contact": {
       title: "צור קשר",
       description:
-        "שולחים ל־y[AI]r studio תהליך אחד שנתקע במשרד או בצוות, ואז בוחרים את נקודת ההתחלה שמתאימה: ספרינט במחיר קבוע או העוזר המנוהל.",
+        "קובעים שיחת אפיון חינם עם y[AI]r studio: שולחים תהליך אחד מהמשרד, ואז בוחרים את השלב שמתאים, ספרינט במחיר קבוע או משרד AI מנוהל.",
     },
   };
 

@@ -19,10 +19,11 @@ import type { Locale } from "@/content/types";
  * labels are localized (via `locale`).
  *
  * The schematic on the right is the restrained CSS-only process motif rendered
- * via <WorkflowMap decorative> (aria-hidden, hidden on mobile): scattered inputs
- * flow through a mapped workflow into clear next actions, with a copper
- * human-approval checkpoint that makes the human-in-the-loop principle visible.
- * Copy + CTA destinations come from the locale content model.
+ * via <WorkflowMap decorative> (aria-hidden; it renders on every viewport and
+ * stacks below the CTAs on mobile): scattered inputs flow through a mapped
+ * workflow into clear next actions, with a copper human-approval checkpoint
+ * that makes the human-in-the-loop principle visible. Copy + CTA destinations
+ * come from the locale content model.
  */
 export default function HeroSection({
   content,

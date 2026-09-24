@@ -3,16 +3,25 @@ import { localeAccessor } from "@/content/types";
 import { shellContent } from "@/content/shell";
 import type { CardItem, Cta, Locale, StepItem } from "@/content/types";
 
-/** /contact page content — typed and locale-keyed. */
+/**
+ * /contact page content — typed and locale-keyed. The page is the scoping
+ * call (rung 01 of the ladder): the hero title IS the site-wide CTA label,
+ * and `next.steps` say what happens after you book.
+ *
+ * Channel order is locale-native: EN leads with email (mailto) and offers
+ * WhatsApp as the ghost button; /he leads with WhatsApp — the local norm —
+ * and email is the ghost button. The content decides; ContactPageBody only
+ * renders primary/secondary.
+ */
 
 export type ContactContent = {
   hero: {
     title: string;
     lead: string;
-    /** Primary hero action — the email CTA (email stays the primary path). */
-    emailCta: Cta;
-    /** Secondary channel — WhatsApp, ghost button, opens in a new tab. */
-    whatsappCta: Cta;
+    /** Primary hero action — email in EN, WhatsApp on /he. */
+    primaryCta: Cta;
+    /** Secondary channel — ghost button; the other of the two. */
+    secondaryCta: Cta;
   };
   next: { title: string; steps: readonly StepItem[] };
   send: { title: string; intro: string; items: readonly CardItem[] };
@@ -27,42 +36,45 @@ export type ContactContent = {
   };
 };
 
-/** The WhatsApp CTA — single-sourced from the shell content (shared with the
-    homepage final band). */
+/** The scoping-call and WhatsApp CTAs — single-sourced from the shell content
+    (shared with the homepage hero and final band). */
 const workflowCtaEn: Cta = shellContent("en").workflowCta;
 const whatsappCtaEn: Cta = shellContent("en").whatsappCta;
+/** The email channel: the scoping-call label, pointed at the mailto. */
+const emailCtaEn: Cta = { ...workflowCtaEn, href: CONTACT_MAILTO };
 
 const en: ContactContent = {
   hero: {
     title: workflowCtaEn.label,
-    lead: "If you run an owner-led service business or professional office and work keeps stalling between email, calendar, documents, meetings, and follow-up, send the workflow in a few lines. Hebrew or English is fine.",
-    emailCta: { ...workflowCtaEn, href: CONTACT_MAILTO },
-    whatsappCta: whatsappCtaEn,
+    lead: "A free 20-minute call about one workflow in your office. Write in Hebrew or English; either channel below reaches me directly.",
+    primaryCta: emailCtaEn,
+    secondaryCta: whatsappCtaEn,
   },
   next: {
-    title: "What happens after you send it",
+    title: "What happens after you book",
     steps: [
       {
-        title: "Send a short note",
-        desc: "A few lines about the workflow and where it slows down. No formal brief needed.",
+        title: "A 20-minute call",
+        desc: "We talk through one workflow: where it starts, which tools it crosses, and where it waits or falls through.",
       },
       {
-        title: "Map the current workflow",
-        desc: "We focus on one real process and document its steps, owners, inputs, handoffs, and approval points.",
+        title: "A written read",
+        desc: "You get a short written read of the workflow: how it runs today, where it leaks, and what should stay with a person.",
       },
       {
-        title: "Separate the map from the build",
-        desc: "A workflow map can stand on its own. Building is proposed only when the process is ready for it.",
+        title: "Which rung fits",
+        desc: "The read names the rung that fits and why: a fixed-price sprint, the managed office, or nothing yet.",
       },
       {
-        title: "Choose the next useful step",
-        desc: "You get a clear recommendation: stop with the map, run a fixed-price sprint, or start a managed-assistant setup.",
+        title: "You choose",
+        desc: "Stop with the read, run the sprint, or start the managed office. No obligation either way.",
+        human: true,
       },
     ],
   },
   send: {
-    title: "What to send",
-    intro: "A few lines is enough to start. The more concrete, the better.",
+    title: "What helps before the call",
+    intro: "A few lines is enough. The more concrete, the better.",
     items: [
       {
         title: "The workflow",
@@ -90,10 +102,10 @@ const en: ContactContent = {
     title: "Good first workflows",
     intro: "Processes that map cleanly and tend to pay off early.",
     items: [
-      "Meeting notes into tasks and follow-up",
+      "Client intake and missing documents",
       "Email and calendar triage",
-      "An overdue or stuck-work dashboard",
-      "A content or ad approval loop",
+      "Meeting notes into tasks and follow-up",
+      "An overdue or stuck-work view",
       "A document-heavy office workflow",
     ],
   },
@@ -107,56 +119,57 @@ const en: ContactContent = {
       },
       {
         title: "You set the priorities",
-        desc: "What gets built, and in what order, is your call. The map informs it; you decide.",
+        desc: "What gets built, and in what order, is your call. The read informs it; you decide.",
       },
     ],
   },
   cta: {
-    heading: "One stuck workflow is enough to start.",
-    body: "Describe where the work begins, which tools it crosses, and where it waits or falls through. You write directly to the person who maps the process and builds the system.",
-    ctaLabel: workflowCtaEn.label,
-    ctaHref: CONTACT_MAILTO,
+    heading: "One workflow is enough to start.",
+    body: "Book the call by email or WhatsApp. You write directly to the person who runs the call, maps the workflow, and builds the system.",
+    ctaLabel: emailCtaEn.label,
+    ctaHref: emailCtaEn.href,
     secondaryCta: whatsappCtaEn,
   },
 };
 
-/** The Hebrew WhatsApp CTA — single-sourced from the shell content. */
+/** The Hebrew CTAs — single-sourced from the shell content; WhatsApp leads. */
 const workflowCtaHe: Cta = shellContent("he").workflowCta;
 const whatsappCtaHe: Cta = shellContent("he").whatsappCta;
+const emailCtaHe: Cta = { ...workflowCtaHe, href: CONTACT_MAILTO };
 
 /** Hebrew (RTL) contact content — hebrew-quality drafted. */
 const he: ContactContent = {
   hero: {
     title: workflowCtaHe.label,
-    lead: "אם אתם מנהלים עסק שירותים בבעלותכם או משרד מקצועי, והעבודה נתקעת בין מייל, יומן, מסמכים, פגישות ומעקב, שלחו את התהליך בכמה שורות. אפשר בעברית או באנגלית.",
-    emailCta: { ...workflowCtaHe, href: CONTACT_MAILTO },
-    whatsappCta: whatsappCtaHe,
+    lead: "שיחה חינם של 20 דקות על תהליך אחד במשרד שלכם. כותבים בעברית או באנגלית; שני הערוצים למטה מגיעים ישירות אליי.",
+    primaryCta: whatsappCtaHe,
+    secondaryCta: emailCtaHe,
   },
   next: {
-    title: "מה קורה אחרי ששולחים",
+    title: "מה קורה אחרי שקובעים",
     steps: [
       {
-        title: "שולחים כמה שורות",
-        desc: "כמה משפטים על התהליך ואיפה הוא נתקע. בלי בריף רשמי.",
+        title: "שיחה של 20 דקות",
+        desc: "עוברים יחד על תהליך אחד: איפה הוא מתחיל, בין אילו כלים הוא עובר, ואיפה הוא מחכה או נופל.",
       },
       {
-        title: "ממפים את התהליך הקיים",
-        desc: "מתמקדים בתהליך אמיתי אחד ומתעדים את השלבים, האחראים, הקלט, ההעברות ונקודות האישור.",
+        title: "סיכום כתוב",
+        desc: "מקבלים סיכום כתוב וקצר של התהליך: איך הוא רץ היום, איפה הוא דולף, ומה צריך להישאר אצל אדם.",
       },
       {
-        title: "מפרידים בין המפה לבנייה",
-        desc: "מפת תהליך יכולה לעמוד בפני עצמה. בנייה מוצעת רק כשהתהליך בשל לזה.",
+        title: "איזה שלב מתאים",
+        desc: "הסיכום אומר איזה שלב מתאים ולמה: ספרינט במחיר קבוע, המשרד המנוהל, או בינתיים כלום.",
       },
       {
-        title: "בוחרים את הצעד השימושי הבא",
-        desc: "מקבלים המלצה ברורה: לעצור עם המפה, לרוץ ספרינט במחיר קבוע, או להתחיל הקמה של העוזר המנוהל.",
+        title: "אתם בוחרים",
+        desc: "לעצור עם הסיכום, לרוץ ספרינט, או להתחיל את המשרד המנוהל. בלי התחייבות לשום כיוון.",
+        human: true,
       },
     ],
   },
   send: {
-    title: "מה מספיק לכתוב",
-    intro:
-      "אם יש לכם עוד דקה, הוסיפו איפה זה קורה, מי אחראי ומה תקוע.",
+    title: "מה עוזר לפני השיחה",
+    intro: "כמה שורות מספיקות. ככל שזה קונקרטי יותר, יותר טוב.",
     items: [
       {
         title: "התהליך",
@@ -181,8 +194,8 @@ const he: ContactContent = {
     ],
   },
   goodFirst: {
-    title: "מה אפשר לשלוח",
-    intro: "לא צריך להכין מסמך אפיון. שלחו דוגמה אחת מהעבודה האמיתית.",
+    title: "מה אפשר להביא לשיחה",
+    intro: "לא צריך להכין מסמך אפיון. דוגמה אחת מהעבודה האמיתית מספיקה.",
     items: [
       "ליד שלא חזרתם אליו בזמן",
       "הצעת מחיר שנשארה פתוחה",
@@ -202,16 +215,16 @@ const he: ContactContent = {
       },
       {
         title: "אתם קובעים את סדר העדיפויות",
-        desc: "מה נבנה, ובאיזה סדר, זו ההחלטה שלכם. המפה מזינה אותה; אתם מחליטים.",
+        desc: "מה נבנה, ובאיזה סדר, זו ההחלטה שלכם. הסיכום מזין אותה; אתם מחליטים.",
       },
     ],
   },
   cta: {
-    heading: "תהליך אחד שנתקע מספיק כדי להתחיל.",
-    body: "ספרו איפה העבודה מתחילה, בין אילו כלים היא עוברת ואיפה היא מחכה או נופלת. אתם כותבים ישירות לאדם שממפה את התהליך ובונה את המערכת.",
-    ctaLabel: workflowCtaHe.label,
-    ctaHref: CONTACT_MAILTO,
-    secondaryCta: whatsappCtaHe,
+    heading: "תהליך אחד מספיק כדי להתחיל.",
+    body: "קובעים את השיחה בוואטסאפ או במייל. אתם כותבים ישירות למי שמנהל את השיחה, ממפה את התהליך ובונה את המערכת.",
+    ctaLabel: whatsappCtaHe.label,
+    ctaHref: whatsappCtaHe.href,
+    secondaryCta: emailCtaHe,
   },
 };
 

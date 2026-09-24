@@ -14,7 +14,7 @@ export const rootMetadata: Metadata = {
     default: "y[AI]r studio",
     template: "%s · y[AI]r studio",
   },
-  description: "AI systems for real business workflows.",
+  description: "The AI department your office hires.",
   // Render shared links as a large card; Twitter derives its image from each
   // page's explicit Open Graph image.
   twitter: { card: "summary_large_image" },

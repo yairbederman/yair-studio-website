@@ -1,8 +1,14 @@
 import { localeAccessor } from "@/content/types";
 import { shellContent } from "@/content/shell";
+import { capabilityCards } from "@/content/capability-cards";
 import type { CardItem, Locale } from "@/content/types";
 
-/** /about page content — typed and locale-keyed. */
+/**
+ * /about page content — typed and locale-keyed. The "What I make" cards are
+ * the five capabilities, derived from capabilityCards(locale) so the titles
+ * and one-liners live in exactly one place (src/lib/capabilities.ts +
+ * src/content/capability-cards.ts).
+ */
 
 export type AboutContent = {
   hero: { title: string; lead: string };
@@ -18,38 +24,25 @@ export type AboutContent = {
   cta: { heading: string; body: string; ctaLabel: string; ctaHref: string };
 };
 
+/** The five capabilities as plain cards (title + one line). */
+const capabilityItems = (locale: Locale): readonly CardItem[] =>
+  capabilityCards(locale).map((c) => ({ title: c.title, desc: c.summary }));
+
 const en: AboutContent = {
   hero: {
-    title: "AI systems for real business workflows",
-    lead: "y[AI]r studio builds AI workflow systems for real business operations: the everyday processes a growing service business runs on. The work is practical, not a demo. Map the process first, then build only what earns its place, with people in control of the decisions that matter.",
+    title: "About y[AI]r studio",
+    lead: "y[AI]r studio runs the recurring work of small professional offices and builds what a service business needs around it: agents, mapped processes, websites, films, and hands-on AI sessions for the team. One person, not an agency, with your people approving what matters.",
   },
   build: {
-    title: "What I build",
-    intro: "Small systems built around how the work actually runs.",
-    items: [
-      {
-        title: "Workflow maps",
-        desc: "One real process drawn end to end: steps, owners, inputs, outputs, and where work gets stuck.",
-      },
-      {
-        title: "Internal AI assistants",
-        desc: "Practical assistants for meetings, tasks, email, knowledge search, reporting, and follow-up.",
-      },
-      {
-        title: "Dashboards & automation",
-        desc: "A connected view of what needs attention, with the right next action close at hand.",
-      },
-      {
-        title: "Approval-first systems",
-        desc: "Systems that draft and prepare the work, then wait for a human decision.",
-      },
-    ],
+    title: "What I make",
+    intro: "Five capabilities, each with its own page.",
+    items: capabilityItems("en"),
   },
   whoRuns: {
     title: "Who runs this",
     paragraphs: [
-      "I come from R&D and software leadership, where systems have to work beyond the demo: unclear requirements, messy inputs, real users, edge cases, and production constraints.",
-      "The work is especially useful for growing service businesses and professional offices where meetings, documents, email, deadlines, and follow-up all cross paths, often in Hebrew and English.",
+      "More than twenty years in software and R&D leadership: at Viber, from R&D project manager to team lead on a product used by hundreds of millions of people; then R&D Manager at Lognet. Since August 2024 I work independently as an AI systems architect, and y[AI]r studio is where that work lives.",
+      "The studio's work is for small professional offices and service businesses where meetings, documents, email, deadlines, and follow-up all cross paths, often in Hebrew and English. One system already runs today for a B2B law firm: marketing analytics and lead generation, anonymized here.",
     ],
   },
   how: {
@@ -66,11 +59,11 @@ const en: AboutContent = {
   },
   who: {
     title: "Who it's for",
-    body: "Growing service businesses, operators, founders, professional offices, and lean teams running real work across too many tools. Professional offices, including legal, document-heavy, and approval-driven teams, are a strong fit for this approach. The same system fits any service business whose workflows have outgrown manual coordination. The work runs in Hebrew and English, whichever the team actually uses day to day.",
+    body: "Owners and office managers of small professional offices, law first, and the teams of service businesses whose work has outgrown manual coordination: more requests, documents, deadlines, and follow-up than anyone can hold in their head. The work runs in Hebrew and English, whichever your office uses day to day.",
   },
   cta: {
-    heading: "Start with one real workflow.",
-    body: "Pick a process that slows things down. We map how it runs today before deciding what is worth building.",
+    heading: "Start with one workflow.",
+    body: "Book a free scoping call. We look at one process that costs your office time before deciding what is worth building.",
     ctaLabel: shellContent("en").workflowCta.label,
     ctaHref: shellContent("en").workflowCta.href,
   },
@@ -79,36 +72,19 @@ const en: AboutContent = {
 /** Hebrew (RTL) about content — hebrew-quality drafted. */
 const he: AboutContent = {
   hero: {
-    title: "מערכות AI לתהליכי עבודה אמיתיים",
-    lead: "y[AI]r studio בונה מערכות AI לתפעול עסקי אמיתי: התהליכים היומיומיים שעסק שירותים צומח רץ עליהם. העבודה פרקטית, לא דמו. קודם ממפים את התהליך, ואז בונים רק את מה שמצדיק את מקומו, עם אנשים בשליטה על ההחלטות שחשובות.",
+    title: "על y[AI]r studio",
+    lead: "y[AI]r studio מריץ את העבודה החוזרת של משרדים מקצועיים קטנים, ובונה סביבה את מה שעסק שירותים צריך: סוכנים, תהליכים ממופים, אתרים, סרטונים ומפגשי AI מעשיים לצוות. אדם אחד, לא סוכנות, כשהאנשים שלכם מאשרים את מה שחשוב.",
   },
   build: {
     title: "מה אני בונה",
-    intro: "מערכות קטנות סביב איך שהעבודה באמת רצה.",
-    items: [
-      {
-        title: "מפות תהליכים",
-        desc: "תהליך אמיתי אחד משורטט מקצה לקצה: שלבים, אחראים, קלט ופלט, ואיפה העבודה נתקעת.",
-      },
-      {
-        title: "עוזרי AI פנימיים",
-        desc: "עוזרים פרקטיים לפגישות, משימות, מייל, חיפוש ידע, דוחות ומעקב.",
-      },
-      {
-        title: "דשבורדים ואוטומציה",
-        desc: "תצוגה מחוברת של מה שדורש טיפול, עם הצעד הנכון הבא זמין מיד.",
-      },
-      {
-        title: "מערכות מבוססות אישור",
-        desc: "מערכות שמכינות את העבודה כטיוטה, ואז מחכות להחלטה אנושית.",
-      },
-    ],
+    intro: "חמש יכולות, לכל אחת עמוד משלה.",
+    items: capabilityItems("he"),
   },
   whoRuns: {
     title: "מי מאחורי הסטודיו",
     paragraphs: [
-      "אני מגיע ממו״פ ומהובלת פיתוח, שם מערכות צריכות לעבוד גם אחרי הדמו: דרישות לא ברורות, קלט מבולגן, משתמשים אמיתיים, מקרי קצה ואילוצי פרודקשן.",
-      "העבודה שימושית במיוחד לעסקי שירותים צומחים ולמשרדים מקצועיים, שבהם פגישות, מסמכים, מייל, מועדים ומעקב נפגשים, לא פעם בעברית ובאנגלית גם יחד.",
+      "יותר מעשרים שנה בתוכנה ובהובלת מו״פ: ב-Viber, ממנהל פרויקטים במו״פ ועד ראש צוות במוצר שמאות מיליוני אנשים משתמשים בו; אחר כך מנהל מו״פ ב-Lognet. מאוגוסט 2024 אני עובד באופן עצמאי כארכיטקט מערכות AI, ו-y[AI]r studio הוא המקום שבו העבודה הזאת חיה.",
+      "העבודה של הסטודיו מיועדת למשרדים מקצועיים קטנים ולעסקי שירותים שבהם פגישות, מסמכים, מייל, מועדים ומעקב נפגשים, לא פעם בעברית ובאנגלית גם יחד. מערכת אחת כבר רצה היום אצל משרד עורכי דין B2B: ניתוח שיווק וייצור לידים, בלי לציין שם.",
     ],
   },
   how: {
@@ -125,11 +101,11 @@ const he: AboutContent = {
   },
   who: {
     title: "למי זה מתאים",
-    body: "עסקי שירותים צומחים, מנהלי תפעול, מייסדים, משרדים מקצועיים וצוותים רזים שמריצים עבודה אמיתית על יותר מדי כלים. משרדים מקצועיים — משפטיים, עתירי מסמכים ומבוססי אישורים — מתאימים במיוחד לגישה הזאת. אותה מערכת מתאימה לכל עסק שירותים שהתהליכים שלו גדלו מעבר לתיאום ידני. העבודה מתנהלת בעברית או באנגלית, לפי מה שהצוות באמת משתמש בו ביומיום.",
+    body: "בעלים ומנהלי משרד של משרדים מקצועיים קטנים, קודם כול עורכי דין, וצוותים בעסקי שירותים שהעבודה שלהם גדלה מעבר לתיאום ידני: יותר פניות, מסמכים, מועדים ומעקב ממה שאפשר להחזיק בראש. העבודה מתנהלת בעברית או באנגלית, לפי מה שהמשרד משתמש בו ביומיום.",
   },
   cta: {
-    heading: "מתחילים מתהליך אמיתי אחד.",
-    body: "בוחרים תהליך שמאט את העסק. ממפים איך הוא רץ היום, לפני שמחליטים מה שווה לבנות.",
+    heading: "מתחילים מתהליך אחד.",
+    body: "קובעים שיחת אפיון חינם. מסתכלים על תהליך אחד שעולה למשרד זמן, לפני שמחליטים מה שווה לבנות.",
     ctaLabel: shellContent("he").workflowCta.label,
     ctaHref: shellContent("he").workflowCta.href,
   },

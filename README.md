@@ -6,9 +6,12 @@ workflows.
 Built with Next.js (App Router) + TypeScript. The site is **fully bilingual**: every page has an
 English version and a Hebrew (RTL) version under `/he`, driven by one locale-keyed content model.
 On top of the visual foundation (design tokens, bilingual typography, shared shell) the site carries
-a homepage with a founder band and illustrative workflow cards, offer pages (overview + live offers), `/workflows`,
+a homepage that routes by commitment (a 3-rung ladder) and shows what the studio makes (five
+capabilities), the `/studio` capability pages, the `/offers` ladder page + the two paid rungs,
 `/about`, `/contact` (email + WhatsApp), an SEO/AEO/GEO foundation (per-page metadata, hreflang
-pairs, Open Graph, structured data, crawl endpoints), and Vercel Analytics.
+pairs, Open Graph, structured data, crawl endpoints), and Vercel Analytics. Positioning: **the AI
+department your office hires** — a managed retainer for small professional offices (law first) and
+SMB teams; the site faces business clients only, and pricing stays model-only (no numbers).
 
 > Founder/about copy uses modest factual positioning. The workflow cards remain visibly labeled
 > illustrative patterns, not client case studies or evidence of outcomes. The
@@ -47,29 +50,42 @@ links in both directions. `/contact` offers email (primary) and WhatsApp.
 
 | Path (EN) | Hebrew mirror | Notes |
 |------|------|-------|
-| `/` | `/he` | Home — flagship-led hero, problems, offers, method, safety, founder band, evidence, proof cards, final CTA (both locales share one composition) |
-| `/workflows` | `/he/workflows` | Approach + worked example (workflow-map artifact + film) |
-| `/offers` | `/he/offers` | Services overview — decision router + who-it-fits + the 4 service cards |
-| `/offers/ai-office-assistant` | `/he/offers/ai-office-assistant` | Flagship offer — managed service (setup + retainer), pricing-model band |
-| `/offers/ai-workflow-sprint` | `/he/offers/ai-workflow-sprint` | Entry offer — fixed price, map + three automations |
-| `/offers/linkedin-content-engine` | `/he/offers/linkedin-content-engine` | Managed content pipeline |
-| `/offers/ai-enablement` | `/he/offers/ai-enablement` | Workshops for R&D / engineering teams |
+| `/` | `/he` | Home — hero (positioning), ladder, proof film (Command Center, "In build · sample data"), capabilities strip, founder, boundaries, final CTA (both locales share one composition) |
+| `/studio` | `/he/studio` | What the studio makes — index of the five capabilities |
+| `/studio/agentic-systems` | `/he/studio/agentic-systems` | Capability page (film planned) |
+| `/studio/process-optimization` | `/he/studio/process-optimization` | Capability page — reuses the `scattered-to-mapped` film |
+| `/studio/websites` | `/he/studio/websites` | Capability page (film planned) |
+| `/studio/films` | `/he/studio/films` | Capability page (film planned) |
+| `/studio/ai-enablement` | `/he/studio/ai-enablement` | Capability page — training a business team's staff on their own work; reuses the `ai-enablement` film |
+| `/offers` | `/he/offers` | Services — the 3-rung commitment ladder (free scoping call → AI Workflow Sprint → Managed AI Office) + who-it-fits |
+| `/offers/ai-office-assistant` | `/he/offers/ai-office-assistant` | Managed AI Office — the headline rung (setup + monthly retainer), pricing-model band; the content engine is an included section at `#content` |
+| `/offers/ai-workflow-sprint` | `/he/offers/ai-workflow-sprint` | AI Workflow Sprint — fixed price, map + three automations |
 | `/about` | `/he/about` | Founder profile, illustrative workflow patterns, principles |
 | `/contact` | `/he/contact` | Email (primary) + WhatsApp + copy-email affordance |
 | `/opengraph-image` | — | Generated 1200×630 branded OG image (`next/og`) |
 
-Six retired offer routes (`ai-workflow-audit`, `ai-ops-pilot`, `follow-up-machine`,
-`internal-ai-systems`, `dashboards-automation`, `content-ad-operations`) 308-redirect to their
-successors in both locales — see `next.config.ts`.
+The five capability pages are one dynamic segment per root —
+`src/app/(site)/studio/[capability]/page.tsx` and its `(he)/he/studio/` twin — with
+`generateStaticParams` from `src/lib/capabilities.ts`, so adding a capability is a data change.
+
+Nine retired routes 308-redirect to their live successors in both locales — see `next.config.ts`:
+the six 2026-07 offer routes (`ai-workflow-audit`, `ai-ops-pilot`, `follow-up-machine`,
+`internal-ai-systems`, `dashboards-automation`, `content-ad-operations`) plus, from the 2026-09
+studio redesign, `/workflows` → `/studio/process-optimization`, `/offers/ai-enablement` →
+`/studio/ai-enablement`, and `/offers/linkedin-content-engine` (like `content-ad-operations`) →
+`/offers/ai-office-assistant#content`.
 
 ## Content model
 
 All copy is **data, not JSX**: typed, locale-keyed files in [`src/content/`](src/content)
-(`home.ts`, `about.ts`, `contact.ts`, `workflows.ts`, `offers-index.ts`, `offers/*.ts`, `proof.ts`,
-`shell.ts`, `offer-cards.ts`, shared shapes in `types.ts`). Each exports a `…Content(locale)`
-accessor; pages are thin composers. Offer detail pages render through one template
-(`src/components/offers/OfferPageBody.tsx`). The canonical offer list (keys, routes, EN card copy)
-stays in [`src/lib/offers.ts`](src/lib/offers.ts).
+(`home.ts`, `about.ts`, `contact.ts`, `ladder.ts`, `offers-index.ts`, `offers/*.ts`, `studio.ts`,
+`studio/*.ts`, `capability-cards.ts`, `offer-cards.ts`, `proof.ts`, `shell.ts`, shared shapes in
+`types.ts`). Each exports a `…Content(locale)` accessor; pages are thin composers. Offer detail
+pages render through one template (`src/components/offers/OfferPageBody.tsx`), capability pages
+through another (`src/components/pages/CapabilityPageBody.tsx`). The canonical lists (keys, routes,
+EN card copy) stay in [`src/lib/offers.ts`](src/lib/offers.ts) (the two paid rungs) and
+[`src/lib/capabilities.ts`](src/lib/capabilities.ts) (the five capabilities); `SERVICES` in
+`src/lib/site.ts` is derived from both.
 
 [src/content/proof.ts](src/content/proof.ts) owns the founder + proof layer. Founder copy is
 factual and deliberately modest. `PROOF_IS_SAMPLE_DATA` controls the visible badge on illustrative
@@ -99,8 +115,9 @@ Public crawl endpoints:
 
 App Router · TypeScript · ESLint · `src/` directory · import alias `@/*`. No Tailwind, no external
 UI library; the only runtime addition is `@vercel/analytics` (mounted once per root layout). Fonts
-are loaded with `next/font` (Inter — EN body/display; Geist Mono — mono accents; Assistant — Hebrew
-body), not a CDN `@import`. Hebrew/RTL is a genuine document, not a subtree: the app uses **two root
+are loaded with `next/font` (Newsreader — EN display; Instrument Sans — EN body/UI and the wordmark;
+Frank Ruhl Libre — Hebrew display; Assistant — Hebrew body; Geist Mono — mono accents), not a CDN
+`@import`. Hebrew/RTL is a genuine document, not a subtree: the app uses **two root
 layouts** via route groups — `app/(site)/layout.tsx` (`<html lang="en">`) and `app/(he)/layout.tsx`
 (`<html lang="he" dir="rtl">`) — both rendering the **same shared shell** (`SiteHeader` /
 `SiteFooter` with a `locale` prop fed from `src/content/shell.ts`). The shared `next/font` loaders
@@ -111,14 +128,24 @@ properties, document-level `[lang]`/`[dir]` selectors, and `<bdi>` for the alway
 Shared components live in `src/components/` (`Container`, `SiteHeader`, `SiteFooter`, `SectionLabel`,
 `CTAButton`, `Wordmark`, `LangToggle` — prefix-mapping language toggle, `NavLinks` — active-state nav,
 `WorkflowMap` — the schematic process-spine artifact, `FounderProfile`, `ProofCards`, `SampleBadge`,
-`ProcessFilm`/`FilmPlayer`). Design tokens are defined once in `src/app/globals.css` — never hardcode
+`ProcessFilm`/`FilmPlayer`; homepage sections under `home/` — `LadderSection`, `CapabilityStrip`
+(also exports `LinkCardGrid`), `ProofFilmSection`; page bodies under `pages/` — `StudioIndexPageBody`,
+`CapabilityPageBody`). Design tokens are defined once in `src/app/globals.css` — never hardcode
 hex in UI; reference `var(--*)`. The one allowed exception is `src/lib/brand.ts`, which mirrors the
 token literals for the OG image because `next/og` (Satori) cannot read CSS variables.
 
 Motion is **pre-rendered video**, never a client-side animation library: the films are HyperFrames
 compositions under [`hyperframes/`](hyperframes/) (one directory per film, each with a `DESIGN.md`),
 rendered to `public/videos/` and played through `FilmPlayer` (poster-first, reduced-motion gated,
-WCAG 2.2.2 pause control). Inventory: `command-center` (flagship product face) · `workflow-sprint` ·
-`meeting-workflow` · `scattered-to-mapped`, plus two ambient/brand pieces — `hero-ambient` (a
-text-free WebGL FBM shader loop behind the homepage hero) and `wordmark-sting` (a ~2.5s `y[AI]r`
-lockup used as a play-once intro on the flagship film).
+WCAG 2.2.2 pause control; `mobile` serves a 4:5 phone cut under 768px, `autoplay={false}` makes a
+film poster-first click-to-play). Rule: one **autoplaying** film per page. Inventory:
+`command-center` (flagship product face — the homepage proof band and the Managed AI Office page,
+"In build · sample data") · `workflow-sprint` (the sprint page) · `scattered-to-mapped`
+(`/studio/process-optimization`) · `ai-enablement` (`/studio/ai-enablement`) ·
+`linkedin-content-engine` (the retainer's included content section, click-to-play), plus two
+ambient/brand pieces — `hero-ambient` (a text-free WebGL FBM shader loop behind the homepage hero)
+and `wordmark-sting` (a ~2.5s `y[AI]r` lockup, kept as a standalone/OG asset; no film passes it as
+`intro`). Retired: `meeting-workflow` (`/workflows` folded into `/studio/process-optimization`; its
+`public/videos/meeting-follow-up-workflow.*` assets are scheduled for deletion in the film phase).
+Planned, not built: `cap-agentic-systems`, `cap-websites`, `cap-films`, and a Command Center 4:5
+mobile cut.

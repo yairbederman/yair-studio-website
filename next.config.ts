@@ -2,10 +2,12 @@ import type { NextConfig } from "next";
 import { localePaths } from "./src/lib/locale-paths";
 
 /**
- * Permanent redirects for the 2026-07 offer restructure (six retired offer
- * routes → their nearest live successor). One EN entry per retired route;
- * the /he mirror derives through localePaths — the single home of the
- * EN↔HE pairing rule — so the pairs can never drift from the site's scheme.
+ * Permanent redirects for retired routes → their nearest live successor:
+ * the 2026-07 offer restructure (six retired offer routes) and the 2026-09
+ * studio redesign (two offers folded away, one page fold). One EN entry per
+ * retired route; the /he mirror derives through localePaths — the single
+ * home of the EN↔HE pairing rule — so the pairs can never drift from the
+ * site's scheme. Every entry points at a FINAL destination (no chains).
  *
  * `permanent: true` emits 308 (Next's recommended permanent redirect;
  * search engines treat it like a 301). Keep these indefinitely — they are
@@ -17,7 +19,14 @@ const RETIRED_OFFER_ROUTES: Record<string, string> = {
   "/offers/follow-up-machine": "/offers/ai-office-assistant",
   "/offers/internal-ai-systems": "/offers/ai-office-assistant",
   "/offers/dashboards-automation": "/offers/ai-office-assistant",
-  "/offers/content-ad-operations": "/offers/linkedin-content-engine",
+  // Content operations live on as the managed office's included content
+  // section (id="content" on that page).
+  "/offers/content-ad-operations": "/offers/ai-office-assistant#content",
+  "/offers/linkedin-content-engine": "/offers/ai-office-assistant#content",
+  "/offers/ai-enablement": "/studio/ai-enablement",
+  // A page fold, not an offer: the approach page became the
+  // process-optimization capability page.
+  "/workflows": "/studio/process-optimization",
 };
 
 // NOTE: destinations are not build-validated (importing PAGES from

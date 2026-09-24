@@ -9,11 +9,13 @@
    design_handoff_yair_studio/ snapshot was never a source.)
 
    Fonts are loaded via next/font (see src/lib/fonts.ts, imported by both root
-   layouts), which sets --font-inter / --font-geist-mono / --font-assistant on
-   <html>. The design system's CDN @import is intentionally NOT used.
+   layouts), which sets --font-instrument-sans / --font-newsreader /
+   --font-frank-ruhl / --font-geist-mono / --font-assistant on <html>. The
+   design system's CDN @import is intentionally NOT used.
 
    Deliberate, approved deviations from the source:
-     - Display family = Inter (not JetBrains Mono).
+     - Pair A · Editorial: display = Newsreader (EN) / Frank Ruhl Libre (HE);
+       body = Instrument Sans (EN) / Assistant (HE) — not JetBrains Mono.
      - Solid nav background (no backdrop-filter / glassmorphism).
      - Light/print theme omitted (homepage section styles added in Step 3, below).
      - IBM Plex Mono (Hebrew mono) deferred — graceful fallback below.
@@ -45,12 +47,14 @@
   --err:  #d85a52;
 
   /* ---------- Typography (mapped to next/font variables) ----------
-     Per Step 2 decision: Inter = EN body + display; Geist Mono = mono
-     accents; Assistant = HE body. IBM Plex Mono (HE mono) deferred. */
-  --font-body:    var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-display: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+     Pair A · Editorial: Newsreader = EN display (opsz 6–72); Instrument Sans =
+     EN body/UI; Frank Ruhl Libre = HE display; Assistant = HE body; Geist Mono
+     = mono accents. IBM Plex Mono (HE mono) deferred. */
+  --font-body:    var(--font-instrument-sans), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: var(--font-newsreader), "Newsreader", Georgia, serif;
+  --font-display-he: var(--font-frank-ruhl), "Frank Ruhl Libre", "David Libre", serif;
   --font-mono:    var(--font-geist-mono), "IBM Plex Mono", "Space Mono", ui-monospace, monospace;
-  --font-body-en: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body-en: var(--font-instrument-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono-en: var(--font-geist-mono), "IBM Plex Mono", "Space Mono", ui-monospace, monospace;
   --font-body-he: var(--font-assistant), "Heebo", "Noto Sans Hebrew", system-ui, sans-serif;
   --font-mono-he: var(--font-geist-mono), "Noto Sans Hebrew", ui-monospace, monospace; /* IBM Plex Mono deferred */
@@ -77,6 +81,7 @@
   /* Tracking */
   --tr-tight: -0.02em;
   --tr-tighter: -0.04em;
+  --tr-snug: -0.01em;       /* serif display below h1 — a serif needs far less negative tracking than a grotesk */
   --tr-normal: 0;
   --tr-wide: 0.04em;
   --tr-ui: 0.08em;
@@ -148,13 +153,15 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
-  font-weight: 600;
-  letter-spacing: var(--tr-tight);
+  font-weight: 500;
+  letter-spacing: var(--tr-snug);
   line-height: var(--lh-snug);
   text-wrap: balance;
 }
 
-h1 { font-size: var(--fs-5xl); line-height: var(--lh-tight); letter-spacing: var(--tr-tighter); }
+/* h1 pins Newsreader's display cut (opsz 72) at its large sizes; the ≤36px
+   mobile h1 rules below reset to auto optical sizing (text cut). */
+h1 { font-size: var(--fs-5xl); line-height: var(--lh-tight); letter-spacing: var(--tr-tight); font-variation-settings: "opsz" 72; }
 h2 { font-size: var(--fs-3xl); }
 h3 { font-size: var(--fs-2xl); }
 
@@ -184,7 +191,7 @@ summary:focus-visible,
 }
 
 code, kbd, samp, pre {
-  font-family: var(--font-mono);
+  font-family: var(--font-mono-en); /* Latin mono — not the HE-redefined --font-mono */
   font-size: 0.92em;
 }
 
@@ -222,38 +229,46 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
    (LTR); the Hebrew root (/he) is html lang="he" dir="rtl". These
    selectors therefore apply at the DOCUMENT level on /he (and to any
    inline [dir] island elsewhere) — the shell is no longer English-only.
-   Hebrew body never uses mono: every Hebrew-bearing element resolves to
-   the Hebrew family, and Hebrew text anchors to `start`.
+
+   Mechanism: the Hebrew root REDEFINES the family tokens themselves
+   (--font-body / --font-display / --font-mono → the Hebrew families).
+   Custom properties inherit, so every rule that declares
+   `font-family: var(--font-*)` — body, .btn, .eyebrow, .offer-cta,
+   .footer-tag, .founder-name, the .sch-* schematic voice … — resolves
+   to the Hebrew face on /he automatically; there is no per-class
+   allow-list to keep in sync (the previous one leaked wherever a class
+   was missing from it). Hebrew body never uses mono (--font-mono →
+   Assistant). The only Latin exceptions are pinned explicitly, to the
+   un-redefined -en tokens: the wordmark lockup (.wordmark →
+   --font-body-en) and the Latin-digit / code glyphs (.wordmark-studio,
+   .method-step-num, code → --font-mono-en). Hebrew is never
+   letter-spaced (reset below), and Hebrew text anchors to `start`.
    ============================================================ */
-[lang="he"], [dir="rtl"] { direction: rtl; font-family: var(--font-body-he); }
+[lang="he"], [dir="rtl"] {
+  direction: rtl;
+  --font-body: var(--font-body-he);
+  --font-display: var(--font-display-he);
+  --font-mono: var(--font-body-he); /* Hebrew is never mono */
+  font-family: var(--font-body-he);
+}
 [lang="en"], [dir="ltr"] { direction: ltr; font-family: var(--font-body-en); }
 
-[lang="he"] :is(h1, h2, h3, h4, h5, h6),
-[dir="rtl"] :is(h1, h2, h3, h4, h5, h6) {
-  font-family: var(--font-body-he);
+/* Hebrew display = Frank Ruhl Libre via the redefined --font-display (weight
+   500 is inherited from the base heading rule); only the Hebrew metrics live
+   here. */
+[lang="he"] :is(h1, h2, h3, h4, h5, h6, .card-title, .founder-name),
+[dir="rtl"] :is(h1, h2, h3, h4, h5, h6, .card-title, .founder-name) {
   letter-spacing: 0;
   line-height: 1.15;
 }
 
-/* Many elements hardcode a Latin family (var(--font-body) on chrome and section
-   labels, var(--font-mono) on the workflow schematic and code). Re-assert the
-   Hebrew family in RTL for every Hebrew-bearing element so none falls back to a
-   Latin font. The Latin-digit step numbers (.method-step-num) deliberately stay
-   mono. */
-[lang="he"] :is(p, .lead, .eyebrow, .label-mono, .mono, .btn,
-  .nav-links a, .footer-r a, .footer-tag, .panel-list li, .sch-cap, .sch-label, .sch-sub,
-  .proof-row dt, .sample-badge, .case-badge),
-[dir="rtl"] :is(p, .lead, .eyebrow, .label-mono, .mono, .btn,
-  .nav-links a, .footer-r a, .footer-tag, .panel-list li, .sch-cap, .sch-label, .sch-sub,
-  .proof-row dt, .sample-badge, .case-badge) {
-  font-family: var(--font-body-he);
-}
-
-/* Hebrew is never letter-spaced: the mono-voice labels keep their tracking in
-   EN only. (Geist Mono has no Hebrew glyphs — the rule above re-asserts the
-   Hebrew family; this drops the leftover tracking.) */
-[lang="he"] :is(.proof-row dt, .sample-badge, .case-badge, .founder-role),
-[dir="rtl"] :is(.proof-row dt, .sample-badge, .case-badge, .founder-role) {
+/* Hebrew is never letter-spaced: every class that declares tracking in EN
+   (uppercase labels, badges, the schematic voice) drops it here. The Latin
+   .wordmark / .wordmark-studio / .method-step-num keep theirs. */
+[lang="he"] :is(.eyebrow, .label-mono, .sch-cap, .sch-label, .sch-sub, .founder-role,
+  .proof-row dt, .sample-badge, .case-badge, .footer-tag),
+[dir="rtl"] :is(.eyebrow, .label-mono, .sch-cap, .sch-label, .sch-sub, .founder-role,
+  .proof-row dt, .sample-badge, .case-badge, .footer-tag) {
   letter-spacing: 0;
 }
 
@@ -268,7 +283,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
    The bracketed [AI] is the brand; brackets + AI render in --accent.
    ============================================================ */
 .wordmark {
-  font-family: var(--font-display);
+  font-family: var(--font-body-en); /* Latin sans lockup — pinned so neither the display serif nor the HE token swap reaches the brand */
   font-weight: 600;
   font-size: 1em;
   letter-spacing: var(--tr-tight);
@@ -288,7 +303,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 .wordmark-group { display: inline-flex; align-items: center; column-gap: 0.6em; font-size: 1em; line-height: 1; }
 .wordmark-group .wordmark { font-size: inherit; }
 .wordmark-studio {
-  font-family: var(--font-mono);
+  font-family: var(--font-mono-en); /* Latin caption — stays Geist Mono under the HE token swap */
   font-size: 0.32em;
   font-weight: 500;
   text-transform: uppercase;
@@ -302,8 +317,11 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
    ============================================================ */
 /* Section-label system uses the warm body font. Monospace is reserved as a
    deliberate accent for the workflow schematic (.sch-*), the brand wordmark
-   (.wordmark-studio), step numbers, and code — so mono reads as the "data /
-   diagram" voice instead of pervasive chrome (PRODUCT.md: avoid excessive mono). */
+   (.wordmark-studio), step numbers (.method-step-num), and code — nothing
+   else: the founder role line, proof-row labels and the sample/case badges
+   are tracked uppercase BODY sans — so mono reads as the "data / diagram"
+   voice instead of pervasive chrome (PRODUCT.md: avoid excessive mono). On
+   /he the --font-mono token itself resolves to the Hebrew body face. */
 .eyebrow,
 .label-mono {
   font-family: var(--font-body);
@@ -468,6 +486,9 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 }
 .footer-r { display: flex; gap: var(--s-5); }
 .footer-r a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px; /* comfortable tap target at every viewport */
   font-family: var(--font-body);
   font-size: var(--fs-sm);
   color: var(--fg-2);
@@ -543,8 +564,9 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   font-size: var(--fs-lg);
 }
 
-/* Shared card title/description (problems, method, offers) — defined once. */
-.card-title { font-size: var(--fs-lg); font-weight: 600; color: var(--fg-1); }
+/* Shared card title/description (problems, method, offers) — defined once.
+   Always an h3, so the display serif comes from the base heading rule. */
+.card-title { font-size: var(--fs-xl); font-weight: 500; color: var(--fg-1); }
 .card-desc { margin-top: var(--s-2); color: var(--fg-2); }
 
 /* ---------- Hero ---------- */
@@ -590,8 +612,8 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   background:
     linear-gradient(
       to right,
-      color-mix(in srgb, var(--bg-0) 64%, transparent) 0%,
-      color-mix(in srgb, var(--bg-0) 30%, transparent) 44%,
+      color-mix(in srgb, var(--bg-0) 48%, transparent) 0%,
+      color-mix(in srgb, var(--bg-0) 22%, transparent) 44%,
       transparent 74%
     ),
     linear-gradient(to bottom, transparent 52%, var(--bg-0) 100%);
@@ -601,8 +623,8 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   background:
     linear-gradient(
       to left,
-      color-mix(in srgb, var(--bg-0) 64%, transparent) 0%,
-      color-mix(in srgb, var(--bg-0) 30%, transparent) 44%,
+      color-mix(in srgb, var(--bg-0) 48%, transparent) 0%,
+      color-mix(in srgb, var(--bg-0) 22%, transparent) 44%,
       transparent 74%
     ),
     linear-gradient(to bottom, transparent 52%, var(--bg-0) 100%);
@@ -624,7 +646,9 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   align-items: flex-start;
   gap: var(--s-5);
 }
-.hero h1 { font-size: var(--fs-4xl); }
+/* Desktop hero display scales with the viewport, capped at 72px (the opsz 72
+   cut pinned on h1); the ≤767px rule below drops to --fs-3xl. */
+.hero h1 { font-size: clamp(2.75rem, 5.2vw, 4.5rem); }
 .hero-lead { line-height: var(--lh-body); max-width: 52ch; }
 .hero-actions {
   display: flex;
@@ -823,62 +847,90 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   to   { transform: scaleX(1); }
 }
 
-/* ---------- Problems ---------- */
-/* The shared .feature-grid / .feature-card pattern supplies the 2×2 desktop
-   layout and stacked mobile layout. Only the richer homepage card hierarchy is
-   scoped here; offer-page cards and the shared ProblemsPanel stay unchanged. */
-.problem-card { min-width: 0; overflow: hidden; }
-.problem-card-kicker {
-  margin-top: var(--s-3);
+/* ---------- Ladder (the 3-rung commitment ladder) ----------
+   Editorial numbered rows, hairline-separated — deliberately not a card grid:
+   the rungs are read as one decision. Below 1024px they stack top to bottom;
+   from 1024px they sit side by side as a triptych (index above title) so the
+   whole decision — head, three rungs, CTAs — fits one screen. The mono index
+   reuses .method-step-num; the title is a .card-title (display serif,
+   HE-keyed); the deliverables reuse the .panel-list hairline dash. Rung 03
+   (the managed office) sits on a --bg-1 panel with a copper index — one step
+   elevated. */
+.ladder { list-style: none; margin: 0; padding: 0; }
+.ladder-rung {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--s-6);
+  padding-block: var(--s-7);
+  border-top: 1px solid var(--rule);
+}
+/* Sit the small mono index on the serif title's cap line. */
+.ladder-rung .method-step-num { padding-top: 0.55rem; }
+.ladder-rung.is-primary {
+  margin-top: var(--s-4);
+  padding-inline: var(--s-6);
+  background: var(--bg-1);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  box-shadow: var(--edge-top);
+}
+.ladder-rung.is-primary .method-step-num { color: var(--accent); }
+.ladder-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-3);
+  min-width: 0;
+}
+.ladder-body .card-title { font-size: var(--fs-2xl); }
+.ladder-kicker {
   color: var(--accent);
   font-size: var(--fs-md);
   font-weight: 600;
 }
-.problem-card-body {
-  margin-top: var(--s-3);
-  color: var(--fg-2);
-  overflow-wrap: anywhere;
-}
-/* Command-center card → clickable settled-poster teaser linking to the
-   flagship film section (#film). Only the first problem card carries these. */
-.problem-card-film {
-  display: block;
-  margin-top: var(--s-4);
-  color: var(--accent);
-  text-decoration: none;
-}
-.problem-card-poster {
-  display: block;
-  width: 100%;
-  height: auto;
-  border: 1px solid var(--rule);
-  border-radius: var(--r-md);
-}
-.problem-card-cta {
-  display: inline-flex;
-  align-items: center;
+.ladder-desc { color: var(--fg-2); max-width: 60ch; }
+.ladder-receive {
+  list-style: none;
+  margin: var(--s-2) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
   gap: var(--s-2);
-  margin-top: var(--s-3);
-  font-weight: 600;
 }
-.problem-card-cta::after { content: "\2192"; }
-[dir="rtl"] .problem-card-cta::after { content: "\2190"; }
-.problem-card-film:hover .problem-card-poster { border-color: var(--accent-rule); }
-.problem-card-film:hover .problem-card-cta { text-decoration: underline; }
-.problem-card-film:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: var(--r-sm);
+.ladder-receive li { position: relative; padding-inline-start: var(--s-5); }
+.ladder-receive li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0.7em;
+  width: 8px;
+  height: 1px;
+  background: var(--fg-3);
 }
-.problems-closing {
-  margin-top: var(--s-6);
-  max-width: 72ch;
-  font-size: var(--fs-lg);
+.ladder-cta { margin-top: var(--s-3); }
+/* Desktop triptych — three rungs in one row, index above the title, CTAs
+   bottom-aligned across the row. */
+@media (min-width: 1024px) {
+  .ladder {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-5);
+  }
+  .ladder-rung {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    row-gap: var(--s-3);
+    padding: var(--s-6) 0 0;
+  }
+  .ladder-rung .method-step-num { padding-top: 0; }
+  .ladder-rung.is-primary { margin-top: 0; padding: var(--s-6); }
+  /* Three titles, one line each. */
+  .ladder-body .card-title { font-size: var(--fs-xl); }
+  .ladder-cta { margin-top: auto; }
 }
-.problems-list .problem-term { color: var(--fg-1); font-weight: 600; }
-/* ---------- Method ---------- */
-.method { scroll-margin-top: var(--s-9); }
 
+/* Bold problem terms inside a ProblemsPanel (offer + capability pages). */
+.problems-list .problem-term { color: var(--fg-1); font-weight: 600; }
 /* Offer-page sections are in-page anchor targets (hero secondary CTAs like
    "#pricing"); keep the sticky header clear of the landed heading. */
 .section[id] { scroll-margin-top: var(--s-9); }
@@ -899,7 +951,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   border-radius: var(--r-lg);
 }
 .method-step-num {
-  font-family: var(--font-mono);
+  font-family: var(--font-mono-en); /* Latin digits — stay Geist Mono under the HE token swap */
   font-size: var(--fs-md);
   letter-spacing: var(--tr-ui);
   color: var(--fg-3);
@@ -919,7 +971,8 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  /* Breakpoint-free: 1 card fills the row, 3 sit side by side at desktop, all stack on phones. */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: var(--s-4);
 }
 .offer-card {
@@ -939,11 +992,6 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   border-color: var(--accent-rule);
   transform: translateY(-2px);
   box-shadow: var(--edge-top-strong);
-}
-.offer-card--disabled:hover {
-  border-color: var(--rule);
-  transform: none;
-  box-shadow: var(--edge-top);
 }
 .offer-card .card-desc { flex: 1 1 auto; }
 .offer-card-foot { margin-top: var(--s-5); }
@@ -966,33 +1014,57 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   inset: 0;
   border-radius: var(--r-lg);
 }
-.offer-status {
-  display: inline-flex;
-  align-items: center;
-  min-height: 28px;
-  padding: 2px var(--s-2);
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--r-sm);
-  color: var(--fg-3);
-  font-size: var(--fs-sm);
-  font-weight: 500;
-}
 .offer-cta-arrow { transition: transform var(--dur) var(--ease); }
-.offer-card:hover .offer-cta-arrow { transform: translateX(3px); }
+.offer-card:hover .offer-cta-arrow,
+.cap-row:hover .offer-cta-arrow { transform: translateX(3px); }
 /* RTL: the arrow glyph points back along the reading direction, and the hover
    nudge moves it visually "forward" (left). */
 [dir="rtl"] .offer-cta-arrow { transform: scaleX(-1); }
-[dir="rtl"] .offer-card:hover .offer-cta-arrow { transform: scaleX(-1) translateX(3px); }
+[dir="rtl"] .offer-card:hover .offer-cta-arrow,
+[dir="rtl"] .cap-row:hover .offer-cta-arrow { transform: scaleX(-1) translateX(3px); }
 
-/* Keyboard focus rings the whole card (not just the CTA text) where :has() is
-   supported; older browsers fall back to the global a:focus-visible ring. */
+/* Keyboard focus rings the whole card / row (not just the CTA text) where
+   :has() is supported; older browsers fall back to the global a:focus-visible
+   ring. */
 @supports selector(:has(*)) {
-  .offer-card:has(.offer-cta:focus-visible) {
+  .offer-card:has(.offer-cta:focus-visible),
+  .cap-row:has(.offer-cta:focus-visible) {
     border-color: var(--accent);
     outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
   .offer-cta:focus-visible { outline: none; }
+}
+
+/* ---------- Capability strip ----------
+   The five capabilities as an editorial hairline list — deliberately not a
+   card grid (five identical cards read as a template, and the odd fifth card
+   had to span the row). Each row is title | summary | copper CTA from 768px,
+   stacked below; the stretched .offer-cta::after makes the whole row one click
+   target (.cap-row is its positioning anchor). */
+.cap-list { list-style: none; margin: 0; padding: 0; }
+.cap-row {
+  position: relative;          /* anchor for the stretched .offer-cta::after */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: var(--s-2);
+  padding-block: var(--s-6);
+  border-top: 1px solid var(--rule);
+  transition: border-color var(--dur) var(--ease);
+}
+.cap-row:last-child { border-bottom: 1px solid var(--rule); }
+.cap-row .card-desc { margin-top: 0; } /* the grid gap spaces the row */
+.cap-row .offer-cta { justify-self: start; }
+/* Hover frames the row: its own top rule plus the next row's (its bottom). */
+.cap-row:hover,
+.cap-row:hover + .cap-row { border-top-color: var(--accent-rule); }
+.cap-row:last-child:hover { border-bottom-color: var(--accent-rule); }
+@media (min-width: 768px) {
+  .cap-row {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr) auto;
+    column-gap: var(--s-6);
+    align-items: baseline;
+  }
 }
 
 /* ---------- Final CTA band ---------- */
@@ -1038,10 +1110,13 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   }
   /* Compact spine below the CTAs — never hidden (the motif IS the brand). */
   .hero-schematic { gap: var(--s-4); }
-  .hero h1 { font-size: var(--fs-3xl); }
+  .hero h1 { font-size: var(--fs-3xl); font-variation-settings: normal; }
   .method-list,
   .offers-grid { grid-template-columns: 1fr; }
-  .problems-grid .feature-card { padding: var(--s-5); }
+  /* Ladder rows stack: index above the title, tighter row rhythm. */
+  .ladder-rung { grid-template-columns: 1fr; row-gap: var(--s-2); padding-block: var(--s-6); }
+  .ladder-rung .method-step-num { padding-top: 0; }
+  .ladder-rung.is-primary { padding-inline: var(--s-5); }
   .final-cta-inner { padding: var(--s-6); }
 }
 
@@ -1125,10 +1200,10 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   line-height: var(--lh-body);
 }
 
-/* Odd-count 2-col grids: the lone last card spans the row instead of leaving
-   a hole. No-op in the single-column mobile layout. */
-.feature-grid > li:last-child:nth-child(odd),
-.offers-grid > li:last-child:nth-child(odd) {
+/* Odd-count 2-col feature grid: the lone last card spans the row instead of
+   leaving a hole. No-op in the single-column mobile layout. (.offers-grid is
+   deliberately excluded — a spanning link card reads as a promoted offer.) */
+.feature-grid > li:last-child:nth-child(odd) {
   grid-column: 1 / -1;
 }
 
@@ -1157,7 +1232,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 
 @media (max-width: 767px) {
   .offer-hero { padding-block: var(--s-8) var(--s-6); }
-  .offer-hero h1 { font-size: var(--fs-3xl); }
+  .offer-hero h1 { font-size: var(--fs-3xl); font-variation-settings: normal; }
   .feature-grid { grid-template-columns: 1fr; }
 }
 
@@ -1165,8 +1240,9 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
    Workflow map artifact (Step 5)
    ------------------------------------------------------------
    Content use of the .sch-* process spine (originally the decorative hero
-   motif): a bordered panel, visible at every breakpoint. Used on /workflows
-   (the concrete example) and the audit offer page. Tokens only — no hex.
+   motif): a bordered panel, visible at every breakpoint. Used for the worked
+   example on every offer and capability page, and for the founder's career
+   spine. Tokens only — no hex.
    ============================================================ */
 .workflow-map,
 .panel-list {
@@ -1218,19 +1294,25 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 }
 /* Caption under an embedded process film (sentence, so not the all-caps .sch-cap) */
 .film-caption {
+  max-width: 72ch;
+  margin-inline: auto;
   font-size: var(--fs-sm);
   line-height: var(--lh-body);
   color: var(--fg-2);
   text-align: center;
   text-wrap: balance;
 }
+/* Phone cut (FilmPlayer `mobile`): both posters render on the server and CSS
+   gates the inactive one, so SSR shows the right still with no flash. Opt-in
+   through .has-mobile only — 16:9 films and the hero backdrop are untouched. */
+.film-frame.has-mobile .film-poster--mobile { display: none; }
+/* Build-status chip in a film section head (homepage proof band). */
+.film-status { margin-top: var(--s-3); }
+/* A film that follows a card grid inside one section (the retainer's
+   included content section), and the proof link that closes it. */
+.feature-grid + .workflow-film { margin-block-start: var(--s-6); }
+.included-proof { margin-block-start: var(--s-5); }
 
-.workflow-compare {
-  display: grid;
-  grid-template-columns: 0.85fr 1.15fr;
-  gap: var(--s-5);
-  align-items: start;
-}
 
 /* A plain hairline-marked list in a panel (the "before" state; also reused for
    short reference lists). Deliberately not a spine and not a card grid. */
@@ -1246,6 +1328,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   color: var(--fg-2);
   position: relative;
   padding-inline-start: var(--s-5);
+  max-width: 75ch;
 }
 .panel-list li::before {
   content: "";
@@ -1270,6 +1353,12 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   border-radius: 50%;
   background: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);
+}
+/* The plain sentence about where client data lives, under the guarantees. */
+.safety-note {
+  margin-top: var(--s-5);
+  max-width: 65ch;
+  color: var(--fg-2);
 }
 
 /* Sibling stagger: each copper dot pops in as the panel scrolls into view
@@ -1296,7 +1385,19 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 }
 
 @media (max-width: 767px) {
-  .workflow-compare { grid-template-columns: 1fr; }
+  /* Full-bleed film: the frame runs edge to edge (negative gutter), no radius,
+     no side rules; the caption keeps the gutter. */
+  .workflow-film .film-frame {
+    margin-inline: calc(-1 * var(--gutter));
+    border-radius: 0;
+    border-inline: 0;
+  }
+  /* The phone cut is 4:5 — opt-in, so 16:9 films keep their frame. */
+  .workflow-film .film-frame.has-mobile { aspect-ratio: 4 / 5; }
+  .film-frame.has-mobile .film-poster--desktop { display: none; }
+  .film-frame.has-mobile .film-poster--mobile { display: block; }
+  /* Comfortable tap target for the pause/play control. */
+  .film-toggle { min-height: 44px; }
 }
 
 /* ============================================================
@@ -1330,13 +1431,13 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 .founder-name {
   font-family: var(--font-display);
   font-size: var(--fs-2xl);
-  font-weight: 600;
-  letter-spacing: var(--tr-tight);
+  font-weight: 500;
+  letter-spacing: var(--tr-snug);
   color: var(--fg-1);
 }
-/* Mono role line — the "data / diagram" voice, consistent with .sch-cap. */
+/* Role line — tracked uppercase body sans (mono is reserved for the schematic). */
 .founder-role {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--fs-xs);
   text-transform: uppercase;
   letter-spacing: var(--tr-ui);
@@ -1376,7 +1477,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
    per-card chip ever returns, use a COLUMN layout beside the h3, not a row:
    a row made badge wrap depend on client-type length, so dt rows started at
    different heights across the 3-up grid. */
-.proof-client { font-size: var(--fs-lg); font-weight: 600; color: var(--fg-1); }
+.proof-client { font-family: var(--font-body); font-size: var(--fs-lg); font-weight: 600; color: var(--fg-1); } /* an h3, but a client-type label — stays sans */
 .proof-rows {
   margin: 0;
   display: flex;
@@ -1384,7 +1485,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   gap: var(--s-4);
 }
 .proof-row dt {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--fs-xs);
   text-transform: uppercase;
   letter-spacing: var(--tr-ui);
@@ -1410,12 +1511,12 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 .proof-section-badge { margin-block: 0 var(--s-4); }
 
 /* Sample-data badge — visible while PROOF_IS_SAMPLE_DATA is true. Deliberately
-   loud (warn token, mono, uppercase): sample claims must read as samples. */
+   loud (warn token, tracked uppercase): sample claims must read as samples. */
 .sample-badge,
 .case-badge {
   display: inline-flex;
   align-items: center;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: var(--fs-xs);
   text-transform: uppercase;
   letter-spacing: var(--tr-ui);

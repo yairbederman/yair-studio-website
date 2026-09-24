@@ -22,7 +22,7 @@ export function GET() {
     `> ${SITE_DESCRIPTION}`,
     "",
     "## About",
-    "y[AI]r studio runs a managed AI office assistant for small professional offices (morning briefings, email triage, document workflows, follow-up tracking) and offers a fixed-price AI workflow sprint, a managed LinkedIn content engine, and AI enablement workshops for engineering teams. The work is practical business process automation: mapping stuck processes, automating repetitive work, and turning scattered tasks into clear next actions, with human-in-the-loop approval at the decision points.",
+    "y[AI]r studio is the AI department a small professional office hires, law offices first. Three ways to start, by commitment: a free 20-minute scoping call (a written read of one workflow and which rung fits), a fixed-price AI Workflow Sprint (one workflow mapped end to end, three focused automations, approval boundaries, handoff notes), and a Managed AI Office (one-time setup plus a monthly retainer: morning briefing, email triage, document workflows, follow-up, with a LinkedIn content engine included and Command Center as the working face, in build). Behind them, five capabilities: agentic systems, process optimization, websites, films, and AI enablement for business teams. Every system keeps a person approving what matters: nothing is sent or changed without approval, and unclear items go to a person.",
     "",
     "## Services",
     ...SERVICES.map((name) => `- ${name}`),
@@ -43,8 +43,8 @@ export function GET() {
           "- The production domain is not yet finalized; URLs use the expected domain.",
         ]),
     "- The site is fully bilingual: every page has an English version and a Hebrew (RTL) version under /he.",
-    "- Founder/about copy factually describes Yair Bederman's R&D and software leadership background, experience taking systems from prototype to production, workflow-first approach, bilingual delivery, and role as founder/operator of y[AI]r studio.",
-    "- Workflow examples are illustrative patterns, not client case studies or evidence of outcomes.",
+    "- Founder/about copy factually describes Yair Bederman: founder and operator of y[AI]r studio, independent AI systems architect since August 2024, previously R&D Manager at Lognet (2023–2026) and, at Viber (2016–2023), R&D project and team leadership; earlier software roles at 888, Taldor, Bank Leumi, and El Al. One anonymized marketing-analytics and lead-generation system runs today for a B2B law firm. No performance metrics are claimed.",
+    "- Workflow examples are illustrative patterns, not client case studies or evidence of outcomes. The Command Center shown on the site is in build and displayed with sample data.",
     "",
   ].join("\n");
 

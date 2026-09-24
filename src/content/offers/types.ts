@@ -1,4 +1,5 @@
 import type { CardItem, Cta, SpineNode, StepItem } from "@/content/types";
+import type { CapabilityFilm } from "@/content/studio/types";
 
 /**
  * Content model for an offer detail page — consumed by the shared
@@ -36,6 +37,8 @@ export type OfferPageContent = {
     filmName: string;
     /** Optional play-once intro (the wordmark sting) shown before the loop. */
     intro?: { mp4: string; webm: string };
+    /** Optional phone cut (4:5) served under 768px by FilmPlayer. */
+    mobile?: CapabilityFilm["mobile"];
   };
   who: { title: string; intro?: string; items: readonly CardItem[] };
   problems: { title: string; items: readonly CardItem[] };
@@ -81,6 +84,20 @@ export type OfferPageContent = {
     intro?: string;
     items: readonly CardItem[];
     note?: string;
+  };
+  /**
+   * Optional "included" section (id `#content`, after `pricing`) — a service
+   * folded into this offer rather than sold on its own (the managed office's
+   * content engine). Its film is poster-first, click-to-play: one autoplaying
+   * film per page. The id is a redirect target — never rename it.
+   */
+  included?: {
+    title: string;
+    intro?: string;
+    items: readonly CardItem[];
+    film?: CapabilityFilm;
+    /** Optional external proof link under the film (opens in a new tab). */
+    proofLink?: Cta;
   };
   human: { title: string; intro?: string; items: readonly CardItem[] };
   cta: { heading: string; body: string; ctaLabel: string; ctaHref: string };

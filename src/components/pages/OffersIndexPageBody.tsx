@@ -1,15 +1,16 @@
-import Link from "next/link";
 import OfferHero from "@/components/offers/OfferHero";
 import OfferSection from "@/components/offers/OfferSection";
 import OfferCardGrid from "@/components/offers/OfferCardGrid";
-import OfferCards from "@/components/offers/OfferCards";
 import OfferCTA from "@/components/offers/OfferCTA";
+import LadderSection from "@/components/home/LadderSection";
 import { offersIndexContent } from "@/content/offers-index";
 import type { Locale } from "@/content/types";
 
 /**
- * The offers overview page, shared by both locales — one composition, zero
- * EN/HE structural drift.
+ * The services page (/offers): hero → the commitment ladder → who it fits →
+ * closing CTA. Shared by both locales — one composition, zero EN/HE
+ * structural drift. The rungs come from src/content/ladder.ts through
+ * LadderSection, the same component the homepage renders.
  */
 export default function OffersIndexPageBody({ locale }: { locale: Locale }) {
   const c = offersIndexContent(locale);
@@ -22,31 +23,14 @@ export default function OffersIndexPageBody({ locale }: { locale: Locale }) {
         ctaHref={c.hero.ctaHref}
       />
 
-      <OfferSection id="start" title={c.start.title} intro={c.start.intro}>
-        <ul className="offers-grid">
-          {c.start.choices.map((choice) => (
-            <li key={choice.title} className="offer-card">
-              <h3 className="card-title">{choice.title}</h3>
-              <p className="card-desc">{choice.desc}</p>
-              <div className="offer-card-foot">
-                <Link href={choice.cta.href} className="offer-cta">
-                  {choice.cta.label}
-                  <span className="offer-cta-arrow" aria-hidden="true">
-                    &rarr;
-                  </span>
-                </Link>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </OfferSection>
+      <LadderSection
+        locale={locale}
+        title={c.ladder.title}
+        intro={c.ladder.intro}
+      />
 
       <OfferSection id="fit" title={c.fit.title} intro={c.fit.intro}>
         <OfferCardGrid items={c.fit.items} />
-      </OfferSection>
-
-      <OfferSection id="offers" title={c.offers.title}>
-        <OfferCards locale={locale} />
       </OfferSection>
 
       <OfferCTA

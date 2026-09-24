@@ -12,8 +12,9 @@ import type { Locale } from "@/content/types";
 
 /**
  * The contact page, shared by both locales — one composition, zero EN/HE
- * structural drift. Email is the primary action; WhatsApp the ghost
- * secondary; CopyEmail covers machines with no mail client.
+ * structural drift. The content decides which channel is primary (email in
+ * EN, WhatsApp first on /he); the other is the ghost secondary; CopyEmail
+ * covers machines with no mail client.
  */
 export default function ContactPageBody({ locale }: { locale: Locale }) {
   const c = contactContent(locale);
@@ -26,11 +27,11 @@ export default function ContactPageBody({ locale }: { locale: Locale }) {
         lead={c.hero.lead}
         actions={
           <>
-            <CTAButton href={c.hero.emailCta.href} variant="primary">
-              {c.hero.emailCta.label}
+            <CTAButton href={c.hero.primaryCta.href} variant="primary">
+              {c.hero.primaryCta.label}
             </CTAButton>
-            <CTAButton href={c.hero.whatsappCta.href} variant="ghost">
-              {c.hero.whatsappCta.label}
+            <CTAButton href={c.hero.secondaryCta.href} variant="ghost">
+              {c.hero.secondaryCta.label}
             </CTAButton>
             <CopyEmail email={CONTACT_EMAIL} labels={shell.copyEmail} />
           </>

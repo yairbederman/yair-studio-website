@@ -6,9 +6,10 @@ import FilmPlayer from "@/components/FilmPlayer";
  * screen-reader and reduced-motion users still get the message
  * (poster still + caption).
  *
- * The frame, gating (poster-only under reduced motion), source order,
- * and the pause/play control live in FilmPlayer; this component adds the
- * figure/caption shell. Styles: `.workflow-film` / `.film-*` in globals.css.
+ * The frame, gating (poster-only under reduced motion), source order, the
+ * phone cut, click-to-play, and the pause/play control live in FilmPlayer;
+ * this component adds the figure/caption shell. Styles: `.workflow-film` /
+ * `.film-*` in globals.css.
  */
 export default function ProcessFilm({
   webm,
@@ -18,6 +19,8 @@ export default function ProcessFilm({
   filmName,
   controls,
   intro,
+  mobile,
+  autoplay,
 }: {
   webm: string;
   mp4: string;
@@ -29,6 +32,10 @@ export default function ProcessFilm({
   controls: { pause: string; play: string };
   /** Optional play-once intro (the wordmark sting) shown before the loop. */
   intro?: { mp4: string; webm: string };
+  /** Optional phone cut (4:5) served under 768px. */
+  mobile?: { mp4: string; webm: string; poster: string };
+  /** false = poster-first, click-to-play; defaults to true inside FilmPlayer. */
+  autoplay?: boolean;
 }) {
   return (
     <figure className="workflow-film process-film">
@@ -39,6 +46,8 @@ export default function ProcessFilm({
         filmName={filmName}
         controls={controls}
         intro={intro}
+        mobile={mobile}
+        autoplay={autoplay}
       />
       <figcaption className="film-caption">{caption}</figcaption>
     </figure>

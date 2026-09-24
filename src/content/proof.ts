@@ -4,10 +4,12 @@ import type { CardItem, Locale, SpineNode } from "@/content/types";
 /**
  * Founder + proof content — typed and locale-keyed.
  *
- * Founder positioning is factual and deliberately modest. Workflow cards are
- * illustrative patterns, not client case studies or evidence of outcomes.
- * PROOF_IS_SAMPLE_DATA controls the visible badge on those workflow examples
- * only; it does not apply to the founder profile or site indexing.
+ * Founder facts are verified from the founder's CV (employers, roles, dates)
+ * and deliberately carry NO performance metrics. The one live client system is
+ * anonymized (no firm name). Workflow cards are illustrative patterns, not
+ * client case studies or evidence of outcomes. PROOF_IS_SAMPLE_DATA controls
+ * the visible badge on those workflow examples only; it does not apply to the
+ * founder profile or site indexing.
  */
 export const PROOF_IS_SAMPLE_DATA = true;
 
@@ -60,37 +62,40 @@ const en: ProofContent = {
   founder: {
     title: "Who builds this",
     intro:
-      "y[AI]r studio is one person with an engineering background, not an agency. You work directly with the person who maps the workflow, builds the system, and supports it after it goes live.",
+      "y[AI]r studio is one person, not an agency. You work directly with the person who runs the scoping call, maps the workflow, builds the system, and supports it after it goes live.",
     name: "Yair Bederman",
-    role: "Productivity & AI systems · founder of y[AI]r studio",
-    bio: "Builds and runs y[AI]r studio. Background in R&D and software leadership; maps the workflow, builds the system, and stays involved after it goes live.",
+    role: "Founder · 20+ years in software and R&D leadership",
+    bio: "Builds and runs y[AI]r studio. Independent AI systems architect since August 2024; before that R&D Manager at Lognet (2023–2026) and, at Viber (2016–2023), R&D project and team leadership; earlier, software development at 888, Taldor, Bank Leumi, and El Al.",
     linkedinLabel: "View LinkedIn profile",
     credentials: [
       {
-        title: "R&D & engineering leadership",
-        desc: "Background in software engineering, R&D, and leading development work.",
+        title: "R&D leadership at Viber and Lognet",
+        desc: "Led delivery on a product with hundreds of millions of users, and built teams from zero.",
       },
       {
-        title: "From prototype to production",
-        desc: "Experience taking software systems from early prototypes into production environments.",
+        title: "Builds agents and automation",
+        desc: "Multi-agent systems and automation pipelines that run inside the tools a business already uses.",
       },
       {
-        title: "Process & workflow design",
-        desc: "Maps the real process before building: owners, bottlenecks, and what should stay human.",
+        title: "A live system for a law office",
+        desc: "A marketing-analytics and lead-generation system runs today for a B2B law firm (anonymized).",
       },
       {
-        title: "Bilingual delivery",
-        desc: "Systems, documentation, and support in Hebrew and English.",
+        title: "Hebrew and English delivery",
+        desc: "Systems, documentation, and support in both languages.",
       },
     ],
     spine: {
       caption: "The path to this work",
       ariaLabel: "Career path leading to y[AI]r studio",
       nodes: [
-        { label: "Software engineering", sub: "building production systems" },
-        { label: "R&D leadership", sub: "teams · delivery · systems" },
-        { label: "Prototype to production", sub: "working under real constraints" },
-        { label: "Workflow mapping", sub: "understand the process before building" },
+        { label: "Software development", sub: "888 · Taldor · Bank Leumi · El Al" },
+        {
+          label: "Viber, 2016–2023",
+          sub: "R&D project and team leadership",
+        },
+        { label: "Lognet, 2023–2026", sub: "R&D Manager" },
+        { label: "Independent AI systems architect", sub: "since Aug 2024" },
         { label: "y[AI]r studio", out: true },
       ],
     },
@@ -185,8 +190,8 @@ const en: ProofContent = {
 };
 
 /**
- * Hebrew (RTL) proof content — hebrew-quality drafted with factual founder
- * positioning and the same illustrative-workflow safeguards as English.
+ * Hebrew (RTL) proof content — hebrew-quality drafted with the same verified
+ * founder facts and the same illustrative-workflow safeguards as English.
  * Note: the Hebrew spelling of the surname ("בדרמן") is a standard
  * transliteration — confirm it at checklist time.
  */
@@ -194,37 +199,40 @@ const he: ProofContent = {
   founder: {
     title: "מי בונה את זה",
     intro:
-      "מאחורי y[AI]r studio עומד אדם אחד עם רקע הנדסי, לא סוכנות. אתם עובדים ישירות עם מי שממפה את התהליך, בונה את המערכת ומלווה אותה אחרי העלייה לאוויר.",
+      "מאחורי y[AI]r studio עומד אדם אחד, לא סוכנות. אתם עובדים ישירות עם מי שמנהל את שיחת האפיון, ממפה את התהליך, בונה את המערכת ומלווה אותה אחרי העלייה לאוויר.",
     name: "יאיר בדרמן",
-    role: "מערכות AI ופרודוקטיביות · מייסד y[AI]r studio",
-    bio: "בונה ומפעיל את y[AI]r studio. רקע במו״פ ובהובלת פיתוח; ממפה את התהליך, בונה את המערכת ונשאר מעורב אחרי שהיא עולה לאוויר.",
+    role: "מייסד · 20+ שנים בתוכנה ובהובלת מו״פ",
+    bio: "בונה ומפעיל את y[AI]r studio. ארכיטקט מערכות AI עצמאי מאוגוסט 2024; לפני כן מנהל מו״פ ב-Lognet (2023–2026), וב-Viber (2016–2023) ניהול פרויקטים וצוותים במו״פ; מוקדם יותר פיתוח תוכנה ב-888, טלדור, בנק לאומי ואל על.",
     linkedinLabel: "לצפייה בפרופיל בלינקדאין",
     credentials: [
       {
-        title: "הובלת מו״פ ופיתוח",
-        desc: "רקע בהנדסת תוכנה, במו״פ ובהובלת עבודת פיתוח.",
+        title: "הובלת מו״פ ב-Viber וב-Lognet",
+        desc: "הוביל את הפיתוח והאספקה במוצר עם מאות מיליוני משתמשים, והקים צוותים מאפס.",
       },
       {
-        title: "מאב־טיפוס ועד פרודקשן",
-        desc: "ניסיון בהעברת מערכות תוכנה מאב־טיפוס מוקדם לסביבת פרודקשן.",
+        title: "בונה סוכנים ואוטומציה",
+        desc: "מערכות מרובות סוכנים ואוטומציות שרצות בתוך הכלים שהעסק כבר עובד איתם.",
       },
       {
-        title: "תכנון תהליכי עבודה",
-        desc: "ממפה את התהליך האמיתי לפני שבונים: אחראים, צווארי בקבוק, ומה נשאר אנושי.",
+        title: "מערכת חיה למשרד עורכי דין",
+        desc: "מערכת לניתוח שיווק ולייצור לידים רצה היום אצל משרד עורכי דין B2B (ללא ציון שם).",
       },
       {
         title: "עברית ואנגלית",
-        desc: "מערכות, תיעוד וליווי בשתי השפות, לפי מה שהצוות באמת מדבר.",
+        desc: "מערכות, תיעוד וליווי בשתי השפות.",
       },
     ],
     spine: {
       caption: "הדרך לעבודה הזאת",
       ariaLabel: "המסלול המקצועי שמוביל ל-y[AI]r studio",
       nodes: [
-        { label: "הנדסת תוכנה", sub: "בניית מערכות פרודקשן" },
-        { label: "הובלת מו״פ", sub: "צוותים · אספקה · מערכות" },
-        { label: "מאב־טיפוס לפרודקשן", sub: "עבודה תחת אילוצים אמיתיים" },
-        { label: "מיפוי תהליכים", sub: "מבינים את התהליך לפני שבונים" },
+        { label: "פיתוח תוכנה", sub: "888 · טלדור · בנק לאומי · אל על" },
+        {
+          label: "Viber, 2016–2023",
+          sub: "ניהול פרויקטים וצוותים במו״פ",
+        },
+        { label: "Lognet, 2023–2026", sub: "מנהל מו״פ" },
+        { label: "ארכיטקט מערכות AI עצמאי", sub: "מאוגוסט 2024" },
         { label: "y[AI]r studio", out: true },
       ],
     },
