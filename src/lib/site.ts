@@ -42,7 +42,7 @@ export const SITE_URL = resolveSiteUrl();
 export const SITE_NAME = "y[AI]r studio";
 export const SITE_ALT_NAME = "Yair Studio";
 export const SITE_DESCRIPTION =
-  "A managed AI office for small professional offices, a fixed-price AI workflow sprint, and a free scoping call to start, with a person approving what matters.";
+  "A managed AI office for small professional offices, fixed-price projects (a workflow sprint, a website, a film, or an agent build), and a free scoping call to start, with a person approving what matters.";
 
 /**
  * Public contact channel (personal Gmail, confirmed for public use). Single
@@ -172,7 +172,7 @@ const EN_PAGES: PageDef[] = [
     path: "/offers",
     title: "Services",
     description:
-      "Three ways to start with y[AI]r studio, by commitment: a free scoping call, a fixed-price AI workflow sprint, and a managed AI office, all with a person approving what matters.",
+      "Three ways to start with y[AI]r studio, by commitment: a free scoping call, a fixed-price project (a workflow sprint, a website, a film, or an agent build), and a managed AI office, all with a person approving what matters.",
   },
   {
     path: "/offers/ai-office-assistant",

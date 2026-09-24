@@ -7,6 +7,7 @@ import OfferSteps from "@/components/offers/OfferSteps";
 import OfferCTA from "@/components/offers/OfferCTA";
 import WorkflowMap from "@/components/WorkflowMap";
 import ProcessFilm from "@/components/ProcessFilm";
+import CTAButton from "@/components/CTAButton";
 import { shellContent } from "@/content/shell";
 import type { OfferPageContent } from "@/content/offers/types";
 import type { Locale } from "@/content/types";
@@ -14,12 +15,13 @@ import type { Locale } from "@/content/types";
 /**
  * Shared offer-page template. Offer detail pages use the same
  * section sequence — hero → optional film → who → problems → build →
- * example map → how → human → closing CTA — so the sequence lives once here
- * and each page file is a thin wrapper passing its locale-resolved content.
+ * example map → how → human → optional after the project → closing CTA — so
+ * the sequence lives once here and each page file is a thin wrapper passing
+ * its locale-resolved content.
  *
  * Section ids are fixed (film/who/problems/build/example/case-study/how/data/
- * pricing/content/human): they are stable in-page anchors and unique per
- * page. `content` is a redirect target (the retired content-engine routes
+ * pricing/content/human/after): they are stable in-page anchors and unique
+ * per page. `content` is a redirect target (the retired content-engine routes
  * land on it) — never rename it.
  */
 export default function OfferPageBody({
@@ -150,6 +152,17 @@ export default function OfferPageBody({
       <OfferSection id="human" title={c.human.title} intro={c.human.intro}>
         <OfferCardGrid items={c.human.items} variant="human" />
       </OfferSection>
+
+      {c.after ? (
+        <OfferSection id="after" title={c.after.title} intro={c.after.intro}>
+          <ProblemsPanel items={c.after.items} />
+          <p className="included-proof">
+            <CTAButton href={c.after.cta.href} variant="ghost">
+              {c.after.cta.label}
+            </CTAButton>
+          </p>
+        </OfferSection>
+      ) : null}
 
       <OfferCTA
         heading={c.cta.heading}

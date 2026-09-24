@@ -1,7 +1,7 @@
 import { localeAccessor } from "@/content/types";
 import { shellContent } from "@/content/shell";
 import { offerCard } from "@/content/offer-cards";
-import { ladderRungCard } from "@/content/ladder";
+import { afterProjectSection, ladderRungCard } from "@/content/ladder";
 import type { Locale } from "@/content/types";
 import type { CapabilityPageContent } from "./types";
 
@@ -158,7 +158,7 @@ const en: CapabilityPageContent = {
       ladderRungCard(
         "en",
         "02",
-        "The full map, the sorting, and three fixes built on it.",
+        "As a project of its own: the workflow sprint, the full map, the sorting, and three fixes built on it.",
       ),
       ladderRungCard(
         "en",
@@ -167,6 +167,10 @@ const en: CapabilityPageContent = {
       ),
     ],
   },
+  after: afterProjectSection(
+    "en",
+    "The map, the sorting table, and the fixes built on it: yours, documented, and running.",
+  ),
   cta: {
     heading: "See your own process mapped like this.",
     body: "Pick one process that slows the office down. We map how it runs today before deciding what is worth building.",
@@ -319,7 +323,7 @@ const he: CapabilityPageContent = {
       ladderRungCard(
         "he",
         "02",
-        "המפה המלאה, המיון ושלושה תיקונים שנבנים עליה.",
+        "כפרויקט בפני עצמו: ספרינט התהליך, המפה המלאה, המיון ושלושה תיקונים שנבנים עליה.",
       ),
       ladderRungCard(
         "he",
@@ -328,6 +332,10 @@ const he: CapabilityPageContent = {
       ),
     ],
   },
+  after: afterProjectSection(
+    "he",
+    "המפה, טבלת המיון והתיקונים שנבנו עליה: שלכם, מתועדים ורצים.",
+  ),
   cta: {
     heading: "ככה ייראה גם התהליך שלכם, ממופה.",
     body: "בוחרים תהליך אחד שמאט את המשרד. ממפים איך הוא רץ היום, לפני שמחליטים מה שווה לבנות.",

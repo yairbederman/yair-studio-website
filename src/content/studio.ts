@@ -48,7 +48,7 @@ export function capabilityPageContent(
 const en: StudioIndexContent = {
   hero: {
     title: "What the studio makes",
-    lead: "Five things, each built for a business that sells a service, and each showing up inside one of the three ways to start: agents that run recurring work, processes mapped and fixed, websites, films, and hands-on AI sessions for your team.",
+    lead: "Five things, each built for a business that sells a service, and each showing up inside one of the three ways to start: agents that run recurring work, processes mapped and fixed, websites, films, and hands-on AI sessions for your team. Any of the five can be a fixed-price project first.",
     ctaLabel: shellContent("en").workflowCta.label,
     ctaHref: shellContent("en").workflowCta.href,
   },
@@ -69,7 +69,7 @@ const en: StudioIndexContent = {
 const he: StudioIndexContent = {
   hero: {
     title: "מה הסטודיו בונה",
-    lead: "חמישה דברים, כל אחד בנוי לעסק שמוכר שירות, וכל אחד מופיע באחת משלוש הדרכים להתחיל: סוכנים שמריצים עבודה חוזרת, תהליכים ממופים ומתוקנים, אתרים, סרטונים ומפגשי AI מעשיים לצוות שלכם.",
+    lead: "חמישה דברים, כל אחד בנוי לעסק שמוכר שירות, וכל אחד מופיע באחת משלוש הדרכים להתחיל: סוכנים שמריצים עבודה חוזרת, תהליכים ממופים ומתוקנים, אתרים, סרטונים ומפגשי AI מעשיים לצוות שלכם. כל אחד מהחמישה יכול להיות קודם פרויקט במחיר קבוע.",
     ctaLabel: shellContent("he").workflowCta.label,
     ctaHref: shellContent("he").workflowCta.href,
   },

@@ -6,8 +6,9 @@ import type { CardItem, Cta, SpineNode, StepItem } from "@/content/types";
  * and filled by one locale-keyed file per capability under src/content/studio/.
  *
  * Every capability page shares one section sequence (hero → optional film →
- * does → receive → how → example → human → where → cta); per-page variation
- * is data. The film, when present, bakes `example.map.nodes` verbatim.
+ * does → receive → how → example → human → where → optional after → cta);
+ * per-page variation is data. The film, when present, bakes
+ * `example.map.nodes` verbatim.
  */
 
 /** Process film rendered directly under the hero (ProcessFilm → FilmPlayer). */
@@ -53,6 +54,13 @@ export type CapabilityPageContent = {
     intro?: string;
     rungs: readonly (CardItem & { cta: Cta })[];
   };
+  /**
+   * "After the project" — the bridge from a project to the managed office;
+   * rendered before the closing CTA as id `after` (ProblemsPanel + one ghost
+   * CTA to the managed-office page). Filled through afterProjectSection()
+   * in src/content/ladder.ts. Never set on the retainer page itself.
+   */
+  after?: { title: string; intro?: string; items: readonly CardItem[]; cta: Cta };
   /** OfferCTA. */
   cta: { heading: string; body: string; ctaLabel: string; ctaHref: string };
 };

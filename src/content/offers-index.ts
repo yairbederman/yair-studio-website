@@ -23,7 +23,7 @@ export type OffersIndexContent = {
 const en: OffersIndexContent = {
   hero: {
     title: "Services",
-    lead: "Three ways to start, by commitment: a free scoping call, a fixed-price workflow sprint, or a managed AI office. Every one keeps a person approving what matters.",
+    lead: "Three ways to start, by commitment: a free scoping call, a fixed-price project, or a managed AI office. Every one keeps a person approving what matters.",
     ctaLabel: shellContent("en").workflowCta.label,
     ctaHref: shellContent("en").workflowCta.href,
   },

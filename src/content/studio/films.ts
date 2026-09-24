@@ -1,6 +1,6 @@
 import { localeAccessor } from "@/content/types";
 import { shellContent } from "@/content/shell";
-import { ladderRungCard } from "@/content/ladder";
+import { afterProjectSection, ladderRungCard } from "@/content/ladder";
 import type { Locale } from "@/content/types";
 import type { CapabilityPageContent } from "./types";
 
@@ -124,15 +124,19 @@ const en: CapabilityPageContent = {
   },
   where: {
     title: "Where it shows up",
-    intro: "A film is scoped in the same call, on its own or with a site.",
+    intro: "A film is its own fixed-price project, on its own or with a site.",
     rungs: [
       ladderRungCard(
         "en",
-        "01",
-        "Bring a page or a deck; the call sets what the film must say.",
+        "02",
+        "As a project of its own: one designed loop with its variants and exports, on its own or alongside a site.",
       ),
     ],
   },
+  after: afterProjectSection(
+    "en",
+    "The film, its variants, and the source composition: yours, documented, and running.",
+  ),
   cta: {
     heading: "Show the thing you sell, in twenty seconds.",
     body: "Book the scoping call with a page or a deck. You get back the six scenes a film of it would carry, before anything is made.",
@@ -255,15 +259,19 @@ const he: CapabilityPageContent = {
   },
   where: {
     title: "איפה זה מופיע",
-    intro: "סרטון נסגר באותה שיחה, לבד או יחד עם אתר.",
+    intro: "סרטון הוא פרויקט במחיר קבוע בפני עצמו, לבד או יחד עם אתר.",
     rungs: [
       ladderRungCard(
         "he",
-        "01",
-        "מביאים עמוד או מצגת; בשיחה קובעים מה הסרטון חייב להגיד.",
+        "02",
+        "כפרויקט בפני עצמו: לופ מעוצב אחד עם הגרסאות והייצואים שלו, לבד או לצד אתר.",
       ),
     ],
   },
+  after: afterProjectSection(
+    "he",
+    "הסרטון, הגרסאות שלו וקומפוזיציית המקור: שלכם, מתועדים ורצים.",
+  ),
   cta: {
     heading: "תראו את מה שאתם מוכרים, בעשרים שניות.",
     body: "קובעים שיחת אפיון עם עמוד או מצגת. מקבלים חזרה את שש הסצנות שסרטון כזה היה מספר, לפני שמשהו נבנה.",

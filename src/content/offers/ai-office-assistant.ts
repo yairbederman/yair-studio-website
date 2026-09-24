@@ -28,7 +28,7 @@ const en: OfferPageContent = {
   hero: {
     eyebrow: "Managed service · setup + monthly retainer",
     title: "The Managed AI Office runs your office's recurring work",
-    lead: "Morning briefings ready before you sit down. An inbox sorted into decisions. Documents and follow-ups chased without anyone remembering to chase them. Everything runs in a private environment dedicated to your office, and your people approve what matters.",
+    lead: "Morning briefings ready before you sit down. An inbox sorted into decisions. Documents and follow-ups chased without anyone remembering to chase them. Everything runs in a private environment dedicated to your office, and your people approve what matters. Most offices arrive here after a project: the studio then runs what the project built, and widens it month by month.",
     ctaLabel: "See how your office would run",
     ctaHref: shellContent("en").workflowCta.href,
     secondaryCta: { label: "How pricing works", href: "#pricing" },
@@ -124,7 +124,7 @@ const en: OfferPageContent = {
   },
   how: {
     title: "How the service runs",
-    intro: "A managed engagement: one setup, then a monthly operating rhythm.",
+    intro: "A managed engagement: one setup, then a monthly operating rhythm. The first weeks are the setup, the office week mapped, your private environment stood up, briefing and triage onboarded; from then on, the daily run, adjusted month to month.",
     steps: [
       {
         title: "Map the office week",
@@ -269,7 +269,7 @@ const he: OfferPageContent = {
   hero: {
     eyebrow: "שירות מנוהל · הקמה + ריטיינר חודשי",
     title: "משרד AI מנוהל שמריץ את העבודה השוטפת של המשרד שלכם",
-    lead: "תדריך בוקר מוכן לפני שהתיישבתם. תיבת מייל ממוינת להחלטות. מסמכים ומעקבים מקודמים בלי שמישהו צריך לזכור לרדוף אחריהם. הכול רץ בסביבה פרטית שמוקדשת למשרד שלכם, והצוות מאשר את מה שחשוב.",
+    lead: "תדריך בוקר מוכן לפני שהתיישבתם. תיבת מייל ממוינת להחלטות. מסמכים ומעקבים מקודמים בלי שמישהו צריך לזכור לרדוף אחריהם. הכול רץ בסביבה פרטית שמוקדשת למשרד שלכם, והצוות מאשר את מה שחשוב. רוב המשרדים מגיעים לכאן אחרי פרויקט: הסטודיו מריץ את מה שהפרויקט בנה, ומרחיב אותו חודש אחרי חודש.",
     ctaLabel: "לראות איך המשרד שלכם היה רץ",
     ctaHref: shellContent("he").workflowCta.href,
     secondaryCta: { label: "איך התמחור עובד", href: "#pricing" },
@@ -365,7 +365,7 @@ const he: OfferPageContent = {
   },
   how: {
     title: "איך השירות רץ",
-    intro: "התקשרות מנוהלת: הקמה אחת, ואז קצב תפעול חודשי.",
+    intro: "התקשרות מנוהלת: הקמה אחת, ואז קצב תפעול חודשי. השבועות הראשונים הם ההקמה: מיפוי שבוע המשרד, הקמת הסביבה הפרטית והפעלת התדריך והמיון; משם, הריצה היומית, עם כוונון חודש בחודשו.",
     steps: [
       {
         title: "ממפים את שבוע המשרד",

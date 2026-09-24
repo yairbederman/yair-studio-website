@@ -6,9 +6,10 @@ import type { CapabilityFilm } from "@/content/studio/types";
  * OfferPageBody template (src/components/offers/OfferPageBody.tsx).
  *
  * Offer detail pages share one section sequence (hero → optional film →
- * who → problems → build → example → how → human → cta); per-page variation
- * is data: which sections carry an intro, the section titles, and whether a
- * film exists. Section ids are fixed in the template (stable anchors).
+ * who → problems → build → example → how → human → optional after → cta);
+ * per-page variation is data: which sections carry an intro, the section
+ * titles, and whether a film exists. Section ids are fixed in the template
+ * (stable anchors).
  */
 export type OfferPageContent = {
   hero: {
@@ -100,5 +101,12 @@ export type OfferPageContent = {
     proofLink?: Cta;
   };
   human: { title: string; intro?: string; items: readonly CardItem[] };
+  /**
+   * "After the project" — the bridge from a project to the managed office;
+   * rendered before the closing CTA as id `after` (ProblemsPanel + one ghost
+   * CTA to the managed-office page). Filled through afterProjectSection()
+   * in src/content/ladder.ts. Never set on the retainer page itself.
+   */
+  after?: { title: string; intro?: string; items: readonly CardItem[]; cta: Cta };
   cta: { heading: string; body: string; ctaLabel: string; ctaHref: string };
 };

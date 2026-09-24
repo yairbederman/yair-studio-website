@@ -1,7 +1,7 @@
 import { localeAccessor } from "@/content/types";
 import { shellContent } from "@/content/shell";
 import { offerCard } from "@/content/offer-cards";
-import { ladderRungCard } from "@/content/ladder";
+import { afterProjectSection, ladderRungCard } from "@/content/ladder";
 import type { Locale } from "@/content/types";
 import type { CapabilityPageContent } from "./types";
 
@@ -139,7 +139,7 @@ const en: CapabilityPageContent = {
       ladderRungCard(
         "en",
         "02",
-        "The three automations are the first agents on one workflow.",
+        "As a project of its own: the sprint's three automations, or one agent built on your own tools, with approval points.",
       ),
       ladderRungCard(
         "en",
@@ -148,6 +148,10 @@ const en: CapabilityPageContent = {
       ),
     ],
   },
+  after: afterProjectSection(
+    "en",
+    "The agents, their approval queue, and the run log: yours, documented, and running.",
+  ),
   cta: {
     heading: "Start with the workflow that eats the most time.",
     body: "Book the scoping call. We look at one workflow and say which steps an agent should run, and which must stay with a person.",
@@ -284,7 +288,7 @@ const he: CapabilityPageContent = {
       ladderRungCard(
         "he",
         "02",
-        "שלוש האוטומציות הן הסוכנים הראשונים על תהליך אחד.",
+        "כפרויקט בפני עצמו: שלוש האוטומציות של הספרינט, או סוכן אחד על הכלים שלכם, עם נקודות אישור.",
       ),
       ladderRungCard(
         "he",
@@ -293,6 +297,10 @@ const he: CapabilityPageContent = {
       ),
     ],
   },
+  after: afterProjectSection(
+    "he",
+    "הסוכנים, תור האישורים ויומן הריצות: שלכם, מתועדים ורצים.",
+  ),
   cta: {
     heading: "מתחילים מהתהליך שאוכל הכי הרבה זמן.",
     body: "קובעים שיחת אפיון. מסתכלים על תהליך אחד ואומרים אילו שלבים סוכן צריך להריץ, ואילו חייבים להישאר אצל אדם.",

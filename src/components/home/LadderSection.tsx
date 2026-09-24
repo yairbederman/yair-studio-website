@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Container from "@/components/Container";
 import SpineReveal from "@/components/SpineReveal";
 import CTAButton from "@/components/CTAButton";
@@ -9,9 +10,10 @@ import type { Locale } from "@/content/types";
  * top to bottom as one decision, so this is deliberately not a card grid.
  * Rungs come from the single source (src/content/ladder.ts); the section
  * copy (title/intro) comes from the caller, so the homepage and /offers can
- * frame the same three rungs differently. Rung 03 (the managed office) is the
- * elevated rung: a --bg-1 panel and the bracketed primary CTA.
- * Used by HomePageBody and OffersIndexPageBody.
+ * frame the same three rungs differently. A receive item with an href (rung
+ * 02's four project shapes) renders as a plain copper link. Rung 03 (the
+ * managed office) is the elevated rung: a --bg-1 panel and the bracketed
+ * primary CTA. Used by HomePageBody and OffersIndexPageBody.
  */
 export default function LadderSection({
   locale,
@@ -47,7 +49,13 @@ export default function LadderSection({
                   <p className="ladder-desc">{rung.desc}</p>
                   <ul className="ladder-receive">
                     {rung.receive.map((item) => (
-                      <li key={item}>{item}</li>
+                      <li key={item.label}>
+                        {item.href ? (
+                          <Link href={item.href}>{item.label}</Link>
+                        ) : (
+                          item.label
+                        )}
+                      </li>
                     ))}
                   </ul>
                   <div className="ladder-cta">

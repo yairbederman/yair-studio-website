@@ -1,6 +1,6 @@
 import { localeAccessor } from "@/content/types";
 import { shellContent } from "@/content/shell";
-import { ladderRungCard } from "@/content/ladder";
+import { afterProjectSection, ladderRungCard } from "@/content/ladder";
 import type { Locale } from "@/content/types";
 import type { CapabilityPageContent } from "./types";
 
@@ -138,15 +138,19 @@ const en: CapabilityPageContent = {
   },
   where: {
     title: "Where it shows up",
-    intro: "Sessions are scoped in the same call: the team, the tasks, and the days.",
+    intro: "Sessions are their own fixed-price project: the team, the tasks, and the days, scoped in the call.",
     rungs: [
       ladderRungCard(
         "en",
-        "01",
-        "Bring one recurring task; the call sets the team, the tasks, and the number of days.",
+        "02",
+        "As a project of its own: the session days, the playbook, and the follow-up visit, scoped to your team.",
       ),
     ],
   },
+  after: afterProjectSection(
+    "en",
+    "The playbook, the setups, and the habits: yours, written down, and in daily use.",
+  ),
   cta: {
     heading: "Bring one real task from your office.",
     body: "That task is the session material. The scoping call sets the team, the tasks, and the number of days.",
@@ -277,15 +281,19 @@ const he: CapabilityPageContent = {
   },
   where: {
     title: "איפה זה מופיע",
-    intro: "המפגשים נסגרים באותה שיחה: הצוות, המשימות והימים.",
+    intro: "המפגשים הם פרויקט במחיר קבוע בפני עצמו: הצוות, המשימות והימים נסגרים בשיחה.",
     rungs: [
       ladderRungCard(
         "he",
-        "01",
-        "מביאים משימה חוזרת אחת; בשיחה קובעים את הצוות, את המשימות ואת מספר הימים.",
+        "02",
+        "כפרויקט בפני עצמו: ימי המפגש, מדריך העבודה וביקור ההמשך, מותאמים לצוות שלכם.",
       ),
     ],
   },
+  after: afterProjectSection(
+    "he",
+    "מדריך העבודה, ההגדרות וההרגלים: שלכם, כתובים ובשימוש יומיומי.",
+  ),
   cta: {
     heading: "תביאו משימה אמיתית אחת מהמשרד.",
     body: "המשימה הזאת היא חומר המפגש. שיחת האפיון קובעת את הצוות, את המשימות ואת מספר הימים.",

@@ -6,6 +6,7 @@ import OfferCTA from "@/components/offers/OfferCTA";
 import ProblemsPanel from "@/components/ProblemsPanel";
 import WorkflowMap from "@/components/WorkflowMap";
 import ProcessFilm from "@/components/ProcessFilm";
+import CTAButton from "@/components/CTAButton";
 import { LinkCardGrid } from "@/components/home/CapabilityStrip";
 import { shellContent } from "@/content/shell";
 import type { CapabilityPageContent } from "@/content/studio/types";
@@ -15,11 +16,12 @@ import type { Locale } from "@/content/types";
  * Shared capability-page template (/studio/<key>). Every capability page uses
  * the same section sequence — hero → optional film → what I do → what you
  * receive → how it runs → worked example → what stays human → where it shows
- * up → closing CTA — so the sequence lives once here and each route passes
- * its locale-resolved content. Built from the offer-page primitives only.
+ * up → optional after the project → closing CTA — so the sequence lives once
+ * here and each route passes its locale-resolved content. Built from the
+ * offer-page primitives only.
  *
- * Section ids are fixed (film/does/receive/how/example/human/where): stable
- * in-page anchors, unique per page.
+ * Section ids are fixed (film/does/receive/how/example/human/where/after):
+ * stable in-page anchors, unique per page.
  */
 export default function CapabilityPageBody({
   content,
@@ -82,6 +84,17 @@ export default function CapabilityPageBody({
       <OfferSection id="where" title={c.where.title} intro={c.where.intro}>
         <LinkCardGrid items={c.where.rungs} />
       </OfferSection>
+
+      {c.after ? (
+        <OfferSection id="after" title={c.after.title} intro={c.after.intro}>
+          <ProblemsPanel items={c.after.items} />
+          <p className="included-proof">
+            <CTAButton href={c.after.cta.href} variant="ghost">
+              {c.after.cta.label}
+            </CTAButton>
+          </p>
+        </OfferSection>
+      ) : null}
 
       <OfferCTA
         heading={c.cta.heading}

@@ -1,6 +1,6 @@
 import { localeAccessor } from "@/content/types";
 import { shellContent } from "@/content/shell";
-import { ladderRungCard } from "@/content/ladder";
+import { afterProjectSection, ladderRungCard } from "@/content/ladder";
 import type { Locale } from "@/content/types";
 import type { CapabilityPageContent } from "./types";
 
@@ -127,15 +127,19 @@ const en: CapabilityPageContent = {
   },
   where: {
     title: "Where it shows up",
-    intro: "A site is its own project, scoped in the same call.",
+    intro: "A site is its own fixed-price project, scoped in the call.",
     rungs: [
       ladderRungCard(
         "en",
-        "01",
-        "Bring the site you have, or the one you don't; it is scoped as its own project.",
+        "02",
+        "As a project of its own: the site designed and built, bilingual, with its films, priced before work starts.",
       ),
     ],
   },
+  after: afterProjectSection(
+    "en",
+    "The site, both language versions, and the code that runs it: yours, documented, and live.",
+  ),
   cta: {
     heading: "See what your site could say.",
     body: "Book the scoping call and bring the site you have, or the one you don't. You get a written read of what it should say and how it should start.",
@@ -261,15 +265,19 @@ const he: CapabilityPageContent = {
   },
   where: {
     title: "איפה זה מופיע",
-    intro: "אתר הוא פרויקט בפני עצמו, שנסגר באותה שיחה.",
+    intro: "אתר הוא פרויקט במחיר קבוע בפני עצמו, שנסגר בשיחה.",
     rungs: [
       ladderRungCard(
         "he",
-        "01",
-        "מביאים את האתר שיש לכם, או את זה שאין; הוא נסגר כפרויקט בפני עצמו.",
+        "02",
+        "כפרויקט בפני עצמו: האתר מעוצב ובנוי, דו־לשוני, עם הסרטונים שלו, ומתומחר לפני שהעבודה מתחילה.",
       ),
     ],
   },
+  after: afterProjectSection(
+    "he",
+    "האתר, שתי גרסאות השפה והקוד שמריץ אותו: שלכם, מתועדים ובאוויר.",
+  ),
   cta: {
     heading: "תראו מה האתר שלכם יכול להגיד.",
     body: "קובעים שיחת אפיון ומביאים את האתר שיש לכם, או את זה שאין. מקבלים סיכום כתוב של מה הוא צריך להגיד ואיך הוא צריך להתחיל.",

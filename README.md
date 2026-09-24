@@ -82,7 +82,9 @@ All copy is **data, not JSX**: typed, locale-keyed files in [`src/content/`](src
 `studio/*.ts`, `capability-cards.ts`, `offer-cards.ts`, `proof.ts`, `shell.ts`, shared shapes in
 `types.ts`). Each exports a `…Content(locale)` accessor; pages are thin composers. Offer detail
 pages render through one template (`src/components/offers/OfferPageBody.tsx`), capability pages
-through another (`src/components/pages/CapabilityPageBody.tsx`). The canonical lists (keys, routes,
+through another (`src/components/pages/CapabilityPageBody.tsx`). Capability and offer pages carry
+an optional `after` section (the project → managed-office bridge, shared copy in `ladder.ts` via
+`afterProjectSection()`), rendered as `#after` before the closing CTA. The canonical lists (keys, routes,
 EN card copy) stay in [`src/lib/offers.ts`](src/lib/offers.ts) (the two paid rungs) and
 [`src/lib/capabilities.ts`](src/lib/capabilities.ts) (the five capabilities); `SERVICES` in
 `src/lib/site.ts` is derived from both.

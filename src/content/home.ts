@@ -110,7 +110,7 @@ const en: HomeContent = {
   ladder: {
     title: ladderContent("en").title,
     intro:
-      "By commitment, from a free call to the studio running your office. You can stop at any rung.",
+      "Most clients start with a project. The managed office is the studio running it for you, month to month. You can stop at any rung.",
   },
   proof: {
     title: "What the managed office looks like",
@@ -177,7 +177,7 @@ const he: HomeContent = {
   ladder: {
     title: ladderContent("he").title,
     intro:
-      "לפי רמת ההתחייבות, משיחה חינם ועד סטודיו שמריץ את המשרד. אפשר לעצור בכל שלב.",
+      "רוב הלקוחות מתחילים בפרויקט. המשרד המנוהל הוא הסטודיו שמריץ אותו בשבילכם, חודש בחודשו. אפשר לעצור בכל שלב.",
   },
   proof: {
     title: "איך נראה המשרד המנוהל",
