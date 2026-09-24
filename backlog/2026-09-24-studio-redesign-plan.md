@@ -33,6 +33,13 @@ text was the site's single biggest "generic" tell.
 | Mobile | Every route verified at 375px in both locales; film type floor enforced before every render |
 | **Audience rule** (owner, 2026-09-24) | **The site faces business clients: owners and office managers of small professional offices and SMB teams. No page, rung, capability, film, or CTA targets R&D or engineering teams.** Retainer, outsourcing, and freelance-style offers are for businesses only. The founder's R&D leadership appears solely as credibility in the founder section |
 
+> **Film spec v2 (owner, 2026-09-24, after the first stills):** the first stills were rejected ("font looks bad,
+> elements very small"). Binding for every film from here on: **sans only on frame** (Instrument Sans 600/400 EN,
+> Assistant 700/600 HE, Geist Mono for Latin chips only; the serif is a website-only headline voice); **elements
+> fill about 80% of the 1920 frame** (rails ~1550px wide, nodes ~40px, cards 2.5–3× the first cut); **type floor
+> headlines ≥ 120px, labels ≥ 80px, secondary ≥ 64px** (≈23 / 16 / 12.5px on a phone); one large text moment at
+> a time. Renders stay blocked until the owner approves the v2 stills.
+
 ## 1. Executive Summary
 
 - **Problem:** The catalogue reads generic and diluted; deliverables are categories, not artefacts; founder proof

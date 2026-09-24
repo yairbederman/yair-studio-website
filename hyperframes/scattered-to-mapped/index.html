@@ -11,17 +11,24 @@
     <style>
       /* ============================================================
          "Scattered → Mapped" film — HyperFrames composition (Film 4).
-         The before BECOMES the after: a tilted ledger of the four real
-         pains (left) + drifting request chips (mid) untangle into a
-         mapped workflow spine (right), gated by a copper human-approval
-         peak. Palette + type mirror src/app/globals.css.
-         Renders transparent (alpha WebM); #review-bg is REVIEW-ONLY.
+         The before BECOMES the after: a ledger of the real pains (two on
+         frame at a time) + drifting request chips (left half) untangle into
+         a mapped workflow spine (right half), gated by a copper
+         human-approval peak. Palette mirrors src/app/globals.css.
+         Film spec v2: SANS ONLY on frame (Instrument Sans 600/400 EN ·
+         Assistant 700/600 HE · Geist Mono for the Latin chips only);
+         elements fill ~80% of the 1920×1080 canvas.
+         Renders transparent (alpha WebM); #review-bg is REVIEW-ONLY —
+         remove it before `npm run render`, restore it after.
+         Geometry (column x, rail x, node y, ledger slots, chip rests) lives
+         in the JS constants below; the CSS reads it through the --* vars.
          ============================================================ */
-      @font-face { font-family: "Inter"; font-weight: 400; font-display: block; src: url("assets/fonts/inter-400.woff2") format("woff2"); }
-      @font-face { font-family: "Inter"; font-weight: 600; font-display: block; src: url("assets/fonts/inter-600.woff2") format("woff2"); }
-      @font-face { font-family: "Geist Mono"; font-weight: 400; font-display: block; src: url("assets/fonts/geist-mono-400.woff2") format("woff2"); }
+      @font-face { font-family: "Instrument Sans"; font-weight: 400 600; font-display: block; src: url("assets/fonts/instrument-sans-400-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
       @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
       @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: "Assistant"; font-weight: 700; font-display: block; src: url("assets/fonts/assistant-700-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+      @font-face { font-family: "Assistant"; font-weight: 700; font-display: block; src: url("assets/fonts/assistant-700-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: "Geist Mono"; font-weight: 400; font-display: block; src: url("assets/fonts/geist-mono-400.woff2") format("woff2"); }
 
       :root {
         --bg-0: #121211; --bg-1: #1a1a18; --bg-2: #242420;
@@ -29,69 +36,75 @@
         --accent: #d96832; --accent-hover: #e67e45;
         --accent-soft: rgba(217, 104, 50, 0.12); --accent-rule: rgba(217, 104, 50, 0.3);
         --rule: #2a2a26; --rule-strong: #3a3a34;
-
-        --rail-x: 1330px;
-        --rail-top: 168px;
-        --rail-h: 720px; /* nodes 168 → 888, gap 144 */
+        /* --left-x / --rail-x / --rail-top / --rail-h / --dot / --label-gap / --label-x
+           are set at init from the JS geometry constants */
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body {
         width: 1920px; height: 1080px; overflow: hidden; background: transparent;
-        font-family: "Inter", system-ui, sans-serif; color: var(--fg-1);
+        font-family: "Instrument Sans", system-ui, sans-serif; color: var(--fg-1);
         -webkit-font-smoothing: antialiased;
       }
       #stage { position: relative; width: 1920px; height: 1080px; }
       #camera { position: absolute; inset: 0; transform-origin: 1100px 540px; will-change: transform; }
+      #review-bg { position: absolute; inset: -40px; background: var(--bg-0); } /* REVIEW-ONLY (check / snapshot) */
 
-      /* ---------- Caps (mirror the section's panel captions) ---------- */
+      /* ---------- Caps — the two headline moments (120px, one on frame at a time) ---------- */
       .cap {
-        position: absolute; top: 116px; font-family: "Geist Mono", ui-monospace, monospace;
-        font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase;
-        color: var(--fg-3); opacity: 0;
+        position: absolute; top: 90px; /* line box 132 → cap band ≈ y 111–199 */
+        font-size: 120px; font-weight: 600; line-height: 1.1; letter-spacing: -0.01em;
+        color: var(--fg-1); white-space: nowrap; opacity: 0; will-change: transform, opacity;
       }
-      #cap-before { left: 130px; }
-      #cap-mapped { left: 1352px; }
+      #cap-before { left: var(--left-x); color: var(--fg-2); }
+      #cap-mapped { left: var(--label-x); filter: blur(0px); } /* flush with the node labels; blur baseline for the peak rack focus */
 
-      /* ---------- Ledger (left) — the four real before-items ---------- */
+      /* ---------- Ledger (left) — the four before-clauses, TWO ON FRAME AT A TIME (64px) ----------
+         Each clause is two measured lines (.ln); each line carries its own strike. */
       .led {
-        position: absolute; left: 130px; display: inline-block;
-        font-size: 25px; font-weight: 400; letter-spacing: -0.005em;
-        color: var(--fg-2); white-space: nowrap; opacity: 0;
-        will-change: transform, opacity;
+        position: absolute; left: var(--left-x);
+        font-size: 64px; font-weight: 400; line-height: 1.1; letter-spacing: 0;
+        color: var(--fg-2); opacity: 0; will-change: transform, opacity;
       }
+      .led .ln { position: relative; display: block; width: fit-content; white-space: nowrap; }
       .led .strike {
-        position: absolute; left: -2px; right: -2px; top: 55%; height: 2px;
-        background: var(--fg-3); border-radius: 1px;
+        position: absolute; left: -4px; right: -4px; top: 58%; height: 3px;
+        background: var(--fg-3); border-radius: 2px;
         transform: scaleX(0); transform-origin: left center;
       }
 
-      /* ---------- Chaos field (mid) — chips + tangle ---------- */
+      /* ---------- Chaos field (left) — chips + tangle ---------- */
       #chaos { position: absolute; inset: 0; }
-      .chipw { position: absolute; will-change: transform; } /* drift wrapper — flight tweens live on the inner chip */
+      /* drift wrapper: a FIXED box with the chip centred, so the chip's centre (the flight origin)
+         is independent of text width — font-race-free in both locales. Flight tweens live on the inner chip. */
+      .chipw {
+        position: absolute; /* size + position set at init from CHIP_BOX / CHIP_REST */
+        display: flex; align-items: center; justify-content: center; will-change: transform;
+      }
       .chip {
         display: inline-block; font-family: "Geist Mono", ui-monospace, monospace;
-        font-size: 16px; letter-spacing: 0.04em; color: var(--fg-2);
-        padding: 8px 13px; border: 1px solid var(--rule-strong); border-radius: 4px;
+        font-size: 64px; line-height: 1; letter-spacing: 0; color: var(--fg-2);
+        padding: 12px 20px; border: 2px solid var(--rule-strong); border-radius: 8px;
         background: var(--bg-1); white-space: nowrap; opacity: 0;
         filter: blur(0px); /* baseline so the flight can blur out (velocity-matched exit) */
         will-change: transform, opacity, filter;
       }
       .tangle {
-        position: absolute; height: 2px; background: var(--rule-strong);
-        border-radius: 2px; opacity: 0; will-change: opacity;
+        position: absolute; height: 3px; background: var(--rule-strong);
+        border-radius: 2px; opacity: 0; transform-origin: left center; will-change: opacity;
       }
 
       /* ---------- Spine (right) ---------- */
       #spine-glow {
-        position: absolute; left: 880px; top: 90px; width: 900px; height: 900px;
+        position: absolute; width: 1300px; height: 1300px;
+        left: calc(var(--rail-x) - 650px); top: calc(var(--rail-top) + var(--rail-h) / 2 - 650px);
         background: radial-gradient(circle, rgba(217, 104, 50, 0.07) 0%, rgba(217, 104, 50, 0) 62%);
         opacity: 0; will-change: transform, opacity;
       }
       .spine-rail, .spine-fill {
         position: absolute; left: var(--rail-x); top: var(--rail-top);
-        width: 2px; height: var(--rail-h); transform: translateX(-50%);
+        width: 3px; height: var(--rail-h); transform: translateX(-50%);
       }
-      .spine-rail { background: var(--rule); transform: translateX(-50%) scaleY(0); transform-origin: top center; }
+      .spine-rail { background: var(--rule-strong); transform: translateX(-50%) scaleY(0); transform-origin: top center; }
       .spine-fill {
         background: linear-gradient(var(--accent-hover), var(--accent));
         transform: translateX(-50%) scaleY(0); transform-origin: top center;
@@ -99,51 +112,49 @@
 
       .node {
         position: absolute; left: var(--rail-x);
-        display: flex; align-items: center; gap: 22px;
+        display: flex; align-items: center; gap: var(--label-gap);
         transform: translateY(-50%);
-        filter: blur(1.6px); opacity: 0; /* ghosted in by the mapping pass, focused on activation */
+        filter: blur(2px); opacity: 0; /* ghosted in by the mapping pass, focused on activation */
       }
       .node .dot {
         position: relative; flex: 0 0 auto;
-        width: 14px; height: 14px; margin-left: -7px; border-radius: 50%;
-        background: var(--bg-0); border: 2px solid var(--rule-strong);
-        box-shadow: 0 0 0 5px var(--bg-0); /* knock the rail out behind the dot */
+        width: var(--dot); height: var(--dot); margin-left: calc(var(--dot) / -2); border-radius: 50%;
+        background: var(--bg-0); border: 4px solid var(--rule-strong);
+        box-shadow: 0 0 0 10px var(--bg-0); /* knock the rail out behind the dot */
       }
-      .node .body { display: flex; flex-direction: column; gap: 4px; }
       .node .label {
-        font-size: 30px; font-weight: 600; letter-spacing: -0.01em;
+        font-size: 80px; font-weight: 600; line-height: 1.1; letter-spacing: -0.01em;
         color: var(--fg-3); white-space: nowrap;
       }
-      .node .sub {
-        font-family: "Geist Mono", ui-monospace, monospace; font-size: 16px;
-        letter-spacing: 0.04em; color: var(--fg-3); white-space: nowrap;
-      }
+      /* The peak: Human approval is the rail's headline moment (120px) */
+      #n4 .label { font-size: 120px; }
       .node--human .dot { border-color: var(--accent); }
       .node--out .label { color: var(--fg-3); }
 
       #approve-ring {
-        position: absolute; left: var(--rail-x); top: 744px;
-        width: 42px; height: 42px; margin-left: -21px; margin-top: -21px;
-        border-radius: 50%; border: 2px solid var(--accent);
+        position: absolute; left: var(--rail-x); /* top set at init to the Human-approval node y */
+        width: 104px; height: 104px; margin-left: -52px; margin-top: -52px;
+        border-radius: 50%; border: 4px solid var(--accent);
         opacity: 0; /* initial scale set by GSAP fromTo */
       }
 
       /* ---------- Locale: HE = one composition, layout mirrored (RTL transcreation) ----------
          #mirror reflects every POSITION across the frame centre (scaleX(-1)); the inner
-         text spans (.t) and node labels/subs are un-flipped (scaleX(-1) again) so the
-         Hebrew reads correctly. Double-flip = mirrored layout with correctly-oriented
-         text — a transcreation, NOT a backwards flipped render. All GSAP transforms
-         (chip flights, ledger jitter) reflect through the parent mirror unchanged, so
-         the timeline is locale-agnostic. EN adds no `.he` class → identical to before. */
+         text spans (.t) and node labels are un-flipped (scaleX(-1) again) so the Hebrew
+         reads correctly. Double-flip = mirrored layout with correctly-oriented text — a
+         transcreation, NOT a backwards flipped render. All GSAP transforms (chip flights,
+         ledger jitter) reflect through the parent mirror unchanged, so the timeline is
+         locale-agnostic. EN adds no `.he` class. */
       .t { display: inline-block; }
       #mirror { position: absolute; inset: 0; width: 1920px; height: 1080px; transform-origin: 960px 540px; }
       .he #mirror { transform: scaleX(-1); }
-      .he #mirror, .he #mirror * { font-family: "Assistant", system-ui, sans-serif; }
-      /* direction:rtl sets the bidi base so a trailing neutral (the chips'
-         "?") resolves to the END of the Hebrew run (visually left), not after
-         it. Pure-Hebrew runs are already RTL-laid regardless, so this is inert
-         for them and only corrects the trailing-"?" chips. */
-      .he .t, .he .node .label, .he .node .sub { transform: scaleX(-1); direction: rtl; }
+      /* HE type — explicit per role: headlines + node labels → Assistant 700; ledger + chips →
+         Assistant 600. Hebrew is never mono and never letter-spaced. */
+      .he .cap, .he .node .label { font-family: "Assistant", system-ui, sans-serif; font-weight: 700; letter-spacing: 0; }
+      .he .led, .he .chip { font-family: "Assistant", system-ui, sans-serif; font-weight: 600; letter-spacing: 0; }
+      /* direction:rtl sets the bidi base so a trailing neutral (the chips' "?") resolves to the
+         END of the Hebrew run (visually left), not after it. Inert for pure-Hebrew runs. */
+      .he .t, .he .node .label { transform: scaleX(-1); direction: rtl; }
       .he #camera { transform-origin: 820px 540px; } /* mirror the push-in pivot X(1100) */
     </style>
   </head>
@@ -151,58 +162,53 @@
   <body>
     <div id="stage" data-composition-id="root" data-start="0" data-duration="13" data-width="1920" data-height="1080">
       <div id="camera" data-layout-allow-overflow>
+       <div id="review-bg"></div>
        <div id="mirror">
         <div id="spine-glow"></div>
 
-        <!-- Caps — the section's two panel captions, both alive in one frame.
+        <!-- Caps — the two headline moments, handed off (one on frame at a time).
              Text lives in an inner .t span so HE can un-flip it under the mirror. -->
         <div class="cap" id="cap-before"><span class="t"></span></div>
         <div class="cap" id="cap-mapped"><span class="t"></span></div>
 
-        <!-- Ledger — the four before-items, verbatim from home.ts evidence -->
-        <div class="led" id="led0" style="top: 250px"><span class="t"></span><span class="strike"></span></div>
-        <div class="led" id="led1" style="top: 392px"><span class="t"></span><span class="strike"></span></div>
-        <div class="led" id="led2" style="top: 534px"><span class="t"></span><span class="strike"></span></div>
-        <div class="led" id="led3" style="top: 676px"><span class="t"></span><span class="strike"></span></div>
+        <!-- Ledger — the four before-clauses of example.intro (process-optimization.ts), two lines
+             each; two on frame at a time (slot A: led0 → led2, slot B: led1 → led3). Tops set at init. -->
+        <div class="led" id="led0"><span class="ln"><span class="t"></span><span class="strike"></span></span><span class="ln"><span class="t"></span><span class="strike"></span></span></div>
+        <div class="led" id="led1"><span class="ln"><span class="t"></span><span class="strike"></span></span><span class="ln"><span class="t"></span><span class="strike"></span></span></div>
+        <div class="led" id="led2"><span class="ln"><span class="t"></span><span class="strike"></span></span><span class="ln"><span class="t"></span><span class="strike"></span></span></div>
+        <div class="led" id="led3"><span class="ln"><span class="t"></span><span class="strike"></span></span><span class="ln"><span class="t"></span><span class="strike"></span></span></div>
 
-        <!-- Chaos field — request chips at odd angles + tangled hairlines.
-             Overlap here is the point (it untangles). -->
-        <div id="chaos" data-layout-allow-overflow>
-          <div class="tangle" style="left: 720px; top: 300px; width: 240px; transform: rotate(18deg)"></div>
-          <div class="tangle" style="left: 880px; top: 250px; width: 200px; transform: rotate(-25deg)"></div>
-          <div class="tangle" style="left: 700px; top: 520px; width: 280px; transform: rotate(-10deg)"></div>
-          <div class="tangle" style="left: 900px; top: 600px; width: 220px; transform: rotate(30deg)"></div>
-          <div class="tangle" style="left: 760px; top: 740px; width: 260px; transform: rotate(-18deg)"></div>
-          <div class="tangle" style="left: 1020px; top: 420px; width: 180px; transform: rotate(50deg)"></div>
-          <div class="tangle" style="left: 1060px; top: 290px; width: 200px; transform: rotate(-42deg)"></div>
-          <div class="tangle" style="left: 640px; top: 680px; width: 240px; transform: rotate(12deg)"></div>
-          <div class="tangle" style="left: 830px; top: 470px; width: 210px; transform: rotate(-4deg)"></div>
-          <div class="tangle" style="left: 960px; top: 760px; width: 230px; transform: rotate(24deg)"></div>
+        <!-- Chaos field — request chips at odd angles + tangled hairlines, in the two bands
+             between / below the ledger slots. Overlap here is the point (it untangles).
+             Chip wrapper sizes + positions are set at init from CHIP_BOX / CHIP_REST. -->
+        <div id="chaos" data-layout-allow-overflow data-layout-allow-overlap>
+          <div class="tangle" style="left: 140px; top: 468px; width: 330px; transform: rotate(9deg)"></div>
+          <div class="tangle" style="left: 350px; top: 590px; width: 320px; transform: rotate(-12deg)"></div>
+          <div class="tangle" style="left: 190px; top: 598px; width: 280px; transform: rotate(-7deg)"></div>
+          <div class="tangle" style="left: 450px; top: 446px; width: 230px; transform: rotate(21deg)"></div>
+          <div class="tangle" style="left: 150px; top: 826px; width: 350px; transform: rotate(11deg)"></div>
+          <div class="tangle" style="left: 330px; top: 952px; width: 340px; transform: rotate(-14deg)"></div>
+          <div class="tangle" style="left: 170px; top: 976px; width: 300px; transform: rotate(-7deg)"></div>
+          <div class="tangle" style="left: 500px; top: 814px; width: 190px; transform: rotate(34deg)"></div>
 
-          <div class="chipw" id="w-email" style="left: 700px; top: 260px"><span class="chip" id="c-email" style="transform: rotate(-5deg)"><span class="t"></span></span></div>
-          <div class="chipw" id="w-chat" style="left: 1050px; top: 190px"><span class="chip" id="c-chat" style="transform: rotate(3deg)"><span class="t"></span></span></div>
-          <div class="chipw" id="w-call" style="left: 820px; top: 380px"><span class="chip" id="c-call" style="transform: rotate(-2deg)"><span class="t"></span></span></div>
-          <div class="chipw" id="w-status" style="left: 660px; top: 560px"><span class="chip" id="c-status" style="transform: rotate(4deg)"><span class="t"></span></span></div>
-          <div class="chipw" id="w-follow" style="left: 1060px; top: 670px"><span class="chip" id="c-follow" style="transform: rotate(-3.5deg)"><span class="t"></span></span></div>
-          <div class="chipw" id="w-open" style="left: 740px; top: 840px"><span class="chip" id="c-open" style="transform: rotate(2.5deg)"><span class="t"></span></span></div>
+          <div class="chipw" id="w-email"><span class="chip" id="c-email" style="transform: rotate(-5deg)"><span class="t"></span></span></div>
+          <div class="chipw" id="w-chat"><span class="chip" id="c-chat" style="transform: rotate(3deg)"><span class="t"></span></span></div>
+          <div class="chipw" id="w-call"><span class="chip" id="c-call" style="transform: rotate(-2deg)"><span class="t"></span></span></div>
+          <div class="chipw" id="w-status"><span class="chip" id="c-status" style="transform: rotate(4deg)"><span class="t"></span></span></div>
+          <div class="chipw" id="w-follow"><span class="chip" id="c-follow" style="transform: rotate(-3.5deg)"><span class="t"></span></span></div>
+          <div class="chipw" id="w-open"><span class="chip" id="c-open" style="transform: rotate(2.5deg)"><span class="t"></span></span></div>
         </div>
 
-        <!-- Spine — the mapped workflow, verbatim from home.ts evidence -->
+        <!-- Spine — the mapped workflow, verbatim from example.map.nodes. Node tops are set at init from NODE_Y. -->
         <div class="spine-rail" id="spine-rail"></div>
         <div class="spine-fill" id="spine-fill"></div>
 
-        <div class="node" id="n0" style="top: 168px">
-          <span class="dot"></span>
-          <span class="body">
-            <span class="label"></span>
-            <span class="sub"></span>
-          </span>
-        </div>
-        <div class="node" id="n1" style="top: 312px"><span class="dot"></span><span class="body"><span class="label"></span></span></div>
-        <div class="node" id="n2" style="top: 456px"><span class="dot"></span><span class="body"><span class="label"></span></span></div>
-        <div class="node" id="n3" style="top: 600px"><span class="dot"></span><span class="body"><span class="label"></span></span></div>
-        <div class="node node--human" id="n4" style="top: 744px"><span class="dot"></span><span class="body"><span class="label"></span></span></div>
-        <div class="node node--out" id="n5" style="top: 888px"><span class="dot"></span><span class="body"><span class="label"></span></span></div>
+        <div class="node" id="n0"><span class="dot"></span><span class="label"></span></div>
+        <div class="node" id="n1"><span class="dot"></span><span class="label"></span></div>
+        <div class="node" id="n2"><span class="dot"></span><span class="label"></span></div>
+        <div class="node" id="n3"><span class="dot"></span><span class="label"></span></div>
+        <div class="node node--human" id="n4"><span class="dot"></span><span class="label"></span></div>
+        <div class="node node--out" id="n5"><span class="dot"></span><span class="label"></span></div>
 
         <div id="approve-ring"></div>
        </div>
@@ -213,55 +219,55 @@
       /* ============================================================
          Timeline — 13s, deterministic (no random / Date / async).
          scatter → mapping pass → untangle → APPROVAL HOLD → done → settle.
-         Node y-centres: 168,312,456,600,744,888 · rail top 168, h 720.
          The `lang` variable picks copy; HE mirrors LAYOUT via #mirror's
          scaleX(-1) (text un-flipped in CSS) — the timeline is locale-agnostic.
-         Every on-frame string traces to src/content/home.ts → evidence.
+         Every on-frame string traces to src/content/studio/process-optimization.ts
+         → `example` (intro / map.caption / map.nodes); see DESIGN.md → Source of truth.
          ============================================================ */
       const vars = (window.__hyperframes && window.__hyperframes.getVariables)
         ? window.__hyperframes.getVariables() : {};
       const lang = vars.lang === "he" ? "he" : "en";
       const isHE = lang === "he";
       document.documentElement.lang = lang;
-      if (isHE) document.documentElement.classList.add("he"); // drives #mirror + un-flip + Assistant font
+      if (isHE) document.documentElement.classList.add("he"); // drives #mirror + un-flip + HE type
 
       const COPY = {
         en: {
-          capBefore: "Before",            // evidence.before.caption
-          capMapped: "Mapped workflow",   // evidence.mapped.caption
-          led: [                          // evidence.before.items (verbatim)
-            "Requests arrive by email, chat, and calls",
-            "Status lives in someone's head",
-            "Follow-up depends on remembering",
-            "No shared view of what is open",
+          capBefore: "Before the map",     // example.intro — the clause before the colon, verbatim
+          capMapped: "Mapped workflow",    // example.map.caption
+          led: [                           // example.intro — the four "before" clauses, sentence-cased, two measured lines each
+            ["Requests arrive by", "email, chat, and calls"],
+            ["Status lives in", "someone's head"],
+            ["Follow-up depends", "on remembering"],
+            ["No shared view of", "what is open"],
           ],
-          chips: ["email", "chat", "call", "status?", "follow-up?", "what is open?"], // contractions of before-items
-          nodes: [                        // evidence.mapped.nodes (verbatim)
-            { label: "Incoming request", sub: "email · chat · call" },
-            { label: "Captured + categorized" },
-            { label: "Owner + due date assigned" },
-            { label: "Draft response prepared" },
-            { label: "Human approval" },
-            { label: "Tracked to done" },
+          chips: ["email", "chat", "call", "status?", "follow-up?", "what is open?"], // contractions of the intro clauses / nodes[0].sub
+          nodes: [                         // example.map.nodes (verbatim labels)
+            "Incoming request",
+            "Captured + categorized",
+            "Owner + due date assigned",
+            "Draft response prepared",
+            "Human approval",
+            "Tracked to done",
           ],
         },
         he: {
-          capBefore: "לפני",              // he.evidence.before.caption
-          capMapped: "תהליך ממופה",       // he.evidence.mapped.caption
-          led: [                          // he.evidence.before.items (verbatim)
-            "בקשות מגיעות במייל, בצ'אט ובטלפון",
-            "הסטטוס נמצא בראש של מישהו",
-            "המעקב תלוי בזיכרון",
-            "אין תמונה משותפת של מה פתוח",
+          capBefore: "לפני המפה",          // he.example.intro — the clause before the colon, verbatim
+          capMapped: "תהליך ממופה",        // he.example.map.caption
+          led: [                           // he.example.intro — the four "before" clauses, verbatim, two lines each
+            ["בקשות מגיעות במייל,", "בצ'אט ובטלפון"],
+            ["הסטטוס נמצא", "בראש של מישהו"],
+            ["המעקב תלוי", "בזיכרון"],
+            ["אין תמונה משותפת", "של מה פתוח"],
           ],
-          chips: ["מייל", "צ'אט", "טלפון", "סטטוס?", "מעקב?", "מה פתוח?"], // contractions of he before-items / node sub
-          nodes: [                        // he.evidence.mapped.nodes (verbatim)
-            { label: "בקשה נכנסת", sub: "מייל · צ'אט · טלפון" },
-            { label: "נקלטת ומסווגת" },
-            { label: "משויכת לאחראי ולתאריך יעד" },
-            { label: "טיוטת תשובה מוכנה" },
-            { label: "אישור אנושי" },
-            { label: "מנוהלת עד לסגירה" },
+          chips: ["מייל", "צ'אט", "טלפון", "סטטוס?", "מעקב?", "מה פתוח?"], // contractions of the he intro clauses / nodes[0].sub
+          nodes: [                         // he.example.map.nodes (verbatim labels)
+            "בקשה נכנסת",
+            "נקלטת ומסווגת",
+            "משויכת לאחראי ולתאריך יעד",
+            "טיוטת תשובה מוכנה",
+            "אישור אנושי",
+            "מנוהלת עד לסגירה",
           ],
         },
       }[lang];
@@ -270,15 +276,48 @@
       const setTxt = (sel, t) => { const el = document.querySelector(sel); if (el) el.textContent = t; };
       setTxt("#cap-before .t", COPY.capBefore);
       setTxt("#cap-mapped .t", COPY.capMapped);
-      COPY.led.forEach((t, i) => setTxt("#led" + i + " .t", t));
-      CHIP_IDS.forEach((id, i) => setTxt("#" + id + " .t", COPY.chips[i]));
-      COPY.nodes.forEach((n, i) => {
-        setTxt("#n" + i + " .label", n.label);
-        if (n.sub) setTxt("#n" + i + " .sub", n.sub);
+      COPY.led.forEach((lines, i) => {
+        document.querySelectorAll("#led" + i + " .ln .t").forEach((el, j) => { el.textContent = lines[j]; });
       });
+      CHIP_IDS.forEach((id, i) => setTxt("#" + id + " .t", COPY.chips[i]));
+      COPY.nodes.forEach((label, i) => setTxt("#n" + i + " .label", label));
 
-      const NODE_Y = [168, 312, 456, 600, 744, 888];
-      const RAIL_TOP = 168, RAIL_H = 720;
+      // ---- Geometry — the single source for the CSS vars, node / ledger tops, chip rests AND the flight vectors ----
+      // EN coordinates; HE mirrors everything through #mirror. Pure constants: nothing is measured from the DOM.
+      const LEFT_X = 100;                             // ledger + chaos column (x 100 → 700) and the BEFORE headline
+      const RAIL_X = 740;                             // rail x (3px wide)
+      const DOT = 40, LABEL_GAP = 24;                 // node dot diameter; dot edge → label
+      const LABEL_X = RAIL_X + DOT / 2 + LABEL_GAP;   // 784 — node labels + the MAPPED headline start here
+      // Node centres, pitch 138: the first label clears the 120px headline band (caps ≈ 111–199,
+      // descenders to ≈ 225); "Owner + due date assigned" (80px) ends at x ≈ 1770 (DESIGN.md → Geometry).
+      const NODE_Y = [290, 428, 566, 704, 842, 980];
+      const RAIL_TOP = NODE_Y[0], RAIL_H = NODE_Y[5] - NODE_Y[0];
+      const LED_TOP = { A: 270, B: 640 };             // ledger slots (two clauses on frame at a time), 2 × 70.4px lines each
+      const LED_SLOT = ["A", "B", "A", "B"];          // led0 → A, led1 → B; led2 then replaces led0, led3 replaces led1
+      const CHIP_BOX = { w: 560, h: 100 };            // .chipw fixed box (chip centred inside; widest chip "what is open?" ≈ 543px)
+      const CHIP_REST = {                             // chip rest CENTRES: middle band (y 430–625) / bottom band (y 800–1010)
+        "c-email": [230, 478], "c-chat": [585, 500], "c-call": [395, 572],
+        "c-status": [290, 850], "c-follow": [480, 950], "c-open": [400, 905],
+      };
+      const CHIP_TARGET = { "c-email": 0, "c-chat": 0, "c-call": 0, "c-status": 2, "c-follow": 3, "c-open": 5 }; // → node index
+
+      const rootStyle = document.documentElement.style;
+      rootStyle.setProperty("--left-x", LEFT_X + "px");
+      rootStyle.setProperty("--rail-x", RAIL_X + "px");
+      rootStyle.setProperty("--rail-top", RAIL_TOP + "px");
+      rootStyle.setProperty("--rail-h", RAIL_H + "px");
+      rootStyle.setProperty("--dot", DOT + "px");
+      rootStyle.setProperty("--label-gap", LABEL_GAP + "px");
+      rootStyle.setProperty("--label-x", LABEL_X + "px");
+      NODE_Y.forEach((y, i) => { document.getElementById("n" + i).style.top = y + "px"; });
+      LED_SLOT.forEach((s, i) => { document.getElementById("led" + i).style.top = LED_TOP[s] + "px"; });
+      document.getElementById("approve-ring").style.top = NODE_Y[4] + "px";
+      Object.entries(CHIP_REST).forEach(([id, [cx, cy]]) => {
+        const w = document.getElementById("w-" + id.slice(2)).style;
+        w.width = CHIP_BOX.w + "px"; w.height = CHIP_BOX.h + "px";
+        w.left = (cx - CHIP_BOX.w / 2) + "px";
+        w.top = (cy - CHIP_BOX.h / 2) + "px";
+      });
       const fillTo = (i) => (NODE_Y[i] - RAIL_TOP) / RAIL_H;
 
       const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
@@ -288,67 +327,87 @@
         tl.to(sel + " .dot", { backgroundColor: "#d96832", borderColor: "#d96832", duration: 0.4 }, at);
         tl.to(sel + " .label", { color: color || "#f4f1ea", duration: 0.4, overwrite: "auto" }, at);
       }
-      /* chip flight: chaos rest → node dot (shrink + dissolve into it) */
-      function fly(sel, dx, dy, at, dur) {
-        tl.to(sel, { x: dx, y: dy, rotation: 0, scale: 0.35, opacity: 0, filter: "blur(8px)", duration: dur, ease: "power2.inOut" }, at); // velocity-matched exit (accelerate + blur into the node)
+      /* chip flight: chaos rest centre → its node dot (shrink + dissolve into it); vector derived from the geometry constants */
+      function fly(id, at, dur) {
+        const [cx, cy] = CHIP_REST[id];
+        const dx = RAIL_X - cx, dy = NODE_Y[CHIP_TARGET[id]] - cy;
+        tl.to("#" + id, { x: dx, y: dy, rotation: 0, scale: 0.15, opacity: 0, filter: "blur(8px)", duration: dur, ease: "power2.inOut" }, at); // velocity-matched exit (accelerate + blur into the node)
       }
-      /* ledger line resolves: straightens, dims, strikes through */
+      /* chip drift on its wrapper: an EVEN number of yoyo halves, so it is back at y 0 exactly when its flight starts */
+      function drift(id, amp, from, until) {
+        const halves = 2 * Math.max(1, Math.round((until - from) / 2.8));
+        tl.to("#w-" + id.slice(2), { y: amp, duration: (until - from) / halves, yoyo: true, repeat: halves - 1, ease: "sine.inOut" }, from);
+      }
+      /* ledger clause enters its slot (tilted + jittered — still unresolved) */
+      function enter(sel, at, from, to, dur, ease) {
+        tl.fromTo(sel, { opacity: 0, ...from }, { opacity: 1, ...to, duration: dur, ease }, at);
+      }
+      /* ledger clause resolves: straightens, dims, strikes through (line 1, then line 2) */
       function resolve(sel, at) {
-        tl.to(sel, { x: 0, rotation: 0, color: "#8a847a", duration: 0.5, ease: "power2.out" }, at);
-        tl.to(sel + " .strike", { scaleX: 1, duration: 0.45, ease: "power2.inOut" }, at + 0.08);
+        tl.to(sel, { x: 0, rotation: 0, color: "#8a847a", duration: 0.45, ease: "power2.out" }, at);
+        tl.to(sel + " .strike", { scaleX: 1, duration: 0.32, ease: "power2.inOut", stagger: 0.12 }, at + 0.06);
+      }
+      /* a resolved clause clears its slot for the next pain (leaves upward as the next one rises in) */
+      function clear(sel, at) {
+        tl.to(sel, { opacity: 0, y: -22, duration: 0.35, ease: "power2.in" }, at);
       }
 
-      // ---- ACT 1 — Scatter (0.15–2.9): the mess assembles ----
-      tl.fromTo("#cap-before", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.15);
-      // four pains, four different entrances — landing tilted + jittered
-      tl.fromTo("#led0", { opacity: 0, x: -24, rotation: -1.3 }, { opacity: 1, x: 12, rotation: -1.3, duration: 0.6, ease: "power3.out" }, 0.35);
-      tl.fromTo("#led1", { opacity: 0, x: 38, rotation: 1.0 }, { opacity: 1, x: 38, rotation: 1.0, duration: 0.7, ease: "sine.out" }, 0.55);
-      tl.fromTo("#led2", { opacity: 0, x: 6, y: 24, rotation: -0.8 }, { opacity: 1, x: 6, y: 0, rotation: -0.8, duration: 0.6, ease: "expo.out" }, 0.75);
-      tl.fromTo("#led3", { opacity: 0, x: 58, rotation: 1.6 }, { opacity: 1, x: 30, rotation: 1.6, duration: 0.65, ease: "power2.out" }, 0.95);
-      // chips tumble in (extra spin settles into each chip's resting tilt)
+      // ---- ACT 1 — Scatter (0.15–2.9): the mess assembles under the BEFORE headline ----
+      tl.fromTo("#cap-before", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.55, ease: "power2.out" }, 0.15);
+      // the first two pains, two different entrances — landing tilted + jittered
+      enter("#led0", 0.35, { x: -24, rotation: -1.2 }, { x: 8, rotation: -1.2 }, 0.6, "power3.out");
+      enter("#led1", 0.55, { x: 40, rotation: 1.0 }, { x: 20, rotation: 1.0 }, 0.7, "sine.out");
+      // five chips tumble in (extra spin settles into each chip's resting tilt); `what is open?` arrives later with its clause
       const CHIPS = [
         ["#c-email", -5, "power3.out"], ["#c-chat", 3, "expo.out"], ["#c-call", -2, "power2.out"],
-        ["#c-status", 4, "power3.out"], ["#c-follow", -3.5, "expo.out"], ["#c-open", 2.5, "power2.out"],
+        ["#c-status", 4, "power3.out"], ["#c-follow", -3.5, "expo.out"],
       ];
       CHIPS.forEach(([sel, rot, ease], i) => {
         tl.fromTo(sel, { opacity: 0, scale: 0.75, rotation: rot + (i % 2 ? 9 : -9) },
           { opacity: 1, scale: 1, rotation: rot, duration: 0.55, ease }, 0.6 + i * 0.22);
       });
       tl.to(".tangle", { opacity: 0.75, duration: 0.6, ease: "sine.out", stagger: 0.07 }, 1.0);
-      // slow ambient drift on the wrappers (finite, varied) — flights animate
-      // the inner chips, so no property is ever driven twice
-      const DRIFT = [
-        ["#w-email", 10, 1], ["#w-chat", -9, 1], ["#w-call", 8, 1],
-        ["#w-status", -11, 2], ["#w-follow", 9, 3], ["#w-open", -10, 6],
-      ];
-      DRIFT.forEach(([sel, amp, rep]) => {
-        tl.to(sel, { y: amp, duration: 1.4, yoyo: true, repeat: rep, ease: "sine.inOut" }, 1.2);
-      });
+      // slow ambient drift on the wrappers (finite, varied) — flights animate the inner chips,
+      // so no property is ever driven twice; each drift ends at y 0 as its flight starts
+      drift("c-email", 8, 1.2, 4.35);
+      drift("c-chat", -7, 1.2, 4.5);
+      drift("c-call", 7, 1.2, 4.65);
+      drift("c-status", -9, 1.2, 6.0);
+      drift("c-follow", 8, 1.2, 6.9);
 
-      // ---- ACT 2 — The mapping pass (2.9–4.3): the spine draws ----
-      tl.fromTo("#cap-mapped", { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }, 2.9);
+      // ---- ACT 2 — The mapping pass (2.9–4.3): the headline hands off, the spine draws ----
+      // One headline moment at a time: BEFORE leaves upward as MAPPED WORKFLOW rises (velocity-matched hand-off).
+      tl.to("#cap-before", { opacity: 0, y: -18, duration: 0.45, ease: "power2.in" }, 2.9);
+      tl.fromTo("#cap-mapped", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.55, ease: "power2.out" }, 3.05);
       tl.to("#spine-rail", { scaleY: 1, duration: 1.1, ease: "power1.inOut" }, 3.0);
       tl.to("#spine-glow", { opacity: 0.8, duration: 1.0, ease: "sine.out" }, 3.2);
       tl.to("#spine-glow", { scale: 1.05, duration: 1.8, yoyo: true, repeat: 4, ease: "sine.inOut" }, 3.4);
       tl.to(".node", { opacity: 0.5, duration: 0.5, stagger: 0.12 }, 3.25); // ghosts along the rail
 
-      // ---- ACT 3 — Untangle (4.35–8.2): each piece finds its place ----
-      fly("#c-email", 593, -110, 4.35, 0.85);
-      fly("#c-chat", 248, -40, 4.5, 0.85);
-      fly("#c-call", 478, -230, 4.65, 0.85);
+      // ---- ACT 3 — Untangle (4.35–8.2): each piece finds its place; the ledger queue advances ----
+      fly("c-email", 4.35, 0.85);
+      fly("c-chat", 4.5, 0.85);
+      fly("c-call", 4.65, 0.85);
       activate("#n0", 5.0);
       resolve("#led0", 5.15);
+      clear("#led0", 5.8);                                  // slot A clears …
+      enter("#led2", 5.95, { x: 6, y: 24, rotation: -0.8 }, { x: 6, y: 0, rotation: -0.8 }, 0.55, "expo.out"); // … the third pain rises in
 
       tl.to("#spine-fill", { scaleY: fillTo(1), duration: 0.5, ease: "power1.inOut" }, 5.5);
       activate("#n1", 5.9);
 
-      fly("#c-status", 624, -122, 6.0, 0.85);
+      fly("c-status", 6.0, 0.85);
       tl.to("#spine-fill", { scaleY: fillTo(2), duration: 0.5, ease: "power1.inOut" }, 6.3);
       activate("#n2", 6.8);
-      resolve("#led1", 6.95);
+      resolve("#led1", 6.85);
 
-      fly("#c-follow", 209, -88, 6.9, 0.85);
+      fly("c-follow", 6.9, 0.85);
       tl.to("#spine-fill", { scaleY: fillTo(3), duration: 0.5, ease: "power1.inOut" }, 7.2);
+      clear("#led1", 7.5);                                  // slot B clears …
+      tl.fromTo("#c-open", { opacity: 0, scale: 0.75, rotation: 2.5 - 9 },   // … the last chip tumbles in — still open …
+        { opacity: 1, scale: 1, rotation: 2.5, duration: 0.55, ease: "power2.out" }, 7.55);
+      enter("#led3", 7.65, { x: 16, y: 24, rotation: 1.4 }, { x: 16, y: 0, rotation: 1.4 }, 0.5, "power2.out"); // … with the last pain
+      drift("c-open", -8, 8.1, 10.75);
       activate("#n3", 7.7);
       resolve("#led2", 7.85);
 
@@ -357,27 +416,30 @@
       // ---- ACT 4 — APPROVAL HOLD (peak, 8.2–10.6) ----
       // Approval receives no chip: it is what the system ADDS, not a
       // rearranged piece of the mess. `what is open?` keeps drifting — still open.
-      // RACK FOCUS — deepen the upstream defocus (1.2→4px) so the copper
-      // Human-approval node is the sole in-focus plane at the peak.
+      // RACK FOCUS — deepen the upstream defocus (2→5px) and dim + defocus the
+      // MAPPED WORKFLOW headline so the copper Human-approval node (120px) is the
+      // sole in-focus headline moment at the peak.
       tl.to(["#n0", "#n1", "#n2", "#n3"], { opacity: 0.45, duration: 0.6 }, 8.2);
-      tl.to(["#n0", "#n1", "#n2", "#n3"], { filter: "blur(4px)", duration: 0.6, ease: "power2.inOut" }, 8.2);
+      tl.to(["#n0", "#n1", "#n2", "#n3"], { filter: "blur(5px)", duration: 0.6, ease: "power2.inOut" }, 8.2);
+      tl.to("#cap-mapped", { opacity: 0.45, filter: "blur(4px)", duration: 0.6, ease: "power2.inOut" }, 8.2);
       tl.to("#spine-fill", { scaleY: fillTo(4), duration: 0.6, ease: "power1.inOut" }, 8.25);
       activate("#n4", 8.3, "#d96832");
       tl.to("#n4", { scale: 1.06, duration: 0.6, transformOrigin: "left center" }, 8.35);
       tl.to("#spine-glow", { opacity: 1, duration: 0.6, ease: "sine.out" }, 8.4);
       tl.fromTo("#approve-ring", { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5 }, 8.7)
-        .to("#approve-ring", { scale: 1.7, opacity: 0, duration: 0.9, ease: "power2.out" }, 9.2);
+        .to("#approve-ring", { scale: 1.55, opacity: 0, duration: 0.9, ease: "power2.out" }, 9.2);
       // held beat 9.6–10.6 — stillness (only the open chip drifts)
 
       // ---- ACT 5 — Tracked to done (10.6–12.4): the last open thing resolves ----
       tl.to("#n4", { scale: 1, duration: 0.5 }, 10.6);
       tl.to("#spine-fill", { scaleY: 1, duration: 0.55, ease: "power1.inOut" }, 10.65);
-      fly("#c-open", 515, 30, 10.75, 0.85);
+      fly("c-open", 10.75, 0.85);
       activate("#n5", 11.45);
       resolve("#led3", 11.7);
 
       // ---- Settle / loop-prep (12.1–13.0) ----
       tl.to(["#n0", "#n1", "#n2", "#n3"], { opacity: 0.65, filter: "blur(0px)", duration: 0.6, ease: "sine.inOut" }, 12.1);
+      tl.to("#cap-mapped", { opacity: 1, filter: "blur(0px)", duration: 0.6, ease: "sine.inOut" }, 12.1);
       tl.to("#spine-glow", { opacity: 0.7, duration: 0.7, ease: "sine.inOut" }, 12.3);
 
       // ===== CAMERA — loop-continuous (identity at t=0 AND t=13) =====
@@ -393,13 +455,13 @@
         if (t < 12.3) return 1.03 - 0.03 * camEase((t - 10.6) / 1.7);
         return 1.0;
       };
-      const drift = { p: 0 };
-      tl.to(drift, {
+      const cam = { p: 0 };
+      tl.to(cam, {
         p: 1, duration: 13, ease: "none",
         onUpdate: () => {
-          const t = drift.p * 13;
-          const dx = Math.sin(drift.p * Math.PI * 2) * DRIFT_AMP_X;
-          const dy = Math.sin(drift.p * Math.PI * 4) * DRIFT_AMP_Y;
+          const t = cam.p * 13;
+          const dx = Math.sin(cam.p * Math.PI * 2) * DRIFT_AMP_X;
+          const dy = Math.sin(cam.p * Math.PI * 4) * DRIFT_AMP_Y;
           camEl.style.transform = `scale(${scaleAt(t)}) translate(${dx}px, ${dy}px)`;
         },
       }, 0);

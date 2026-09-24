@@ -8,8 +8,8 @@ import type { CapabilityPageContent } from "./types";
 /**
  * /studio/agentic-systems — AI agents that run recurring office work inside
  * the office's own tools, every external action waiting for a person. The
- * machinery behind both paid rungs. No film yet (cap-agentic-systems comes
- * later and will bake `example.map.nodes` verbatim — keep them final).
+ * machinery behind both paid rungs. The film (hyperframes/cap-agentic-systems)
+ * bakes `example.map.nodes` verbatim — re-render it if they change.
  */
 
 const en: CapabilityPageContent = {
@@ -22,6 +22,15 @@ const en: CapabilityPageContent = {
       label: offerCard("en", "ai-office-assistant").cta,
       href: offerCard("en", "ai-office-assistant").href,
     },
+  },
+  film: {
+    sectionTitle: "The agent at work",
+    webm: "/videos/cap-agentic-systems.webm",
+    mp4: "/videos/cap-agentic-systems.mp4",
+    poster: "/videos/cap-agentic-systems-poster.png",
+    caption:
+      "One intake, run by agents: a person approves what matters, and the request is answered and tracked.",
+    filmName: "agentic systems film",
   },
   does: {
     title: "What I do",
@@ -171,6 +180,15 @@ const he: CapabilityPageContent = {
       label: offerCard("he", "ai-office-assistant").cta,
       href: offerCard("he", "ai-office-assistant").href,
     },
+  },
+  film: {
+    sectionTitle: "הסוכן בעבודה",
+    webm: "/videos/cap-agentic-systems-he.webm",
+    mp4: "/videos/cap-agentic-systems-he.mp4",
+    poster: "/videos/cap-agentic-systems-he-poster.png",
+    caption:
+      "פנייה אחת, בניהול סוכנים: אדם מאשר את מה שחשוב, והפנייה נענתה ובמעקב.",
+    filmName: "סרטון מערכות הסוכנים",
   },
   does: {
     title: "מה אני עושה",

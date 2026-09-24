@@ -1,0 +1,461 @@
+<!doctype html>
+<html
+  lang="en"
+  data-resolution="landscape"
+  data-composition-variables='[{"id":"lang","type":"string","label":"Locale (en | he)","default":"en"}]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"
+      integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      /* ============================================================
+         "One intake, run by agents" — /studio/agentic-systems film.
+         An office request enters, an agent captures and sorts it, acts
+         inside the office's own tools (a draft reply, a chase for missing
+         documents), and the items that matter wait at the copper human
+         approval checkpoint — one approved, one deliberately left waiting —
+         then the request is answered and tracked. Horizontal conveyor;
+         the copper "Human approval" checkpoint is the rack-focus peak.
+         Schematic (no product UI, no "Sample data" chip). One composition,
+         two locales (`lang`; HE mirrors RTL). Palette mirrors
+         src/app/globals.css. FILM SPEC v2: sans only on frame (Instrument
+         Sans EN / Assistant HE / Geist Mono for the Latin chips only) and
+         the composition fills ~80% of the frame. Renders transparent.
+         Settled cinematic grammar: velocity-matched hand-offs, one
+         rack-focus onto the checkpoint, loop-continuous camera (drift
+         <= 1.5%). NO WebGL bloom (flagship-only signature). See DESIGN.md.
+         ============================================================ */
+      @font-face { font-family: "Instrument Sans"; font-weight: 400 600; font-display: block; src: url("assets/fonts/instrument-sans-400-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: "Assistant"; font-weight: 700; font-display: block; src: url("assets/fonts/assistant-700-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+      @font-face { font-family: "Assistant"; font-weight: 700; font-display: block; src: url("assets/fonts/assistant-700-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: "Geist Mono"; font-weight: 400; font-display: block; src: url("assets/fonts/geist-mono-400.woff2") format("woff2"); }
+
+      :root {
+        --bg-0: #121211; --bg-1: #1a1a18; --bg-2: #242420;
+        --fg-1: #f4f1ea; --fg-2: #b9b3aa; --fg-3: #8a847a;
+        --accent: #d96832;
+        --accent-soft: rgba(217, 104, 50, 0.12); --accent-rule: rgba(217, 104, 50, 0.35);
+        --rule: #2a2a26; --rule-strong: #3a3a34;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden; background: transparent;
+        font-family: "Instrument Sans", system-ui, sans-serif;
+        color: var(--fg-1); -webkit-font-smoothing: antialiased;
+      }
+      #stage { position: relative; width: 1920px; height: 1080px; }
+      #stage.he { font-family: "Assistant", system-ui, sans-serif; }
+      #camera { position: absolute; inset: 0; transform-origin: 960px 540px; will-change: transform; }
+      /* REVIEW/CHECK/SNAPSHOT ONLY — charcoal backdrop so contrast reads true.
+         Hidden (data-hidden) before the transparent alpha render; the charcoal
+         MP4 is post-composited from the alpha master — see DESIGN.md → Render.
+         inset:-40px so camera drift never exposes a transparent edge. */
+      #review-bg { position: absolute; inset: -40px; background: var(--bg-0); }
+
+      /* ---------- Type roles (spec v2 — sans only). Hebrew: never mono, never tracked. ---------- */
+      .mono { font-family: "Geist Mono", ui-monospace, monospace; letter-spacing: 0.02em; }
+      .he .mono { font-family: "Assistant", system-ui, sans-serif; font-weight: 600; letter-spacing: 0; }
+      [dir="rtl"] { letter-spacing: 0; }
+
+      /* ---------- Source chips (the intake pile: email · form · call) ---------- */
+      .chip { position: absolute; opacity: 0; will-change: transform, opacity, filter; }
+      .chip-inner {
+        display: inline-block; padding: 30px 56px; border-radius: 22px;
+        background: var(--bg-2); border: 2.5px solid #45433c;
+        font-size: 80px; line-height: 1.15; color: var(--fg-2); white-space: nowrap;
+        will-change: transform;
+      }
+      .he .chip-inner { font-size: 88px; }
+
+      /* ---------- Conveyor rail + nodes ---------- */
+      #rail-svg { position: absolute; inset: 0; width: 1920px; height: 1080px; will-change: filter; }
+      #rail { fill: none; stroke: var(--rule-strong); stroke-width: 4; }
+      .node {
+        position: absolute; width: 40px; height: 40px; border-radius: 50%;
+        border: 3.5px solid #55524a; background: var(--bg-1);
+        transform: translate(-50%, -50%); opacity: 0; will-change: transform, opacity, filter;
+      }
+      #n4 { border-color: var(--accent-rule); } /* human approval — copper from birth */
+
+      /* the traveling request token — centered via GSAP xPercent/yPercent (NOT a
+         CSS translate) because the timeline animates x along the rail. */
+      #token {
+        position: absolute; width: 48px; height: 48px; border-radius: 13px;
+        background: var(--accent); box-shadow: 0 0 34px 0 rgba(217,104,50,0.35);
+        opacity: 0; will-change: transform, opacity;
+      }
+
+      /* ---------- Sorted ticks (node 1 — three ascending bars = captured and sorted) ---------- */
+      .tick {
+        position: absolute; width: 12px; border-radius: 6px; background: #6a665c;
+        opacity: 0; will-change: transform, opacity, filter;
+      }
+
+      /* ---------- Approval checkpoint ring (node 4) — painted beneath the cards ---------- */
+      #appr-ring {
+        position: absolute; width: 164px; height: 164px; border-radius: 50%;
+        border: 3.5px solid var(--accent); transform: translate(-50%, -50%); opacity: 0;
+        will-change: transform, opacity;
+      }
+
+      /* ---------- Work items (abstract cards — dot + three blank bars, no text) ---------- */
+      .card {
+        position: absolute; width: 560px; height: 150px; border-radius: 24px;
+        background: rgba(36, 36, 32, 0.62); border: 2.5px solid #45433c;
+        opacity: 0; display: flex; align-items: center; gap: 32px; padding: 0 40px;
+        will-change: transform, opacity, filter;
+      }
+      .he .card { flex-direction: row-reverse; }
+      #cardB { border-style: dashed; } /* the chase — an outbound reminder, still open */
+      .cdot { width: 44px; height: 44px; border-radius: 50%; border: 4px solid #55524a; flex: 0 0 auto; }
+      .cbars { display: flex; flex-direction: column; gap: 20px; flex: 1 1 auto; }
+      .he .cbars { align-items: flex-end; }
+      .cbar { width: 100%; height: 14px; border-radius: 7px; background: #4a473f; } /* explicit width: HE aligns bars flex-end, which would collapse an auto-width bar to 0 */
+      .cbar.mid { width: 78%; }
+      .cbar.short { width: 52%; }
+      .card-check { width: 80px; height: 80px; flex: 0 0 auto; opacity: 0; }
+      .card-check path {
+        fill: none; stroke: var(--accent); stroke-width: 5; stroke-linecap: round;
+        stroke-linejoin: round; stroke-dasharray: 48; stroke-dashoffset: 48;
+      }
+
+      /* ---------- Run log (three rows above the out node — answered and tracked) ---------- */
+      .log {
+        position: absolute; width: 600px; height: 16px; border-radius: 8px;
+        background: #4a473f; opacity: 0; will-change: transform, opacity;
+      }
+      .log.hot { background: var(--accent); }
+
+      /* ---------- Stage labels (one large headline at a time, top band) ---------- */
+      .lbl {
+        position: absolute; left: 0; top: 200px; width: 1920px; text-align: center;
+        font-family: "Instrument Sans", system-ui, sans-serif; font-weight: 600;
+        font-size: 128px; line-height: 1.1; letter-spacing: -0.01em; color: var(--fg-1);
+        opacity: 0; white-space: nowrap; will-change: transform, opacity, filter;
+      }
+      .he .lbl { font-family: "Assistant", system-ui, sans-serif; font-weight: 700; font-size: 140px; letter-spacing: 0; }
+
+      /* ---------- Caption (the one secondary line, at the peak) ---------- */
+      #caption {
+        position: absolute; left: 0; top: 920px; width: 1920px; text-align: center;
+        font-family: "Instrument Sans", system-ui, sans-serif; font-weight: 400;
+        font-size: 72px; line-height: 1.2; letter-spacing: 0; color: var(--fg-2); opacity: 0;
+        will-change: transform, opacity, filter;
+      }
+      .he #caption { font-family: "Assistant", system-ui, sans-serif; font-weight: 600; font-size: 80px; letter-spacing: 0; }
+    </style>
+  </head>
+
+  <body>
+    <div id="stage" data-composition-id="root" data-start="0" data-duration="12" data-width="1920" data-height="1080">
+      <div id="camera" data-layout-allow-overflow>
+        <div id="review-bg"></div>
+
+        <!-- conveyor rail -->
+        <svg id="rail-svg" viewBox="0 0 1920 1080">
+          <line id="rail" x1="185" y1="640" x2="1735" y2="640" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+        </svg>
+
+        <!-- source chips (the intake pile) -->
+        <div class="chip" id="chip0"><span class="chip-inner mono" id="chipt0"></span></div>
+        <div class="chip" id="chip1"><span class="chip-inner mono" id="chipt1"></span></div>
+        <div class="chip" id="chip2"><span class="chip-inner mono" id="chipt2"></span></div>
+
+        <!-- node dots -->
+        <div class="node" id="n0"></div>
+        <div class="node" id="n1"></div>
+        <div class="node" id="n2"></div>
+        <div class="node" id="n3"></div>
+        <div class="node" id="n4"></div>
+        <div class="node" id="n5"></div>
+
+        <!-- sorted ticks (node 1) -->
+        <div class="tick" id="tick0"></div>
+        <div class="tick" id="tick1"></div>
+        <div class="tick" id="tick2"></div>
+
+        <!-- approval ring (node 4) — beneath the cards so it emanates from behind them -->
+        <div id="appr-ring"></div>
+
+        <!-- work items: A = the draft reply (above the rail), B = the documents chase (below) -->
+        <div class="card" id="cardA">
+          <span class="cdot"></span>
+          <span class="cbars"><span class="cbar"></span><span class="cbar mid"></span><span class="cbar short"></span></span>
+          <svg class="card-check" id="cardA-check" viewBox="0 0 46 46"><path d="M11 24 l8 8 l16 -19" /></svg>
+        </div>
+        <div class="card" id="cardB">
+          <span class="cdot"></span>
+          <span class="cbars"><span class="cbar"></span><span class="cbar mid"></span><span class="cbar short"></span></span>
+        </div>
+
+        <!-- the traveling token -->
+        <div id="token"></div>
+
+        <!-- run log (above the out node) -->
+        <div class="log hot" id="log0"></div>
+        <div class="log" id="log1"></div>
+        <div class="log" id="log2"></div>
+
+        <!-- stage labels (one at a time; lbl5 = the out node, held as the closing) -->
+        <div class="lbl" id="lbl0"></div>
+        <div class="lbl" id="lbl1"></div>
+        <div class="lbl" id="lbl2"></div>
+        <div class="lbl" id="lbl3"></div>
+        <div class="lbl" id="lbl4"></div>
+        <div class="lbl" id="lbl5"></div>
+
+        <!-- the one secondary line -->
+        <div id="caption"></div>
+      </div>
+    </div>
+
+    <script>
+      /* ============================================================
+         Deterministic 12s timeline. No random / Date / setTimeout /
+         async / timeline callbacks (all text set once at init). The
+         `lang` variable picks copy + mirrors the horizontal axis for HE.
+         Every on-frame string traces to src/content/studio/agentic-systems.ts
+         (line refs below; full table in DESIGN.md).
+         ============================================================ */
+      const vars = (window.__hyperframes && window.__hyperframes.getVariables)
+        ? window.__hyperframes.getVariables() : {};
+      const lang = vars.lang === "he" ? "he" : "en";
+
+      const COPY = {
+        en: {
+          chips: ["email", "form", "call"],   // example.map.nodes[0].sub "email · form · call" (:105)
+          l0: "New request",                  // example.map.nodes[0].label (:105)
+          l1: "Captured and sorted",          // example.map.nodes[1].label (:106)
+          l2: "Draft reply prepared",         // example.map.nodes[2].label (:107)
+          l3: "Missing documents chased",     // example.map.nodes[3].label (:108)
+          l4: "Human approval",               // example.map.nodes[4].label (human) (:109)
+          l5: "Answered and tracked",         // example.map.nodes[5].label (out) (:110) — held as the closing
+          caption: "Approve what matters",    // how.steps[3].title (human step) (:88)
+        },
+        he: {
+          chips: ["מייל", "טופס", "טלפון"],   // he.example.map.nodes[0].sub (:254)
+          l0: "פנייה חדשה",                    // he.example.map.nodes[0].label (:254)
+          l1: "נקלטת וממוינת",                 // he.example.map.nodes[1].label (:255)
+          l2: "טיוטת תשובה מוכנה",             // he.example.map.nodes[2].label (:256)
+          l3: "תזכורת למסמכים חסרים",          // he.example.map.nodes[3].label (:257)
+          l4: "אישור אנושי",                   // he.example.map.nodes[4].label (human) (:258)
+          l5: "נענתה ובמעקב",                  // he.example.map.nodes[5].label (out) (:259) — held as the closing
+          caption: "מאשרים את מה שחשוב",       // he.how.steps[3].title (human step) (:237)
+        },
+      }[lang];
+
+      document.documentElement.lang = lang;
+      // Do NOT set dir="rtl" on <html> — it blanks the hyperframes RENDER
+      // pipeline. Mirror positionally via X(); set dir only on text elements.
+      const isHE = lang === "he";
+      if (isHE) {
+        document.getElementById("stage").classList.add("he");
+        document.querySelectorAll(".lbl, .chip-inner, #caption").forEach((el) => { el.dir = "rtl"; });
+      }
+
+      const setText = (id, t) => { document.getElementById(id).textContent = t; };
+      COPY.chips.forEach((t, i) => setText("chipt" + i, t));
+      ["l0", "l1", "l2", "l3", "l4", "l5"].forEach((k, i) => setText("lbl" + i, COPY[k]));
+      setText("caption", COPY.caption);
+
+      // ---- Geometry (EN coordinates; HE mirrors x → 1920 − x) — spec v2 ----
+      // Rail x 185 → 1735 (1550px), headline band top 200, rail y 640, work
+      // items above (A) and below (B) the rail, caption top 920.
+      const X = isHE ? (x) => 1920 - x : (x) => x;
+      const RAIL_Y = 640, RAIL_X0 = 185, RAIL_X1 = 1735;
+      const NX = [245, 531, 817, 1103, 1389, 1675]; // node x, EN (gap 286)
+      const place = (id, cx, cy) => {
+        const el = document.getElementById(id);
+        el.style.left = X(cx) + "px";
+        el.style.top = cy + "px";
+      };
+
+      // rail endpoints mirror with the nodes
+      const railLine = document.getElementById("rail");
+      railLine.setAttribute("x1", X(RAIL_X0)); railLine.setAttribute("x2", X(RAIL_X1));
+      NX.forEach((x, i) => place("n" + i, x, RAIL_Y));
+
+      // source chips — a loose pile above the head of the rail; centred via GSAP so the merge flight composes
+      const CHIPS = [[460, 295], [860, 410], [545, 535]];
+      CHIPS.forEach(([cx, cy], i) => place("chip" + i, cx, cy));
+      gsap.set(".chip", { xPercent: -50, yPercent: -50 });
+      gsap.set("#chip0 .chip-inner", { rotation: -6 });
+      gsap.set("#chip1 .chip-inner", { rotation: 4 });
+      gsap.set("#chip2 .chip-inner", { rotation: -3 });
+
+      // token starts at node 0
+      place("token", NX[0], RAIL_Y);
+      gsap.set("#token", { xPercent: -50, yPercent: -50 });
+
+      // sorted ticks — three ascending bars above node 1 (bottom-aligned with card A's bottom)
+      const TICK_H = [40, 64, 90], TICK_GAP = 36, TICK_W = 12, TICK_BASE = 590;
+      TICK_H.forEach((h, i) => {
+        const el = document.getElementById("tick" + i);
+        el.style.height = h + "px";
+        el.style.left = X(NX[1] + (i - 1) * TICK_GAP) - TICK_W / 2 + "px";
+        el.style.top = TICK_BASE - h + "px";
+      });
+
+      // work items — A (the draft reply) sits ABOVE the rail over node 2, nudged 64px
+      // downstream so it clears node 1's ticks; B (the documents chase) sits BELOW the
+      // rail under node 3. At the peak both travel to node 4 and flank the checkpoint.
+      const CARD_H = 150;
+      const CARD_X0 = [NX[2] + 64, NX[3]], CARD_TOP = [440, 690];
+      place("cardA", CARD_X0[0], CARD_TOP[0]); place("cardB", CARD_X0[1], CARD_TOP[1]);
+      gsap.set(".card", { xPercent: -50 });
+      const cardDx = (i, node) => X(NX[node]) - X(CARD_X0[i]);
+
+      // approval ring on node 4
+      place("appr-ring", NX[4], RAIL_Y);
+
+      // run log — three rows above the out node, flush with the rail's end and
+      // growing away from node 5 (EN: right → left; HE: left → right)
+      const LOG_W = 600;
+      [460, 512, 564].forEach((top, i) => {
+        const el = document.getElementById("log" + i);
+        el.style.left = (isHE ? X(RAIL_X1) : RAIL_X1 - LOG_W) + "px";
+        el.style.top = top + "px";
+        el.style.transformOrigin = isHE ? "0% 50%" : "100% 50%";
+      });
+
+      // travel helper: token / card x-delta from node a to node b (HE-aware)
+      const dx = (a, b) => X(NX[b]) - X(NX[a]);
+
+      // ---- Timeline ----
+      // Settled grammar: velocity-matched hand-offs (exits accelerate + blur,
+      // entries decelerate from blur), one rack focus onto the copper approval
+      // checkpoint at the peak, and a loop-continuous camera (identity at t=0
+      // and t=12). The rack refocuses before the tail so the seam is crisp.
+      // Offsets/blurs scaled with the v2 element sizes (grammar unchanged).
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out", overwrite: "auto" } });
+
+      const showLabel = (id, at) =>
+        tl.fromTo("#" + id, { opacity: 0, y: 24, filter: "blur(14px)" },
+          { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.55, ease: "power2.out" }, at);
+      const hideLabel = (id, at) =>
+        tl.to("#" + id, { opacity: 0, y: -18, filter: "blur(14px)", duration: 0.45, ease: "power2.in" }, at);
+      const nodeIn = (i, at) =>
+        tl.fromTo("#n" + i, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.5 }, at);
+      const activate = (i, at) =>
+        tl.to("#n" + i, { borderColor: "#d96832", backgroundColor: "rgba(217,104,50,0.14)", scale: 1.18, duration: 0.4, ease: "power2.out" }, at);
+      const tokenTo = (i, at) =>
+        tl.to("#token", { x: dx(0, i), duration: 0.6, ease: "power2.inOut" }, at);
+      const cardIn = (id, at) =>
+        tl.fromTo("#" + id, { opacity: 0, y: 30, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.5, ease: "power2.out" }, at);
+
+      // ===== BEAT 0 — New request (0.0–2.0): the pile merges into one token =====
+      // autoRound:false — pathLength=1 makes the offset a 1→0 fraction; CSSPlugin's
+      // default px rounding would snap it (the rail would pop on at ~1.0s, not draw).
+      tl.to("#rail", { strokeDashoffset: 0, duration: 1.6, ease: "power1.inOut", autoRound: false }, 0.1);
+      CHIPS.forEach((_, i) =>
+        tl.fromTo("#chip" + i, { opacity: 0, y: 36, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.55, ease: "power2.out" }, 0.15 + i * 0.14));
+      nodeIn(0, 0.75);
+      // chips accelerate into node 0 + blur out (velocity-matched exit) → token appears
+      CHIPS.forEach(([cx, cy], i) =>
+        tl.to("#chip" + i, { x: X(NX[0]) - X(cx), y: RAIL_Y - cy, scale: 0.4, opacity: 0, filter: "blur(16px)", duration: 0.5, ease: "power2.in" }, 0.95 + i * 0.07));
+      tl.fromTo("#token", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.45, ease: "power2.out" }, 1.3);
+      activate(0, 1.3);
+      showLabel("lbl0", 1.35);
+
+      // ===== BEAT 1 — Captured and sorted (2.0–3.6) =====
+      hideLabel("lbl0", 2.2);
+      tokenTo(1, 2.35); nodeIn(1, 2.4);
+      showLabel("lbl1", 2.6);
+      activate(1, 2.85);
+      TICK_H.forEach((_, i) =>
+        tl.fromTo("#tick" + i, { opacity: 0, y: 40 }, { opacity: 0.85, y: 0, duration: 0.45, ease: "power2.out" }, 2.9 + i * 0.1));
+
+      // ===== BEAT 2 — Inside the office's tools (3.6–6.0): draft reply, documents chase =====
+      hideLabel("lbl1", 3.55);
+      tokenTo(2, 3.7); nodeIn(2, 3.75);
+      showLabel("lbl2", 3.95);
+      activate(2, 4.2); cardIn("cardA", 4.3);
+      hideLabel("lbl2", 4.75);
+      tokenTo(3, 4.9); nodeIn(3, 4.95);
+      showLabel("lbl3", 5.15);
+      activate(3, 5.4); cardIn("cardB", 5.5);
+
+      // ===== BEAT 3 — PEAK: Human approval (6.0–8.8) =====
+      hideLabel("lbl3", 5.95);
+      tokenTo(4, 6.1); nodeIn(4, 6.15);
+      // both items travel down the line to the checkpoint — A above it, B below it
+      tl.to("#cardA", { x: cardDx(0, 4), duration: 0.7, ease: "power2.inOut" }, 6.3);
+      tl.to("#cardB", { x: cardDx(1, 4), duration: 0.7, ease: "power2.inOut" }, 6.42);
+      showLabel("lbl4", 6.5);
+      // RACK FOCUS — upstream (rail, nodes 0–3, ticks) defocus + dim; the copper
+      // checkpoint, both waiting items and the token stay sharp. Camera pushes in (below).
+      const UPSTREAM = ["#rail-svg", "#n0", "#n1", "#n2", "#n3", "#tick0", "#tick1", "#tick2"];
+      tl.to(UPSTREAM, { filter: "blur(9px)", opacity: 0.4, duration: 0.75, ease: "power2.inOut" }, 6.85);
+      tl.to("#n4", { boxShadow: "0 0 60px 0 rgba(217,104,50,0.4)", borderColor: "#d96832", backgroundColor: "rgba(217,104,50,0.2)", scale: 1.25, duration: 0.6 }, 6.9);
+      // one bounded copper ring bloom (immediateRender:false so the "from" state
+      // does not paint from t=0)
+      tl.fromTo("#appr-ring", { opacity: 0.9, scale: 0.5, transformOrigin: "center" },
+        { opacity: 0, scale: 1.9, duration: 1.1, ease: "power2.out", immediateRender: false }, 7.05);
+      // item A approved by a person — the card warms to copper and the check draws
+      tl.to("#cardA", { borderColor: "#d96832", backgroundColor: "rgba(217,104,50,0.12)", duration: 0.4 }, 7.5);
+      tl.to("#cardA .cdot", { borderColor: "#d96832", backgroundColor: "#d96832", duration: 0.4 }, 7.5);
+      tl.to("#cardA-check", { opacity: 1, duration: 0.2 }, 7.6);
+      tl.to("#cardA-check path", { strokeDashoffset: 0, duration: 0.55, ease: "power2.inOut" }, 7.65);
+      // the one secondary line, verbatim (decelerate from blur)
+      tl.fromTo("#caption", { opacity: 0, y: 18, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "power2.out" }, 7.7);
+      // item B is deliberately left waiting — one finite breath on its open dot, then it stays open
+      tl.to("#cardB .cdot", { borderColor: "rgba(217,104,50,0.6)", duration: 0.45, ease: "sine.inOut", repeat: 1, yoyo: true }, 8.0);
+
+      // ===== BEAT 4 — Answered and tracked (8.8–10.6) =====
+      // REFOCUS — the rack releases so the loop seam is crisp.
+      tl.to(UPSTREAM, { filter: "blur(0px)", opacity: 1, duration: 0.8, ease: "power2.inOut" }, 8.75);
+      tl.to("#n4", { boxShadow: "0 0 40px 0 rgba(217,104,50,0.18)", duration: 0.8, ease: "power2.inOut" }, 8.75);
+      hideLabel("lbl4", 8.8);
+      tl.to("#caption", { opacity: 0, y: -18, filter: "blur(12px)", duration: 0.5, ease: "power2.in" }, 8.85);
+      tokenTo(5, 9.0); nodeIn(5, 9.05);
+      // the approved item leaves the checkpoint and dissolves into node 5 (item B stays waiting)
+      tl.to("#cardA", { x: cardDx(0, 5), y: RAIL_Y - CARD_H / 2 - CARD_TOP[0], scale: 0.35, opacity: 0, filter: "blur(14px)", duration: 0.6, ease: "power2.in" }, 9.05);
+      showLabel("lbl5", 9.2); // the out node — held through the tail as the closing
+      activate(5, 9.5);
+      // the run log writes in above node 5 (rows grow away from the node)
+      [0, 1, 2].forEach((i) =>
+        tl.fromTo("#log" + i, { opacity: 0, scaleX: 0 }, { opacity: i === 0 ? 1 : 0.55, scaleX: 1, duration: 0.45, ease: "power2.out" }, 9.6 + i * 0.2));
+
+      // ===== BEAT 5 — Settle (10.6–12.0) =====
+      // the logged row breathes once (finite; ends 11.7 so nothing is mid-yoyo at the seam)
+      tl.to("#log0", { opacity: 0.72, duration: 0.5, ease: "sine.inOut", repeat: 1, yoyo: true }, 10.7);
+
+      // ===== CAMERA — loop-continuous (identity at t=0 AND t=12), drift ≤ 1.5% =====
+      // Push gently INTO the approval peak (scale 1.0 → 1.015), hold, then settle
+      // back so the seam matches. Micro-drift overlays: integer sine cycles on both
+      // axes (1× X, 2× Y) so dx,dy return to 0 at the seam. scale AND drift are pure
+      // functions of timeline time — no reads of a sibling tween — so every
+      // seek/worker is identical.
+      const camEl = document.getElementById("camera");
+      const DUR = 12, PUSH = 0.015, DRIFT_AMP_X = 5, DRIFT_AMP_Y = 3;
+      const camEase = gsap.parseEase("power2.inOut");
+      const scaleAt = (t) => {
+        if (t <= 5.4) return 1.0;
+        if (t < 7.2) return 1.0 + PUSH * camEase((t - 5.4) / 1.8);
+        if (t <= 8.9) return 1.0 + PUSH;
+        if (t < 11.5) return 1.0 + PUSH - PUSH * camEase((t - 8.9) / 2.6);
+        return 1.0;
+      };
+      const drift = { p: 0 };
+      tl.to(drift, {
+        p: 1, duration: DUR, ease: "none",
+        onUpdate: () => {
+          const t = drift.p * DUR;
+          const ddx = Math.sin(drift.p * Math.PI * 2) * DRIFT_AMP_X;
+          const ddy = Math.sin(drift.p * Math.PI * 4) * DRIFT_AMP_Y;
+          camEl.style.transform = `scale(${scaleAt(t)}) translate(${ddx}px, ${ddy}px)`;
+        },
+      }, 0);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["root"] = tl;
+    </script>
+  </body>
+</html>

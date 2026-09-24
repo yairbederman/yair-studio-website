@@ -52,7 +52,7 @@ links in both directions. `/contact` offers email (primary) and WhatsApp.
 |------|------|-------|
 | `/` | `/he` | Home — hero (positioning), ladder, proof film (Command Center, "In build · sample data"), capabilities strip, founder, boundaries, final CTA (both locales share one composition) |
 | `/studio` | `/he/studio` | What the studio makes — index of the five capabilities |
-| `/studio/agentic-systems` | `/he/studio/agentic-systems` | Capability page (film planned) |
+| `/studio/agentic-systems` | `/he/studio/agentic-systems` | Capability page (film: `cap-agentic-systems`) |
 | `/studio/process-optimization` | `/he/studio/process-optimization` | Capability page — reuses the `scattered-to-mapped` film |
 | `/studio/websites` | `/he/studio/websites` | Capability page (film planned) |
 | `/studio/films` | `/he/studio/films` | Capability page (film planned) |
@@ -149,5 +149,5 @@ ambient/brand pieces — `hero-ambient` (a text-free WebGL FBM shader loop behin
 and `wordmark-sting` (a ~2.5s `y[AI]r` lockup, kept as a standalone/OG asset; no film passes it as
 `intro`). Retired: `meeting-workflow` (`/workflows` folded into `/studio/process-optimization`; its
 `public/videos/meeting-follow-up-workflow.*` assets are scheduled for deletion in the film phase).
-Planned, not built: `cap-agentic-systems`, `cap-websites`, `cap-films`, and a Command Center 4:5
+Planned, not built: `cap-websites`, `cap-films` (compositions authored, renders pending), and a Command Center 4:5
 mobile cut.

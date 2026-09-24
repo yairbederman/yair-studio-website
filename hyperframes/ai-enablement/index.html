@@ -14,22 +14,26 @@
     ></script>
     <style>
       /* ============================================================
-         "The Enablement" — AI Enablement Workshops offer film.
-         One real backlog task is worked hands-on with agents (parallel
-         lanes), the patterns are captured into a playbook for your stack,
-         HUMAN REVIEW STAYS (the copper rack-focus peak over the playbook),
-         and then the team runs it alone. Schematic — no product UI, no
-         "Sample data" chip. One composition, two locales (`lang`; HE mirrors
-         RTL). Palette + type mirror src/app/globals.css. Renders transparent.
-         See DESIGN.md. Settled cinematic grammar: velocity-matched hand-offs,
-         one rack focus onto the checkpoint, loop-continuous camera. NO WebGL
-         bloom (flagship-only signature).
+         "The Enablement" — AI enablement film for /studio/ai-enablement
+         (a business team: the owner + staff of a small office).
+         One real task from the office's week is worked hands-on with AI
+         (parallel lanes), the habits are captured into a playbook for the
+         office, YOUR REVIEW STAYS (the copper rack-focus peak over the
+         playbook), and then the team runs it alone. Schematic — no product
+         UI, no "Sample data" chip. One composition, two locales (`lang`; HE
+         mirrors RTL). Palette mirrors src/app/globals.css; type is film spec
+         v2 — sans only on frame (Instrument Sans 600/400 EN · Assistant
+         700/600 HE; Geist Mono reserved for Latin chips — none on frame).
+         Renders transparent. See DESIGN.md. Settled cinematic grammar:
+         velocity-matched hand-offs, one rack focus onto the checkpoint,
+         loop-continuous camera. NO WebGL bloom (flagship-only signature).
          ============================================================ */
-      @font-face { font-family: "Inter"; font-weight: 400; font-display: block; src: url("assets/fonts/inter-400.woff2") format("woff2"); }
-      @font-face { font-family: "Inter"; font-weight: 600; font-display: block; src: url("assets/fonts/inter-600.woff2") format("woff2"); }
-      @font-face { font-family: "Geist Mono"; font-weight: 400; font-display: block; src: url("assets/fonts/geist-mono-400.woff2") format("woff2"); }
+      @font-face { font-family: "Instrument Sans"; font-weight: 400 600; font-display: block; src: url("assets/fonts/instrument-sans-400-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
       @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
       @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: "Assistant"; font-weight: 700; font-display: block; src: url("assets/fonts/assistant-700-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+      @font-face { font-family: "Assistant"; font-weight: 700; font-display: block; src: url("assets/fonts/assistant-700-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: "Geist Mono"; font-weight: 400; font-display: block; src: url("assets/fonts/geist-mono-400.woff2") format("woff2"); }
 
       :root {
         --bg-0: #121211; --bg-1: #1a1a18; --bg-2: #242420;
@@ -41,81 +45,91 @@
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body {
         width: 1920px; height: 1080px; overflow: hidden; background: transparent;
-        font-family: "Inter", system-ui, sans-serif; /* HE swaps to Assistant at init */
+        font-family: "Instrument Sans", system-ui, sans-serif;
         color: var(--fg-1); -webkit-font-smoothing: antialiased;
       }
       #stage { position: relative; width: 1920px; height: 1080px; }
+      #stage.he { font-family: "Assistant", system-ui, sans-serif; }
       #camera { position: absolute; inset: 0; transform-origin: 960px 540px; will-change: transform; }
       /* REVIEW/CHECK/SNAPSHOT ONLY — charcoal backdrop so contrast reads true;
          removed before the transparent alpha render. inset:-40px so camera
          drift never exposes a transparent edge. */
       #review-bg { position: absolute; inset: -40px; background: var(--bg-0); }
-      .mono { font-family: "Geist Mono", ui-monospace, monospace; } /* HE swaps to Assistant at init */
 
-      /* ---------- Agent lanes ---------- */
+      /* ---------- Type roles (film spec v2 — sans only). Hebrew: never tracked. ----------
+         .t-display = headline moments (stage labels, closing)
+         .t-label   = secondary lines (node-0 sub, peak caption)
+         Sizes live on the elements below; the roles only set the face. */
+      .t-display { font-family: "Instrument Sans", system-ui, sans-serif; font-weight: 600; line-height: 1.1; letter-spacing: -0.01em; }
+      .t-label { font-family: "Instrument Sans", system-ui, sans-serif; font-weight: 400; line-height: 1.2; letter-spacing: 0; }
+      .he .t-display { font-family: "Assistant", system-ui, sans-serif; font-weight: 700; letter-spacing: 0; }
+      .he .t-label { font-family: "Assistant", system-ui, sans-serif; font-weight: 600; letter-spacing: 0; }
+      [dir="rtl"] { letter-spacing: 0; }
+
+      /* ---------- AI lanes ---------- */
       #lanes-svg { position: absolute; inset: 0; width: 1920px; height: 1080px; will-change: filter; }
-      .lane { fill: none; stroke: var(--rule-strong); stroke-width: 2.5; }
+      .lane { fill: none; stroke: var(--rule-strong); stroke-width: 6; }
       .tick {
-        position: absolute; width: 15px; height: 15px; border-radius: 50%;
+        position: absolute; width: 40px; height: 40px; border-radius: 50%;
         background: var(--accent); opacity: 0; will-change: transform, opacity;
       }
 
-      /* ---------- Task chip (the one real backlog task) ---------- */
+      /* ---------- Task chip (the one real task from the office's week) ---------- */
       #task {
-        position: absolute; border: 1.5px solid var(--accent-rule); border-radius: 12px;
+        position: absolute; border: 3px solid var(--accent-rule); border-radius: 28px;
         background: rgba(36, 36, 32, 0.6); opacity: 0;
         will-change: transform, opacity, filter;
-        display: flex; align-items: center; gap: 16px; padding: 0 22px;
+        display: flex; align-items: center; gap: 40px; padding: 0 56px;
       }
-      #task .tsq { width: 24px; height: 24px; border-radius: 6px; background: var(--accent); flex: 0 0 auto; }
-      #task .tbars { display: flex; flex-direction: column; gap: 9px; flex: 1 1 auto; }
-      #task .tbar { height: 7px; border-radius: 3px; background: #4a473f; }
+      #task .tsq { width: 62px; height: 62px; border-radius: 14px; background: var(--accent); flex: 0 0 auto; }
+      #task .tbars { display: flex; flex-direction: column; gap: 24px; flex: 1 1 auto; }
+      #task .tbar { height: 18px; border-radius: 8px; background: #4a473f; }
       #task .tbar.short { width: 58%; }
 
       /* ---------- Playbook (the captured practice — persistent) ---------- */
       #book {
-        position: absolute; border: 1.5px solid #45433c; border-radius: 14px;
+        position: absolute; border: 3px solid #45433c; border-radius: 26px;
         background: rgba(36, 36, 32, 0.62); opacity: 0;
         will-change: transform, opacity, filter;
-        display: flex; flex-direction: column; gap: 20px; padding: 30px 28px;
+        display: flex; flex-direction: column; gap: 38px; padding: 56px 52px;
       }
-      #book-bar { height: 16px; border-radius: 5px; background: var(--accent); opacity: 0.9; }
-      #book .pline { height: 12px; border-radius: 4px; background: #55524a; transform: scaleX(0); }
+      #book-bar { height: 30px; border-radius: 9px; background: var(--accent); opacity: 0.9; }
+      #book .pline { height: 22px; border-radius: 7px; background: #55524a; transform: scaleX(0); }
       #book .pline.short { width: 62%; }
 
       /* ---------- Review checkpoint (over the playbook) ---------- */
       #gate-ring {
-        position: absolute; border-radius: 50%; border: 2.5px solid var(--accent);
+        position: absolute; border-radius: 50%; border: 6px solid var(--accent);
         opacity: 0; will-change: transform, opacity;
       }
       #gate-check { position: absolute; opacity: 0; }
       #gate-check path {
-        fill: none; stroke: var(--accent); stroke-width: 5; stroke-linecap: round;
+        fill: none; stroke: var(--accent); stroke-width: 4; stroke-linecap: round;
         stroke-linejoin: round; stroke-dasharray: 48; stroke-dashoffset: 48;
       }
 
-      /* ---------- Stage labels (one large centered label at a time, swaps in place) ---------- */
-      .lbl {
-        position: absolute; left: 580px; top: 300px; width: 760px; text-align: center;
-        font-family: "Inter", sans-serif; font-weight: 600; font-size: 60px;
-        letter-spacing: -0.015em; color: var(--fg-1); opacity: 0;
-        white-space: nowrap; will-change: transform, opacity;
+      /* ---------- Headline band (one large text moment at a time, swaps in place) ----------
+         Film spec v2 floor (DESIGN.md → Mobile legibility): headlines ≥ 120px, sub ≥ 80px,
+         caption ≥ 64px on the 1920 canvas. 1600px measure (x 160–1760): a string wider
+         than that wraps (balanced) — it never shrinks below the floor. The stage labels
+         AND the closing share this band; the node-0 sub sits under it (beat 0 only, before
+         any lane or the playbook is on frame); the peak caption owns the bottom band. */
+      .lbl, #closing {
+        position: absolute; left: 160px; top: 106px; width: 1600px; text-align: center;
+        font-size: 120px; color: var(--fg-1); opacity: 0;
+        text-wrap: balance; will-change: transform, opacity, filter;
       }
       #sub0 {
-        position: absolute; left: 580px; top: 384px; width: 760px; text-align: center;
-        font-size: 30px; letter-spacing: 0.02em; color: var(--fg-3); opacity: 0; white-space: nowrap;
+        position: absolute; left: 160px; top: 260px; width: 1600px; text-align: center;
+        font-size: 80px; color: var(--fg-3); opacity: 0; text-wrap: balance;
+        will-change: transform, opacity;
       }
 
-      /* ---------- Caption / closing ---------- */
+      /* ---------- Peak caption (bottom band) ---------- */
       #caption {
-        position: absolute; left: 0; top: 968px; width: 1920px; text-align: center;
-        font-family: "Inter", sans-serif; font-weight: 400; font-size: 38px;
-        letter-spacing: 0.005em; color: var(--fg-2); opacity: 0;
-      }
-      #closing {
-        position: absolute; left: 0; top: 952px; width: 1920px; text-align: center;
-        font-family: "Inter", sans-serif; font-weight: 600; font-size: 62px;
-        letter-spacing: -0.01em; color: var(--fg-1); opacity: 0;
+        position: absolute; left: 160px; top: 910px; width: 1600px; text-align: center;
+        font-size: 72px; color: var(--fg-2); opacity: 0; text-wrap: balance;
+        will-change: transform, opacity, filter;
       }
     </style>
   </head>
@@ -125,11 +139,11 @@
       <div id="camera" data-layout-allow-overflow>
         <div id="review-bg"></div>
 
-        <!-- agent lanes -->
+        <!-- AI lanes -->
         <svg id="lanes-svg" viewBox="0 0 1920 1080">
-          <line class="lane" id="lane0" x1="440" y1="480" x2="1180" y2="480" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
-          <line class="lane" id="lane1" x1="440" y1="560" x2="1180" y2="560" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
-          <line class="lane" id="lane2" x1="440" y1="640" x2="1180" y2="640" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+          <line class="lane" id="lane0" x1="640" y1="460" x2="1260" y2="460" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+          <line class="lane" id="lane1" x1="640" y1="600" x2="1260" y2="600" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
+          <line class="lane" id="lane2" x1="640" y1="740" x2="1260" y2="740" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" />
         </svg>
 
         <!-- task chip -->
@@ -157,17 +171,17 @@
         <svg id="gate-check" viewBox="0 0 48 48"><path d="M12 25 l8 8 l16 -19" /></svg>
 
         <!-- stage labels -->
-        <div class="lbl" id="lbl0"></div>
-        <div class="lbl" id="lbl1"></div>
-        <div class="lbl" id="lbl2"></div>
-        <div class="lbl" id="lbl3"></div>
-        <div class="lbl" id="lbl4"></div>
-        <div class="lbl" id="lbl5"></div>
-        <div id="sub0" class="mono"></div>
+        <div class="lbl t-display" id="lbl0"></div>
+        <div class="lbl t-display" id="lbl1"></div>
+        <div class="lbl t-display" id="lbl2"></div>
+        <div class="lbl t-display" id="lbl3"></div>
+        <div class="lbl t-display" id="lbl4"></div>
+        <div class="lbl t-display" id="lbl5"></div>
+        <div id="sub0" class="t-label"></div>
 
         <!-- text moments -->
-        <div id="caption"></div>
-        <div id="closing"></div>
+        <div id="caption" class="t-label"></div>
+        <div id="closing" class="t-display"></div>
       </div>
     </div>
 
@@ -176,8 +190,8 @@
          Deterministic 13s timeline. No random / Date / setTimeout /
          async / timeline callbacks (all text set once at init). The
          `lang` variable picks copy + mirrors the workspace for HE.
-         Every on-frame string traces to ai-enablement.ts (source
-         comments below; full table in DESIGN.md).
+         Every on-frame string traces to src/content/studio/ai-enablement.ts
+         (line refs in the source comments below; full table in DESIGN.md).
          ============================================================ */
       const vars = (window.__hyperframes && window.__hyperframes.getVariables)
         ? window.__hyperframes.getVariables() : {};
@@ -185,37 +199,39 @@
 
       const COPY = {
         en: {
-          l0: "A real task",                                   // example.map.nodes[0].label
-          sub0: "from your backlog",                           // example.map.nodes[0].sub
-          l1: "Hands-on with agents",                          // example.map.nodes[1].label
-          l2: "Patterns captured",                             // example.map.nodes[2].label
-          l3: "Playbook for your stack",                       // example.map.nodes[3].label
-          l4: "Human review stays",                            // example.map.nodes[4].label (human)
-          l5: "The team runs it alone",                        // example.map.nodes[5].label (out)
-          caption: "Judgment and review stay with your engineers", // how.steps[4].desc
-          closing: "The playbook is yours",                    // human.items[2].desc ("The playbook is yours, in your repo…") — verbatim
+          l0: "A real task",                                   // example.map.nodes[0].label (:113)
+          sub0: "from your office's week",                     // example.map.nodes[0].sub (:113)
+          l1: "Hands-on with AI",                              // example.map.nodes[1].label (:114)
+          l2: "Habits captured",                               // example.map.nodes[2].label (:115)
+          l3: "Playbook for your office",                      // example.map.nodes[3].label (:116)
+          l4: "Your review stays",                             // example.map.nodes[4].label (human) (:117)
+          l5: "The team runs it alone",                        // example.map.nodes[5].label (out) (:118)
+          caption: "Judgment and review stay with your people", // how.steps[4].desc (:101) — the clause after the semicolon, sentence-cased
+          closing: "The playbook is yours",                    // human.items[2].desc (:135) — the clause before the first comma, verbatim
         },
         he: {
-          l0: "משימה אמיתית",                                   // he.example.map.nodes[0].label
-          sub0: "מהבקלוג שלכם",                                 // he.example.map.nodes[0].sub
-          l1: "עבודה מעשית עם סוכנים",                          // he.example.map.nodes[1].label
-          l2: "דפוסים נלכדים",                                  // he.example.map.nodes[2].label
-          l3: "פלייבוק לסטאק שלכם",                             // he.example.map.nodes[3].label
-          l4: "הבדיקה נשארת אנושית",                            // he.example.map.nodes[4].label (human)
-          l5: "הצוות רץ לבד",                                   // he.example.map.nodes[5].label (out)
-          caption: "שיקול הדעת והבדיקה נשארים אצל המהנדסים שלכם", // he.how.steps[4].desc
-          closing: "הפלייבוק שלכם",                             // he.human.items[2].desc ("הפלייבוק שלכם, בריפו שלכם…") — verbatim
+          l0: "משימה אמיתית",                                   // he.example.map.nodes[0].label (:256)
+          sub0: "מהשבוע של המשרד שלכם",                         // he.example.map.nodes[0].sub (:256)
+          l1: "עבודה מעשית עם AI",                              // he.example.map.nodes[1].label (:257)
+          l2: "ההרגלים נרשמים",                                 // he.example.map.nodes[2].label (:258)
+          l3: "מדריך עבודה למשרד",                              // he.example.map.nodes[3].label (:259)
+          l4: "הבדיקה נשארת אצלכם",                             // he.example.map.nodes[4].label (human) (:260)
+          l5: "הצוות מריץ לבד",                                 // he.example.map.nodes[5].label (out) (:261)
+          caption: "שיקול הדעת והבדיקה נשארים אצל האנשים שלכם", // he.how.steps[4].desc (:244) — the clause after the semicolon
+          closing: "מדריך העבודה שלכם",                         // he.human.items[2].desc (:278) — the clause before the first comma, verbatim
         },
       }[lang];
 
       document.documentElement.lang = lang;
       // Do NOT set dir="rtl" on <html> — it blanks the hyperframes RENDER
       // pipeline. Mirror positionally via X(); set dir only on text elements.
+      // `.he` on #stage drives the HE type roles (Assistant 700 / 600).
       const isHE = lang === "he";
       if (isHE) {
-        document.body.style.fontFamily = '"Assistant", system-ui, sans-serif';
-        document.querySelectorAll(".mono").forEach((el) => { el.style.fontFamily = '"Assistant", system-ui, sans-serif'; });
-        document.querySelectorAll(".lbl, #sub0, #caption, #closing")
+        document.getElementById("stage").classList.add("he");
+        // #task + #book too: the chip icon sits at the reading start and the short
+        // bars align right, like a Hebrew document (not a flipped LTR glyph).
+        document.querySelectorAll(".lbl, #sub0, #caption, #closing, #task, #book")
           .forEach((el) => { el.dir = "rtl"; });
       }
 
@@ -226,7 +242,10 @@
       setText("caption", COPY.caption); setText("closing", COPY.closing);
 
       // ---- Geometry (EN coordinates; HE mirrors x → 1920 − x) ----
+      // Film spec v2: the workspace spans x 185 → 1735 (task chip 185–585 ·
+      // lanes 640–1260 · playbook 1315–1735), centred on y = 600 (340–860).
       const X = isHE ? (x) => 1920 - x : (x) => x;
+      const STAGE_Y = 600, BOOK_X = 1525;
       // center → top-left placement (no CSS translate → GSAP owns all transforms cleanly)
       const placeC = (id, cx, cy, w, h) => {
         const el = document.getElementById(id);
@@ -237,23 +256,24 @@
       };
 
       // lanes: mirror endpoints so HE runs right→left
-      const LANE_X0 = 440, LANE_X1 = 1180, LANE_Y = [480, 560, 640];
+      const LANE_X0 = 640, LANE_X1 = 1260, LANE_Y = [STAGE_Y - 140, STAGE_Y, STAGE_Y + 140];
       [0, 1, 2].forEach((i) => {
         const ln = document.getElementById("lane" + i);
         ln.setAttribute("x1", X(LANE_X0)); ln.setAttribute("x2", X(LANE_X1));
       });
-      const laneTravel = X(LANE_X1) - X(LANE_X0); // signed: +740 EN, −740 HE
+      const laneTravel = X(LANE_X1) - X(LANE_X0); // signed: +620 EN, −620 HE
 
-      // task chip (center-left)
-      placeC("task", 300, 560, 152, 96);
-      // playbook (center-right)
-      placeC("book", 1380, 560, 224, 276);
-      // review ring + check over the playbook
-      placeC("gate-ring", 1380, 560, 168, 168);
-      placeC("gate-check", 1380, 452, 50, 50);
+      // task chip (left, 400×250)
+      placeC("task", 385, STAGE_Y, 400, 250);
+      // playbook (right, 420×520)
+      placeC("book", BOOK_X, STAGE_Y, 420, 520);
+      // review ring over the playbook; the check sits in the card's empty lower
+      // half (below the habit lines), not on the copper bar
+      placeC("gate-ring", BOOK_X, STAGE_Y, 440, 440);
+      placeC("gate-check", BOOK_X, STAGE_Y + 120, 160, 160);
 
       // work + run ticks start at each lane's left edge (top-left anchored → x-tween is clean)
-      const TICK = 15;
+      const TICK = 40;
       [0, 1, 2].forEach((i) => {
         placeC("work" + i, LANE_X0, LANE_Y[i], TICK, TICK);
         placeC("run" + i, LANE_X0, LANE_Y[i], TICK, TICK);
@@ -282,7 +302,7 @@
       showLabel("lbl0", 0.7);
       tl.fromTo("#sub0", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5 }, 1.0);
 
-      // ===== BEAT 1 — Hands-on with agents (2.0–4.3) =====
+      // ===== BEAT 1 — Hands-on with AI (2.0–4.3) =====
       hideLabel("lbl0", 2.05); tl.to("#sub0", { opacity: 0, y: -10, duration: 0.4, ease: "power2.in" }, 2.15);
       // lanes draw out
       tl.to(["#lane0", "#lane1", "#lane2"], { strokeDashoffset: 0, duration: 0.9, ease: "power1.inOut", stagger: 0.1 }, 2.3);
@@ -292,12 +312,12 @@
         tl.fromTo("#" + id, { opacity: 0, x: 0 }, { opacity: 1, x: laneTravel, duration: 1.4, ease: "power2.inOut" }, at);
       workTravel("work0", 2.7); workTravel("work1", 2.86); workTravel("work2", 3.02);
 
-      // ===== BEAT 2 — Patterns captured → Playbook (4.3–6.8) =====
+      // ===== BEAT 2 — Habits captured → Playbook (4.3–6.8) =====
       hideLabel("lbl1", 4.35);
       // ticks converge into the playbook + blur out (velocity-matched exit)
-      tl.to(["#work0", "#work1", "#work2"], { x: X(1380) - X(LANE_X0), y: 0, scale: 0.5, opacity: 0, filter: "blur(10px)", duration: 0.55, ease: "power2.in", stagger: 0.05 }, 4.45);
+      tl.to(["#work0", "#work1", "#work2"], { x: X(BOOK_X) - X(LANE_X0), y: 0, scale: 0.5, opacity: 0, filter: "blur(10px)", duration: 0.55, ease: "power2.in", stagger: 0.05 }, 4.45);
       showLabel("lbl2", 4.55);
-      // the playbook assembles (decelerate from blur), pattern lines draw
+      // the playbook assembles (decelerate from blur), habit lines draw
       tl.fromTo("#book", { opacity: 0, y: 22, scale: 0.96, filter: "blur(8px)" }, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.7, ease: "power2.out" }, 4.9);
       tl.to("#pl0", { scaleX: 1, duration: 0.45, ease: "power2.out" }, 5.35);
       tl.to("#pl1", { scaleX: 1, duration: 0.45, ease: "power2.out" }, 5.5);
@@ -306,13 +326,13 @@
       hideLabel("lbl2", 5.75); showLabel("lbl3", 5.95);
       tl.to("#book", { borderColor: "rgba(217,104,50,0.5)", duration: 0.5 }, 5.95); // copper edge — persistent
 
-      // ===== BEAT 3 — PEAK: human review stays (6.8–9.3) =====
+      // ===== BEAT 3 — PEAK: your review stays (6.8–9.3) =====
       hideLabel("lbl3", 6.75); showLabel("lbl4", 7.15);
       // RACK FOCUS — lanes + task + any residual defocus + dim; the review
       // checkpoint over the playbook stays sharp. Camera pushes in (below).
       const UPSTREAM = ["#lanes-svg", "#task"];
-      tl.to(UPSTREAM, { filter: "blur(7px)", opacity: 0.38, duration: 0.75, ease: "power2.inOut" }, 7.5);
-      tl.to("#book", { boxShadow: "0 0 50px 0 rgba(217,104,50,0.4)", scale: 1.05, duration: 0.6 }, 7.55);
+      tl.to(UPSTREAM, { filter: "blur(12px)", opacity: 0.38, duration: 0.75, ease: "power2.inOut" }, 7.5);
+      tl.to("#book", { boxShadow: "0 0 100px 0 rgba(217,104,50,0.4)", scale: 1.05, duration: 0.6 }, 7.55);
       // one bounded copper ring bloom (immediateRender:false so the "from"
       // state does not paint from t=0)
       tl.fromTo("#gate-ring", { opacity: 0.9, scale: 0.55, transformOrigin: "center" },
@@ -326,7 +346,7 @@
       // ===== BEAT 4 — The team runs it alone (9.3–11.0) =====
       // REFOCUS — the rack releases so the loop seam is crisp.
       tl.to(UPSTREAM, { filter: "blur(0px)", opacity: 1, duration: 0.8, ease: "power2.inOut" }, 9.35);
-      tl.to("#book", { boxShadow: "0 0 34px 0 rgba(217,104,50,0.16)", scale: 1, duration: 0.8, ease: "power2.inOut" }, 9.35);
+      tl.to("#book", { boxShadow: "0 0 70px 0 rgba(217,104,50,0.16)", scale: 1, duration: 0.8, ease: "power2.inOut" }, 9.35);
       hideLabel("lbl4", 9.4); showLabel("lbl5", 9.7);
       // the lanes resume on their own — run-ticks fade in at the lane start and
       // travel to the end once (single pass). immediateRender:false + an
@@ -342,7 +362,7 @@
       tl.to("#caption", { opacity: 0, y: -12, filter: "blur(10px)", duration: 0.5, ease: "power2.in" }, 11.0);
       hideLabel("lbl5", 11.1);
       tl.fromTo("#closing", { opacity: 0, y: 16, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.75, ease: "power2.out" }, 11.35);
-      tl.to("#book", { boxShadow: "0 0 44px 0 rgba(217,104,50,0.12)", duration: 0.9, ease: "sine.inOut" }, 11.5);
+      tl.to("#book", { boxShadow: "0 0 90px 0 rgba(217,104,50,0.12)", duration: 0.9, ease: "sine.inOut" }, 11.5);
 
       // ===== CAMERA — loop-continuous (identity at t=0 AND t=13) =====
       // Push gently INTO the review peak, hold, then settle back so the seam

@@ -1,8 +1,8 @@
 # SCRIPT — what the film says
 
-Subject: the homepage Evidence promise — **scattered, manual work becomes a
-mapped flow with a human approval step** — shown as one continuous
-transformation, not two panels.
+Subject: the `/studio/process-optimization` promise ("The map you receive") —
+**scattered, manual work becomes a mapped flow with a human approval step** —
+shown as one continuous transformation, not two panels.
 
 ## The message arc
 
@@ -12,16 +12,16 @@ transformation, not two panels.
 
 Bilingual: EN + a Hebrew RTL locale (`lang` variable). The Hebrew is a
 transcreation of the same message — the layout mirrors (see DESIGN.md → Locales);
-HE copy traces to `home.ts` → `he.evidence`.
+HE copy traces to `src/content/studio/process-optimization.ts` → `he.example`.
 
-## The cast (all copy traces to `home.ts` → `evidence`)
+## The cast (all copy traces to `process-optimization.ts` → `example`)
 
 | Element | Text | Source |
 |---|---|---|
-| Caps | `BEFORE` / `MAPPED WORKFLOW` | panel captions |
-| Ledger | the four before items, verbatim | `before.items` |
-| Nodes | the six workflow steps, verbatim (+ `email · chat · call` sub) | `mapped.nodes` |
-| Chips | `email` `chat` `call` `status?` `follow-up?` `what is open?` | contractions of the before items |
+| Headlines | `Before the map` / `Mapped workflow` | `example.intro` (clause before the colon) / `example.map.caption` |
+| Ledger | the four before-clauses, verbatim (EN sentence-cased), two on frame at a time (a queue: each struck clause clears for the next) | `example.intro` |
+| Nodes | the six workflow steps, verbatim (the `email · chat · call` sub is carried by the three chips, not set as text — film spec v2) | `example.map.nodes` |
+| Chips | `email` `chat` `call` `status?` `follow-up?` `what is open?` | contractions of the before-clauses |
 
 ## Resolution map — which pain each node answers
 
@@ -41,10 +41,10 @@ the system adds. Everything dims, the copper node blooms (bounded ring), holds.
 
 ## The payoff
 
-Settled frame: a tidied, struck-through before-list on the left; the complete
-mapped spine on the right. *The mess became the map.*
+Settled frame: the last two pains, straightened and struck through, on the left; the complete
+mapped spine under `Mapped workflow` on the right. *The mess became the map.*
 
 ## Honesty rules (non-negotiable)
 
 - No numbers, percentages, names, logos, or invented quotes.
-- Nothing on screen that does not trace to `evidence` content.
+- Nothing on screen that does not trace to `example` content.

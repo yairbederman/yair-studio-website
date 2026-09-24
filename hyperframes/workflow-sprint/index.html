@@ -21,11 +21,14 @@
          One composition, two locales (`lang` variable; HE mirrors
          positionally — dir set per-element, NEVER on <html>: that
          blanks the render pipeline, see office-assistant/REVIEW.md).
-         Renders transparent (alpha MOV master route).
+         Type is film spec v2 — sans only on frame: Instrument Sans 600
+         (EN) · Assistant 700 (HE); sizes fill ~80% of the frame.
+         Renders transparent (alpha MOV master route); #review-bg is
+         REVIEW-ONLY — remove before `npm run render`, restore after.
          ============================================================ */
-      @font-face { font-family: "Inter"; font-weight: 600; font-display: block; src: url("assets/fonts/inter-600.woff2") format("woff2"); }
-      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
-      @font-face { font-family: "Assistant"; font-weight: 600; font-display: block; src: url("assets/fonts/assistant-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: "Instrument Sans"; font-weight: 400 600; font-display: block; src: url("assets/fonts/instrument-sans-400-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: "Assistant"; font-weight: 700; font-display: block; src: url("assets/fonts/assistant-700-hebrew.woff2") format("woff2"); unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F; }
+      @font-face { font-family: "Assistant"; font-weight: 700; font-display: block; src: url("assets/fonts/assistant-700-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 
       :root {
         --bg-0: #121211; --bg-1: #1a1a18; --bg-2: #242420;
@@ -37,32 +40,40 @@
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body {
         width: 1920px; height: 1080px; overflow: hidden; background: transparent;
-        font-family: "Inter", system-ui, sans-serif; /* HE swaps to Assistant at init */
+        font-family: "Instrument Sans", system-ui, sans-serif; /* EN; HE → Assistant via #stage.he */
         color: var(--fg-1);
         -webkit-font-smoothing: antialiased;
       }
       #stage { position: relative; width: 1920px; height: 1080px; }
       #camera { position: absolute; inset: 0; transform-origin: 960px 540px; will-change: transform; }
+      /* REVIEW/CHECK/SNAPSHOT ONLY — charcoal backdrop so contrast reads true; inset:-40px so the
+         camera drift never exposes a transparent edge. Remove before `npm run render`, restore after. */
+      #review-bg { position: absolute; inset: -40px; background: var(--bg-0); }
+      /* HE type (spec v2, sans only): every text moment → Assistant 700.
+         Hebrew is never letter-spaced — one reset beats every tracked rule below (incl. the ids). */
+      #stage.he { font-family: "Assistant", system-ui, sans-serif; }
+      #stage.he .headline, #stage.he .row-label { font-weight: 700; }
+      #stage [dir="rtl"] { letter-spacing: 0; }
 
-      /* ---------- Headlines (6 stacked text moments) ----------
-         Mobile rule: frame renders ~330px wide on phones (scale ~0.17):
-         headlines 84px, closing 92px, row/approval labels 64px. */
+      /* ---------- Headlines (6 text moments, one at a time, same band) ----------
+         Spec v2 type floor: headlines 120px (≈ 23px on a 375px phone), row labels
+         80px (≈ 16px). Band: cap top y≈130, baseline y≈218. */
       .headline {
-        position: absolute; left: 0; top: 118px; width: 1920px; text-align: center;
-        font-size: 84px; font-weight: 600; letter-spacing: -0.015em;
+        position: absolute; left: 0; top: 112px; width: 1920px; text-align: center;
+        font-weight: 600; /* Instrument Sans (inherited); HE → Assistant 700 */
+        font-size: 120px; line-height: 1.05; letter-spacing: -0.01em; white-space: nowrap;
         color: var(--fg-1); opacity: 0; will-change: transform, opacity;
       }
-      #hl-closing { top: 112px; font-size: 92px; letter-spacing: -0.02em; }
-      #lbl-approval {
-        position: absolute; left: 0; top: 968px; width: 1920px; text-align: center;
-        font-size: 64px; font-weight: 600; letter-spacing: -0.01em;
-        color: var(--accent); opacity: 0;
-      }
+      /* Closing: EN on one line measures 1725px of ink (> 1600) → two block lines at 120px;
+         HE fits one line (1215px). Lines come from COPY.closing. */
+      #hl-closing .ln { display: block; }
+      /* Approval — the peak's one text moment, in the headline band (copper). */
+      #lbl-approval { color: var(--accent); }
 
       /* ---------- Row labels (sorted kinds of work) ---------- */
       .row-label {
-        position: absolute; width: 420px;
-        font-size: 64px; font-weight: 600; letter-spacing: -0.01em;
+        position: absolute; width: 440px; /* widest: "AI-assisted" 417px advance at 80px */
+        font-size: 80px; font-weight: 600; letter-spacing: -0.01em;
         color: var(--fg-2); opacity: 0;
         filter: blur(0px); /* baseline for the peak rack-focus (tweened directly) */
         will-change: transform, opacity, filter;
@@ -72,9 +83,9 @@
 
       /* ---------- Tiles (abstract work units, no text) ---------- */
       .tile {
-        position: absolute; width: 90px; height: 60px; border-radius: 8px;
-        background: var(--bg-2); border: 1.5px solid var(--rule-strong);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+        position: absolute; width: 120px; height: 80px; border-radius: 10px;
+        background: var(--bg-2); border: 2px solid var(--rule-strong);
+        box-shadow: 0 5px 13px rgba(0, 0, 0, 0.35);
         opacity: 0;
         /* filter baseline for the rack-focus blur at the approval peak. NOTE:
            GSAP writes an inline `filter` on each tile during the scatter/mapping
@@ -86,7 +97,7 @@
       }
 
       /* automation ticks (three, drawn on chosen tiles at act 4) */
-      .auto-tick { position: absolute; width: 34px; height: 34px; opacity: 0; }
+      .auto-tick { position: absolute; width: 46px; height: 46px; opacity: 0; } /* viewBox 34 → stroke scales */
       .auto-tick path {
         fill: none; stroke: var(--accent); stroke-width: 4; stroke-linecap: round;
         stroke-linejoin: round; stroke-dasharray: 34; stroke-dashoffset: 34;
@@ -95,21 +106,21 @@
       /* ---------- Rail: "mapped end to end" (snakes the grid once) ---------- */
       #rails { position: absolute; inset: 0; width: 1920px; height: 1080px; }
       #rail {
-        fill: none; stroke: #4a4842; stroke-width: 2.5;
+        fill: none; stroke: #4a4842; stroke-width: 3;
         stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0.9;
       }
 
       /* ---------- Approval gate (compact peak; motif shared with film 1) ---------- */
       #gate-node {
-        position: absolute; width: 30px; height: 30px; border-radius: 50%;
-        background: var(--bg-0); border: 3px solid var(--accent);
+        position: absolute; width: 60px; height: 60px; border-radius: 50%;
+        background: var(--bg-0); border: 6px solid var(--accent);
         opacity: 0; will-change: transform;
       }
       #gate-pulse {
-        position: absolute; width: 76px; height: 76px; border-radius: 50%;
-        border: 2.5px solid var(--accent); opacity: 0; will-change: transform, opacity;
+        position: absolute; width: 152px; height: 152px; border-radius: 50%;
+        border: 5px solid var(--accent); opacity: 0; will-change: transform, opacity;
       }
-      #gate-check { position: absolute; width: 44px; height: 44px; opacity: 0; }
+      #gate-check { position: absolute; width: 88px; height: 88px; opacity: 0; } /* viewBox 44 → stroke scales */
       #gate-check path {
         fill: none; stroke: var(--fg-1); stroke-width: 4.5; stroke-linecap: round;
         stroke-linejoin: round; stroke-dasharray: 44; stroke-dashoffset: 44;
@@ -120,6 +131,7 @@
   <body>
     <div id="stage" data-composition-id="root" data-start="0" data-duration="14" data-width="1920" data-height="1080">
       <div id="camera" data-layout-allow-overflow>
+        <div id="review-bg"></div><!-- REVIEW-ONLY: remove before render, restore after -->
         <!-- Rail (path set at init — mirrored for HE) -->
         <svg id="rails" viewBox="0 0 1920 1080"><path id="rail" pathLength="1" d="" /></svg>
 
@@ -152,7 +164,7 @@
         <div class="row-label" id="lbl-auto-row"></div>
         <div class="row-label" id="lbl-ai-row"></div>
         <div class="row-label" id="lbl-human-row"></div>
-        <div id="lbl-approval"></div>
+        <div class="headline" id="lbl-approval"></div>
       </div>
     </div>
 
@@ -174,7 +186,7 @@
           human: "Human",                              // nodes[2].sub
           built: "Three automations built",            // example.map.nodes[3]
           approval: "Human approval",                  // example.map.nodes[4]
-          closing: "Workflow runs with less friction", // example.map.nodes[5]
+          closing: ["Workflow runs", "with less friction"], // example.map.nodes[5] — 2 lines (1 line = 1725px ink)
         },
         he: {
           stuck: "תהליך אחד שנתקע",
@@ -185,13 +197,13 @@
           human: "אנושי",
           built: "שלוש אוטומציות נבנות",
           approval: "אישור אנושי",
-          closing: "התהליך רץ עם פחות חיכוך",
+          closing: ["התהליך רץ עם פחות חיכוך"], // one line (1215px ink)
         },
       }[lang];
 
       document.documentElement.lang = lang;
       if (lang === "he") {
-        document.body.style.fontFamily = '"Assistant", system-ui, sans-serif';
+        document.getElementById("stage").classList.add("he"); // spec v2 HE type (Assistant 700) + tracking reset (CSS .he rules)
         // dir per-element only — html[dir=rtl] blanks the render pipeline.
         document.querySelectorAll("#stage .headline, #stage .row-label, #lbl-approval")
           .forEach((el) => { el.dir = "rtl"; });
@@ -202,7 +214,11 @@
       setText("hl-mapped", COPY.mapped);
       setText("hl-sorted", COPY.sorted);
       setText("hl-built", COPY.built);
-      setText("hl-closing", COPY.closing);
+      COPY.closing.forEach((t) => { // one block span per line (#hl-closing .ln)
+        const ln = document.createElement("span");
+        ln.className = "ln"; ln.textContent = t;
+        document.getElementById("hl-closing").appendChild(ln);
+      });
       setText("lbl-auto-row", COPY.auto);
       setText("lbl-ai-row", COPY.ai);
       setText("lbl-human-row", COPY.human);
@@ -210,32 +226,36 @@
 
       // ---- Geometry (EN coordinates; HE mirrors x → 1920 − x) ----
       const X = lang === "he" ? (x) => 1920 - x : (x) => x;
-      const TILE_W = 90, TILE_H = 60;
+      const TILE_W = 120, TILE_H = 80;
 
       // Scatter (deterministic hand-picked mess), grid (5×3), sorted rows.
+      // Spec v2: the field spans ~1400×600 (x 262–1658, y 320–920).
       // Each tile: [scatterX, scatterY, rotDeg]
       const SCATTER = [
-        [700, 420, -8], [1180, 380, 6], [880, 520, -3], [1300, 560, 10], [620, 640, 4],
-        [1060, 500, -12], [760, 760, 7], [980, 700, -5], [1240, 720, 3], [560, 500, -10],
-        [1400, 440, -6], [860, 360, 12], [1120, 820, -9], [660, 860, 5], [1340, 840, -4],
+        [534, 422, -8], [1264, 381, 6], [808, 526, -3], [1446, 568, 10], [413, 651, 4],
+        [1082, 506, -12], [626, 776, 7], [960, 714, -5], [1355, 734, 3], [322, 506, -10],
+        [1598, 443, -6], [778, 360, 12], [1173, 838, -9], [474, 880, 5], [1507, 859, -4],
       ];
-      const COLS = [660, 810, 960, 1110, 1260];
-      const ROWS = [480, 620, 760];
-      // Sorted rows: automatic (6) / AI-assisted (5) / human (4) —
-      // shifted right so the label+tiles block reads centered.
+      const COLS = [480, 720, 960, 1200, 1440];
+      const ROWS = [480, 650, 820]; // = the sorted rows (pitch 170)
+      // Sorted rows: automatic (6) / AI-assisted (5) / human (4). Block ≈ 1475px wide,
+      // centred: label box x 200–640, 56px gap, tiles 696–1696 (pitch 176).
       const SORT = {
-        auto: { y: 440, tiles: [0, 2, 5, 8, 11, 13], xs: [750, 880, 1010, 1140, 1270, 1400] },
-        ai: { y: 620, tiles: [1, 4, 6, 9, 12], xs: [750, 880, 1010, 1140, 1270] },
-        human: { y: 800, tiles: [3, 7, 10, 14], xs: [750, 880, 1010, 1140] },
+        auto: { y: 480, tiles: [0, 2, 5, 8, 11, 13], xs: [756, 932, 1108, 1284, 1460, 1636] },
+        ai: { y: 650, tiles: [1, 4, 6, 9, 12], xs: [756, 932, 1108, 1284, 1460] },
+        human: { y: 820, tiles: [3, 7, 10, 14], xs: [756, 932, 1108, 1284] },
       };
       // The three automations (offer promises exactly three):
-      // tile 5 = automatic row @1010, tile 6 = AI-assisted row @1010,
-      // tile 11 = automatic row @1270 (indices into SORT rows above).
+      // tile 5 = automatic row @1108, tile 6 = AI-assisted row @1108,
+      // tile 11 = automatic row @1460 (indices into SORT rows above).
       const AUTOS = [
-        { tick: "tick0", tile: 5, x: 1010, y: 440 },
-        { tick: "tick1", tile: 6, x: 1010, y: 620 },
-        { tick: "tick2", tile: 11, x: 1270, y: 440 },
+        { tick: "tick0", tile: 5, x: 1108, y: 480 },
+        { tick: "tick1", tile: 6, x: 1108, y: 650 },
+        { tick: "tick2", tile: 11, x: 1460, y: 480 },
       ];
+      // HE row labels are narrower (widest 294px vs EN 417px advance at 80px), so the
+      // mirrored block would sit 61px left of centre — shift the HE sorted block right.
+      const SORT_DX = lang === "he" ? 61 : 0;
       const STUCK = 7; // the tile that sags in act 0
 
       // Tiles start at their scatter positions (center-based placement).
@@ -249,38 +269,40 @@
       // Ticks sit on their tiles' sorted positions (revealed in act 4).
       AUTOS.forEach(({ tick, x, y }) => {
         const el = document.getElementById(tick);
-        el.style.left = X(x) - 17 + "px";
-        el.style.top = y - 17 + "px";
+        el.style.left = X(x) + SORT_DX - 23 + "px";
+        el.style.top = y - 23 + "px";
       });
 
       // Rail snakes through the three grid rows (drawn during "mapped").
       document.getElementById("rail").setAttribute(
         "d",
-        `M${X(585)} ${ROWS[0]} L${X(1335)} ${ROWS[0]} L${X(1335)} ${ROWS[1]} ` +
-        `L${X(585)} ${ROWS[1]} L${X(585)} ${ROWS[2]} L${X(1335)} ${ROWS[2]}`
+        `M${X(390)} ${ROWS[0]} L${X(1530)} ${ROWS[0]} L${X(1530)} ${ROWS[1]} ` +
+        `L${X(390)} ${ROWS[1]} L${X(390)} ${ROWS[2]} L${X(1530)} ${ROWS[2]}`
       );
 
       // Row labels: box beside the rows (right-aligned EN, mirrored for HE).
+      // top offset centres the ink on the row: Instrument Sans caps −40, Assistant −46.
       const placeRowLabel = (id, y) => {
         const el = document.getElementById(id);
-        el.style.left = (lang === "he" ? 1920 - 250 - 420 : 250) + "px";
-        el.style.top = y - 32 + "px";
+        el.style.left = (lang === "he" ? 1920 - 200 - 440 : 200) + SORT_DX + "px";
+        el.style.top = y - (lang === "he" ? 46 : 40) + "px";
         el.style.textAlign = lang === "he" ? "left" : "right";
       };
       placeRowLabel("lbl-auto-row", SORT.auto.y);
       placeRowLabel("lbl-ai-row", SORT.ai.y);
       placeRowLabel("lbl-human-row", SORT.human.y);
 
-      // Gate cluster — below the rows so the peak never collides with them.
-      const GATE = { x: X(960), y: 915 };
+      // Gate cluster — centred on the (defocused) row block; its label is the
+      // headline band's text moment at the peak, so text never collides.
+      const GATE = { x: X(960), y: 650 };
       const placeCenter = (id, w, h) => {
         const el = document.getElementById(id);
         el.style.left = GATE.x - w / 2 + "px";
         el.style.top = GATE.y - h / 2 + "px";
       };
-      placeCenter("gate-node", 30, 30);
-      placeCenter("gate-pulse", 76, 76);
-      placeCenter("gate-check", 44, 44);
+      placeCenter("gate-node", 60, 60);
+      placeCenter("gate-pulse", 152, 152);
+      placeCenter("gate-check", 88, 88);
 
       // Motion deltas from each tile's scatter anchor (GSAP x/y are offsets).
       const gridDelta = (i) => ({
@@ -290,7 +312,7 @@
       const sortDelta = (i) => {
         for (const row of Object.values(SORT)) {
           const k = row.tiles.indexOf(i);
-          if (k !== -1) return { x: X(row.xs[k]) - X(SCATTER[i][0]), y: row.y - SCATTER[i][1] };
+          if (k !== -1) return { x: X(row.xs[k]) + SORT_DX - X(SCATTER[i][0]), y: row.y - SCATTER[i][1] };
         }
       };
 
@@ -310,7 +332,7 @@
           { opacity: 0.85, y: 0, duration: 0.5 }, 0.35 + i * 0.055);
       });
       // one step sags — the stuck one
-      tl.to("#t" + STUCK, { y: "+=26", opacity: 0.45, duration: 0.55, ease: "power2.inOut" }, 1.45);
+      tl.to("#t" + STUCK, { y: "+=34", opacity: 0.45, duration: 0.55, ease: "power2.inOut" }, 1.45);
       headOut("hl-stuck", 2.0);
 
       // ---- ACT 1 — Mapped end to end (2.2–5.0) ----
@@ -360,7 +382,7 @@
       // ---- ACT 4 — Human approval (compact peak, 10.9–12.5) ----
       // RACK FOCUS — tiles + row labels defocus (blur + dim) while the copper
       // approval gate stays sharp; the eye is pulled to the human checkpoint.
-      tl.to(["#stage .tile", "#stage .row-label"], { filter: "blur(6px)", opacity: 0.32, duration: 0.6, ease: "power2.inOut" }, 10.9);
+      tl.to(["#stage .tile", "#stage .row-label"], { filter: "blur(8px)", opacity: 0.32, duration: 0.6, ease: "power2.inOut" }, 10.9);
       tl.to("#stage .auto-tick", { opacity: 0.3, duration: 0.6, ease: "power2.inOut" }, 10.9);
       tl.fromTo("#gate-node", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1.6, backgroundColor: "#d96832", duration: 0.5 }, 11.05);
       headIn("lbl-approval", 11.15);
