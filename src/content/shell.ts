@@ -1,4 +1,4 @@
-import { waLink } from "@/lib/site";
+import { SITE_TAGLINE, waLink } from "@/lib/site";
 import { localeAccessor } from "@/content/types";
 import type { Cta, Locale } from "@/content/types";
 import type { CopyEmailLabels } from "@/components/CopyEmail";
@@ -10,9 +10,10 @@ import type { CopyEmailLabels } from "@/components/CopyEmail";
  * and locale-prefixed routes.
  *
  * Also the single source for the site-wide scoping-call CTA (`workflowCta`,
- * the first rung of the ladder) and the WhatsApp CTA: homepage, offer,
- * capability, and contact surfaces consume the same locale-resolved labels
- * and destinations instead of restating them.
+ * the first rung of the ladder) and the WhatsApp CTA: homepage, service,
+ * work, and contact surfaces consume the same locale-resolved labels and
+ * destinations instead of restating them. The footer tag is the site
+ * tagline (SITE_TAGLINE in src/lib/site.ts).
  */
 
 export type ShellContent = {
@@ -30,33 +31,39 @@ export type ShellContent = {
   copyEmail: CopyEmailLabels;
   /** Pause/play labels for the process-film toggle (FilmPlayer). */
   filmControls: { pause: string; play: string };
-  /** Primary action used across homepage, offers, and contact surfaces. */
+  /** Primary action used across homepage, services, and contact surfaces. */
   workflowCta: Cta;
   /** The WhatsApp secondary CTA used on the homepage final band and /contact. */
   whatsappCta: Cta;
 };
+
+// The header nav and the footer list the same four routes — one list per
+// locale, shared by both.
+const EN_LINKS: readonly Cta[] = [
+  { label: "Work", href: "/work" },
+  { label: "Services", href: "/services" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+];
+
+const HE_LINKS: readonly Cta[] = [
+  { label: "עבודות", href: "/he/work" },
+  { label: "שירותים", href: "/he/services" },
+  { label: "אודות", href: "/he/about" },
+  { label: "צור קשר", href: "/he/contact" },
+];
 
 const en: ShellContent = {
   brandHref: "/",
   skipLink: "Skip to content",
   nav: {
     ariaLabel: "Primary",
-    links: [
-      { label: "Studio", href: "/studio" },
-      { label: "Services", href: "/offers" },
-      { label: "About", href: "/about" },
-      { label: "Contact", href: "/contact" },
-    ],
+    links: EN_LINKS,
   },
   footer: {
-    tag: "The AI department your office hires",
+    tag: SITE_TAGLINE.en,
     ariaLabel: "Footer",
-    links: [
-      { label: "Studio", href: "/studio" },
-      { label: "Services", href: "/offers" },
-      { label: "About", href: "/about" },
-      { label: "Contact", href: "/contact" },
-    ],
+    links: EN_LINKS,
     whatsappLabel: "WhatsApp",
     linkedinLabel: "LinkedIn",
   },
@@ -80,22 +87,12 @@ const he: ShellContent = {
   skipLink: "דלג לתוכן",
   nav: {
     ariaLabel: "ניווט ראשי",
-    links: [
-      { label: "סטודיו", href: "/he/studio" },
-      { label: "שירותים", href: "/he/offers" },
-      { label: "אודות", href: "/he/about" },
-      { label: "צור קשר", href: "/he/contact" },
-    ],
+    links: HE_LINKS,
   },
   footer: {
-    tag: "מחלקת ה-AI שהמשרד שלכם שוכר",
+    tag: SITE_TAGLINE.he,
     ariaLabel: "קישורים בתחתית",
-    links: [
-      { label: "סטודיו", href: "/he/studio" },
-      { label: "שירותים", href: "/he/offers" },
-      { label: "אודות", href: "/he/about" },
-      { label: "צור קשר", href: "/he/contact" },
-    ],
+    links: HE_LINKS,
     whatsappLabel: "וואטסאפ",
     linkedinLabel: "לינקדאין",
   },

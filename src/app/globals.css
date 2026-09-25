@@ -9,18 +9,91 @@
    design_handoff_yair_studio/ snapshot was never a source.)
 
    Fonts are loaded via next/font (see src/lib/fonts.ts, imported by both root
-   layouts), which sets --font-instrument-sans / --font-newsreader /
-   --font-frank-ruhl / --font-geist-mono / --font-assistant on <html>. The
-   design system's CDN @import is intentionally NOT used.
+   layouts), which sets --font-instrument-sans / --font-geist-mono /
+   --font-assistant on <html>. The design system's CDN @import is
+   intentionally NOT used.
 
    Deliberate, approved deviations from the source:
-     - Pair A · Editorial: display = Newsreader (EN) / Frank Ruhl Libre (HE);
+     - Sans pair (redesign v2): display = Instrument Sans 600–700 (EN) /
+       Assistant 700–800 (HE), the body families at display weights;
        body = Instrument Sans (EN) / Assistant (HE) — not JetBrains Mono.
      - Solid nav background (no backdrop-filter / glassmorphism).
      - Light/print theme omitted (homepage section styles added in Step 3, below).
      - IBM Plex Mono (Hebrew mono) deferred — graceful fallback below.
    Rule: never hardcode hex in components — always use var(--*).
    ============================================================ */
+
+/* ============================================================
+   Tailwind CSS 4 — utilities only
+   ------------------------------------------------------------
+   - No Preflight: only theme.css + utilities.css are imported, so this
+     file's own base styles stay the reset. Nothing but comments and the
+     @layer order statement may precede the @imports.
+   - Cascade: theme < base < components < utilities, and every UNLAYERED
+     rule in this file beats all four, whatever its specificity. The
+     zero-specificity universal resets therefore sit in @layer base (so
+     mt-4 beats `* { margin: 0 }`); element typography stays unlayered.
+   - Scan scope: source(none) turns auto-detection off and @source "../"
+     scans src/ only — hyperframes/ and backlog/ are not gitignored and
+     must never feed utilities into the build.
+   - Blocklist: a site class that shares a utility name receives Tailwind's
+     declarations for every property the site rule does not set (.container
+     would gain width:100% plus breakpoint max-widths), so each collision is
+     listed in `@source not inline`. A new site class must not reuse a
+     utility name, or it joins that list.
+   - Colors: `--color-*: initial` drops Tailwind's palette (text-orange-500
+     cannot exist, which enforces the no-hex rule above), then the map
+     exposes the site tokens as text-accent, bg-bg-1, border-rule … The
+     tokens stay defined once, in :root; the map only references them.
+     Spacing and breakpoints are Tailwind's defaults: its 4px step already
+     matches the 8pt --s-* scale (p-1 = 4px, p-2 = 8px, p-4 = 16px,
+     p-6 = 24px, p-8 = 32px, p-12 = 48px, p-16 = 64px, p-24 = 96px,
+     p-32 = 128px).
+   - Use utilities for layout, spacing, position, opacity and token colors.
+     A property that an unlayered rule here sets on the element itself
+     beats any utility, so element-level styles go in the feature
+     stylesheet. Those rules: h1–h6 family / weight / size / tracking /
+     line-height; p color; a color / underline / transition (and a:hover);
+     code / kbd / samp / pre font; hr border + margin (my-* loses); body
+     display:flex / flex-direction / min-height; ::selection colors; the
+     [dir="rtl"] text-align; and :focus-visible outline + border-radius on
+     bare a / button / input / select / textarea / summary (and .btn,
+     [role="button"], [tabindex]), so a rounded-full control shows a 4px
+     radius on keyboard focus. No `!` (important) utilities: a layered
+     !important beats the unlayered !important reduced-motion reset.
+   - Feature stylesheets: src/styles/{home,work,services,contact}.css,
+     imported by both root layouts right after this file, in that order.
+     Plain CSS (no @apply, no Tailwind import); every selector namespaced
+     under the feature's root class; element-level rules that must beat
+     this file live there (unlayered, loaded later: equal specificity
+     wins); colors only via var(--*) tokens.
+   ============================================================ */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@source "../";
+@source not inline("container sr-only");
+
+@theme inline {
+  --color-*: initial;
+  --color-bg-0: var(--bg-0);
+  --color-bg-1: var(--bg-1);
+  --color-bg-2: var(--bg-2);
+  --color-bg-3: var(--bg-3);
+  --color-fg-1: var(--fg-1);
+  --color-fg-2: var(--fg-2);
+  --color-fg-3: var(--fg-3);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-press: var(--accent-press);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-rule: var(--accent-rule);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-err: var(--err);
+}
 
 :root {
   /* ---------- Colors (dark, default) — COLOR.md §2 ---------- */
@@ -47,12 +120,13 @@
   --err:  #d85a52;
 
   /* ---------- Typography (mapped to next/font variables) ----------
-     Pair A · Editorial: Newsreader = EN display (opsz 6–72); Instrument Sans =
-     EN body/UI; Frank Ruhl Libre = HE display; Assistant = HE body; Geist Mono
-     = mono accents. IBM Plex Mono (HE mono) deferred. */
+     Sans pair: Instrument Sans = EN body/UI and EN display; Assistant = HE
+     body and HE display; Geist Mono = mono accents. Display is the body family
+     at display weights (--fw-*), so the display stacks alias the body stacks.
+     IBM Plex Mono (HE mono) deferred. */
   --font-body:    var(--font-instrument-sans), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-display: var(--font-newsreader), "Newsreader", Georgia, serif;
-  --font-display-he: var(--font-frank-ruhl), "Frank Ruhl Libre", "David Libre", serif;
+  --font-display: var(--font-body-en);
+  --font-display-he: var(--font-body-he);
   --font-mono:    var(--font-geist-mono), "IBM Plex Mono", "Space Mono", ui-monospace, monospace;
   --font-body-en: var(--font-instrument-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono-en: var(--font-geist-mono), "IBM Plex Mono", "Space Mono", ui-monospace, monospace;
@@ -78,13 +152,22 @@
   --lh-body: 1.55;
   --lh-loose: 1.7;
 
-  /* Tracking */
-  --tr-tight: -0.02em;
-  --tr-tighter: -0.04em;
-  --tr-snug: -0.01em;       /* serif display below h1 — a serif needs far less negative tracking than a grotesk */
+  /* Tracking — the display face is a grotesk, which wants more negative
+     tracking the larger it sets: ≈ -0.01em at 18–24px, ≈ -0.02em at 28–36px,
+     ≈ -0.03em at 48–72px. Tracking follows the rendered size, so a size
+     override that crosses a step also sets that step's token. */
+  --tr-snug: -0.01em;       /* 18–24px: h4–h6, card titles, .proof-client */
+  --tr-tight: -0.02em;      /* 28–36px: h2, h3, the 28px ladder + founder titles, ≤36px h1s; the wordmark */
+  --tr-tighter: -0.03em;    /* h1 display, 48–72px */
   --tr-normal: 0;
   --tr-wide: 0.04em;
   --tr-ui: 0.08em;
+
+  /* Display weights — display and body share a family, so weight carries the
+     hierarchy. Instrument Sans (wght 400–700) values here; the Hebrew root
+     redefines both for Assistant (wght 200–800). */
+  --fw-display: 600;
+  --fw-display-h1: 700;
 
   /* Spacing (8pt) */
   --s-1: 4px;
@@ -122,14 +205,19 @@
 /* ============================================================
    Base elements
    ============================================================ */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+/* The zero-specificity resets are layered: every unlayered rule in this file
+   still beats them exactly as before, and a layered spacing utility (mt-4,
+   box-content) can now beat them too. */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-* {
-  margin: 0;
+  * {
+    margin: 0;
+  }
 }
 
 html {
@@ -153,17 +241,15 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: var(--fw-display);
   letter-spacing: var(--tr-snug);
   line-height: var(--lh-snug);
   text-wrap: balance;
 }
 
-/* h1 pins Newsreader's display cut (opsz 72) at its large sizes; the ≤36px
-   mobile h1 rules below reset to auto optical sizing (text cut). */
-h1 { font-size: var(--fs-5xl); line-height: var(--lh-tight); letter-spacing: var(--tr-tight); font-variation-settings: "opsz" 72; }
-h2 { font-size: var(--fs-3xl); }
-h3 { font-size: var(--fs-2xl); }
+h1 { font-size: var(--fs-5xl); font-weight: var(--fw-display-h1); line-height: var(--lh-tight); letter-spacing: var(--tr-tighter); }
+h2 { font-size: var(--fs-3xl); letter-spacing: var(--tr-tight); }
+h3 { font-size: var(--fs-2xl); letter-spacing: var(--tr-tight); }
 
 p { color: var(--fg-1); text-wrap: pretty; }
 
@@ -231,7 +317,8 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
    inline [dir] island elsewhere) — the shell is no longer English-only.
 
    Mechanism: the Hebrew root REDEFINES the family tokens themselves
-   (--font-body / --font-display / --font-mono → the Hebrew families).
+   (--font-body / --font-display / --font-mono → the Hebrew families;
+   --fw-display / --fw-display-h1 → Assistant's display weights).
    Custom properties inherit, so every rule that declares
    `font-family: var(--font-*)` — body, .btn, .eyebrow, .offer-cta,
    .footer-tag, .founder-name, the .sch-* schematic voice … — resolves
@@ -249,13 +336,18 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   --font-body: var(--font-body-he);
   --font-display: var(--font-display-he);
   --font-mono: var(--font-body-he); /* Hebrew is never mono */
+  /* Assistant display weights: 700, h1 800 (EN: 600 / 700). */
+  --fw-display: 700;
+  --fw-display-h1: 800;
   font-family: var(--font-body-he);
 }
 [lang="en"], [dir="ltr"] { direction: ltr; font-family: var(--font-body-en); }
 
-/* Hebrew display = Frank Ruhl Libre via the redefined --font-display (weight
-   500 is inherited from the base heading rule); only the Hebrew metrics live
-   here. */
+/* Hebrew display = Assistant via the redefined --font-display, at the
+   redefined --fw-* weights (the tokens, not this rule: its :is() carries class
+   specificity, so an h1-only weight could not follow it). Only the Hebrew
+   metrics live here. The 1.15 line-height predates the serif era — it was set
+   when HE headings were first Assistant — so it stays. */
 [lang="he"] :is(h1, h2, h3, h4, h5, h6, .card-title, .founder-name),
 [dir="rtl"] :is(h1, h2, h3, h4, h5, h6, .card-title, .founder-name) {
   letter-spacing: 0;
@@ -283,7 +375,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
    The bracketed [AI] is the brand; brackets + AI render in --accent.
    ============================================================ */
 .wordmark {
-  font-family: var(--font-body-en); /* Latin sans lockup — pinned so neither the display serif nor the HE token swap reaches the brand */
+  font-family: var(--font-body-en); /* Latin sans lockup — pinned so neither a display-face change nor the HE token swap reaches the brand */
   font-weight: 600;
   font-size: 1em;
   letter-spacing: var(--tr-tight);
@@ -565,8 +657,9 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 }
 
 /* Shared card title/description (problems, method, offers) — defined once.
-   Always an h3, so the display serif comes from the base heading rule. */
-.card-title { font-size: var(--fs-xl); font-weight: 500; color: var(--fg-1); }
+   Always an h3, so the display face comes from the base heading rule; at
+   21px it takes the 18–24px tracking step, not the h3 rule's 28px one. */
+.card-title { font-size: var(--fs-xl); font-weight: var(--fw-display); letter-spacing: var(--tr-snug); color: var(--fg-1); }
 .card-desc { margin-top: var(--s-2); color: var(--fg-2); }
 
 /* ---------- Hero ---------- */
@@ -646,8 +739,8 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   align-items: flex-start;
   gap: var(--s-5);
 }
-/* Desktop hero display scales with the viewport, capped at 72px (the opsz 72
-   cut pinned on h1); the ≤767px rule below drops to --fs-3xl. */
+/* Desktop hero display scales with the viewport, capped at 72px; the ≤767px
+   rule below drops to --fs-3xl. */
 .hero h1 { font-size: clamp(2.75rem, 5.2vw, 4.5rem); }
 .hero-lead { line-height: var(--lh-body); max-width: 52ch; }
 .hero-actions {
@@ -852,7 +945,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
    the rungs are read as one decision. Below 1024px they stack top to bottom;
    from 1024px they sit side by side as a triptych (index above title) so the
    whole decision — head, three rungs, CTAs — fits one screen. The mono index
-   reuses .method-step-num; the title is a .card-title (display serif,
+   reuses .method-step-num; the title is a .card-title (display face,
    HE-keyed); the deliverables reuse the .panel-list hairline dash. Rung 03
    (the managed office) sits on a --bg-1 panel with a copper index — one step
    elevated. */
@@ -864,8 +957,11 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   padding-block: var(--s-7);
   border-top: 1px solid var(--rule);
 }
-/* Sit the small mono index on the serif title's cap line. */
-.ladder-rung .method-step-num { padding-top: 0.55rem; }
+/* Side-by-side rows (768–1023px): sit the small mono index on the 28px title's
+   first baseline. Geist Mono 14px/1.55 sets its baseline 15.8px into its line,
+   so 0.7rem (11.2px) lands it at 27.0px; the title's sits at 26.9px (Instrument
+   Sans, 1.2) or ≈26.4px (Assistant, 1.15). */
+.ladder-rung .method-step-num { padding-top: 0.7rem; }
 .ladder-rung.is-primary {
   margin-top: var(--s-4);
   padding-inline: var(--s-6);
@@ -882,7 +978,10 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   gap: var(--s-3);
   min-width: 0;
 }
-.ladder-body .card-title { font-size: var(--fs-2xl); }
+/* 28px takes the 28–36px tracking step. :where() keeps this at single-class
+   weight (still later than .card-title) so the Hebrew heading reset
+   ([lang] + class) keeps zeroing it; a second class here would outrank it. */
+:where(.ladder-body) .card-title { font-size: var(--fs-2xl); letter-spacing: var(--tr-tight); }
 .ladder-kicker {
   color: var(--accent);
   font-size: var(--fs-md);
@@ -925,7 +1024,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   .ladder-rung .method-step-num { padding-top: 0; }
   .ladder-rung.is-primary { margin-top: 0; padding: var(--s-6); }
   /* Three titles, one line each. */
-  .ladder-body .card-title { font-size: var(--fs-xl); }
+  :where(.ladder-body) .card-title { font-size: var(--fs-xl); letter-spacing: var(--tr-snug); }
   .ladder-cta { margin-top: auto; }
 }
 
@@ -1110,7 +1209,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   }
   /* Compact spine below the CTAs — never hidden (the motif IS the brand). */
   .hero-schematic { gap: var(--s-4); }
-  .hero h1 { font-size: var(--fs-3xl); font-variation-settings: normal; }
+  .hero h1 { font-size: var(--fs-3xl); letter-spacing: var(--tr-tight); }
   .method-list,
   .offers-grid { grid-template-columns: 1fr; }
   /* Ladder rows stack: index above the title, tighter row rhythm. */
@@ -1179,8 +1278,11 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   font-family: var(--font-display);
   font-size: var(--fs-4xl);
   line-height: 1;
-  /* the glyph's ink sits high in its em box — nudge it onto the symptom cap line */
-  margin-block-start: -0.14em;
+  /* Land the quote's ink top on the 18px symptom's cap line. Instrument Sans
+     (ascent 0.97, descent 0.25) at line-height 1 puts the baseline 0.86em down
+     the box and the quote's top (0.74em) 0.12em = 5.8px down; the symptom's
+     cap line sits 4.3px down its row. */
+  margin-block-start: -0.03em;
 }
 [dir="rtl"] .scenario::before { content: "\201D"; } /* opens on the start (right) side */
 .scenario-text {
@@ -1232,7 +1334,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 
 @media (max-width: 767px) {
   .offer-hero { padding-block: var(--s-8) var(--s-6); }
-  .offer-hero h1 { font-size: var(--fs-3xl); font-variation-settings: normal; }
+  .offer-hero h1 { font-size: var(--fs-3xl); letter-spacing: var(--tr-tight); }
   .feature-grid { grid-template-columns: 1fr; }
 }
 
@@ -1428,8 +1530,8 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 .founder-name {
   font-family: var(--font-display);
   font-size: var(--fs-2xl);
-  font-weight: 500;
-  letter-spacing: var(--tr-snug);
+  font-weight: var(--fw-display);
+  letter-spacing: var(--tr-tight);
   color: var(--fg-1);
 }
 /* Role line — tracked uppercase body sans (mono is reserved for the schematic). */
@@ -1474,7 +1576,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
    per-card chip ever returns, use a COLUMN layout beside the h3, not a row:
    a row made badge wrap depend on client-type length, so dt rows started at
    different heights across the 3-up grid. */
-.proof-client { font-family: var(--font-body); font-size: var(--fs-lg); font-weight: 600; color: var(--fg-1); } /* an h3, but a client-type label — stays sans */
+.proof-client { font-family: var(--font-body); font-size: var(--fs-lg); font-weight: 600; letter-spacing: var(--tr-snug); color: var(--fg-1); } /* an h3, but a client-type label — stays sans */
 .proof-rows {
   margin: 0;
   display: flex;
@@ -1578,7 +1680,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
      same in both directions — no [dir="rtl"] rule needed.
    - Reduced motion: the animation is declared ONLY inside
      no-preference, so reduced-motion users get the full static
-     texture and zero movement. The global reset (L209) is the
+     texture and zero movement. The global reset (Base elements) is the
      belt to this suspenders; even a leak lands on translate(0,0).
    - Tweak knobs: opacity = texture intensity (0.04 subtle, 0.08
      heavy); duration + jitter amplitude = boil liveliness.

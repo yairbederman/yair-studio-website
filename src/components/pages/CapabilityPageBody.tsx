@@ -7,7 +7,7 @@ import ProblemsPanel from "@/components/ProblemsPanel";
 import WorkflowMap from "@/components/WorkflowMap";
 import ProcessFilm from "@/components/ProcessFilm";
 import CTAButton from "@/components/CTAButton";
-import { LinkCardGrid } from "@/components/home/CapabilityStrip";
+import LinkCardGrid from "@/components/LinkCardGrid";
 import { shellContent } from "@/content/shell";
 import type { CapabilityPageContent } from "@/content/studio/types";
 import type { Locale } from "@/content/types";

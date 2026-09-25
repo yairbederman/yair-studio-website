@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { OFFERS } from "@/lib/offers";
-import { CAPABILITIES } from "@/lib/capabilities";
+import { SERVICES_LIST } from "@/lib/services";
+import type { ServiceKey } from "@/lib/services";
+import { WORK_PAGES } from "@/lib/work-slugs";
+import { serviceCard } from "@/content/service-cards";
+import { offerCard } from "@/content/offer-cards";
 
 /**
  * Central site constants + canonical page list + metadata helper.
@@ -41,8 +45,20 @@ export const SITE_URL = resolveSiteUrl();
 
 export const SITE_NAME = "y[AI]r studio";
 export const SITE_ALT_NAME = "Yair Studio";
+
+/**
+ * The site's one-line positioning (the homepage H1, owner-approved
+ * 2026-09-25), per locale. Single source for the homepage <title>, the Open
+ * Graph image alt (and the OG image's tagline, which must equal it), and the
+ * footer tag in src/content/shell.ts.
+ */
+export const SITE_TAGLINE = {
+  en: "AI agents for the work your office repeats",
+  he: "סוכני AI לעבודה שהמשרד חוזר עליה",
+} as const;
+
 export const SITE_DESCRIPTION =
-  "A managed AI office for small professional offices, fixed-price projects (a workflow sprint, a website, a film, or an agent build), and a free scoping call to start, with a person approving what matters.";
+  "AI agents for the work a small office repeats every day, built as a fixed-price project and then run month to month as the office's AI department, with a person approving what matters. Also websites and creative films.";
 
 /**
  * Public contact channel (personal Gmail, confirmed for public use). Single
@@ -88,18 +104,17 @@ export const LINKEDIN_URL = "https://www.linkedin.com/in/yair-bederman/";
  * one place.
  */
 export const OG_IMAGE_PATH = "/opengraph-image";
-export const OG_IMAGE_ALT =
-  "y[AI]r studio · The AI department your office hires";
+export const OG_IMAGE_ALT = `${SITE_NAME} · ${SITE_TAGLINE.en}`;
 
 /**
  * Canonical service taxonomy (schema.org Service names): the two paid rungs
- * (src/lib/offers.ts) followed by the five capabilities
- * (src/lib/capabilities.ts), so every service name lives in exactly one
- * place. Consumed by JsonLd.tsx and llms.txt/route.ts.
+ * (src/lib/offers.ts) followed by the three services
+ * (src/lib/services.ts), so every service name lives in exactly one place.
+ * Consumed by JsonLd.tsx and llms.txt/route.ts.
  */
 export const SERVICES: readonly string[] = [
   ...OFFERS.map((o) => o.serviceName),
-  ...CAPABILITIES.map((c) => c.serviceName),
+  ...SERVICES_LIST.map((s) => s.serviceName),
 ];
 
 type Locale = "en_US" | "he_IL";
@@ -122,16 +137,91 @@ import { isHebrewPath, localePaths } from "@/lib/locale-paths";
 export { localePaths } from "@/lib/locale-paths";
 
 /**
- * Every public route, in sitemap order. Single source for per-page metadata,
- * the sitemap, and llms.txt. Descriptions are factual and restrained — they
- * describe the studio and its offers without overclaiming.
+ * Page strings for each /services/<key> page. The path and the EN title come
+ * from SERVICES_LIST (src/lib/services.ts), the HE title from the HE service
+ * card (src/content/service-cards.ts); typed on ServiceKey, so a service
+ * without its page strings fails the type check.
+ */
+const SERVICE_PAGE_STRINGS: Record<
+  ServiceKey,
+  { description: string; heDescription: string }
+> = {
+  "ai-agents": {
+    description:
+      "AI agents from y[AI]r studio: agents that take over an office's recurring work, intake, sorting, drafts, and follow-up, inside the tools it already uses, with a person approving what matters. Built as a fixed-price project.",
+    heDescription:
+      "סוכני AI מבית y[AI]r studio: סוכנים שלוקחים על עצמם את העבודה החוזרת של המשרד, קליטת פניות, מיון, טיוטות ומעקב, בתוך הכלים שהמשרד כבר עובד איתם, כשאדם מאשר את מה שחשוב. נבנים כפרויקט במחיר קבוע.",
+  },
+  websites: {
+    description:
+      "Websites from y[AI]r studio: designed, fast, bilingual (Hebrew and English) sites for a business that sells a service.",
+    heDescription:
+      "אתרים מבית y[AI]r studio: אתרים מעוצבים, מהירים ודו־לשוניים (עברית ואנגלית) לעסק שמוכר שירות.",
+  },
+  films: {
+    description:
+      "Creative films from y[AI]r studio: short films made with generative AI, for a brand, a launch, or social media.",
+    heDescription:
+      "סרטונים יצירתיים מבית y[AI]r studio: סרטונים קצרים שנוצרים עם AI גנרטיבי, למותג, להשקה או לרשתות.",
+  },
+};
+
+/**
+ * The managed office page: its path and EN title are the OFFERS entry
+ * "ai-office-assistant" (src/lib/offers.ts), its HE title the HE offer card
+ * (src/content/offer-cards.ts). offerCard() throws on a missing or href-less
+ * offer, so a renamed offer fails the build.
+ */
+const MANAGED_OFFICE = offerCard("en", "ai-office-assistant");
+
+/**
+ * Every public route, in sitemap order: home, the services, the work, the
+ * legacy /studio and /offers pages (live until they are retired), then about
+ * and contact. Single source for per-page metadata, the sitemap, and
+ * llms.txt. Descriptions are factual and restrained — they describe the
+ * studio and its services without overclaiming. The /services/<key> entries
+ * are DERIVED from SERVICES_LIST, the managed office's path and title from
+ * MANAGED_OFFICE (above), and the /work/<slug> entries from WORK_PAGES
+ * (src/lib/work-slugs.ts), never hand-listed.
  */
 const EN_PAGES: PageDef[] = [
   {
     path: "/",
-    absoluteTitle: "y[AI]r studio · The AI department your office hires",
+    absoluteTitle: `${SITE_NAME} · ${SITE_TAGLINE.en}`,
     description: SITE_DESCRIPTION,
   },
+  {
+    path: "/services",
+    title: "Services",
+    description:
+      "Three services from y[AI]r studio: AI agents for an office's recurring work, websites, and creative films, plus a managed office that runs the agents month to month after the project.",
+  },
+  ...SERVICES_LIST.map(
+    (s): PageDef => ({
+      path: s.href,
+      title: s.title,
+      description: SERVICE_PAGE_STRINGS[s.key].description,
+    }),
+  ),
+  {
+    path: MANAGED_OFFICE.href,
+    title: MANAGED_OFFICE.title,
+    description:
+      "The managed AI office from y[AI]r studio: after a project, the studio runs the office's agents month to month, morning briefing, email triage, documents, and follow-up, in the office's own private environment, with a person approving what matters.",
+  },
+  {
+    path: "/work",
+    title: "Work",
+    description:
+      "Work from y[AI]r studio, each piece labelled for what it is: live, a prototype shown with sample data, or a concept film.",
+  },
+  ...WORK_PAGES.map(
+    (w): PageDef => ({
+      path: `/work/${w.slug}`,
+      title: w.title,
+      description: w.description,
+    }),
+  ),
   {
     path: "/studio",
     title: "Studio",
@@ -190,13 +280,13 @@ const EN_PAGES: PageDef[] = [
     path: "/about",
     title: "About",
     description:
-      "About y[AI]r studio: AI workflow systems for growing service businesses, built around human-in-the-loop automation.",
+      "About y[AI]r studio: Yair builds AI agents for the recurring work of small offices, then runs them month to month if the office wants, with a person approving what matters.",
   },
   {
     path: "/contact",
     title: "Contact",
     description:
-      "Book a free scoping call with y[AI]r studio: send one workflow from your office, then pick the rung that fits, a fixed-price sprint or the managed AI office.",
+      "Contact y[AI]r studio about AI agents, a website, or a film, by WhatsApp or email. A free scoping call starts with one piece of your office's recurring work.",
   },
 ];
 
@@ -210,10 +300,40 @@ const EN_PAGES: PageDef[] = [
 const HE_PAGE_STRINGS: Record<string, { title: string; description: string }> =
   {
     "/": {
-      title: "מחלקת ה-AI שהמשרד שלכם שוכר",
+      title: SITE_TAGLINE.he,
       description:
-        "y[AI]r studio בעברית: משרד AI מנוהל למשרדים מקצועיים קטנים, ספרינט תהליך AI במחיר קבוע, ושיחת אפיון חינם להתחלה, כשאדם מאשר את מה שחשוב.",
+        "y[AI]r studio: סוכני AI לעבודה שהמשרד חוזר עליה כל יום, נבנים כפרויקט במחיר קבוע ואז רצים חודש אחרי חודש כמחלקת ה-AI של המשרד, כשאדם מאשר את מה שחשוב. וגם אתרים וסרטונים יצירתיים.",
     },
+    "/services": {
+      title: "שירותים",
+      description:
+        "שלושה שירותים של y[AI]r studio: סוכני AI לעבודה החוזרת של המשרד, אתרים וסרטונים יצירתיים, ומשרד מנוהל שמריץ את הסוכנים חודש אחרי חודש אחרי הפרויקט.",
+    },
+    ...Object.fromEntries(
+      SERVICES_LIST.map((s) => [
+        s.href,
+        {
+          title: serviceCard("he", s.key).title,
+          description: SERVICE_PAGE_STRINGS[s.key].heDescription,
+        },
+      ]),
+    ),
+    [MANAGED_OFFICE.href]: {
+      title: offerCard("he", MANAGED_OFFICE.key).title,
+      description:
+        "משרד ה-AI המנוהל של y[AI]r studio: אחרי הפרויקט, הסטודיו מריץ את הסוכנים של המשרד חודש אחרי חודש, תדריך בוקר, מיון מיילים, מסמכים ומעקב, בסביבה הפרטית של המשרד, כשאדם מאשר את מה שחשוב.",
+    },
+    "/work": {
+      title: "עבודות",
+      description:
+        "עבודות של y[AI]r studio, וכל פריט מסומן לפי מה שהוא: פעיל, אב־טיפוס שמוצג עם נתוני דוגמה, או סרט קונספט.",
+    },
+    ...Object.fromEntries(
+      WORK_PAGES.map((w) => [
+        `/work/${w.slug}`,
+        { title: w.heTitle, description: w.heDescription },
+      ]),
+    ),
     "/studio": {
       title: "סטודיו",
       description:
@@ -262,12 +382,12 @@ const HE_PAGE_STRINGS: Record<string, { title: string; description: string }> =
     "/about": {
       title: "אודות",
       description:
-        "על y[AI]r studio: מערכות AI לתהליכי עבודה של עסקי שירותים צומחים, סביב אוטומציה עם אישור אנושי בנקודות ההחלטה.",
+        "על y[AI]r studio: יאיר בונה סוכני AI לעבודה החוזרת של משרדים קטנים, ואם המשרד רוצה, גם מפעיל אותם חודש אחרי חודש, כשאדם מאשר את מה שחשוב.",
     },
     "/contact": {
       title: "צור קשר",
       description:
-        "קובעים שיחת אפיון חינם עם y[AI]r studio: שולחים תהליך אחד מהמשרד, ואז בוחרים את השלב שמתאים, ספרינט במחיר קבוע או משרד AI מנוהל.",
+        "פונים ל-y[AI]r studio על סוכני AI, אתר או סרטון, בוואטסאפ או במייל. שיחת אפיון חינם מתחילה מעבודה חוזרת אחת של המשרד.",
     },
   };
 

@@ -36,6 +36,13 @@ const RETIRED_OFFER_ROUTES: Record<string, string> = {
 // into a 404 is cached forever by clients.
 
 const nextConfig: NextConfig = {
+  // Remote images allowed through next/image: only the YouTube thumbnails
+  // (i.ytimg.com/vi/<id>/…) used as posters for the YouTube-hosted work films.
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "i.ytimg.com", pathname: "/vi/**" },
+    ],
+  },
   redirects: async () =>
     Object.entries(RETIRED_OFFER_ROUTES).flatMap(([source, destination]) => [
       { source, destination, permanent: true },

@@ -1,4 +1,8 @@
 import "../globals.css";
+import "@/styles/home.css";
+import "@/styles/work.css";
+import "@/styles/services.css";
+import "@/styles/contact.css";
 import { Analytics } from "@vercel/analytics/next";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";

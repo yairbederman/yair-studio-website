@@ -1,5 +1,5 @@
 import type { CardItem, Cta, SpineNode, StepItem } from "@/content/types";
-import type { CapabilityFilm } from "@/content/studio/types";
+import type { CapabilityFilm } from "@/content/types";
 
 /**
  * Content model for an offer detail page — consumed by the shared

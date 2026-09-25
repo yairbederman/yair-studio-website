@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SITE_URL } from "@/lib/site";
+import { SITE_DESCRIPTION, SITE_URL } from "@/lib/site";
 
 /**
  * Base metadata shared by every root layout (the EN `(site)` shell and the HE
@@ -14,7 +14,7 @@ export const rootMetadata: Metadata = {
     default: "y[AI]r studio",
     template: "%s · y[AI]r studio",
   },
-  description: "The AI department your office hires.",
+  description: SITE_DESCRIPTION,
   // Render shared links as a large card; Twitter derives its image from each
   // page's explicit Open Graph image.
   twitter: { card: "summary_large_image" },

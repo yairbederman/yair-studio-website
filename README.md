@@ -115,11 +115,13 @@ Public crawl endpoints:
 
 ## Stack
 
-App Router · TypeScript · ESLint · `src/` directory · import alias `@/*`. No Tailwind, no external
-UI library; the only runtime addition is `@vercel/analytics` (mounted once per root layout). Fonts
-are loaded with `next/font` (Newsreader — EN display; Instrument Sans — EN body/UI and the wordmark;
-Frank Ruhl Libre — Hebrew display; Assistant — Hebrew body; Geist Mono — mono accents), not a CDN
-`@import`. Hebrew/RTL is a genuine document, not a subtree: the app uses **two root
+App Router · TypeScript · ESLint · `src/` directory · import alias `@/*`. Tailwind CSS 4 utilities
+only — no Preflight, token colors mapped via `@theme inline` (rules in the header of
+[`src/app/globals.css`](src/app/globals.css)); no external UI library, and the only runtime addition
+is `@vercel/analytics` (mounted once per root layout). Fonts are loaded with `next/font` (Instrument
+Sans — EN body/UI, the wordmark, and EN display at 600–700; Assistant — Hebrew body and Hebrew
+display at 700–800; Geist Mono — mono accents), not a CDN `@import`. Hebrew/RTL is a genuine
+document, not a subtree: the app uses **two root
 layouts** via route groups — `app/(site)/layout.tsx` (`<html lang="en">`) and `app/(he)/layout.tsx`
 (`<html lang="he" dir="rtl">`) — both rendering the **same shared shell** (`SiteHeader` /
 `SiteFooter` with a `locale` prop fed from `src/content/shell.ts`). The shared `next/font` loaders

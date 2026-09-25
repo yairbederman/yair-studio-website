@@ -16,6 +16,18 @@ export type CardItem = { title: string; desc: string };
 /** A numbered step; `human` marks the copper approval checkpoint. */
 export type StepItem = { title: string; desc: string; human?: boolean };
 
+/** Process film rendered directly under the hero (ProcessFilm → FilmPlayer). */
+export type CapabilityFilm = {
+  sectionTitle: string;
+  webm: string;
+  mp4: string;
+  poster: string;
+  caption: string;
+  filmName: string;
+  /** Optional phone cut (4:5) served under 768px by FilmPlayer. */
+  mobile?: { webm: string; mp4: string; poster: string };
+};
+
 /** One node in a schematic process spine (matches WorkflowMap's node shape). */
 export type SpineNode = {
   label: string;

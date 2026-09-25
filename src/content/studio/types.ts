@@ -1,4 +1,15 @@
-import type { CardItem, Cta, SpineNode, StepItem } from "@/content/types";
+import type {
+  CapabilityFilm,
+  CardItem,
+  Cta,
+  SpineNode,
+  StepItem,
+} from "@/content/types";
+
+// CapabilityFilm now lives in src/content/types.ts (the service pages and the
+// work items share it); re-exported so existing importers keep working until
+// this folder is retired.
+export type { CapabilityFilm } from "@/content/types";
 
 /**
  * Content model for a capability page (/studio/<key>) — consumed by the
@@ -10,18 +21,6 @@ import type { CardItem, Cta, SpineNode, StepItem } from "@/content/types";
  * per-page variation is data. The film, when present, bakes
  * `example.map.nodes` verbatim.
  */
-
-/** Process film rendered directly under the hero (ProcessFilm → FilmPlayer). */
-export type CapabilityFilm = {
-  sectionTitle: string;
-  webm: string;
-  mp4: string;
-  poster: string;
-  caption: string;
-  filmName: string;
-  /** Optional phone cut (4:5) served under 768px by FilmPlayer. */
-  mobile?: { webm: string; mp4: string; poster: string };
-};
 
 export type CapabilityPageContent = {
   /** OfferHero. */

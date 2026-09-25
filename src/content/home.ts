@@ -26,7 +26,7 @@ import { ladderContent } from "@/content/ladder";
 import { aiOfficeAssistantContent } from "@/content/offers/ai-office-assistant";
 import { studioIndexContent } from "@/content/studio";
 import type { Locale, Cta, SpineNode } from "@/content/types";
-import type { CapabilityFilm } from "@/content/studio/types";
+import type { CapabilityFilm } from "@/content/types";
 
 // Re-export the shared primitives (now defined once in src/content/types.ts)
 // for this module's existing consumers.
