@@ -1,5 +1,7 @@
 import { ImageResponse } from "next/og";
 import { BRAND_COLORS } from "@/lib/brand";
+import { SITE_TAGLINE } from "@/lib/site";
+import { homeContent } from "@/content/home";
 
 /**
  * Branded Open Graph image served from the stable /opengraph-image route.
@@ -10,6 +12,11 @@ import { BRAND_COLORS } from "@/lib/brand";
  * font — no committed font binaries. Brand is carried by color + the bracketed
  * [AI] wordmark treatment. Colors come from BRAND_COLORS (src/lib/brand.ts),
  * the JS mirror of the CSS tokens, because Satori can't read CSS variables.
+ *
+ * Text is never retyped here: the eyebrow is the homepage hero's audience
+ * line, and the tagline is SITE_TAGLINE.en — the same string OG_IMAGE_ALT
+ * (src/lib/site.ts) carries after the site name, so the image and its alt
+ * text cannot drift.
  *
  * Node.js runtime (default) — do NOT switch to the edge runtime.
  */
@@ -44,7 +51,7 @@ export function GET() {
             color: fgMuted,
           }}
         >
-          AI workflow systems
+          {homeContent("en").hero.eyebrow}
         </div>
 
         {/* Wordmark + tagline */}
@@ -85,7 +92,7 @@ export function GET() {
               letterSpacing: -0.5,
             }}
           >
-            The AI department your office hires
+            {SITE_TAGLINE.en}
           </div>
         </div>
 

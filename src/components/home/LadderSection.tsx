@@ -9,11 +9,13 @@ import type { Locale } from "@/content/types";
  * The 3-rung commitment ladder as an editorial numbered list — rungs are read
  * top to bottom as one decision, so this is deliberately not a card grid.
  * Rungs come from the single source (src/content/ladder.ts); the section
- * copy (title/intro) comes from the caller, so the homepage and /offers can
- * frame the same three rungs differently. A receive item with an href (rung
- * 02's four project shapes) renders as a plain copper link. Rung 03 (the
- * managed office) is the elevated rung: a --bg-1 panel and the bracketed
- * primary CTA. Used by HomePageBody and OffersIndexPageBody.
+ * copy (title/intro) comes from the caller, so each page that renders the
+ * ladder (the homepage, and /services pages if they adopt it) frames the same
+ * three rungs its own way. A receive item with an href (rung 02's four project
+ * shapes) renders as a plain copper link. Rung 03 (the managed office) is the
+ * elevated rung: a --bg-1 panel and the bracketed primary CTA; the homepage
+ * adds more weight in src/styles/home.css. Used by HomePageBody and
+ * OffersIndexPageBody (until Stage C retires /offers).
  */
 export default function LadderSection({
   locale,

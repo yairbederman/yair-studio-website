@@ -1,7 +1,7 @@
 import PageHero from "@/components/PageHero";
 import OfferSection from "@/components/offers/OfferSection";
-import OfferCardGrid from "@/components/offers/OfferCardGrid";
 import OfferCTA from "@/components/offers/OfferCTA";
+import LinkCardGrid from "@/components/LinkCardGrid";
 import FounderProfile from "@/components/FounderProfile";
 import ProofCards from "@/components/ProofCards";
 import { aboutContent } from "@/content/about";
@@ -11,7 +11,11 @@ import type { Locale } from "@/content/types";
 /**
  * The about page, shared by both locales — one composition, zero EN/HE
  * structural drift. The founder bio is hidden here (showBio={false}): the
- * whoRuns prose already covers it.
+ * credentials and career spine beside it already carry every fact it states,
+ * and the whoRuns prose above says only why the studio exists. "What I
+ * make" is two link grids: the three services, then the monthly managed
+ * office on its own row (a lone card fills the row), so the office reads as
+ * what comes after a project.
  */
 export default function AboutPageBody({ locale }: { locale: Locale }) {
   const c = aboutContent(locale);
@@ -46,7 +50,10 @@ export default function AboutPageBody({ locale }: { locale: Locale }) {
       </OfferSection>
 
       <OfferSection id="build" title={c.build.title} intro={c.build.intro}>
-        <OfferCardGrid items={c.build.items} />
+        <LinkCardGrid items={c.build.items} />
+        <div className="mt-4">
+          <LinkCardGrid items={[c.build.after]} />
+        </div>
       </OfferSection>
 
       <OfferSection id="how" title={c.how.title} intro={c.how.intro}>

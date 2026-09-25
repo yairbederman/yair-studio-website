@@ -1,73 +1,188 @@
+import { Fragment, type CSSProperties } from "react";
+import Link from "next/link";
 import Container from "@/components/Container";
-import SectionLabel from "@/components/SectionLabel";
 import CTAButton from "@/components/CTAButton";
-import WorkflowMap from "@/components/WorkflowMap";
-import FilmPlayer from "@/components/FilmPlayer";
-import { shellContent } from "@/content/shell";
-import type { HomeContent } from "@/content/home";
-import type { Locale } from "@/content/types";
+import { splitAccent, type HomeContent } from "@/content/home";
 
 /**
- * Hero: explains what y[AI]r studio does in one screen. Copy-first.
+ * Hero: one service in one line, set large, over a drawn grid. A Server
+ * Component end to end — the whole entrance is CSS keyframes in
+ * src/styles/home.css (.home-hero), so there is no client JS, no timer, and
+ * the complete H1 text is in the first HTML (it is the LCP element).
  *
- * Behind the copy sits the ambient backdrop loop (hero-ambient) — a quiet,
- * text-free video that makes the most-seen screen feel alive. It rides the
- * existing FilmPlayer pipeline: poster-first, reduced-motion users get the
- * poster only (no video bytes), and a pause control stays operable (WCAG
- * 2.2.2). A scrim over the text zone (mirrored for RTL) keeps the copy legible.
- * The asset is text-free, so one file serves both locales; only the pause/play
- * labels are localized (via `locale`).
+ * The H1 is split into one inline-block <span> per word, each carrying its
+ * index as --i; the stylesheet turns that into an animation-delay. The spans
+ * stay in the accessibility tree and the spaces between them are real text,
+ * so the heading reads as one string. The word that content.titleAccent
+ * names gets an <em class="accent"> inside its own span, so it reveals with
+ * the rest; trailing punctuation stays in that span, outside the accent
+ * colour (splitAccent).
  *
- * The schematic on the right is the restrained CSS-only process motif rendered
- * via <WorkflowMap decorative> (aria-hidden; it renders on every viewport and
- * stacks below the CTAs on mobile): scattered inputs flow through a mapped
- * workflow into clear next actions, with a copper human-approval checkpoint
- * that makes the human-in-the-loop principle visible. Copy + CTA destinations
- * come from the locale content model.
+ * The decorative layer (aria-hidden, pointer-events: none) is an SVG grid
+ * whose lines draw in, copper detail dots on four intersections (the site's
+ * approval-dot motif), a few floating dots that drift once, and four
+ * L-shaped corner marks. The grid is anchored to the inline-end side and
+ * mirrored on /he, so the dots always sit away from the copy; the corners
+ * use logical borders, so they mirror without a rule of their own.
+ * prefers-reduced-motion shows all of it in its final state at once.
  */
 export default function HeroSection({
   content,
-  locale,
 }: {
   content: HomeContent["hero"];
-  locale: Locale;
 }) {
+  const words = content.title.split(" ");
   return (
-    <section className="hero" aria-labelledby="hero-title">
-      {/* Ambient backdrop — decorative (poster/video are aria-hidden inside
-          FilmPlayer); the pause toggle stays operable. */}
-      <FilmPlayer
-        frameClassName="hero-backdrop"
-        mp4="/videos/hero-ambient.mp4"
-        webm="/videos/hero-ambient.webm"
-        poster="/videos/hero-ambient-poster.png"
-        filmName="ambient background"
-        controls={shellContent(locale).filmControls}
-      />
-      {/* Legibility scrim over the text zone + a fade into the next section. */}
-      <div className="hero-scrim" aria-hidden="true" />
-
-      <Container className="hero-inner">
-        <div className="hero-copy">
-          <SectionLabel>{content.eyebrow}</SectionLabel>
-          <h1 id="hero-title">{content.title}</h1>
-          <p className="lead hero-lead">{content.lead}</p>
-          <div className="hero-actions">
-            <CTAButton href={content.primaryCta.href} variant="primary">
-              {content.primaryCta.label}
-            </CTAButton>
-            <CTAButton href={content.secondaryCta.href} variant="ghost">
-              {content.secondaryCta.label}
-            </CTAButton>
-          </div>
+    <section
+      className="home-hero relative flex items-center overflow-hidden"
+      aria-labelledby="hero-title"
+    >
+      <HeroBackdrop />
+      <Container className="home-hero-inner relative z-1 py-16 md:py-24">
+        <p className="eyebrow home-hero-eyebrow">{content.eyebrow}</p>
+        <h1 id="hero-title" className="home-hero-title mt-6">
+          {words.map((word, i) => {
+            const accent = splitAccent(word, content.titleAccent);
+            return (
+              <Fragment key={i}>
+                {i > 0 ? " " : null}
+                <span className="home-hero-word" style={stagger(i)}>
+                  {accent ? (
+                    <>
+                      <em className="accent">{accent[0]}</em>
+                      {accent[1]}
+                    </>
+                  ) : (
+                    word
+                  )}
+                </span>
+              </Fragment>
+            );
+          })}
+        </h1>
+        <p className="home-hero-lead mt-6 md:mt-8">{content.lead}</p>
+        <p className="home-hero-status mt-8 inline-flex items-start gap-2 px-3 py-1">
+          <span className="home-hero-status-dot" aria-hidden="true" />
+          {content.status}
+        </p>
+        <div className="home-hero-actions mt-6 flex flex-wrap gap-3">
+          <CTAButton href={content.primaryCta.href} variant="primary">
+            {content.primaryCta.label}
+          </CTAButton>
+          <CTAButton href={content.secondaryCta.href}>
+            {content.secondaryCta.label}
+          </CTAButton>
         </div>
-
-        <WorkflowMap
-          decorative
-          caption={content.schematic.caption}
-          nodes={content.schematic.nodes}
-        />
+        <p className="home-hero-also mt-6">
+          <Link href={content.also.href}>
+            {content.also.label}
+            <span className="home-arrow" aria-hidden="true">
+              &rarr;
+            </span>
+          </Link>
+        </p>
       </Container>
     </section>
+  );
+}
+
+/** The --i stagger index a hero keyframe delay multiplies by. */
+function stagger(i: number): CSSProperties {
+  return { "--i": i } as CSSProperties;
+}
+
+/* Grid geometry, in viewBox units. preserveAspectRatio "xMaxYMid slice"
+   scales it uniformly to cover the section, anchored to the right edge, so
+   at 1440px wide one unit is one pixel and the cells stay square at every
+   size. Lines are numbered from the anchored edge inward, so the draw-in
+   starts beside the dots and runs toward the copy. */
+const VIEW_W = 1440;
+const VIEW_H = 880;
+const CELL = 80;
+const COLUMNS = Array.from(
+  { length: VIEW_W / CELL - 1 },
+  (_, k) => VIEW_W - (k + 1) * CELL,
+);
+const ROWS = Array.from({ length: VIEW_H / CELL - 1 }, (_, k) => (k + 1) * CELL);
+
+/** Copper detail dots, each on a grid intersection, clear of the copy. */
+const DETAIL_DOTS: readonly (readonly [number, number])[] = [
+  [1280, 160],
+  [1360, 480],
+  [1120, 560],
+  [1200, 720],
+];
+
+/** Floating dots, deliberately off the grid. */
+const FLOAT_DOTS: readonly (readonly [number, number])[] = [
+  [1000, 120],
+  [1330, 300],
+  [1180, 400],
+  [940, 700],
+  [1410, 760],
+];
+
+/** Where each corner mark sits (logical: start/end mirror on /he). */
+const CORNERS = [
+  "is-ts top-6 inset-s-6 md:top-8 md:inset-s-8",
+  "is-te top-6 inset-e-6 md:top-8 md:inset-e-8",
+  "is-bs bottom-6 inset-s-6 md:bottom-8 md:inset-s-8",
+  "is-be bottom-6 inset-e-6 md:bottom-8 md:inset-e-8",
+] as const;
+
+function HeroBackdrop() {
+  return (
+    <div
+      className="home-hero-deco pointer-events-none absolute inset-0"
+      aria-hidden="true"
+    >
+      <svg
+        className="home-hero-grid absolute inset-0 size-full"
+        viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
+        preserveAspectRatio="xMaxYMid slice"
+        focusable="false"
+      >
+        {COLUMNS.map((x, i) => (
+          <path
+            key={`v${x}`}
+            className="home-hero-line"
+            d={`M${x} 0V${VIEW_H}`}
+            pathLength={1}
+            style={stagger(i)}
+          />
+        ))}
+        {ROWS.map((y, i) => (
+          <path
+            key={`h${y}`}
+            className="home-hero-line is-h"
+            d={`M${VIEW_W} ${y}H0`}
+            pathLength={1}
+            style={stagger(i)}
+          />
+        ))}
+        {DETAIL_DOTS.map(([x, y], i) => (
+          <g key={`d${x}-${y}`} className="home-hero-detail" style={stagger(i)}>
+            <circle className="home-hero-detail-ring" cx={x} cy={y} r={8} />
+            <circle cx={x} cy={y} r={3.5} />
+          </g>
+        ))}
+        {FLOAT_DOTS.map(([x, y], i) => (
+          <circle
+            key={`f${x}-${y}`}
+            className="home-hero-float"
+            cx={x}
+            cy={y}
+            r={2}
+            style={stagger(i)}
+          />
+        ))}
+      </svg>
+      {CORNERS.map((position) => (
+        <span
+          key={position}
+          className={`home-hero-corner absolute size-5 ${position}`}
+        />
+      ))}
+    </div>
   );
 }

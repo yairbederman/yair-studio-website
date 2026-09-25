@@ -1,18 +1,34 @@
 import { localeAccessor } from "@/content/types";
 import { shellContent } from "@/content/shell";
+import { offerCard } from "@/content/offer-cards";
 import { LINKEDIN_URL } from "@/lib/site";
 import type { Locale } from "@/content/types";
 import type { OfferPageContent } from "./types";
 
 /**
- * Managed AI Office — the flagship offer and rung 03 of the ladder (one-time
- * setup + monthly retainer, small professional offices, law first). The
- * Command Center film is its working face; the homepage proof section reuses
- * this file's `film` block, so the film paths live here once.
+ * Managed AI Office (/services/managed-office) — the flagship offer and rung
+ * 03 of the ladder (one-time setup, then a monthly service; small offices).
+ * It is sold as what runs after a project, so `how` spells out month 2 onwards:
+ * what runs every day, the monthly report, and how the setup improves. The
+ * page speaks to owners: "monthly", never "retainer"; no tool names. The
+ * offer's name comes from offerCard() (the h1), never
+ * retyped. The Command Center film is its working face; the homepage proof
+ * band and the Command Center work item (src/content/work.ts) reuse this
+ * file's `film` block (including `mobile`), so the film paths live here once
+ * and the block's shape must not change.
  *
- * The LinkedIn content engine is INCLUDED in the retainer (`included`,
- * rendered with id="content" — the retired /offers/linkedin-content-engine
- * route 308s to that anchor). Its film rides along poster-first, click to
+ * Baked strings: the Command Center film bakes `film.sectionTitle`, the
+ * `build.items` titles and the nouns in their descs, and `example.map`'s
+ * first sub, human node and out node; the content-engine film bakes phrases
+ * of `included.intro`, `included.items` and its `film.caption` (see the
+ * source tables in hyperframes/command-center/DESIGN.md and
+ * hyperframes/linkedin-content-engine/DESIGN.md). Keep those verbatim, or
+ * re-render.
+ *
+ * The LinkedIn content engine is INCLUDED in the monthly service
+ * (`included`, rendered with id="content" — the retired
+ * /offers/linkedin-content-engine route 308s to that anchor; `#pricing` is
+ * the hero's in-page target). Its film rides along poster-first, click to
  * play: one autoplaying film per page.
  *
  * This page overrides the site-wide scoping-call CTA LABEL only (a managed
@@ -26,9 +42,9 @@ import type { OfferPageContent } from "./types";
 
 const en: OfferPageContent = {
   hero: {
-    eyebrow: "Managed service · setup + monthly retainer",
-    title: "The Managed AI Office runs your office's recurring work",
-    lead: "Morning briefings ready before you sit down. An inbox sorted into decisions. Documents and follow-ups chased without anyone remembering to chase them. Everything runs in a private environment dedicated to your office, and your people approve what matters. Most offices arrive here after a project: the studio then runs what the project built, and widens it month by month.",
+    eyebrow: "Managed service · one-time setup, then month to month",
+    title: `${offerCard("en", "ai-office-assistant").title}: your office's AI department`,
+    lead: "Morning briefings ready before you sit down. An inbox sorted into decisions. Documents and follow-ups chased without anyone remembering to chase them. Everything runs in a private environment dedicated to your office, and your people approve what matters. After a project, the studio runs what the project built, reports on it every month, and widens it as the office trusts it.",
     ctaLabel: "See how your office would run",
     ctaHref: shellContent("en").workflowCta.href,
     secondaryCta: { label: "How pricing works", href: "#pricing" },
@@ -52,7 +68,7 @@ const en: OfferPageContent = {
     items: [
       {
         title: "The morning starts with reconstruction",
-        desc: "Meetings, deadlines, and waiting items live in five tools, and someone assembles the day by hand.",
+        desc: "Meetings, deadlines, and waiting items live in several tools, and someone assembles the day by hand.",
       },
       {
         title: "The inbox sets the priorities",
@@ -128,36 +144,36 @@ const en: OfferPageContent = {
     },
   },
   how: {
-    title: "How the service runs",
-    intro: "A managed engagement: one setup, then a monthly operating rhythm. The first weeks are the setup, the office week mapped, your private environment stood up, briefing and triage onboarded; from then on, the daily run, adjusted month to month.",
+    title: "How the months run",
+    intro: "One setup, then a monthly rhythm. The first weeks are the setup; from then on the studio runs the day, and every month you see what ran and decide what the service takes on next.",
     steps: [
       {
-        title: "Map the office week",
-        desc: "We map how mornings, email, documents, and follow-up actually run today, and where they leak.",
+        title: "Set up once",
+        desc: "We map how the office week really runs and where it leaks, stand up your private environment, and switch on briefing and triage first.",
       },
       {
-        title: "Stand up your private environment",
-        desc: "Everything runs in an environment dedicated to your office. Your data stays yours.",
-      },
-      {
-        title: "Onboard the first workflows",
-        desc: "Briefing and triage first; document and follow-up workflows join as the office trusts the rhythm.",
-      },
-      {
-        title: "Run and adjust month to month",
-        desc: "The service is managed: what the office handles grows with you, and support is part of the retainer.",
+        title: "Every day, the work runs",
+        desc: "Briefing, triage, documents, and follow-up run on your tools; drafts and proposed actions wait in one approval queue.",
       },
       {
         title: "Approval stays in the office",
         desc: "No message leaves and nothing sensitive changes without a person signing off.",
         human: true,
       },
+      {
+        title: "Every month, a written report",
+        desc: "What ran, what was flagged for a person, and what the studio adjusted, in one short report.",
+      },
+      {
+        title: "Improve and widen",
+        desc: "The studio tunes the setup using the drafts your people corrected, and together we choose which work the service takes on next. Support is part of the monthly service.",
+      },
     ],
   },
   included: {
     title: "Included: your content engine",
     intro:
-      "The retainer includes the same LinkedIn pipeline that runs the studio's own presence: angles proposed from your real material, drafts written in your voice, one review queue, and nothing published without your approval.",
+      "The monthly service includes the same LinkedIn content engine that runs the studio's own presence: angles proposed from your real material, drafts written in your voice, one review queue, and nothing published without your approval.",
     items: [
       {
         title: "Voice profile",
@@ -215,7 +231,7 @@ const en: OfferPageContent = {
       },
       {
         title: "Unclear items go to a person",
-        desc: "Anything the system is unsure about is routed to a person, not guessed.",
+        desc: "When the system's confidence is low, the item is flagged for a person instead of acted on.",
       },
       {
         title: "Your data stays yours",
@@ -233,8 +249,8 @@ const en: OfferPageContent = {
         desc: "Covers mapping the office, standing up your private environment, and onboarding the first workflows.",
       },
       {
-        title: "Monthly retainer",
-        desc: "Covers the daily runs, the content engine, support, adjustments, and gradually widening what the office handles.",
+        title: "Monthly service",
+        desc: "Covers the daily runs, the monthly report, the content engine, support, adjustments, and gradually widening the work the service takes on.",
       },
     ],
     note: "Amounts depend on the office's size and workflows. They are agreed in the first conversation, not hidden here.",
@@ -272,9 +288,9 @@ const en: OfferPageContent = {
 /** Hebrew (RTL) flagship content — hebrew-quality drafted. */
 const he: OfferPageContent = {
   hero: {
-    eyebrow: "שירות מנוהל · הקמה + ריטיינר חודשי",
-    title: "משרד AI מנוהל שמריץ את העבודה השוטפת של המשרד שלכם",
-    lead: "תדריך בוקר מוכן לפני שהתיישבתם. תיבת מייל ממוינת להחלטות. מסמכים ומעקבים מקודמים בלי שמישהו צריך לזכור לרדוף אחריהם. הכול רץ בסביבה פרטית שמוקדשת למשרד שלכם, והצוות מאשר את מה שחשוב. רוב המשרדים מגיעים לכאן אחרי פרויקט: הסטודיו מריץ את מה שהפרויקט בנה, ומרחיב אותו חודש אחרי חודש.",
+    eyebrow: "שירות מנוהל · הקמה חד־פעמית, ואז חודש אחרי חודש",
+    title: `${offerCard("he", "ai-office-assistant").title}: מחלקת ה-AI של המשרד`,
+    lead: "תדריך בוקר מוכן לפני שהתיישבתם. תיבת מייל ממוינת להחלטות. מסמכים ומעקבים מקודמים בלי שמישהו צריך לזכור לרדוף אחריהם. הכול רץ בסביבה פרטית שמוקדשת למשרד שלכם, והצוות מאשר את מה שחשוב. אחרי פרויקט, הסטודיו מריץ את מה שהפרויקט בנה, מדווח עליו כל חודש ומרחיב אותו ככל שהמשרד סומך עליו.",
     ctaLabel: "לראות איך המשרד שלכם היה רץ",
     ctaHref: shellContent("he").workflowCta.href,
     secondaryCta: { label: "איך התמחור עובד", href: "#pricing" },
@@ -298,7 +314,7 @@ const he: OfferPageContent = {
     items: [
       {
         title: "הבוקר מתחיל בהרכבת תמונה",
-        desc: "פגישות, מועדים ופריטים שמחכים מפוזרים בחמישה כלים, ומישהו מרכיב את היום ביד.",
+        desc: "פגישות, מועדים ופריטים שמחכים מפוזרים בכמה כלים, ומישהו מרכיב את היום ביד.",
       },
       {
         title: "תיבת המייל קובעת את סדר היום",
@@ -353,7 +369,7 @@ const he: OfferPageContent = {
       },
       {
         title: "מעקב ופגישות",
-        desc: "פגישות הופכות לאחראים, משימות ותאריכים; לידים, הצעות והבטחות ללקוחות במעקב עד שנסגרים.",
+        desc: "פגישות הופכות לאחראים, משימות ותאריכים. לידים, הצעות והבטחות ללקוחות במעקב עד שנסגרים.",
       },
     ],
   },
@@ -374,36 +390,36 @@ const he: OfferPageContent = {
     },
   },
   how: {
-    title: "איך השירות רץ",
-    intro: "התקשרות מנוהלת: הקמה אחת, ואז קצב תפעול חודשי. השבועות הראשונים הם ההקמה: מיפוי שבוע המשרד, הקמת הסביבה הפרטית והפעלת התדריך והמיון; משם, הריצה היומית, עם כוונון חודש בחודשו.",
+    title: "איך נראה כל חודש",
+    intro: "הקמה אחת, ואז קצב חודשי. השבועות הראשונים הם ההקמה. משם הסטודיו מריץ את היום, ובכל חודש אתם רואים מה רץ ומחליטים איזו עבודה השירות לוקח על עצמו הלאה.",
     steps: [
       {
-        title: "ממפים את שבוע המשרד",
-        desc: "ממפים איך בקרים, מייל, מסמכים ומעקב באמת רצים היום, ואיפה הם דולפים.",
+        title: "מקימים פעם אחת",
+        desc: "ממפים איך שבוע המשרד באמת רץ ואיפה הוא דולף, מקימים את הסביבה הפרטית שלכם ומפעילים קודם את התדריך ואת המיון.",
       },
       {
-        title: "מקימים סביבה פרטית",
-        desc: "הכול רץ בסביבה ייעודית למשרד שלכם. המידע נשאר שלכם.",
-      },
-      {
-        title: "מפעילים את התהליכים הראשונים",
-        desc: "קודם תדריך ומיון; תהליכי מסמכים ומעקב מצטרפים כשהמשרד סומך על הקצב.",
-      },
-      {
-        title: "מריצים ומכווננים חודש בחודשו",
-        desc: "השירות מנוהל: מה שהמשרד המנוהל מטפל בו גדל איתכם, והתמיכה חלק מהריטיינר.",
+        title: "כל יום, העבודה רצה",
+        desc: "תדריך, מיון, מסמכים ומעקב רצים על הכלים שלכם. טיוטות ופעולות מוצעות מחכות בתור אישורים אחד.",
       },
       {
         title: "האישור נשאר במשרד",
         desc: "שום הודעה לא יוצאת ושום דבר רגיש לא משתנה בלי חתימה של אדם.",
         human: true,
       },
+      {
+        title: "כל חודש, דוח כתוב",
+        desc: "מה רץ, מה סומן לבדיקה של אדם ומה הסטודיו כוונן, בדוח קצר אחד.",
+      },
+      {
+        title: "משפרים ומרחיבים",
+        desc: "הסטודיו מכוונן את ההגדרות לפי הטיוטות שהאנשים שלכם תיקנו, ויחד בוחרים איזו עבודה השירות לוקח על עצמו הלאה. התמיכה כלולה בשירות החודשי.",
+      },
     ],
   },
   included: {
     title: "כלול: מנוע התוכן שלכם",
     intro:
-      "הריטיינר כולל את אותו מערך לינקדאין שמריץ את הנוכחות של הסטודיו עצמו: זוויות שמוצעות מהחומר האמיתי שלכם, טיוטות בקול שלכם, תור אישורים אחד, ושום דבר לא מתפרסם בלי אישור שלכם.",
+      "השירות החודשי כולל את אותו מנוע תוכן ללינקדאין שמריץ את הנוכחות של הסטודיו עצמו: זוויות שמוצעות מהחומר האמיתי שלכם, טיוטות בקול שלכם, תור אישורים אחד, ושום דבר לא מתפרסם בלי אישור שלכם.",
     items: [
       {
         title: "פרופיל קול",
@@ -459,7 +475,7 @@ const he: OfferPageContent = {
       },
       {
         title: "פריטים לא ברורים עוברים לאדם",
-        desc: "כל דבר שהמערכת לא בטוחה לגביו מנותב לאדם, לא מנוחש.",
+        desc: "כשהמערכת לא בטוחה מספיק, הפריט מסומן לבדיקה של אדם במקום שהיא תפעל.",
       },
       {
         title: "המידע שלכם נשאר שלכם",
@@ -477,15 +493,15 @@ const he: OfferPageContent = {
         desc: "כוללת מיפוי של המשרד, הקמת הסביבה הפרטית והפעלת התהליכים הראשונים.",
       },
       {
-        title: "ריטיינר חודשי",
-        desc: "כולל את הריצות היומיות, מנוע התוכן, תמיכה, כוונונים והרחבה הדרגתית של מה שהמשרד המנוהל מטפל בו.",
+        title: "שירות חודשי",
+        desc: "כולל את הריצות היומיות, הדוח החודשי, מנוע התוכן, תמיכה, כוונונים והרחבה הדרגתית של העבודה שהשירות לוקח על עצמו.",
       },
     ],
     note: "הסכומים תלויים בגודל המשרד ובתהליכים. הם נסגרים בשיחה הראשונה, לא מוסתרים כאן.",
   },
   human: {
     title: "מה נשאר אצל האנשים שלכם",
-    intro: "הסטודיו מרכיב, מנסח ורודף. שיקול הדעת נשאר במשרד.",
+    intro: "הסטודיו מרכיב, מנסח ורודף אחרי מה שחסר. שיקול הדעת נשאר במשרד.",
     items: [
       {
         title: "תקשורת עם לקוחות",
@@ -497,7 +513,7 @@ const he: OfferPageContent = {
       },
       {
         title: "סדרי עדיפויות",
-        desc: "התדריך מציע מה חשוב היום; המשרד מחליט.",
+        desc: "התדריך מציע מה חשוב היום, והמשרד מחליט.",
       },
       {
         title: "המילה האחרונה",

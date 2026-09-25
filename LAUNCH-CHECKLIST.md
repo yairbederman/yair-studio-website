@@ -11,7 +11,7 @@ apply to founder content and does not control site indexing.
 - [x] Keep the role and bio limited to founder/operator positioning plus the existing R&D and software leadership background.
 - [x] Employers and dates are public and must match the founder's LinkedIn profile exactly: 888 / Taldor / Bank Leumi / El Al (software development) → Viber 2016–2023 → Lognet R&D Manager 2023–2026 → independent AI systems architect since Aug 2024 → y[AI]r studio.
 - [x] The live law-office system stays anonymized (no firm name, no identifying detail). No metrics, no client names, no implied outcomes — anywhere in the founder copy.
-- [ ] Re-verify the Lognet end year and the Hebrew spelling of the surname in `src/content/proof.ts` before launch.
+- [ ] Re-verify the Lognet end year (and whether independent work ran in parallel from Aug 2024) in `src/content/proof.ts` before launch.
 - [ ] Re-check factual wording whenever the founder profile changes. Correct the claim directly if needed; do not relabel founder copy as illustrative.
 
 ## 2. Illustrative workflow patterns — `src/content/proof.ts` → `cases.items`
@@ -31,7 +31,7 @@ never be presented as client engagements or evidence of outcomes.
 ## 4. Hebrew copy review
 
 - [ ] Read every `/he` page as a native speaker. Fix register and word choices directly in the `he` objects in `src/content/*.ts`.
-- [ ] Confirm the Hebrew spelling of the surname in `src/content/proof.ts` remains correct.
+- [x] Hebrew spelling of the surname confirmed by the owner 2026-09-25: **בידרמן** (applied in `src/content/proof.ts`).
 
 ## 5. Structured data
 

@@ -6,4 +6,93 @@
    both root layouts right after globals.css. The rules every feature
    stylesheet follows are defined once, in the "Tailwind CSS 4" block
    at the top of src/app/globals.css (bullet "Feature stylesheets").
+
+   Roots: .services-index (ServicesIndexPageBody) and .service-page
+   (ServicePageBody), both on <main>. Layout and spacing are Tailwind
+   utilities on the JSX; this file holds only what a utility cannot
+   reach: token surfaces, overrides of unlayered globals.css rules (a
+   site class like .offer-card or .card-desc beats any utility), the
+   lead item's grid areas, and typography. The card idiom comes from
+   globals.css and is reused, not restated: .offer-card (the surface,
+   hover lift, arrow nudge and :has() focus ring), .card-title /
+   .card-desc, .method-step-num (the Latin index digits), and .offer-cta
+   / .offer-cta-arrow (the copper text CTA whose stretched ::after makes
+   a whole card one click target). Size and tracking overrides on a
+   .card-title or heading sit under :where() so they keep the class's own
+   specificity: the Hebrew heading reset in globals.css ([lang="he"]
+   :is(h1…h6, .card-title) → no letter-spacing, line-height 1.15) must
+   still win on /he.
    ============================================================ */
+
+/* ---------- /services index: the three services ----------
+   An ordered index, not three equal cards. Each item is an .offer-card;
+   from 768px the lead service (the first in SERVICES_LIST order) spans
+   the row as a wide panel — number and title on the start column,
+   summary and CTA on the end column — and the other two sit side by side
+   under it. The item's gap spaces its rows, so the summary drops the
+   .card-desc top margin. */
+.services-index .services-item .card-desc { margin-top: 0; }
+
+/* The lead service: copper top edge and index number. */
+.services-index .services-item.is-lead { border-top: 2px solid var(--accent); }
+.services-index .services-item.is-lead .method-step-num { color: var(--accent); }
+
+@media (min-width: 768px) {
+  .services-index .services-item.is-lead {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      "num   desc"
+      "title desc"
+      "title cta";
+    padding: var(--s-7);
+  }
+  .services-index .is-lead .method-step-num { grid-area: num; }
+  .services-index .is-lead .card-title { grid-area: title; }
+  .services-index .is-lead .card-desc { grid-area: desc; }
+  .services-index .is-lead .offer-cta { grid-area: cta; }
+  :where(.services-index .is-lead) .card-title {
+    font-size: var(--fs-3xl);
+    letter-spacing: var(--tr-tight);
+    line-height: var(--lh-snug);
+  }
+  :where(.services-index .is-lead) .card-desc { font-size: var(--fs-lg); }
+}
+
+/* ---------- /services index: after the project, month to month ----------
+   The bridge from any project to the managed office, as one panel: the
+   offer's name as the copper eyebrow and the heading on the start column,
+   the body and its CTA on the end column (stacked on phones). The
+   inline-start copper rule marks it as the path onward, not a fourth
+   service. */
+.services-index .services-monthly {
+  background: var(--bg-1);
+  border: 1px solid var(--rule);
+  border-inline-start: 2px solid var(--accent-rule);
+  border-radius: var(--r-lg);
+  box-shadow: var(--edge-top);
+}
+.services-index .services-monthly .eyebrow { color: var(--accent); }
+.services-index .services-monthly p {
+  color: var(--fg-2);
+  font-size: var(--fs-lg);
+}
+
+/* ---------- Service pages: the work band ----------
+   WorkGrid (src/styles/work.css) renders the cards; under them sits the
+   link to /work, an .offer-cta standing alone. With no card around it,
+   its stretched ::after has nothing to cover, its keyboard ring (moved
+   to the card by globals.css) comes back to the link, and its own hover
+   nudges the arrow. */
+.service-page .service-work-more .offer-cta::after { content: none; }
+@supports selector(:has(*)) {
+  .service-page .service-work-more .offer-cta:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+.service-page .service-work-more .offer-cta:hover .offer-cta-arrow { transform: translateX(3px); }
+[dir="rtl"] .service-page .service-work-more .offer-cta:hover .offer-cta-arrow {
+  transform: scaleX(-1) translateX(3px);
+}

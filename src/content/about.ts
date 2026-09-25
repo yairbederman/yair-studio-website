@@ -1,22 +1,38 @@
 import { localeAccessor } from "@/content/types";
 import { shellContent } from "@/content/shell";
-import { capabilityCards } from "@/content/capability-cards";
-import type { CardItem, Locale } from "@/content/types";
+import { serviceCards } from "@/content/service-cards";
+import { offerCard } from "@/content/offer-cards";
+import type { CardItem, Cta, Locale } from "@/content/types";
 
 /**
  * /about page content — typed and locale-keyed. The "What I make" cards are
- * the five capabilities, derived from capabilityCards(locale) so the titles
- * and one-liners live in exactly one place (src/lib/capabilities.ts +
- * src/content/capability-cards.ts).
+ * the three services, derived from serviceCards(locale), and the monthly
+ * managed office below them takes its title, CTA and link from
+ * offerCard(locale, "ai-office-assistant"), so every name and link lives in
+ * exactly one place (src/lib/services.ts + src/content/service-cards.ts,
+ * src/lib/offers.ts + src/content/offer-cards.ts). Only the office card's
+ * one line is written here, in this page's first-person voice.
  */
+
+/** A card that links to its page (LinkCardGrid item). */
+type LinkCard = CardItem & { cta: Cta };
 
 export type AboutContent = {
   hero: { title: string; lead: string };
-  build: { title: string; intro: string; items: readonly CardItem[] };
+  build: {
+    title: string;
+    intro: string;
+    /** The three services. */
+    items: readonly LinkCard[];
+    /** The monthly managed office: what runs after a project. */
+    after: LinkCard;
+  };
   /**
    * "Who runs this" — the founder section. Narrative paragraphs live here;
    * the founder identity, credentials, and career spine come from
-   * src/content/proof.ts (single source of truth).
+   * src/content/proof.ts (single source of truth) and render right under
+   * these paragraphs, so the prose says only what they do not (why the
+   * studio exists), never an employer, a role, or a credential.
    */
   whoRuns: { title: string; paragraphs: readonly string[] };
   how: { title: string; intro: string; principles: readonly string[] };
@@ -24,25 +40,38 @@ export type AboutContent = {
   cta: { heading: string; body: string; ctaLabel: string; ctaHref: string };
 };
 
-/** The five capabilities as plain cards (title + one line). */
-const capabilityItems = (locale: Locale): readonly CardItem[] =>
-  capabilityCards(locale).map((c) => ({ title: c.title, desc: c.summary }));
+/** The three services as linked cards (title, summary, card CTA). */
+const serviceItems = (locale: Locale): readonly LinkCard[] =>
+  serviceCards(locale).map((c) => ({
+    title: c.title,
+    desc: c.summary,
+    cta: { label: c.cta, href: c.href },
+  }));
+
+/** The managed office as a linked card; the caller writes the one line. */
+function officeItem(locale: Locale, desc: string): LinkCard {
+  const office = offerCard(locale, "ai-office-assistant");
+  return { title: office.title, desc, cta: { label: office.cta, href: office.href } };
+}
 
 const en: AboutContent = {
   hero: {
     title: "About y[AI]r studio",
-    lead: "y[AI]r studio runs the recurring work of small professional offices and builds what a service business needs around it: agents, mapped processes, websites, films, and hands-on AI sessions for the team. One person, not an agency, with your people approving what matters.",
+    lead: "One person, not an agency. I build AI agents for the work your office repeats, with your people approving what matters, and if you want, I keep running them month to month. I also make websites and creative films for the same businesses.",
   },
   build: {
     title: "What I make",
-    intro: "Five capabilities, each with its own page.",
-    items: capabilityItems("en"),
+    intro: "Three services, each built as a fixed-price project, and one way to keep the agents running after it.",
+    items: serviceItems("en"),
+    after: officeItem(
+      "en",
+      "After the project, I run your office's agents month to month: the morning briefing, email, documents, and follow-up, in your own private environment. Nothing is sent or changed without your approval.",
+    ),
   },
   whoRuns: {
     title: "Who runs this",
     paragraphs: [
-      "More than twenty years in software and R&D leadership: at Viber, from R&D project manager to team lead on a product used by hundreds of millions of people; then R&D Manager at Lognet. Since August 2024 I work independently as an AI systems architect, and y[AI]r studio is where that work lives.",
-      "The studio's work is for small professional offices and service businesses where meetings, documents, email, deadlines, and follow-up all cross paths, often in Hebrew and English. One system already runs today for a B2B law firm: marketing analytics and lead generation, anonymized here.",
+      "y[AI]r studio exists because a small office usually has no one to build its systems and keep them running. A large company has its own team for that; a small office can hire the studio instead.",
     ],
   },
   how: {
@@ -59,7 +88,7 @@ const en: AboutContent = {
   },
   who: {
     title: "Who it's for",
-    body: "Owners and office managers of small professional offices, law first, and the teams of service businesses whose work has outgrown manual coordination: more requests, documents, deadlines, and follow-up than anyone can hold in their head. The work runs in Hebrew and English, whichever your office uses day to day.",
+    body: "Owners and office managers of small businesses and professional offices, law firms among them, whose work has outgrown manual coordination: more requests, documents, deadlines, and follow-up than anyone can hold in their head. The work runs in Hebrew and English, whichever your office uses day to day.",
   },
   cta: {
     heading: "Start with one workflow.",
@@ -69,22 +98,25 @@ const en: AboutContent = {
   },
 };
 
-/** Hebrew (RTL) about content — hebrew-quality drafted. */
+/** Hebrew (RTL) about content — written natively, not translated. */
 const he: AboutContent = {
   hero: {
     title: "על y[AI]r studio",
-    lead: "y[AI]r studio מריץ את העבודה החוזרת של משרדים מקצועיים קטנים, ובונה סביבה את מה שעסק שירותים צריך: סוכנים, תהליכים ממופים, אתרים, סרטונים ומפגשי AI מעשיים לצוות. אדם אחד, לא סוכנות, כשהאנשים שלכם מאשרים את מה שחשוב.",
+    lead: "אדם אחד, לא סוכנות. אני בונה סוכני AI לעבודה שהמשרד שלכם חוזר עליה, כשהאנשים שלכם מאשרים את מה שחשוב, ואם תרצו, ממשיך להפעיל אותם חודש אחרי חודש. אני גם בונה אתרים ומפיק סרטונים יצירתיים לאותם עסקים.",
   },
   build: {
-    title: "מה אני בונה",
-    intro: "חמש יכולות, לכל אחת עמוד משלה.",
-    items: capabilityItems("he"),
+    title: "מה אני עושה",
+    intro: "שלושה שירותים, כל אחד נבנה כפרויקט במחיר קבוע, ודרך אחת שבה הסוכנים ממשיכים לרוץ גם אחריו.",
+    items: serviceItems("he"),
+    after: officeItem(
+      "he",
+      "אחרי הפרויקט, אני מפעיל את הסוכנים של המשרד חודש אחרי חודש: תדריך הבוקר, המיילים, המסמכים והמעקב, בסביבה הפרטית שלכם. שום דבר לא נשלח ולא משתנה בלי אישור שלכם.",
+    ),
   },
   whoRuns: {
     title: "מי מאחורי הסטודיו",
     paragraphs: [
-      "יותר מעשרים שנה בתוכנה ובהובלת מו״פ: ב-Viber, ממנהל פרויקטים במו״פ ועד ראש צוות במוצר שמאות מיליוני אנשים משתמשים בו; אחר כך מנהל מו״פ ב-Lognet. מאוגוסט 2024 אני עובד באופן עצמאי כארכיטקט מערכות AI, ו-y[AI]r studio הוא המקום שבו העבודה הזאת חיה.",
-      "העבודה של הסטודיו מיועדת למשרדים מקצועיים קטנים ולעסקי שירותים שבהם פגישות, מסמכים, מייל, מועדים ומעקב נפגשים, לא פעם בעברית ובאנגלית גם יחד. מערכת אחת כבר רצה היום אצל משרד עורכי דין B2B: ניתוח שיווק וייצור לידים, בלי לציין שם.",
+      "הסטודיו קם כי למשרד קטן בדרך כלל אין מי שיבנה את המערכות שלו וידאג שימשיכו לעבוד. לחברה גדולה יש לזה צוות משלה, ומשרד קטן יכול להפקיד את זה בידי הסטודיו.",
     ],
   },
   how: {
@@ -94,14 +126,14 @@ const he: AboutContent = {
       "ממפים לפני שבונים אוטומציה",
       "האדם נשאר בשליטה",
       "מתחברים לכלים הקיימים במקום להחליף אותם",
-      "הצעד הבא תמיד גלוי",
+      "דואגים שהצעד הבא יהיה גלוי",
       "מלווים את ההטמעה אחרי ההקמה, לא רק מוסרים מערכת",
       "מדלגים על דמואים של AI שלא שורדים עבודה אמיתית",
     ],
   },
   who: {
     title: "למי זה מתאים",
-    body: "בעלים ומנהלי משרד של משרדים מקצועיים קטנים, קודם כול עורכי דין, וצוותים בעסקי שירותים שהעבודה שלהם גדלה מעבר לתיאום ידני: יותר פניות, מסמכים, מועדים ומעקב ממה שאפשר להחזיק בראש. העבודה מתנהלת בעברית או באנגלית, לפי מה שהמשרד משתמש בו ביומיום.",
+    body: "בעלים ומנהלי משרד בעסקים קטנים ובמשרדים מקצועיים, ובהם משרדי עורכי דין, שהעבודה שלהם גדלה מעבר לתיאום ידני: יותר פניות, מסמכים, מועדים ומעקב ממה שאפשר להחזיק בראש. העבודה מתנהלת בעברית או באנגלית, לפי מה שהמשרד משתמש בו ביומיום.",
   },
   cta: {
     heading: "מתחילים מתהליך אחד.",

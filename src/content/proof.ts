@@ -64,25 +64,33 @@ const en: ProofContent = {
     intro:
       "y[AI]r studio is one person, not an agency. You work directly with the person who runs the scoping call, maps the workflow, builds the system, and supports it after it goes live.",
     name: "Yair Bederman",
-    role: "Founder · 20+ years in software and R&D leadership",
-    bio: "Builds and runs y[AI]r studio. Independent AI systems architect since August 2024; before that R&D Manager at Lognet (2023–2026) and, at Viber (2016–2023), R&D project and team leadership; earlier, software development at 888, Taldor, Bank Leumi, and El Al.",
+    role: "Founder · AI systems architect",
+    // Chronology: the dates are as published (public, CV-verified). Lognet
+    // 2023–2026 and independent work since Aug 2024 overlap, so the bio states
+    // them side by side and never orders them ("before that"); the spines
+    // order nodes by start date. No string names the Lognet end month, so the
+    // open owner question on it changes no copy. If a date ever changes,
+    // update both bios, both spines, and llms.txt/route.ts together.
+    bio: "Builds and runs y[AI]r studio. Independent AI systems architect since August 2024. R&D Manager at Lognet (2023–2026); at Viber (2016–2023), R&D project and team leadership; earlier, software development at 888, Taldor, Bank Leumi, and El Al.",
     linkedinLabel: "View LinkedIn profile",
+    // The four facts of the homepage credibility band (and of this block):
+    // standalone titles, verifiable descriptions, no metrics.
     credentials: [
       {
-        title: "R&D leadership at Viber and Lognet",
-        desc: "Led delivery on a product with hundreds of millions of users, and built teams from zero.",
+        title: "20+ years in software",
+        desc: "Developer at 888, Taldor, Bank Leumi, and El Al, then R&D leadership at Viber and Lognet, including building teams from zero.",
       },
       {
-        title: "Builds agents and automation",
-        desc: "Multi-agent systems and automation pipelines that run inside the tools a business already uses.",
+        title: "Delivery at Viber's scale",
+        desc: "From R&D project manager to team lead on a product used by hundreds of millions of people.",
       },
       {
         title: "A live system for a law office",
         desc: "A marketing-analytics and lead-generation system runs today for a B2B law firm (anonymized).",
       },
       {
-        title: "Hebrew and English delivery",
-        desc: "Systems, documentation, and support in both languages.",
+        title: "One person, Hebrew and English",
+        desc: "No agency layers: the person on your scoping call builds the system and supports it, in either language.",
       },
     ],
     spine: {
@@ -192,34 +200,34 @@ const en: ProofContent = {
 /**
  * Hebrew (RTL) proof content — hebrew-quality drafted with the same verified
  * founder facts and the same illustrative-workflow safeguards as English.
- * Note: the Hebrew spelling of the surname ("בדרמן") is a standard
- * transliteration — confirm it at checklist time.
+ * The Hebrew surname is "בידרמן", as the owner spells it (confirmed
+ * 2026-09-25).
  */
 const he: ProofContent = {
   founder: {
     title: "מי בונה את זה",
     intro:
       "מאחורי y[AI]r studio עומד אדם אחד, לא סוכנות. אתם עובדים ישירות עם מי שמנהל את שיחת האפיון, ממפה את התהליך, בונה את המערכת ומלווה אותה אחרי העלייה לאוויר.",
-    name: "יאיר בדרמן",
-    role: "מייסד · 20+ שנים בתוכנה ובהובלת מו״פ",
-    bio: "בונה ומפעיל את y[AI]r studio. ארכיטקט מערכות AI עצמאי מאוגוסט 2024; לפני כן מנהל מו״פ ב-Lognet (2023–2026), וב-Viber (2016–2023) ניהול פרויקטים וצוותים במו״פ; מוקדם יותר פיתוח תוכנה ב-888, טלדור, בנק לאומי ואל על.",
+    name: "יאיר בידרמן",
+    role: "מייסד · ארכיטקט מערכות AI",
+    bio: "בונה ומפעיל את y[AI]r studio. ארכיטקט מערכות AI עצמאי מאוגוסט 2024. מנהל מו״פ ב-Lognet (2023–2026). ב-Viber (2016–2023) ניהול פרויקטים וצוותים במו״פ, ולפני כן פיתוח תוכנה ב-888, טלדור, בנק לאומי ואל על.",
     linkedinLabel: "לצפייה בפרופיל בלינקדאין",
     credentials: [
       {
-        title: "הובלת מו״פ ב-Viber וב-Lognet",
-        desc: "הוביל את הפיתוח והאספקה במוצר עם מאות מיליוני משתמשים, והקים צוותים מאפס.",
+        title: "20+ שנים בתוכנה",
+        desc: "פיתוח ב-888, טלדור, בנק לאומי ואל על, ואחר כך הובלת מו״פ ב-Viber וב-Lognet, כולל הקמת צוותים מאפס.",
       },
       {
-        title: "בונה סוכנים ואוטומציה",
-        desc: "מערכות מרובות סוכנים ואוטומציות שרצות בתוך הכלים שהעסק כבר עובד איתם.",
+        title: "בקנה המידה של Viber",
+        desc: "ממנהל פרויקטים במו״פ ועד ראש צוות במוצר שמאות מיליוני אנשים משתמשים בו.",
       },
       {
         title: "מערכת חיה למשרד עורכי דין",
         desc: "מערכת לניתוח שיווק ולייצור לידים רצה היום אצל משרד עורכי דין B2B (ללא ציון שם).",
       },
       {
-        title: "עברית ואנגלית",
-        desc: "מערכות, תיעוד וליווי בשתי השפות.",
+        title: "אדם אחד, עברית ואנגלית",
+        desc: "בלי שכבות של סוכנות: מי שמנהל איתכם את שיחת האפיון בונה את המערכת ומלווה אותה, בשתי השפות.",
       },
     ],
     spine: {

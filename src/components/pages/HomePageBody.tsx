@@ -1,7 +1,9 @@
 import HeroSection from "@/components/home/HeroSection";
+import CredibilityBand from "@/components/home/CredibilityBand";
+import ServicesSection from "@/components/home/ServicesSection";
+import WorkSection from "@/components/home/WorkSection";
 import LadderSection from "@/components/home/LadderSection";
 import ProofFilmSection from "@/components/home/ProofFilmSection";
-import CapabilityStrip from "@/components/home/CapabilityStrip";
 import FounderSection from "@/components/home/FounderSection";
 import SafetySection from "@/components/home/SafetySection";
 import FinalCTA from "@/components/home/FinalCTA";
@@ -15,8 +17,10 @@ import type { Locale } from "@/content/types";
  * its /he mirror can never drift structurally (the bilingual-parity pattern
  * OfferPageBody established for the offer pages).
  *
- * Seven sections: hero → ladder (three ways to start) → proof film → what the
- * studio makes → founder → boundaries → closing CTA.
+ * Work-first, one taxonomy: hero (one service in one line) → credibility band
+ * (the founder facts) → the three services → work (three cards + the candour
+ * note) → ladder (three ways to start) → proof film → founder → boundaries →
+ * closing CTA.
  *
  * JSON-LD renders on the EN homepage only: the graph is EN-literal (names,
  * Person url) and identifies the org site-wide; emitting it from /he would
@@ -29,18 +33,19 @@ export default function HomePageBody({ locale }: { locale: Locale }) {
     <>
       {locale === "en" ? <JsonLd /> : null}
       <main id="main" className="home">
-        <HeroSection content={content.hero} locale={locale} />
+        <HeroSection content={content.hero} />
+        <CredibilityBand
+          title={content.credibility.title}
+          items={proof.founder.credentials}
+        />
+        <ServicesSection locale={locale} content={content.services} />
+        <WorkSection locale={locale} content={content.work} />
         <LadderSection
           locale={locale}
           title={content.ladder.title}
           intro={content.ladder.intro}
         />
         <ProofFilmSection content={content.proof} locale={locale} />
-        <CapabilityStrip
-          locale={locale}
-          title={content.capabilities.title}
-          intro={content.capabilities.intro}
-        />
         <FounderSection content={proof.founder} />
         <SafetySection content={content.boundaries} />
         <FinalCTA content={content.finalCta} />

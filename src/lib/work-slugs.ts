@@ -7,15 +7,24 @@
  *   - src/content/work.ts, which checks at module init that its published
  *     records are exactly WORK_SLUGS, and reads each title from here
  *
- * Import-free on purpose: site.ts imports this file, so any "@/" import here
- * would risk a site → work-slugs → site cycle. The page body reads
- * src/content/work.ts; these strings are metadata only, and the titles are
- * the single source of each work item's name.
+ * Nearly import-free on purpose: site.ts imports this file, so an import
+ * that reaches site.ts would make a site → work-slugs → site cycle. The one
+ * import, offer-cards (for the Managed AI Office's name), reaches only
+ * src/lib/offers.ts and src/lib/locale-paths.ts, which import nothing. The
+ * page body reads src/content/work.ts; these strings are metadata only, and
+ * the titles are the single source of each work item's name.
  *
  * Publishing an item takes two edits: its record in work.ts sets
  * `published: true`, and its entry is added here. Either one alone fails the
  * build.
  */
+
+import { offerCard } from "@/content/offer-cards";
+
+const managedOffice = {
+  en: offerCard("en", "ai-office-assistant").title,
+  he: offerCard("he", "ai-office-assistant").title,
+};
 
 export type WorkPageMeta = {
   slug: string;
@@ -29,11 +38,9 @@ export const WORK_PAGES: readonly WorkPageMeta[] = [
   {
     slug: "command-center",
     title: "Command Center",
-    description:
-      "Command Center, a prototype of the managed AI office's daily view: the day's mail, drafts, and documents in one screen, with what matters held for a person's approval. In build, filmed with sample data.",
+    description: `Command Center, a prototype of the ${managedOffice.en}'s daily view: the day's mail, drafts, and documents in one screen, with what matters held for a person's approval. In build, shown with sample data.`,
     heTitle: "מוקד הבקרה",
-    heDescription:
-      "מוקד הבקרה, אב־טיפוס של המסך היומי של משרד ה-AI המנוהל: הדואר, הטיוטות והמסמכים של היום במקום אחד, כשמה שחשוב מחכה לאישור של אדם. בבנייה, מצולם עם נתוני דוגמה.",
+    heDescription: `מוקד הבקרה, אב־טיפוס של המסך היומי של ${managedOffice.he}: הדואר, הטיוטות והמסמכים של היום במקום אחד, כשמה שחשוב מחכה לאישור של אדם. בבנייה, מוצג עם נתוני דוגמה.`,
   },
   {
     slug: "this-website",
@@ -47,30 +54,38 @@ export const WORK_PAGES: readonly WorkPageMeta[] = [
   {
     slug: "dallal",
     title: "Dallal",
-    description: "Dallal, one of the studio's generative concept films.",
+    description:
+      "Dallal, a vertical café concept film from y[AI]r studio, made with generative AI.",
     heTitle: "Dallal",
-    heDescription: "Dallal, אחד מסרטי הקונספט הגנרטיביים של הסטודיו.",
+    heDescription:
+      "Dallal, סרטון קונספט אנכי של y[AI]r studio לבית קפה, שנוצר עם AI גנרטיבי.",
   },
   {
     slug: "coffee-grinder",
     title: "Coffee grinder",
-    description: "Coffee grinder, one of the studio's generative concept films.",
-    heTitle: "Coffee grinder",
-    heDescription: "Coffee grinder, אחד מסרטי הקונספט הגנרטיביים של הסטודיו.",
+    description:
+      "Coffee grinder, a vertical product concept film from y[AI]r studio, made with generative AI.",
+    heTitle: "מטחנת קפה",
+    heDescription:
+      "מטחנת קפה, סרטון קונספט אנכי של y[AI]r studio למוצר, שנוצר עם AI גנרטיבי.",
   },
   {
     slug: "varriage",
     title: "VARriage",
-    description: "VARriage, one of the studio's generative concept films.",
+    description:
+      "VARriage, a vertical concept ad in Hebrew from y[AI]r studio, made with generative AI.",
     heTitle: "VARriage",
-    heDescription: "VARriage, אחד מסרטי הקונספט הגנרטיביים של הסטודיו.",
+    heDescription:
+      "VARriage, פרסומת קונספט אנכית בעברית של y[AI]r studio, שנוצרה עם AI גנרטיבי.",
   },
   {
     slug: "esc",
     title: "ESC",
-    description: "ESC, one of the studio's generative concept films.",
+    description:
+      "ESC, a vertical concept short from y[AI]r studio, made with generative AI.",
     heTitle: "ESC",
-    heDescription: "ESC, אחד מסרטי הקונספט הגנרטיביים של הסטודיו.",
+    heDescription:
+      "ESC, סרטון קונספט קצר ואנכי של y[AI]r studio, שנוצר עם AI גנרטיבי.",
   },
 ];
 

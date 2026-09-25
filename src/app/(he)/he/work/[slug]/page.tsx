@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Container from "@/components/Container";
-import { workItem } from "@/content/work";
+import WorkDetail from "@/components/work/WorkDetail";
 import { WORK_SLUGS } from "@/lib/work-slugs";
 import { pageMetadata } from "@/lib/site";
 
@@ -20,16 +19,5 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function WorkItemPageHe({ params }: Props) {
   const { slug } = await params;
-  const item = workItem("he", slug);
-  return (
-    <main id="main">
-      <section className="offer-hero" aria-labelledby="work-item-title">
-        <Container>
-          <div className="hero-copy">
-            <h1 id="work-item-title">{item.title}</h1>
-          </div>
-        </Container>
-      </section>
-    </main>
-  );
+  return <WorkDetail locale="he" slug={slug} />;
 }

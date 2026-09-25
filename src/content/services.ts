@@ -4,6 +4,8 @@ import { offerCard } from "@/content/offer-cards";
 import { aiAgentsContent } from "@/content/services/ai-agents";
 import { websitesContent } from "@/content/services/websites";
 import { filmsContent } from "@/content/services/films";
+import { workIndexContent } from "@/content/work";
+import { localePaths } from "@/lib/locale-paths";
 import type { ServiceKey } from "@/lib/services";
 import type { Cta, Locale } from "@/content/types";
 import type {
@@ -17,7 +19,8 @@ import type {
  * live under src/content/services/*.ts; the index cards come from
  * src/content/service-cards.ts, and the managed-office link from
  * offerCard() (never restated here). The closing CTA is the site-wide
- * scoping-call CTA (src/content/shell.ts).
+ * scoping-call CTA (src/content/shell.ts). Also the link every service
+ * page's work band shares (serviceWorkLink).
  */
 
 /** Page content per service key — one file per key. */
@@ -52,8 +55,8 @@ function managedOfficeCta(locale: Locale): Cta {
 
 const en: ServicesIndexContent = {
   hero: {
-    title: "What the studio does for your office",
-    lead: "AI agents for the work your office repeats, websites, and creative films. Each starts as a fixed-price project, and the agents can keep running month to month as your office's AI department.",
+    title: "What the studio builds for your office",
+    lead: "AI agents for the work your office repeats, plus websites and creative films. Every project is fixed-price and scoped in a free call, and you work directly with the person who builds it. After the project, the studio can keep the agents running month to month.",
     ctaLabel: shellContent("en").workflowCta.label,
     ctaHref: shellContent("en").workflowCta.href,
   },
@@ -63,13 +66,13 @@ const en: ServicesIndexContent = {
       "Start with the one that fits the problem in front of you. Each page says what you receive, how the work runs, and where to start.",
   },
   managedOffice: {
-    title: "Then, month to month",
-    body: "Your office's AI department. After the project, the studio keeps the agents it built running, watches them, and improves them, with your people approving what matters.",
+    title: "After the project, month to month",
+    body: "Your office's AI department. The studio keeps running the agents it built, keeps an eye on them, and improves them each month, with your people approving what matters.",
     cta: managedOfficeCta("en"),
   },
   cta: {
     heading: "Not sure where to start?",
-    body: "Most offices start with one piece of recurring work. Book the scoping call, and the written read will say which service fits it.",
+    body: "Start with one piece of recurring work. Book the scoping call, and the written read will say which service fits it, or that none does yet.",
     ctaLabel: shellContent("en").workflowCta.label,
     ctaHref: shellContent("en").workflowCta.href,
   },
@@ -78,8 +81,8 @@ const en: ServicesIndexContent = {
 /** Hebrew (RTL) index content — written, not translated. */
 const he: ServicesIndexContent = {
   hero: {
-    title: "מה הסטודיו עושה בשביל המשרד שלכם",
-    lead: "סוכני AI לעבודה שהמשרד חוזר עליה, אתרים וסרטונים יצירתיים. כל אחד מתחיל כפרויקט במחיר קבוע, והסוכנים יכולים להמשיך לרוץ חודש אחרי חודש כמחלקת ה-AI של המשרד.",
+    title: "מה הסטודיו בונה בשביל המשרד שלכם",
+    lead: "סוכני AI לעבודה שהמשרד חוזר עליה, וגם אתרים וסרטונים יצירתיים. כל פרויקט הוא במחיר קבוע ומוגדר בשיחת אפיון חינם, ואתם עובדים ישירות עם מי שבונה אותו. אחרי הפרויקט, הסטודיו יכול להמשיך להריץ את הסוכנים חודש אחרי חודש.",
     ctaLabel: shellContent("he").workflowCta.label,
     ctaHref: shellContent("he").workflowCta.href,
   },
@@ -89,13 +92,13 @@ const he: ServicesIndexContent = {
       "מתחילים מהשירות שמתאים לבעיה שמולכם. כל עמוד אומר מה מקבלים, איך העבודה רצה ומאיפה מתחילים.",
   },
   managedOffice: {
-    title: "ואז, חודש אחרי חודש",
-    body: "מחלקת ה-AI של המשרד. אחרי הפרויקט, הסטודיו ממשיך להריץ את הסוכנים שהוא בנה, עוקב אחריהם ומשפר אותם, כשהאנשים שלכם מאשרים את מה שחשוב.",
+    title: "אחרי הפרויקט, חודש אחרי חודש",
+    body: "מחלקת ה-AI של המשרד. הסטודיו ממשיך להריץ את הסוכנים שהוא בנה, עוקב אחריהם ומשפר אותם כל חודש, כשהאנשים שלכם מאשרים את מה שחשוב.",
     cta: managedOfficeCta("he"),
   },
   cta: {
     heading: "לא בטוחים מאיפה להתחיל?",
-    body: "רוב המשרדים מתחילים מעבודה חוזרת אחת. קובעים שיחת אפיון, והסיכום הכתוב יגיד איזה שירות מתאים לה.",
+    body: "מתחילים מעבודה חוזרת אחת. קובעים שיחת אפיון, והסיכום הכתוב יגיד איזה שירות מתאים לה, או שכרגע אף אחד מהם לא מתאים.",
     ctaLabel: shellContent("he").workflowCta.label,
     ctaHref: shellContent("he").workflowCta.href,
   },
@@ -108,3 +111,17 @@ export const servicesIndexContent = localeAccessor(
   "servicesIndexContent",
   CONTENT,
 );
+
+/**
+ * The link under a service page's work band (ServicePageBody) to the
+ * locale's /work page. Its label is the one the /work pages already give
+ * that destination (workIndexContent().detail.back, "All work"), so the
+ * site names the link once. ServicePageContent.work carries no link (its
+ * shape is frozen), so every service page shares this one.
+ */
+export function serviceWorkLink(locale: Locale): Cta {
+  return {
+    label: workIndexContent(locale).detail.back,
+    href: localePaths("/work")[locale],
+  };
+}

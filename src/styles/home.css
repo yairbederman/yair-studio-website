@@ -5,4 +5,387 @@
    globals.css. The rules every feature stylesheet follows are defined
    once, in the "Tailwind CSS 4" block at the top of
    src/app/globals.css (bullet "Feature stylesheets").
+
+   Layout, spacing and position are Tailwind utilities in the JSX; this
+   file holds what utilities cannot win or express: element typography
+   (globals.css sets h1–h3 / p / a unlayered), decoration, and motion.
+   New classes are prefixed home-; overrides of shared classes (the
+   ladder, the founder band) and the hero's .accent word are nested
+   under .home.
+
+   RTL: logical properties throughout. Selectors that set heading
+   tracking or line-height stay at one class, so the Hebrew heading
+   reset in globals.css ([lang="he"] :is(h1 … .card-title), two classes
+   of weight) keeps Hebrew at letter-spacing 0 without a rule here.
    ============================================================ */
+
+/* ---------- Hero ----------
+   Full viewport minus the sticky header (≈61px from 768px; the wrapped
+   phone header is ≈112px, below), capped so a tall monitor does not open
+   a void. 100vh is the fallback where svh is unsupported.
+
+   Timing (CSS only, no JS): word i starts at 80ms + min(i, 10) × 60ms and
+   takes 520ms, so any H1 of up to eleven words is fully drawn by 1.2s
+   (the EN H1, eight words, by 1.02s). Eyebrow 0ms, lead 600ms, status
+   760ms, CTAs 860ms, also-line 960ms (each 520ms, done by 1.48s); grid
+   lines 0–1.47s; corners 1.1–1.5s; detail dots 1.3–2.06s; floating dots
+   drift once, 0.3–2.16s. The whole sequence is over within 2.2s and the
+   page is still from then on, so no pause control is needed
+   (WCAG 2.2.2). */
+.home-hero {
+  --hero-base: 80ms;
+  --hero-step: 60ms;
+  --hero-word: 520ms;
+  --hero-blur: 0px;
+  --float-o: 0.4;
+  min-block-size: min(calc(100vh - 4rem), 62rem);
+  min-block-size: min(calc(100svh - 4rem), 62rem);
+}
+
+.home-hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+/* A short copper rule leads the audience line in the reading direction. */
+.home-hero-eyebrow::before {
+  content: "";
+  inline-size: 24px;
+  block-size: 1px;
+  background: var(--accent);
+}
+
+/* 88px (the cap) from ≈1260px wide, 54px at 768, 40px on phones. Weight
+   comes from h1's --fw-display-h1 token (700 EN, 800 HE). */
+.home-hero-title {
+  max-inline-size: 20ch;
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+/* Inline-block so each word can move; the spaces between them are text. */
+.home-hero-word { display: inline-block; }
+
+.home-hero-lead {
+  max-inline-size: 44ch;
+  font-size: var(--fs-xl);
+  line-height: 1.45;
+  color: var(--fg-2);
+}
+/* The H1's one accent word (hero.titleAccent, in HeroSection): copper, upright. */
+.home .accent {
+  color: var(--accent);
+  font-style: normal;
+}
+
+/* A pill on one line; when a phone wraps it, the 15px radius (half the
+   one-line height: 20px line + 2 × 4px padding + borders) turns it into a
+   rounded tag instead of a squashed capsule. */
+.home-hero-status {
+  font-size: var(--fs-sm);
+  line-height: 20px;
+  color: var(--fg-2);
+  background: var(--bg-1);
+  border: 1px solid var(--rule-strong);
+  border-radius: 15px;
+}
+/* The approval dot, at chip size, centred on the first line. */
+.home-hero-status-dot {
+  flex: none;
+  margin-block-start: 6.5px;
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* The secondary CTA is transparent by default; over the grid it takes the
+   page ground so no line runs through its label. */
+.home-hero-actions .btn:not(.btn-primary) { background: var(--bg-0); }
+.home-hero-actions .btn:not(.btn-primary):hover { background: var(--bg-3); }
+
+.home-hero-also { font-size: var(--fs-sm); }
+.home-hero-also a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--fg-2);
+}
+.home-hero-also a:hover { color: var(--fg-1); }
+
+/* Arrow after a text link: points along the reading direction and nudges
+   forward on hover (RTL mirrors the glyph, so the nudge reads forward too). */
+.home-arrow {
+  display: inline-block;
+  transition: transform var(--dur) var(--ease);
+}
+a:hover > .home-arrow,
+.home-service:hover .home-arrow { transform: translateX(3px); }
+[dir="rtl"] .home-arrow { transform: scaleX(-1); }
+[dir="rtl"] a:hover > .home-arrow,
+[dir="rtl"] .home-service:hover .home-arrow { transform: scaleX(-1) translateX(3px); }
+
+/* ---------- Hero decoration (aria-hidden, pointer-events: none) ----------
+   The grid is anchored to the inline-end edge (xMaxYMid slice) and
+   mirrored on /he, so the radial mask always opens beside the copy, not
+   behind it. The mask reads alpha only; any opaque token works as its
+   color. At rest (and under reduced motion) every line is drawn and every
+   dot and corner is visible: only the no-preference block below hides
+   anything, and only for its own entrance. */
+.home-hero-grid {
+  -webkit-mask-image: radial-gradient(ellipse 70% 85% at 84% 45%, var(--bg-0) 18%, transparent 76%);
+  mask-image: radial-gradient(ellipse 70% 85% at 84% 45%, var(--bg-0) 18%, transparent 76%);
+}
+[dir="rtl"] .home-hero-grid { transform: scaleX(-1); }
+
+.home-hero-line {
+  fill: none;
+  stroke: var(--rule-strong);
+  stroke-width: 1;
+}
+.home-hero-detail {
+  fill: var(--accent);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.home-hero-detail-ring { fill: var(--accent-soft); }
+.home-hero-float {
+  fill: var(--fg-2);
+  opacity: var(--float-o);
+}
+
+/* L-shaped corner marks: logical borders mirror them on /he for free. */
+.home-hero-corner { border: 0 solid var(--fg-3); }
+.home-hero-corner.is-ts { border-block-start-width: 1px; border-inline-start-width: 1px; }
+.home-hero-corner.is-te { border-block-start-width: 1px; border-inline-end-width: 1px; }
+.home-hero-corner.is-bs { border-block-end-width: 1px; border-inline-start-width: 1px; }
+.home-hero-corner.is-be { border-block-end-width: 1px; border-inline-end-width: 1px; }
+
+/* ---------- Hero entrance ---------- */
+@media (min-width: 1024px) {
+  /* Blur is desktop-only: it is the most expensive part of the reveal. */
+  .home-hero-word { --hero-blur: 6px; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-hero-word {
+    animation: word-appear var(--hero-word) var(--ease) both;
+    animation-delay: calc(var(--hero-base) + min(var(--i), 10) * var(--hero-step));
+  }
+  .home-hero-eyebrow,
+  .home-hero-lead,
+  .home-hero-status,
+  .home-hero-actions,
+  .home-hero-also {
+    animation: word-appear var(--hero-word) var(--ease) both;
+  }
+  .home-hero-lead { animation-delay: 600ms; }
+  .home-hero-status { animation-delay: 760ms; }
+  .home-hero-actions { animation-delay: 860ms; }
+  .home-hero-also { animation-delay: 960ms; }
+
+  /* pathLength=1 on every line, so one dash of length 1 is the whole line. */
+  .home-hero-line {
+    stroke-dasharray: 1;
+    animation: grid-draw 900ms var(--ease) both;
+    animation-delay: calc(var(--i) * 30ms);
+  }
+  .home-hero-line.is-h { animation-delay: calc(120ms + var(--i) * 50ms); }
+
+  .home-hero-corner { animation: mark-in 400ms var(--ease) 1100ms both; }
+  .home-hero-detail {
+    animation: mark-in 400ms var(--ease) both;
+    animation-delay: calc(1300ms + var(--i) * 120ms);
+  }
+  .home-hero-float {
+    animation: float 1500ms ease-in-out both;
+    animation-delay: calc(300ms + var(--i) * 90ms);
+  }
+}
+
+@keyframes word-appear {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(var(--hero-blur));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+@keyframes grid-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes mark-in {
+  from { opacity: 0; transform: scale(0.4); }
+  to { opacity: 1; transform: none; }
+}
+/* Fades in, drifts up and aside, settles back where the static render
+   (and reduced motion) keeps it. */
+@keyframes float {
+  0% { opacity: 0; transform: translate(0, 14px); }
+  25% { opacity: var(--float-o); }
+  60% { transform: translate(5px, -10px); }
+  100% { opacity: var(--float-o); transform: translate(0, 0); }
+}
+
+/* ---------- Credibility band ---------- */
+.home-cred { border-block-start: 1px solid var(--rule); }
+/* An h2 styled as a label: the facts below carry the weight. */
+.home-cred-label {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  line-height: var(--lh-body);
+  text-transform: uppercase;
+  letter-spacing: var(--tr-ui);
+  color: var(--fg-3);
+}
+/* Copper approval dot on the title's first line. */
+.home-cred-item::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0.45rem;
+  inline-size: 9px;
+  block-size: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.home-cred-title {
+  font-size: var(--fs-lg);
+  line-height: 1.3;
+  letter-spacing: var(--tr-snug);
+  color: var(--fg-1);
+}
+.home-cred-desc {
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  color: var(--fg-2);
+}
+
+/* ---------- Services ---------- */
+.home-service {
+  background: var(--bg-1);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  box-shadow: var(--edge-top);
+  transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.home-service:hover {
+  border-color: var(--accent-rule);
+  transform: translateY(-2px);
+}
+/* The lead service (AI agents): copper top rule over a soft copper wash. */
+.home-service.is-lead {
+  border-block-start: 2px solid var(--accent);
+  background: linear-gradient(to bottom, var(--accent-soft), transparent 45%), var(--bg-1);
+}
+.home-service-title {
+  font-size: var(--fs-2xl);
+  letter-spacing: var(--tr-tight);
+  color: var(--fg-1);
+}
+.home-service-desc {
+  max-inline-size: 52ch;
+  color: var(--fg-2);
+}
+@media (min-width: 1024px) {
+  .home-service.is-lead .home-service-title { font-size: var(--fs-3xl); }
+  .home-service.is-lead .home-service-desc { font-size: var(--fs-lg); }
+}
+.home-service-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  align-self: flex-start;
+  font-size: var(--fs-md);
+  font-weight: 500;
+  color: var(--accent);
+}
+.home-service-link:hover { color: var(--accent-hover); text-decoration: none; }
+/* Stretched: the whole card is the link's click target. */
+.home-service-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-lg);
+}
+/* Keyboard focus rings the whole card where :has() is supported; older
+   browsers keep the global a:focus-visible ring on the link text. */
+@supports selector(:has(*)) {
+  .home-service:has(.home-service-link:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .home-service-link:focus-visible { outline: none; }
+}
+
+/* ---------- Work ---------- */
+.home-work-all a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--fs-lg);
+  font-weight: 500;
+  color: var(--fg-1);
+  white-space: nowrap;
+}
+.home-work-all a:hover { color: var(--accent-hover); }
+/* The candour note: a copper hairline on the inline-start edge. */
+.home-candour { border-inline-start: 2px solid var(--accent-rule); }
+.home-candour-title {
+  font-size: var(--fs-lg);
+  letter-spacing: var(--tr-snug);
+  color: var(--fg-1);
+}
+.home-candour-body {
+  max-inline-size: 68ch;
+  color: var(--fg-2);
+}
+
+/* ---------- Ladder (homepage framing of the shared LadderSection) ----------
+   The globals.css triptych already sits the three ways to start side by
+   side from 1024px; here the band tightens so head, rungs and CTAs fit one
+   desktop screen, and the Managed AI Office (rung 03) carries the weight:
+   a copper top rule over a soft copper wash, on top of its --bg-1 panel
+   and bracketed primary CTA. */
+.home .ladder-rung.is-primary {
+  border-block-start: 2px solid var(--accent);
+  background: linear-gradient(to bottom, var(--accent-soft), transparent 50%), var(--bg-1);
+}
+@media (min-width: 1024px) {
+  .home #ladder { padding-block: var(--s-8); }
+  .home #ladder .section-head { margin-block-end: var(--s-6); }
+  .home .ladder-receive { font-size: var(--fs-md); }
+}
+
+/* ---------- Founder ----------
+   The credibility band under the hero already lists the founder facts, so
+   the founder band here keeps name, bio, LinkedIn and the career path only
+   (/about still shows the facts inside its founder block). */
+.home .founder .founder-creds { display: none; }
+
+/* ---------- Phones ---------- */
+@media (max-width: 767px) {
+  .home-hero {
+    min-block-size: calc(100vh - 7rem);
+    min-block-size: calc(100svh - 7rem);
+  }
+  .home-hero-lead { font-size: var(--fs-lg); }
+  /* Copy fills the width on a phone, so nothing may sit behind a word: the
+     grid opens only along the bottom edge, under the CTAs, and the dots
+     (whose intersections land wherever the copy wraps) stay out. */
+  .home-hero-grid {
+    -webkit-mask-image: radial-gradient(ellipse 90% 26% at 75% 100%, var(--bg-0) 20%, transparent 100%);
+    mask-image: radial-gradient(ellipse 90% 26% at 75% 100%, var(--bg-0) 20%, transparent 100%);
+  }
+  .home-hero-detail,
+  .home-hero-float { display: none; }
+  .home-work-all a { font-size: var(--fs-base); }
+}

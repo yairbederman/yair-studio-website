@@ -1,8 +1,310 @@
 /* ============================================================
    Work — feature stylesheet · owner: Stage B2 (/work portfolio)
    ------------------------------------------------------------
-   Scope: /work, /work/[slug] and their /he mirrors. Imported by both
+   Scope: /work, /work/[slug] and their /he mirrors, plus the work grid
+   wherever WorkGrid renders it (home, service pages). Imported by both
    root layouts right after globals.css. The rules every feature
    stylesheet follows are defined once, in the "Tailwind CSS 4" block
    at the top of src/app/globals.css (bullet "Feature stylesheets").
+   Every selector is namespaced work-*; the only shared classes touched
+   are the ones the markup reuses on purpose (.sample-badge for the
+   status chip, .workflow-film for the self-hosted film frame).
    ============================================================ */
+
+/* ---------- Grid ----------
+   The grid, its gaps and every card's column span are utilities, placed
+   by src/components/work/grid-layout.ts (fewer, larger cards: 16:9 pieces
+   two to a row and portrait films three from 1024px, films two to a row
+   from 640px, one column on phones).
+
+   A card alone in a part-filled row gets data-feature with the breakpoint
+   it is alone at, takes the whole row there, and sets poster and text side
+   by side instead of one card beside an empty stretch. The ranges do not
+   overlap: a film alone at 640px can share a row of three at 1024px. The
+   column widths (portrait poster column, 16:9 poster/text split) come from
+   grid-layout.ts, which sizes the poster for them; WorkCard sets them on a
+   featured card as --work-feature-portrait / -poster / -text. */
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .work-card[data-feature~="sm"] {
+    display: grid;
+    grid-template-columns: minmax(0, var(--work-feature-portrait)) minmax(0, 1fr);
+    column-gap: var(--s-6);
+    align-items: center;
+  }
+}
+@media (min-width: 1024px) {
+  .work-card[data-feature~="lg"] {
+    display: grid;
+    grid-template-columns: minmax(0, var(--work-feature-poster)) minmax(0, var(--work-feature-text));
+    column-gap: var(--s-7);
+    align-items: center;
+  }
+  .work-card[data-feature~="lg"]:is([data-aspect="9:16"], [data-aspect="4:5"]) {
+    grid-template-columns: minmax(0, var(--work-feature-portrait)) minmax(0, 1fr);
+  }
+}
+
+/* ---------- Card ----------
+   Layout (flex column, gaps, the overlay row's placement) is utilities in
+   WorkCard; this block is the frames, type and states. */
+
+/* The poster frame holds the item's own aspect; the image covers it, so a
+   9:16 film is never letterboxed. */
+.work-card-media,
+.work-yt,
+.work-detail-poster {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: var(--bg-1);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+}
+:is(.work-card-media, .work-yt, .work-detail-poster)[data-aspect="9:16"] { aspect-ratio: 9 / 16; }
+:is(.work-card-media, .work-yt, .work-detail-poster)[data-aspect="4:5"] { aspect-ratio: 4 / 5; }
+
+.work-card-poster,
+.work-yt-poster,
+.work-detail-poster-img {
+  object-fit: cover;
+}
+.work-card-poster { transition: transform var(--dur-slow) var(--ease); }
+.work-card:hover .work-card-poster { transform: scale(1.03); }
+
+/* An h3 set at card-title size (18–24px tracking step, like .card-title). */
+.work-card-title {
+  font-size: var(--fs-xl);
+  letter-spacing: var(--tr-snug);
+  line-height: var(--lh-snug);
+}
+.work-card-link {
+  color: var(--fg-1);
+  text-decoration: none;
+  transition: color var(--dur) var(--ease);
+}
+/* One link, whole card: the title's ::after spans the card. */
+.work-card-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: var(--r-lg);
+}
+.work-card:hover .work-card-link,
+.work-card-link:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+/* Keyboard focus rings the whole card (the area the link covers), not the
+   title text alone — same copper ring as the global rule. */
+.work-card-link:focus-visible { outline: none; }
+.work-card-link:focus-visible::after {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+.work-card-summary {
+  color: var(--fg-2);
+  max-width: 60ch;
+}
+.work-card-body .work-chips { margin-block-start: var(--s-2); }
+
+/* ---------- Status chip ----------
+   .sample-badge gives the shape; the status picks the tone. Prototype
+   keeps the --warn sample color. The solid ground lets the chip read over
+   light and dark posters alike (it sits on the poster's bottom row). */
+.work-status { background: var(--bg-0); }
+.work-status[data-status="live"] {
+  color: var(--accent);
+  border-color: var(--accent-rule);
+}
+.work-status[data-status="concept"] {
+  color: var(--fg-2);
+  border-color: var(--rule-strong);
+}
+
+/* ---------- Deliverables chips ----------
+   The list's wrap and gaps are utilities in WorkChips; each chip is here. */
+.work-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  padding: var(--s-1) var(--s-3);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--fg-2);
+  background: var(--bg-1);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-md);
+}
+.work-chip-count {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Play mark ----------
+   A copper disc with a play triangle: on film cards (a hint, the card is a
+   link) and as the YouTube play button's icon. Media icons never mirror in
+   RTL, so the triangle uses a physical clip-path. */
+.work-play {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 6px var(--accent-soft);
+  transition: transform var(--dur) var(--ease);
+}
+.work-play::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 38%;
+  height: 42%;
+  background: var(--bg-0);
+  clip-path: polygon(22% 0, 100% 50%, 22% 100%);
+}
+.work-card-play {
+  position: relative; /* a flex item in the overlay row */
+  flex: none;
+  width: 44px;
+  height: 44px;
+}
+.work-card:hover .work-card-play { transform: scale(1.08); }
+
+/* ---------- Detail page ---------- */
+.work-detail { padding-block: var(--s-8) var(--s-9); }
+
+.work-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-block-end: var(--s-6);
+  font-size: var(--fs-sm);
+  color: var(--fg-2);
+}
+.work-back:hover { color: var(--fg-1); }
+/* Points back toward the start: left in EN, right in HE. Decorative (the
+   empty alt keeps it out of the link's name where supported). */
+.work-back::before {
+  content: "\2190";
+  content: "\2190" / "";
+}
+[dir="rtl"] .work-back::before {
+  content: "\2192";
+  content: "\2192" / "";
+}
+
+.work-detail-layout {
+  display: grid;
+  gap: var(--s-7);
+}
+.work-detail-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-4);
+}
+.work-detail-head h1 { font-size: var(--fs-4xl); }
+.work-detail-brief {
+  max-width: 60ch;
+  line-height: var(--lh-body);
+}
+
+/* A self-hosted film: the .workflow-film frame as on the managed-office
+   page, minus its trailing margin (the layout gap spaces it). */
+.work-detail-film { margin: 0; }
+
+/* A portrait frame never grows past a set width (a 9:16 film at tablet
+   width would be taller than the screen): DETAIL_PORTRAIT_MAX_PX in
+   grid-layout.ts, which WorkDetail sets on the frame as
+   --work-detail-portrait-max. */
+.work-detail:is([data-aspect="9:16"], [data-aspect="4:5"]) .work-detail-media {
+  max-inline-size: var(--work-detail-portrait-max);
+}
+
+/* Portrait pieces sit beside the text from 900px: the film in the start
+   column across both rows, title above the facts in the other. The grid
+   follows the writing direction, so HE mirrors it. */
+@media (min-width: 900px) {
+  .work-detail:is([data-aspect="9:16"], [data-aspect="4:5"]) .work-detail-layout {
+    grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "media head"
+      "media facts";
+    column-gap: var(--s-8);
+    align-items: start;
+  }
+  .work-detail:is([data-aspect="9:16"], [data-aspect="4:5"]) .work-detail-head { grid-area: head; }
+  .work-detail:is([data-aspect="9:16"], [data-aspect="4:5"]) .work-detail-media { grid-area: media; }
+  .work-detail:is([data-aspect="9:16"], [data-aspect="4:5"]) .work-facts { grid-area: facts; }
+}
+
+.work-facts {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--s-5) var(--s-6);
+  padding-block-start: var(--s-5);
+  border-block-start: 1px solid var(--rule);
+}
+.work-fact { min-width: 0; }
+.work-fact--deliverables { grid-column: 1 / -1; }
+/* Label voice of .proof-row dt: tracked uppercase body sans. */
+.work-fact dt {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tr-ui);
+  color: var(--fg-3);
+}
+.work-fact dd {
+  margin: var(--s-2) 0 0;
+  color: var(--fg-1);
+}
+
+/* ---------- YouTube, click to play ---------- */
+.work-yt-play {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+/* The frame clips overflow, so the global copper ring is drawn inside. */
+.work-yt-play:focus-visible { outline-offset: -4px; }
+.work-yt-poster { transition: filter var(--dur-slow) var(--ease); }
+.work-yt-play:hover .work-yt-poster { filter: brightness(0.85); }
+.work-yt-icon {
+  inset: 0;
+  margin: auto;
+  width: 72px;
+  height: 72px;
+}
+.work-yt-play:hover .work-yt-icon { transform: scale(1.06); }
+.work-yt-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+@media (max-width: 767px) {
+  .work-detail { padding-block: var(--s-7) var(--s-8); }
+  .work-detail-head h1 {
+    font-size: var(--fs-3xl);
+    letter-spacing: var(--tr-tight);
+  }
+}
+
+/* Hebrew is never letter-spaced: this file's tracked rules drop it on /he
+   (these load after globals.css's own reset, so they must restate it). */
+[lang="he"] :is(.work-card-title, .work-detail-head h1, .work-fact dt),
+[dir="rtl"] :is(.work-card-title, .work-detail-head h1, .work-fact dt) {
+  letter-spacing: 0;
+}
