@@ -39,7 +39,7 @@ const en: OfferPageContent = {
     mp4: "/videos/command-center.mp4",
     poster: "/videos/command-center-poster.png",
     caption:
-      "The Command Center your office logs into: the day's work in one view — meetings, deadlines, incoming mail, stalled documents — with what matters waiting for a person's approval. In build, shown with sample data.",
+      "The Command Center your office logs into: the day's work in one view — incoming mail, draft replies, signatures, stalled documents — with what matters waiting for a person's approval. In build, shown with sample data.",
     filmName: "command center film",
     mobile: {
       mp4: "/videos/command-center-mobile.mp4",
@@ -285,7 +285,7 @@ const he: OfferPageContent = {
     mp4: "/videos/command-center-he.mp4",
     poster: "/videos/command-center-he-poster.png",
     caption:
-      "מוקד הבקרה שהמשרד שלכם נכנס אליו: כל העבודה של היום בתצוגה אחת — פגישות, מועדים, דואר נכנס, מסמכים תקועים — כשמה שחשוב מחכה לאישור של אדם. בבנייה, מוצג עם נתוני דוגמה.",
+      "מוקד הבקרה שהמשרד שלכם נכנס אליו: כל העבודה של היום בתצוגה אחת — דואר נכנס, טיוטות תשובה, חתימות, מסמכים תקועים — כשמה שחשוב מחכה לאישור של אדם. בבנייה, מוצג עם נתוני דוגמה.",
     filmName: "סרטון מוקד הבקרה",
     mobile: {
       mp4: "/videos/command-center-mobile-he.mp4",

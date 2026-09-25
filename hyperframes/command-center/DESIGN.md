@@ -252,8 +252,8 @@ panels from `build.items`, and the approval title from the `example.map` human n
 3. `FilmPlayer` (poster-first, reduced-motion gated, pause control) serves the `mobile` set
    under 768px.
 4. The film caption (EN :41–42 / HE :287–288) and the homepage proof intro (`home.ts:118` /
-   `:185`) name only what the v2 frame shows (meetings, deadlines, incoming mail, stalled
-   documents, approval) — re-check them if the panels change.
+   `:185`) name only what the v2 frame shows (incoming mail, draft replies, signatures, stalled
+   documents, approval — the rows both cuts show) — re-check them if the panels change.
 
 ## Hard "do not"
 

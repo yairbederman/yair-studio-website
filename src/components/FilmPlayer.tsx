@@ -1,7 +1,14 @@
 "use client";
 
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import { useEffect, useRef, useState } from "react";
+
+// Phone-cut breakpoint: read by the matchMedia effect AND the poster's
+// <source media>. Same breakpoint as the .film-frame.has-mobile rules in
+// globals.css — change both together.
+const PHONE_MEDIA = "(max-width: 767px)";
+// Desktop/default poster `sizes` — shared by the <Image> and the <picture> <img>.
+const POSTER_SIZES = "(min-width: 1200px) 1152px, 100vw";
 
 /**
  * The film frame shared by every process film (and the hero backdrop): a
@@ -30,9 +37,10 @@ import { useEffect, useRef, useState } from "react";
  * 768px. The choice is resolved in the SAME post-hydration effect as the
  * reduced-motion check, so it is known before the <video> mounts (a <video>
  * reads its <source> list once); if the viewport later crosses the breakpoint
- * the element is re-keyed so it re-reads them. Both posters render on the
- * server and CSS gates the inactive one (.film-poster--desktop / --mobile), so
- * SSR shows the right still with no flash. `intro` has no mobile counterpart.
+ * the element is re-keyed so it re-reads them. The server renders ONE art-
+ * directed <picture> (phone still as a <source media={PHONE_MEDIA}>, desktop
+ * still as the <img>), so the browser fetches only the matching poster and SSR
+ * shows the right still with no flash. `intro` has no mobile counterpart.
  *
  * `autoplay={false}` (poster-first, click-to-play): the <video> stays
  * unmounted until the user presses Play — never a second autoplaying film on
@@ -82,8 +90,7 @@ export default function FilmPlayer({
   const hasMobile = Boolean(mobile);
   useEffect(() => {
     const motion = window.matchMedia("(prefers-reduced-motion: no-preference)");
-    // Same breakpoint as the .film-frame.has-mobile rules in globals.css — change both together.
-    const phone = window.matchMedia("(max-width: 767px)");
+    const phone = window.matchMedia(PHONE_MEDIA);
     const apply = () => {
       setShowVideo(motion.matches);
       setUseMobile(hasMobile && phone.matches);
@@ -141,28 +148,32 @@ export default function FilmPlayer({
   const frameClass = ["film-frame", frameClassName, mobile ? "has-mobile" : undefined]
     .filter(Boolean)
     .join(" ");
+  // Phone cut: art-directed poster props for the <picture> below.
+  const posterArt = mobile
+    ? {
+        desktop: getImageProps({ src: poster, alt: "", fill: true, sizes: POSTER_SIZES }).props,
+        phone: getImageProps({ src: mobile.poster, alt: "", fill: true, sizes: "100vw" }).props,
+      }
+    : null;
 
   return (
     <div className={frameClass}>
       {/* Base layer — always rendered, so there is never a blank frame. */}
-      <Image
-        className={mobile ? "film-poster film-poster--desktop" : "film-poster"}
-        src={poster}
-        alt=""
-        aria-hidden="true"
-        fill
-        sizes="(min-width: 1200px) 1152px, 100vw"
-      />
-      {mobile ? (
+      {posterArt ? (
+        <picture>
+          <source media={PHONE_MEDIA} srcSet={posterArt.phone.srcSet} sizes={posterArt.phone.sizes} />
+          <img {...posterArt.desktop} className="film-poster" alt="" aria-hidden="true" />
+        </picture>
+      ) : (
         <Image
-          className="film-poster film-poster--mobile"
-          src={mobile.poster}
+          className="film-poster"
+          src={poster}
           alt=""
           aria-hidden="true"
           fill
-          sizes="100vw"
+          sizes={POSTER_SIZES}
         />
-      ) : null}
+      )}
       {mountVideo ? (
         <video
           key={useMobile ? "mobile" : "desktop"}

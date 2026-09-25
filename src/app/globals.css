@@ -1302,10 +1302,6 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
   text-align: center;
   text-wrap: balance;
 }
-/* Phone cut (FilmPlayer `mobile`): both posters render on the server and CSS
-   gates the inactive one, so SSR shows the right still with no flash. Opt-in
-   through .has-mobile only — 16:9 films and the hero backdrop are untouched. */
-.film-frame.has-mobile .film-poster--mobile { display: none; }
 /* Build-status chip in a film section head (homepage proof band). */
 .film-status { margin-top: var(--s-3); }
 /* A film that follows a card grid inside one section (the retainer's
@@ -1392,11 +1388,11 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
     border-radius: 0;
     border-inline: 0;
   }
-  /* The phone cut is 4:5 — opt-in, so 16:9 films keep their frame. */
-  /* Same breakpoint as FilmPlayer's matchMedia("(max-width: 767px)") — change both together. */
+  /* The phone cut is 4:5 — opt-in, so 16:9 films keep their frame. Its poster
+     needs no CSS: FilmPlayer renders one <picture> whose <source media> picks
+     the phone still, so the browser fetches only the matching poster. */
+  /* Same breakpoint as FilmPlayer's PHONE_MEDIA ("(max-width: 767px)") — change both together. */
   .workflow-film .film-frame.has-mobile { aspect-ratio: 4 / 5; }
-  .film-frame.has-mobile .film-poster--desktop { display: none; }
-  .film-frame.has-mobile .film-poster--mobile { display: block; }
   /* Comfortable tap target for the pause/play control. */
   .film-toggle { min-height: 44px; }
 }

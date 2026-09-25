@@ -495,6 +495,20 @@ chunk boundary (5 capture workers), no dropout. Visual crops at 9.2s (scratchpad
     ודדליינים במקום אחד" → "הפגישות והמועדים של היום, הדואר הנכנס והמסמכים התקועים במקום אחד"
   - No third occurrence; `contact.ts:202` ("לקוח שמחכה למסמך") is a contact-form example, not a
     film description — unchanged.
+- **2026-09-25 re-word (code review):** the 4:5 phone cut (served under 768px) drops the
+  Morning briefing panel, so Meetings · Deadlines never appear on phones. The four strings now
+  name only rows BOTH cuts show — Incoming mail · Draft replies · Signatures · Stalled documents
+  / דואר נכנס · טיוטות תשובה · חתימות · מסמכים תקועים:
+  - flagship caption EN (:42): "…— meetings, deadlines, incoming mail, stalled documents —…" →
+    "…— incoming mail, draft replies, signatures, stalled documents —…"
+  - flagship caption HE (:288): "…— פגישות, מועדים, דואר נכנס, מסמכים תקועים —…" →
+    "…— דואר נכנס, טיוטות תשובה, חתימות, מסמכים תקועים —…"
+  - home proof intro EN (`home.ts:118`): "the day's meetings, deadlines, incoming mail, and
+    stalled documents in one place" → "the day's incoming mail, draft replies, signatures, and
+    stalled documents in one place"
+  - home proof intro HE (`home.ts:185`): "הפגישות והמועדים של היום, הדואר הנכנס והמסמכים
+    התקועים במקום אחד" → "הדואר הנכנס של היום, טיוטות התשובה, החתימות והמסמכים התקועים במקום
+    אחד"
 - `npx tsc --noEmit`: exit 0, no output.
 - Live check (dev server :3000): at 375px the EN + HE flagship pages and the EN homepage play
   `command-center-mobile{,-he}.mp4` with the mobile poster; at 1024px the HE homepage plays
